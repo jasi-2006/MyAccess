@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,13 +60,36 @@ public class UserController {
 
 	@DeleteMapping("users/{id}")
 	public  ResponseEntity<?> deleteUser(@PathVariable Long id){
-		boolean delete = userService.deleteUser(id);
+		boolean delete = userService.deleteUserid(id);
 		if (delete){
 			return  ResponseEntity.status(HttpStatus.OK).body(delete);
 		}else  {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
+
+	// actualizar con documento
+	@PutMapping("/users/document/{document}")
+	public  ResponseEntity<UserResponseDTO> updateUser(@PathVariable String document, @RequestBody UserRequestDTO userRequestDTO){
+		UserResponseDTO response = (UserResponseDTO) userService.;
+		System.out.println("documento recibido '" +document+"'");
+		if (response != null){
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+		}else {
+			return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+	}
+
+	@DeleteMapping("/users/delete/{document}")
+	public ResponseEntity<?> delete (@PathVariable String document){
+		boolean deleted = userService.deleteUserdoc(document);
+		if (deleted){
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}else{
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
+
 }
 
 

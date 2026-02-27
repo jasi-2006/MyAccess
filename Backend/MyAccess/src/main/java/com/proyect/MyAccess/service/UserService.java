@@ -110,31 +110,6 @@ public class UserService {
         return  response;
     }
 
-    // endpoint para mostrar los datos mediante el id
-    public List <UserResponseDTO>getfordocument(String document){
-        List<User> users = userRepository.findByDocument(document);
-        List<UserResponseDTO> response = new ArrayList<>();
-        for (User user : users){
-            UserResponseDTO responseDTO = new UserResponseDTO();
-            responseDTO.setId(user.getId());
-            responseDTO.setDocument(user.getDocument());
-            responseDTO.setName(user.getName());
-            responseDTO.setLastName(user.getLastName());
-            responseDTO.setEmail(user.getEmail());
-            responseDTO.setPassword(user.getPassword());
-            responseDTO.setPhone(user.getPhone());
-
-            RoleResponseDTO role= new RoleResponseDTO();
-            role.setId(user.getId());
-            role.setNameRole(user.getRole().getNameRole());
-            responseDTO.setRole(role);
-            response.add(responseDTO);
-        }
-
-        return response;
-
-    }
-
     // endpoint para actualizar usuario por id
 
     public Optional <UserResponseDTO> updateUser(Long id, UserRequestDTO userRequestDTO){
@@ -164,8 +139,9 @@ public class UserService {
             return Optional.empty();
         }
     }
-    // endpoint para eliminar un usuario
-    public boolean deleteUser(Long id){
+
+    // endpoint para eliminar un usuario por id
+    public boolean deleteUserid(Long id){
         if (userRepository.existsById(id)){
             userRepository.deleteById(id);
             return  true;
@@ -173,5 +149,70 @@ public class UserService {
         return  false;
     }
 
+// por documento
+    // endpoint para mostrar los datos mediante el documento
+    public List <UserResponseDTO>getfordocument(String document){
+        List<User> users = userRepository.findByDocument(document);
+        List<UserResponseDTO> response = new ArrayList<>();
+        for (User user : users){
+            UserResponseDTO responseDTO = new UserResponseDTO();
+            responseDTO.setId(user.getId());
+            responseDTO.setDocument(user.getDocument());
+            responseDTO.setName(user.getName());
+            responseDTO.setLastName(user.getLastName());
+            responseDTO.setEmail(user.getEmail());
+            responseDTO.setPassword(user.getPassword());
+            responseDTO.setPhone(user.getPhone());
+
+            RoleResponseDTO role= new RoleResponseDTO();
+            role.setId(user.getId());
+            role.setNameRole(user.getRole().getNameRole());
+            responseDTO.setRole(role);
+            response.add(responseDTO);
+        }
+        return response;
+
+    }
+
+    //endpoint para actualizar por documento
+
+    public boolean updateUserForDocument(String document, UserRequestDTO userRequestDTO){
+        List<User> optionalUser = userRepository.findByDocument(document);
+        if (optionalUser == null){
+            return  optionalUser.isEmpty();
+        }
+            User user = optionalUser.get(0);
+            user.setDocument(userRequestDTO.getDocument());
+            user.setName(userRequestDTO.getName());
+            user.setLastName(userRequestDTO.getLastName());
+            user.setEmail(userRequestDTO.getEmail());
+            user.setPhone(userRequestDTO.getPhone());
+            user.setPassword(userRequestDTO.getPassword());
+
+            User updateUserForDocument= userRepository.save(user);
+
+            UserResponseDTO response = new UserResponseDTO();
+            response.setDocument(updateUserForDocument.getDocument());
+            response.setName(updateUserForDocument.getName());
+            response.setLastName(updateUserForDocument.getLastName());
+            response.setEmail(updateUserForDocument.getEmail());
+            response.setPassword(updateUserForDocument.getPassword());
+            response.setPhone(updateUserForDocument.getPhone());
+            return List.of(response);
+        else {
+            return List.of();
+        }
+    }
+
+    // enpoint para eliminar un usuario por el documento
+
+    public  boolean deleteUserdoc(String document){
+        List<User> users = userRepository.findByDocument(document);
+        if(!users.isEmpty()){
+            userRepository.delete(users.get(0));
+            return true;
+        }
+        return false;
+    }
 }
 
