@@ -176,32 +176,32 @@ public class UserService {
 
     //endpoint para actualizar por documento
 
-    public boolean updateUserForDocument(String document, UserRequestDTO userRequestDTO){
-        List<User> optionalUser = userRepository.findByDocument(document);
-        if (optionalUser == null){
-            return  optionalUser.isEmpty();
-        }
-            User user = optionalUser.get(0);
-            user.setDocument(userRequestDTO.getDocument());
-            user.setName(userRequestDTO.getName());
-            user.setLastName(userRequestDTO.getLastName());
-            user.setEmail(userRequestDTO.getEmail());
-            user.setPhone(userRequestDTO.getPhone());
-            user.setPassword(userRequestDTO.getPassword());
+    public Optional<UserResponseDTO> updateUserForDocument(String document, UserRequestDTO userRequestDTO) {
+        List<User> users = userRepository.findByDocument(document);
 
-            User updateUserForDocument= userRepository.save(user);
-
-            UserResponseDTO response = new UserResponseDTO();
-            response.setDocument(updateUserForDocument.getDocument());
-            response.setName(updateUserForDocument.getName());
-            response.setLastName(updateUserForDocument.getLastName());
-            response.setEmail(updateUserForDocument.getEmail());
-            response.setPassword(updateUserForDocument.getPassword());
-            response.setPhone(updateUserForDocument.getPhone());
-            return List.of(response);
-        else {
-            return List.of();
+        if (users.isEmpty()) {
+            return Optional.empty();
         }
+
+        User user = users.get(0);
+        user.setDocument(userRequestDTO.getDocument());
+        user.setName(userRequestDTO.getName());
+        user.setLastName(userRequestDTO.getLastName());
+        user.setEmail(userRequestDTO.getEmail());
+        user.setPhone(userRequestDTO.getPhone());
+        user.setPassword(userRequestDTO.getPassword());
+
+        User updatedUser = userRepository.save(user);
+
+        UserResponseDTO response = new UserResponseDTO();
+        response.setDocument(updatedUser.getDocument());
+        response.setName(updatedUser.getName());
+        response.setLastName(updatedUser.getLastName());
+        response.setEmail(updatedUser.getEmail());
+        response.setPassword(updatedUser.getPassword());
+        response.setPhone(updatedUser.getPhone());
+
+        return Optional.of(response);
     }
 
     // enpoint para eliminar un usuario por el documento
