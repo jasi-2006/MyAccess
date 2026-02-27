@@ -70,13 +70,12 @@ public class UserController {
 
 	// actualizar con documento
 	@PutMapping("/users/document/{document}")
-	public  ResponseEntity<UserResponseDTO> updateUser(@PathVariable String document, @RequestBody UserRequestDTO userRequestDTO){
-		UserResponseDTO response = (UserResponseDTO) userService.;
-		System.out.println("documento recibido '" +document+"'");
-		if (response != null){
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
-		}else {
-			return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	public ResponseEntity<UserResponseDTO> updateUserfordocument(@PathVariable String document,@RequestBody UserRequestDTO userRequestDTO) {
+		Optional<UserResponseDTO> response = userService.updateUserForDocument(document, userRequestDTO);
+		if (response.isPresent()) {
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get());
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
 
