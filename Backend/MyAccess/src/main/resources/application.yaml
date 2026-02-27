@@ -8,6 +8,11 @@ spring:
     username: root
     password: paulo3144615 #cambiar contraseña
     driver-class-name: com.mysql.cj.jdbc.Driver
+  secundary-datasource:
+    url: jdbc:mysql://localhost:3306/notifications?
+    username: root
+    password: paulo3144615
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:

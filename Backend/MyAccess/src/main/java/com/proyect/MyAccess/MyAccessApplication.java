@@ -9,7 +9,4 @@ public class MyAccessApplication {
 		SpringApplication.run(MyAccessApplication.class, args);
 	}
 
-
-
-
 }
