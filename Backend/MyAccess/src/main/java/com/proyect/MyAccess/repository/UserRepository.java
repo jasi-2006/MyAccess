@@ -9,5 +9,6 @@ import java.util.*;
 public interface  UserRepository extends JpaRepository <User, Long>{
    List <User> findByRole_NameRole(String nameRole);
    List <User> findByDocument(String document);
+
  }
 
