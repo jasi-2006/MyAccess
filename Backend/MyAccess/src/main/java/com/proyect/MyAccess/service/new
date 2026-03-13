@@ -1,0 +1,30 @@
+if (user.getRole() != null){
+            RoleResponseDTO roleDTO = new  RoleResponseDTO();
+            roleDTO.setId(user.getRole().getId());
+            roleDTO.setNameRole(user.getRole().getNameRole());
+            userResponseDTO.setRole(roleDTO);
+        }
+
+
+
+
+
+            if(user.getRole()!=null){
+                RoleResponseDTO roleDTO = new RoleResponseDTO();
+                roleDTO.setId(user.getRole().getId());
+                roleDTO.setNameRole(user.getRole().getNameRole());
+                userResponseDTO.setRole(roleDTO);
+            }
+            else {
+                userResponseDTO.setRole(null);
+            }
+
+
+
+               // coneccion de los eventos
+                         RoleResponseDTO roleDTO = new RoleResponseDTO();
+                         roleDTO.setId(user.getId());
+                         roleDTO.setNameRole(user.getRole().getNameRole());
+                         responseDTO.setRole(roleDTO);
+
+                         response.add(responseDTO);
