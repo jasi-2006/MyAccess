@@ -3,17 +3,17 @@ package com.proyect.MyAccess.dto;
 import lombok.Data;
 
 @Data
-public class UserProfileResponseDTO {
-    private long id;
+public class UserRegisterProfileRequestDTO {
     private String document;
     private String name;
     private String lastName;
     private String password;
     private String email;
     private String phone;
-    private String nameRole;
     private String tokenNumber;
     private String trainingProgram;
     private String trainingCenter;
     private String regional;
+    private String bloodType;
+    private String nameRole;
 }
