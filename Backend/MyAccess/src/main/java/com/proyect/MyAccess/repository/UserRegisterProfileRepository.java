@@ -11,5 +11,6 @@ public interface UserRegisterProfileRepository extends JpaRepository<UserRegiste
     Optional<UserRegisterProfile> findById(Long id);
     List <UserRegisterProfile> findByNameRole(String nameRole);
     List <UserRegisterProfile> findByDocument(String document);
-
+    Optional <UserRegisterProfile> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

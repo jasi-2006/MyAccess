@@ -4,7 +4,9 @@ import com.proyect.MyAccess.dto.UserRegisterProfileRequestDTO;
 import com.proyect.MyAccess.dto.UserRegisterProfileResponseDTO;
 import com.proyect.MyAccess.entity.UserRegisterProfile;
 import com.proyect.MyAccess.repository.UserRegisterProfileRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,11 +15,14 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class UserRegisterProfileService {
 
     private final UserRegisterProfileRepository userRepository;
 
+    // Asegura que el save se persista en la DB
     public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO userRequestDTO) {
+        // 1. Mapeo de DTO a Entidad
         UserRegisterProfile user = new UserRegisterProfile();
         user.setDocument(userRequestDTO.getDocument());
         user.setName(userRequestDTO.getName());
@@ -30,12 +35,17 @@ public class UserRegisterProfileService {
         user.setTrainingCenter(userRequestDTO.getTrainingCenter());
         user.setTrainingProgram(userRequestDTO.getTrainingProgram());
         user.setEmail(userRequestDTO.getEmail());
-        user.setPassword(userRequestDTO.getPassword());
 
+        // 2. Encriptación
+        String encryptedPassword = BCrypt.hashpw(userRequestDTO.getPassword(), BCrypt.gensalt());
+        user.setPassword(encryptedPassword);
+
+        // 3. Guardado (Aquí es donde ocurre la magia en la DB)
         UserRegisterProfile saved = userRepository.save(user);
 
+        // 4. Mapeo de Entidad a Response DTO
         UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-        response.setId(saved.getId());
+        response.setId(saved.getId()); // Si esto es NULL, el problema está en la entidad/DB
         response.setDocument(saved.getDocument());
         response.setName(saved.getName());
         response.setLastName(saved.getLastName());
@@ -47,6 +57,7 @@ public class UserRegisterProfileService {
         response.setTokenNumber(saved.getTokenNumber());
         response.setBloodType(saved.getBloodType());
         response.setTrainingProgram(saved.getTrainingProgram());
+        // Por seguridad, considera no enviar el password de vuelta
         response.setPassword(saved.getPassword());
 
         return response;

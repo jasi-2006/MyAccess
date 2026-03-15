@@ -1,5 +1,7 @@
 server:
   port: 9090
+  servlet:
+    context-path: /api/v1
 spring:
   application:
     name: myaccess
@@ -25,3 +27,8 @@ logging:
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernxxaate.type.descriptor.sql.BasicBinder: TRACE
+
+security:
+  jwt:
+    secret-key: alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=
+    tokenExpiration: 60000

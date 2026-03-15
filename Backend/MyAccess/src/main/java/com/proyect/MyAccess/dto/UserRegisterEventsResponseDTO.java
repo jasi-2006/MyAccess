@@ -9,5 +9,6 @@ public class UserRegisterEventsResponseDTO {
     private String tipeEvent;
     private Boolean processed;
     private LocalDate eventDate;
+    private String description;
     private long idUser;
 }
