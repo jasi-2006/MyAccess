@@ -21,6 +21,8 @@ public class UserRegisterEvents {
     private Boolean processed;
     @Column(name ="eventDate")
     private LocalDate eventDate;
+    @Column(name="description")
+    private String description;
 
     // relation of the tables
     @ManyToOne

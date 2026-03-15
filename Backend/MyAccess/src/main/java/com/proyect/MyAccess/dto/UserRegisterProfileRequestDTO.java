@@ -16,4 +16,7 @@ public class UserRegisterProfileRequestDTO {
     private String regional;
     private String bloodType;
     private String nameRole;
+
+
+
 }

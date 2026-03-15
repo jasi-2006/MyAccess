@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/Register")
+@RequestMapping("/register")
 public class UserRegisterProfileController {
 
 	private final UserRegisterProfileService userService;
