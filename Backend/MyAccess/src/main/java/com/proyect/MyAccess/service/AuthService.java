@@ -79,11 +79,21 @@ public class AuthService {
         UserRegisterProfile user = new UserRegisterProfile();
         user.setEmail(request.getEmail().trim().toLowerCase());
         user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        user.setDocument(request.getDocument());
+        user.setName(request.getName());
+        user.setLastName(request.getLastName());
+        user.setPhone(request.getPhone());
+        user.setNameRole(request.getNameRole());
+        user.setRegional(request.getRegional());
+        user.setBloodType(request.getBloodType());
+        user.setTokenNumber(request.getTokenNumber());
+        user.setTrainingCenter(request.getTrainingCenter());
+        user.setTrainingProgram(request.getTrainingProgram());
 
         // Guardar
-        userRepository.save(user);
+        UserRegisterProfile saved = userRepository.save(user);
 
         // Generar token
-        return jwtService.generateToken(user.getId(), user.getEmail(), user.getId());
+        return jwtService.generateToken(saved.getId(), saved.getEmail(), saved.getId());
     }
 }

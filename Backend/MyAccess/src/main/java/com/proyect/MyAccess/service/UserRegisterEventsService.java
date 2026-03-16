@@ -53,6 +53,7 @@ public class UserRegisterEventsService {
             dto.setEventDate(event.getEventDate());
             dto.setTipeEvent(event.getTipeEvent());
             dto.setProcessed(event.getProcessed());
+            dto.setDescription(event.getDescription());
 
             if (event.getUserProfile() != null) {
                 dto.setIdUser(event.getUserProfile().getId());
@@ -73,6 +74,7 @@ public class UserRegisterEventsService {
         response.setEventDate(event.getEventDate());
         response.setTipeEvent(event.getTipeEvent());
         response.setProcessed(event.getProcessed());
+        response.setDescription(event.getDescription());
 
         if (event.getUserProfile() != null) {
             response.setIdUser(event.getUserProfile().getId());
@@ -88,6 +90,7 @@ public class UserRegisterEventsService {
         event.setTipeEvent(userDTO.getTipeEvent());
         event.setProcessed(userDTO.getProcessed());
         event.setEventDate(userDTO.getEventDate());
+        event.setDescription(userDTO.getDescription());
 
 
         if (userDTO.getIdUser() != null) {
@@ -103,6 +106,7 @@ public class UserRegisterEventsService {
         response.setEventDate(updated.getEventDate());
         response.setTipeEvent(updated.getTipeEvent());
         response.setProcessed(updated.getProcessed());
+        response.setDescription(updated.getDescription());
 
         if (updated.getUserProfile() != null) {
             response.setIdUser(updated.getUserProfile().getId());
