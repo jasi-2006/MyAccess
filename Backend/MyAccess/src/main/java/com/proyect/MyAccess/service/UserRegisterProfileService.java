@@ -31,9 +31,7 @@ public class UserRegisterProfileService {
         user.setLastName(userRequestDTO.getLastName());
         user.setPhone(userRequestDTO.getPhone());
         user.setNameRole(userRequestDTO.getNameRole());
-        user.setRegional(userRequestDTO.getRegional());
         user.setBloodType(userRequestDTO.getBloodType());
-        user.setTrainingCenter(userRequestDTO.getTrainingCenter());
         user.setTrainingProgram(userRequestDTO.getTrainingProgram());
         user.setEmail(userRequestDTO.getEmail());
 
@@ -144,10 +142,8 @@ public class UserRegisterProfileService {
             user.setPhone(userRequestDTO.getPhone());
             user.setEmail(userRequestDTO.getEmail());
             user.setPassword(userRequestDTO.getPassword());
-            user.setRegional(userRequestDTO.getRegional());
             user.setNameRole(userRequestDTO.getNameRole());
             user.setTrainingProgram(userRequestDTO.getTrainingProgram());
-            user.setTrainingCenter(userRequestDTO.getTrainingCenter());
             user.setBloodType(userRequestDTO.getBloodType());
 
             UserRegisterProfile updatedUser = userRepository.save(user);
@@ -189,8 +185,6 @@ public class UserRegisterProfileService {
         user.setPassword(userRequestDTO.getPassword());
         user.setNameRole(userRequestDTO.getNameRole());
         user.setTrainingProgram(userRequestDTO.getTrainingProgram());
-        user.setTrainingCenter(userRequestDTO.getTrainingCenter());
-        user.setRegional(userRequestDTO.getRegional());
         user.setBloodType(userRequestDTO.getBloodType());
 
         UserRegisterProfile updatedUser = userRepository.save(user);

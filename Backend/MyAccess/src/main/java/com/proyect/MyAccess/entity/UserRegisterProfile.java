@@ -23,10 +23,10 @@ public class UserRegisterProfile {
     private String phone;
     @Column(name="nameRole")
     private String nameRole;
-    @Column(name="regional")
-    private String regional;
     @Column(name ="bloodType")
     private String bloodType;
+    @Column(name ="regional")
+    private String regional;
     @Column(name="trainingCenter")
     private String trainingCenter;
     @Column(name ="trainingProgram")
