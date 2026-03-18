@@ -1,0 +1,45 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /api/v1
+spring:
+  application:
+    name: myaccess
+  datasource:
+    url: jdbc:mysql://localhost:3306/user_service
+    username: root
+    password: paulo3144615 #cambiar contraseña
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: paulorodriguez733@gmail.com
+    password: zlvlullfigrpjbsu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      database-platform: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernxxaate.type.descriptor.sql.BasicBinder: TRACE
+
+security:
+  jwt:
+    secret-key: alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=
+    tokenExpiration: 600000
+
