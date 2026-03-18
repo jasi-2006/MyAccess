@@ -10,5 +10,5 @@ public class UserRegisterEventsResponseDTO {
     private Boolean processed;
     private LocalDate eventDate;
     private String description;
-    private long idUser;
+    private Long idUser;
 }

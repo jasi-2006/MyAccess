@@ -28,4 +28,8 @@ public class UserRegisterEvents {
     @ManyToOne
     @JoinColumn(name="idUser")
     private UserRegisterProfile userProfile;
+
+    public void setIdUser(Long id) {
+
+    }
 }

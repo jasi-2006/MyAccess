@@ -13,8 +13,6 @@ public class FilterConfig {
     FilterRegistrationBean<JwtValidationFilter> jwtFilter(JwtValidationFilter jwtValidationFilter) {
         FilterRegistrationBean<JwtValidationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtValidationFilter);
-
-        // ✅ Aplicar a TODAS las rutas
         registrationBean.addUrlPatterns("/*");
 
         registrationBean.setOrder(1);

@@ -3,6 +3,9 @@ package com.proyect.MyAccess.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name ="user_profile")
@@ -24,8 +27,6 @@ public class UserRegisterProfile {
     private String regional;
     @Column(name ="bloodType")
     private String bloodType;
-    @Column(name="tokenNumber")
-    private String tokenNumber;
     @Column(name="trainingCenter")
     private String trainingCenter;
     @Column(name ="trainingProgram")
@@ -34,4 +35,10 @@ public class UserRegisterProfile {
     private String email;
     @Column(name="password")
     private String password;
+    @Column (name="verificationCode")
+    private String verificationCode;
+    @Column (name= "codeExpiration")
+    private LocalDateTime codeExpiration;
+    @Column (name="verified")
+    private Boolean verified;
 }

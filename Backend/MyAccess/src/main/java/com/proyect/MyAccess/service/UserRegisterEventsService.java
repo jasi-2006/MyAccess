@@ -122,4 +122,24 @@ public class UserRegisterEventsService {
         }
         userEventsRepository.deleteById(id);
     }
+
+    public List<UserRegisterEventsResponseDTO> getByUserId(Long userId) {
+        List<UserRegisterEvents> events = userEventsRepository.findByUserProfileId(userId);
+        List<UserRegisterEventsResponseDTO> responseList = new ArrayList<>();
+
+        for (UserRegisterEvents event : events) {
+            UserRegisterEventsResponseDTO dto = new UserRegisterEventsResponseDTO();
+            dto.setId(event.getId());
+            dto.setEventDate(event.getEventDate());
+            dto.setTipeEvent(event.getTipeEvent());
+            dto.setProcessed(event.getProcessed());
+            dto.setDescription(event.getDescription());
+            if (event.getUserProfile() != null) {
+                dto.setIdUser(event.getUserProfile().getId());
+            }
+            responseList.add(dto);
+        }
+        return responseList;
+    }
+
 }
