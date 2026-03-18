@@ -20,16 +20,16 @@ public class UserLoginService {
     }
 
     public String login(UserLoginRequestDTO request) {
-        System.out.println("Email recibido: " + request.getEmail());
-        System.out.println("Password recibido: " + request.getPassword());
-
         UserRegisterProfile user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (!BCrypt.checkpw(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Credenciales incorrectas");
         }
+        if (!user.getVerified()){
+            throw new RuntimeException("cuenta no verificada. revisa tu correo");
+        }
 
-        return jwtService.generateToken(user.getId(), user.getEmail(), 1L);
+        return jwtService.generateToken(user.getId(), user.getEmail(), user.getNameRole());
     }
 }

@@ -7,16 +7,12 @@ public class UserRegisterProfileRequestDTO {
     private String document;
     private String name;
     private String lastName;
-    private String password;
-    private String email;
     private String phone;
-    private String tokenNumber;
-    private String trainingProgram;
-    private String trainingCenter;
+    private String nameRole;
     private String regional;
     private String bloodType;
-    private String nameRole;
-
-
-
+    private String trainingCenter;
+    private String trainingProgram;
+    private String email;
+    private String password;
 }

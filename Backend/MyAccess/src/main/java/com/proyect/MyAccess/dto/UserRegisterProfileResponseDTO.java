@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserRegisterProfileResponseDTO {
-    private long id;
+    private Long id;
     private String document;
     private String name;
     private String lastName;
@@ -12,7 +12,6 @@ public class UserRegisterProfileResponseDTO {
     private String email;
     private String phone;
     private String nameRole;
-    private String tokenNumber;
     private String trainingProgram;
     private String trainingCenter;
     private String bloodType;

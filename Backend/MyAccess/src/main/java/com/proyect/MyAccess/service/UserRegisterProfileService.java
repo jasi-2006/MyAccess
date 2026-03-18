@@ -19,10 +19,12 @@ import java.util.Optional;
 public class UserRegisterProfileService {
 
     private final UserRegisterProfileRepository userRepository;
+    private  final VerificationService verificationService;
 
-    // Asegura que el save se persista en la DB
     public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO userRequestDTO) {
-        // 1. Mapeo de DTO a Entidad
+        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
+            throw new RuntimeException("El email ya está registrado");
+        }
         UserRegisterProfile user = new UserRegisterProfile();
         user.setDocument(userRequestDTO.getDocument());
         user.setName(userRequestDTO.getName());
@@ -31,21 +33,18 @@ public class UserRegisterProfileService {
         user.setNameRole(userRequestDTO.getNameRole());
         user.setRegional(userRequestDTO.getRegional());
         user.setBloodType(userRequestDTO.getBloodType());
-        user.setTokenNumber(userRequestDTO.getTokenNumber());
         user.setTrainingCenter(userRequestDTO.getTrainingCenter());
         user.setTrainingProgram(userRequestDTO.getTrainingProgram());
         user.setEmail(userRequestDTO.getEmail());
 
-        // 2. Encriptación
+
         String encryptedPassword = BCrypt.hashpw(userRequestDTO.getPassword(), BCrypt.gensalt());
         user.setPassword(encryptedPassword);
 
-        // 3. Guardado (Aquí es donde ocurre la magia en la DB)
         UserRegisterProfile saved = userRepository.save(user);
 
-        // 4. Mapeo de Entidad a Response DTO
         UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-        response.setId(saved.getId()); // Si esto es NULL, el problema está en la entidad/DB
+        response.setId(saved.getId());
         response.setDocument(saved.getDocument());
         response.setName(saved.getName());
         response.setLastName(saved.getLastName());
@@ -54,11 +53,10 @@ public class UserRegisterProfileService {
         response.setNameRole(saved.getNameRole());
         response.setRegional(saved.getRegional());
         response.setTrainingCenter(saved.getTrainingCenter());
-        response.setTokenNumber(saved.getTokenNumber());
         response.setBloodType(saved.getBloodType());
         response.setTrainingProgram(saved.getTrainingProgram());
-        // Por seguridad, considera no enviar el password de vuelta
         response.setPassword(saved.getPassword());
+        verificationService.sendCode(saved.getEmail());
 
         return response;
     }
@@ -79,7 +77,6 @@ public class UserRegisterProfileService {
             response.setNameRole(user.getNameRole());
             response.setPassword(user.getPassword());
             response.setRegional(user.getRegional());
-            response.setTokenNumber(user.getTokenNumber());
             response.setTrainingCenter(user.getTrainingCenter());
             response.setBloodType(user.getBloodType());
             response.setTrainingProgram(user.getTrainingProgram());
@@ -104,7 +101,6 @@ public class UserRegisterProfileService {
             responseDTO.setPassword(user.getPassword());
             responseDTO.setNameRole(user.getNameRole());
             responseDTO.setTrainingProgram(user.getTrainingProgram());
-            responseDTO.setTokenNumber(user.getTokenNumber());
             responseDTO.setTrainingCenter(user.getTrainingCenter());
             responseDTO.setBloodType(user.getBloodType());
             responseDTO.setRegional(user.getRegional());
@@ -129,7 +125,6 @@ public class UserRegisterProfileService {
             responseDTO.setPhone(user.getPhone());
             responseDTO.setNameRole(user.getNameRole());
             responseDTO.setRegional(user.getRegional());
-            responseDTO.setTokenNumber(user.getTokenNumber());
             responseDTO.setBloodType(user.getBloodType());
             responseDTO.setTrainingCenter(user.getTrainingCenter());
             responseDTO.setTrainingProgram(user.getTrainingProgram());
@@ -149,7 +144,6 @@ public class UserRegisterProfileService {
             user.setPhone(userRequestDTO.getPhone());
             user.setEmail(userRequestDTO.getEmail());
             user.setPassword(userRequestDTO.getPassword());
-            user.setTokenNumber(userRequestDTO.getTokenNumber());
             user.setRegional(userRequestDTO.getRegional());
             user.setNameRole(userRequestDTO.getNameRole());
             user.setTrainingProgram(userRequestDTO.getTrainingProgram());
@@ -169,7 +163,6 @@ public class UserRegisterProfileService {
             response.setBloodType(updatedUser.getBloodType());
             response.setTrainingCenter(updatedUser.getTrainingCenter());
             response.setTrainingProgram(updatedUser.getTrainingProgram());
-            response.setTokenNumber(updatedUser.getTokenNumber());
             response.setNameRole(updatedUser.getNameRole());
             response.setRegional(updatedUser.getRegional());
 
@@ -195,7 +188,6 @@ public class UserRegisterProfileService {
         user.setPhone(userRequestDTO.getPhone());
         user.setPassword(userRequestDTO.getPassword());
         user.setNameRole(userRequestDTO.getNameRole());
-        user.setTokenNumber(userRequestDTO.getTokenNumber());
         user.setTrainingProgram(userRequestDTO.getTrainingProgram());
         user.setTrainingCenter(userRequestDTO.getTrainingCenter());
         user.setRegional(userRequestDTO.getRegional());
@@ -212,7 +204,6 @@ public class UserRegisterProfileService {
         response.setPassword(updatedUser.getPassword());
         response.setPhone(updatedUser.getPhone());
         response.setNameRole(updatedUser.getNameRole());
-        response.setTokenNumber(updatedUser.getTokenNumber());
         response.setTrainingProgram(updatedUser.getTrainingProgram());
         response.setTrainingCenter(updatedUser.getTrainingCenter());
         response.setRegional(updatedUser.getRegional());
@@ -230,4 +221,6 @@ public class UserRegisterProfileService {
         }
         return false;
     }
+
+
 }

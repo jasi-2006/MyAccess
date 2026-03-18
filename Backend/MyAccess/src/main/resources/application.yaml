@@ -10,7 +10,17 @@ spring:
     username: root
     password: paulo3144615 #cambiar contraseña
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: paulorodriguez733@gmail.com
+    password: zlvlullfigrpjbsu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   jpa:
     hibernate:
       naming:
@@ -31,4 +41,5 @@ logging:
 security:
   jwt:
     secret-key: alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=
-    tokenExpiration: 60000
+    tokenExpiration: 600000
+

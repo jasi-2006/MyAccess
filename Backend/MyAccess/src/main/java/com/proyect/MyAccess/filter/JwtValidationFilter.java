@@ -25,6 +25,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        if (path.equals("/auth/login") || path.equals("/auth/register")|| path.equals("/auth/verify")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -40,26 +47,16 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            // Extraer datos del token
-            request.setAttribute("username", jwtService.extractUsername(token));
+            request.setAttribute("username", jwtService.extractName(token));
             request.setAttribute("userId", jwtService.extractUserId(token));
             request.setAttribute("emailId", jwtService.extractEmailId(token));
+            request.setAttribute("role", jwtService.extractRole(token));
 
-            // Continuar
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
             sendError(response, "Token validation failed");
         }
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-
-        // ✅ SOLO estas 2 rutas son públicas
-        return path.contains("/auth/login") ||
-                path.contains("/auth/register");
     }
 
     private void sendError(HttpServletResponse response, String message) throws IOException {
