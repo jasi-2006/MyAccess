@@ -23,11 +23,11 @@ public class UserRegisterEventsService {
     public UserRegisterEventsResponseDTO create(UserRegisterEventsRequestsDTO userDTO) {
         UserRegisterProfile userProfile = userProfileRepository.findById(userDTO.getIdUser())
                 .orElseThrow(() -> new RuntimeException("El usuario " + userDTO.getIdUser() + " no existe"));
-
         UserRegisterEvents user = new UserRegisterEvents();
         user.setTipeEvent(userDTO.getTipeEvent());
         user.setProcessed(userDTO.getProcessed());
         user.setEventDate(userDTO.getEventDate());
+        user.setDescription(userDTO.getDescription());
         user.setUserProfile(userProfile);
 
         UserRegisterEvents saved = userEventsRepository.save(user);
@@ -37,6 +37,7 @@ public class UserRegisterEventsService {
         response.setEventDate(saved.getEventDate());
         response.setTipeEvent(saved.getTipeEvent());
         response.setProcessed(saved.getProcessed());
+        response.setDescription(saved.getDescription());
         response.setIdUser(userProfile.getId());
 
         return response;

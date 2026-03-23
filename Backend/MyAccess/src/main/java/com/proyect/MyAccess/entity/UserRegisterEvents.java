@@ -21,7 +21,7 @@ public class UserRegisterEvents {
     private Boolean processed;
     @Column(name ="eventDate")
     private LocalDate eventDate;
-    @Column(name="description")
+    @Column(name="descriptions")
     private String description;
 
     // relation of the tables
