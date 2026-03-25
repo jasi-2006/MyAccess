@@ -30,14 +30,14 @@ public class UserRegisterEventsService {
         user.setDescription(userDTO.getDescription());
         user.setUserProfile(userProfile);
 
-        UserRegisterEvents saved = userEventsRepository.save(user);
+        userEventsRepository.save(user);
 
         UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
-        response.setId(saved.getId());
-        response.setEventDate(saved.getEventDate());
-        response.setTipeEvent(saved.getTipeEvent());
-        response.setProcessed(saved.getProcessed());
-        response.setDescription(saved.getDescription());
+        response.setId(user.getId());
+        response.setEventDate(userDTO.getEventDate());
+        response.setTipeEvent(userDTO.getTipeEvent());
+        response.setProcessed(userDTO.getProcessed());
+        response.setDescription(userDTO.getDescription());
         response.setIdUser(userProfile.getId());
 
         return response;

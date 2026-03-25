@@ -25,13 +25,13 @@ public class AuditService {
         audit.setAccion(auditDTO.getAcction());
         audit.setIdUser(auditDTO.getIdUser());
 
-        Audit saved = auditRepository.save(audit);
+        auditRepository.save(audit);
 
         AuditResponseDTO response = new AuditResponseDTO();
-        response.setId(saved.getId());
-        response.setModule(saved.getModule());
-        response.setAcction(saved.getAccion());
-        response.setIdUser(saved.getIdUser());
+        response.setId(audit.getId());
+        response.setModule(auditDTO.getModule());
+        response.setAcction(auditDTO.getAcction());
+        response.setIdUser(auditDTO.getIdUser());
         return  response;
     }
 }

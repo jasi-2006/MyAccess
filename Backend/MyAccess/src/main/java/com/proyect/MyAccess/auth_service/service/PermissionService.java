@@ -21,15 +21,15 @@ public class PermissionService {
         permission.setPermissionName(requestDTO.getPermissionName());
         permission.setModule(requestDTO.getModule());
 
-        Permissions saved =permissionRepository.save(permission);
+        permissionRepository.save(permission);
 
 
         PermissionResponseDTO responseDTO = new PermissionResponseDTO();
-        responseDTO.setId(saved.getId());
-        responseDTO.setDescription(saved.getDescription());
-        responseDTO.setPermissionCode(saved.getPermissionCode());
-        responseDTO.setPermissionName(saved.getPermissionName());
-        responseDTO.setModule(saved.getModule());
+        responseDTO.setId(permission.getId());
+        responseDTO.setDescription(requestDTO.getDescription());
+        responseDTO.setPermissionCode(requestDTO.getPermissionCode());
+        responseDTO.setPermissionName(requestDTO.getPermissionName());
+        responseDTO.setModule(requestDTO.getModule());
         return  responseDTO;
     }
 

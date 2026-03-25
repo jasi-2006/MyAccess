@@ -41,22 +41,22 @@ public class UserRegisterProfileService {
         String encryptedPassword = BCrypt.hashpw(userRequestDTO.getPassword(), BCrypt.gensalt());
         user.setPassword(encryptedPassword);
 
-        UserRegisterProfile saved = userRepository.save(user);
+       userRepository.save(user);
 
         UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-        response.setId(saved.getId());
-        response.setDocument(saved.getDocument());
-        response.setName(saved.getName());
-        response.setLastName(saved.getLastName());
-        response.setEmail(saved.getEmail());
-        response.setPhone(saved.getPhone());
-        response.setNameRole(saved.getNameRole());
-        response.setRegional(saved.getRegional());
-        response.setTrainingCenter(saved.getTrainingCenter());
-        response.setBloodType(saved.getBloodType());
-        response.setTrainingProgram(saved.getTrainingProgram());
-        response.setPassword(saved.getPassword());
-        verificationService.sendCode(saved.getEmail());
+        response.setId(user.getId());
+        response.setDocument(userRequestDTO.getDocument());
+        response.setName(userRequestDTO.getName());
+        response.setLastName(userRequestDTO.getLastName());
+        response.setEmail(userRequestDTO.getEmail());
+        response.setPhone(userRequestDTO.getPhone());
+        response.setNameRole(userRequestDTO.getNameRole());
+        response.setRegional(userRequestDTO.getRegional());
+        response.setTrainingCenter(userRequestDTO.getTrainingCenter());
+        response.setBloodType(userRequestDTO.getBloodType());
+        response.setTrainingProgram(userRequestDTO.getTrainingProgram());
+        response.setPassword(userRequestDTO.getPassword());
+        verificationService.sendCode(userRequestDTO.getEmail());
 
         return response;
     }

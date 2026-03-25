@@ -22,10 +22,16 @@ public class RoleService {
         role.setAssest(requestDTO.getAssest());
         role.setDateCreation(requestDTO.getDateCreation());
 
-        Role  saved =roleRepository.save(role);
+        roleRepository.save(role);
 
         RoleResponseDTO responseDTO = new RoleResponseDTO();
-
+        responseDTO.setId(role.getId());
+        responseDTO.setDescription(requestDTO.getDescription());
+        responseDTO.setNameRole(requestDTO.getNameRole());
+        responseDTO.setAssest(requestDTO.getAssest());
+        responseDTO.setAccessLevel(requestDTO.getAccessLevel());
+        responseDTO.setDateCreation(requestDTO.getDateCreation());
+        return responseDTO;
 
     }
 }
