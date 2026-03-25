@@ -1,7 +1,5 @@
 package com.proyect.MyAccess.service;
 
-import com.proyect.MyAccess.dto.UserRegisterProfileRequestDTO;
-import com.proyect.MyAccess.dto.UserRegisterProfileResponseDTO;
 import com.proyect.MyAccess.entity.UserRegisterProfile;
 import com.proyect.MyAccess.repository.UserRegisterProfileRepository;
 import jakarta.transaction.Transactional;

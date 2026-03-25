@@ -1,7 +1,5 @@
 package com.proyect.MyAccess.controller;
 
-import com.proyect.MyAccess.dto.UserRegisterEventsRequestsDTO;
-import com.proyect.MyAccess.dto.UserRegisterEventsResponseDTO;
 import com.proyect.MyAccess.service.UserRegisterEventsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,7 @@ public class UserRegisterEventsController {
     private final UserRegisterEventsService userEventsService;
 
     @PostMapping
-    public ResponseEntity<UserRegisterEventsResponseDTO> create(@RequestBody UserRegisterEventsRequestsDTO dto, HttpServletRequest request) {
+    public ResponseEntity<UserRegisterEventsResponseDTO> create(@RequestBody com.proyect.MyAccess.dto.AuditResponsetDTO dto, HttpServletRequest request) {
         if ("APRENDIZ".equalsIgnoreCase((String) request.getAttribute("role"))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -54,7 +52,7 @@ public class UserRegisterEventsController {
     @PutMapping("/{id}")
     public ResponseEntity<UserRegisterEventsResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody UserRegisterEventsRequestsDTO dto,
+            @RequestBody com.proyect.MyAccess.dto.AuditResponsetDTO dto,
             HttpServletRequest request) {
         if ("APRENDIZ".equalsIgnoreCase((String) request.getAttribute("role"))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

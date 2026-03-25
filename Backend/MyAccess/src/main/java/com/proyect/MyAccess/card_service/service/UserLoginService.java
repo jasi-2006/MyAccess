@@ -1,6 +1,5 @@
 package com.proyect.MyAccess.service;
 
-import com.proyect.MyAccess.dto.UserLoginRequestDTO;
 import com.proyect.MyAccess.entity.UserRegisterProfile;
 import com.proyect.MyAccess.repository.UserRegisterProfileRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -19,7 +18,7 @@ public class UserLoginService {
         this.jwtService = jwtService;
     }
 
-    public String login(UserLoginRequestDTO request) {
+    public String login(com.proyect.MyAccess.dto.AuditRequestDTO request) {
         UserRegisterProfile user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 

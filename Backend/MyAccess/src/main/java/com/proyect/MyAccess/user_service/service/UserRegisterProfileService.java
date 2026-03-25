@@ -21,7 +21,9 @@ public class UserRegisterProfileService {
     private final UserRegisterProfileRepository userRepository;
     private  final VerificationService verificationService;
 
-    public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO userRequestDTO) {
+    public UserRegisterProfileResponseDTO
+
+    userCreated(UserRegisterProfileRequestDTO userRequestDTO) {
         if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
             throw new RuntimeException("El email ya está registrado");
         }

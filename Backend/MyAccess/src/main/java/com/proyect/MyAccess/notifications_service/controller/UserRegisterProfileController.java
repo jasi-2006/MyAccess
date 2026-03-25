@@ -1,6 +1,4 @@
 package com.proyect.MyAccess.controller;
-import com.proyect.MyAccess.dto.UserRegisterProfileRequestDTO;
-import com.proyect.MyAccess.dto.UserRegisterProfileResponseDTO;
 import com.proyect.MyAccess.service.UserRegisterProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

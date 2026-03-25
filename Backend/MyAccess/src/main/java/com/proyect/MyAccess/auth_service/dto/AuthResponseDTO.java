@@ -1,4 +1,4 @@
-package com.proyect.MyAccess.dto;
+package com.proyect.MyAccess.auth_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

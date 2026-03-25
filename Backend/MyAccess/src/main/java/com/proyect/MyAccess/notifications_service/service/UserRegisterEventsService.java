@@ -1,10 +1,7 @@
 package com.proyect.MyAccess.service;
 
-import com.proyect.MyAccess.dto.UserRegisterEventsRequestsDTO;
-import com.proyect.MyAccess.dto.UserRegisterEventsResponseDTO;
 import com.proyect.MyAccess.entity.UserRegisterEvents;
 import com.proyect.MyAccess.entity.UserRegisterProfile;
-import com.proyect.MyAccess.repository.UserRegisterEventsRepository;
 import com.proyect.MyAccess.repository.UserRegisterProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,7 @@ public class UserRegisterEventsService {
     private final UserRegisterProfileRepository userProfileRepository;
 
 
-    public UserRegisterEventsResponseDTO create(UserRegisterEventsRequestsDTO userDTO) {
+    public UserRegisterEventsResponseDTO create(com.proyect.MyAccess.dto.AuditResponsetDTO userDTO) {
         UserRegisterProfile userProfile = userProfileRepository.findById(userDTO.getIdUser())
                 .orElseThrow(() -> new RuntimeException("El usuario " + userDTO.getIdUser() + " no existe"));
         UserRegisterEvents user = new UserRegisterEvents();
@@ -85,7 +82,7 @@ public class UserRegisterEventsService {
     }
 
 
-    public UserRegisterEventsResponseDTO update(Long id, UserRegisterEventsRequestsDTO userDTO) {
+    public UserRegisterEventsResponseDTO update(Long id, com.proyect.MyAccess.dto.AuditResponsetDTO userDTO) {
         UserRegisterEvents event = userEventsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El evento " + id + " no existe"));
         event.setTipeEvent(userDTO.getTipeEvent());
