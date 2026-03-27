@@ -10,9 +10,11 @@ public class UserAuth {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private String id;
+    private Long id;
     @Column(name = "document_type")
     private String documentType;
+    @Column (name="numberDocument")
+    private String numberDocument;
     @Column(name ="email")
     private String email;
     @Column(name ="password")
