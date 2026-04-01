@@ -8,4 +8,5 @@ public class PermissionRequestDTO {
     private String permissionName;
     private String description;
     private String module;
+    private Long idRole;
 }
