@@ -1,7 +1,12 @@
 package com.proyect.MyAccess.user_service.controller;
 
-import com.proyect.MyAccess.dto.AuthResponseDTO;
-import com.proyect.MyAccess.service.UserRegisterProfileService;
+import com.proyect.MyAccess.user_service.dto.AuthResponseDTO;
+import com.proyect.MyAccess.user_service.dto.UserLoginRequestDTO;
+import com.proyect.MyAccess.user_service.dto.UserRegisterProfileRequestDTO;
+import com.proyect.MyAccess.user_service.dto.UserRegisterProfileResponseDTO;
+import com.proyect.MyAccess.user_service.service.UserLoginService;
+import com.proyect.MyAccess.user_service.service.UserRegisterProfileService;
+import com.proyect.MyAccess.user_service.service.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +22,7 @@ public class AuthController {
     private  final VerificationService verificationService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody com.proyect.MyAccess.dto.AuditRequestDTO request) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginRequestDTO request) {
         String token = userLoginService.login(request);
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }

@@ -10,7 +10,7 @@ import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
-@Service
+@Service("userJwtService")
 public class JwtService {
 
     private final SecretKey secretKey;

@@ -1,7 +1,9 @@
 package com.proyect.MyAccess.user_service.service;
 
-import com.proyect.MyAccess.entity.UserRegisterProfile;
-import com.proyect.MyAccess.repository.UserRegisterProfileRepository;
+import com.proyect.MyAccess.auth_service.dto.AuditRequestDTO;
+import com.proyect.MyAccess.user_service.dto.UserLoginRequestDTO;
+import com.proyect.MyAccess.user_service.entity.UserRegisterProfile;
+import com.proyect.MyAccess.user_service.repository.UserRegisterProfileRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserLoginService {
         this.jwtService = jwtService;
     }
 
-    public String login(com.proyect.MyAccess.dto.AuditRequestDTO request) {
+    public String login(UserLoginRequestDTO request) {
         UserRegisterProfile user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 

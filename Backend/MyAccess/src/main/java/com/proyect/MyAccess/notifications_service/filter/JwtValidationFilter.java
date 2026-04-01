@@ -1,18 +1,18 @@
-package com.proyect.MyAccess.filter;
+package com.proyect.MyAccess.notifications_service.filter;
 
 import java.io.IOException;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.proyect.MyAccess.service.JwtService;
+import com.proyect.MyAccess.notifications_service.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
+@Component("notificationsJwtValidationFilter")
 public class JwtValidationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -27,7 +27,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        if (path.equals("/auth/login") || path.equals("/auth/register")|| path.equals("/auth/verify")) {
+        if (path.equals("/auth/login") || path.equals("/auth/register") || path.equals("/auth/verify")) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -12,7 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
+@Component("userJwtValidationFilter")
 public class JwtValidationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;

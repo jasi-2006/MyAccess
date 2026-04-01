@@ -1,18 +1,18 @@
-package com.proyect.MyAccess.filter;
+package com.proyect.MyAccess.card_service.filter;
 
 import java.io.IOException;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.proyect.MyAccess.service.JwtService;
+import com.proyect.MyAccess.card_service.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
+@Component("cardJwtValidationFilter")
 public class JwtValidationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;

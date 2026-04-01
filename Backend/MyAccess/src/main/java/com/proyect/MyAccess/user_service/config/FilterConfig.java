@@ -4,13 +4,13 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.proyect.MyAccess.filter.JwtValidationFilter;
+import com.proyect.MyAccess.user_service.filter.JwtValidationFilter;
 
-@Configuration
+@Configuration("userFilterConfig")
 public class FilterConfig {
 
     @Bean
-    FilterRegistrationBean<JwtValidationFilter> jwtFilter(JwtValidationFilter jwtValidationFilter) {
+    FilterRegistrationBean<JwtValidationFilter> userJwtFilter(JwtValidationFilter jwtValidationFilter) {
         FilterRegistrationBean<JwtValidationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtValidationFilter);
         registrationBean.addUrlPatterns("/*");

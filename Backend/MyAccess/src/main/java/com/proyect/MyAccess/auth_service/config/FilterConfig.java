@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 
 import com.proyect.MyAccess.auth_service.filter.JwtValidationFilter;
 
-@Configuration
+@Configuration("authFilterConfig")
 public class FilterConfig {
 
     @Bean
-    FilterRegistrationBean<JwtValidationFilter> jwtFilter(JwtValidationFilter jwtValidationFilter) {
+    FilterRegistrationBean<JwtValidationFilter> authJwtFilter(JwtValidationFilter jwtValidationFilter) {
         FilterRegistrationBean<JwtValidationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtValidationFilter);
         registrationBean.addUrlPatterns("/*");
