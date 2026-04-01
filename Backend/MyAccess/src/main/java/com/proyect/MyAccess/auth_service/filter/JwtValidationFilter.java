@@ -15,48 +15,31 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component("authJwtValidationFilter")
 public class JwtValidationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
-
-    public JwtValidationFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String path = request.getServletPath();
 
-        if (path.equals("/auth/login") || path.equals("/auth/register")|| path.equals("/auth/verify")) {
+        if (path.startsWith("/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String authHeader = request.getHeader("Authorization");
+        String userId = request.getHeader("x-User-id");
+        String email  = request.getHeader("X-User-Email");
+        String role   = request.getHeader("X-User-role");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            sendError(response, "Header Authorization is missing or invalid");
+        if (userId == null || role == null) {
+            sendError(response, "Missing gateway headers");
             return;
         }
 
-        String token = authHeader.substring(7);
+        request.setAttribute("userId", Long.parseLong(userId));
+        request.setAttribute("emailId", email);
+        request.setAttribute("role", role);
 
-        try {
-            if (!jwtService.isTokenValid(token)) {
-                sendError(response, "Token is invalid or expired");
-                return;
-            }
-
-            request.setAttribute("username", jwtService.extractName(token));
-            request.setAttribute("userId", jwtService.extractUserId(token));
-            request.setAttribute("emailId", jwtService.extractEmailId(token));
-            request.setAttribute("role", jwtService.extractRole(token));
-
-            filterChain.doFilter(request, response);
-
-        } catch (Exception e) {
-            sendError(response, "Token validation failed");
-        }
+        filterChain.doFilter(request, response);
     }
 
     private void sendError(HttpServletResponse response, String message) throws IOException {
