@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "MyAccess",
+    "slug": "myaccess-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#3DDC97"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.myaccess.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#3DDC97"
+      },
+      "package": "com.myaccess.app"
+    }
+  }
+}
