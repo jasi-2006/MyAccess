@@ -15,10 +15,10 @@ public class UserRegisterProfile {
     private Long id;
     @Column(name ="document")
     private String document;
-    @Column(name ="name")
-    private String name;
-    @Column(name="lastName")
-    private String lastName;
+    @Column(name="document_tipe")
+    private String documentType;
+    @Column(name ="full_name")
+    private String fullName;
     @Column(name ="phone")
     private String phone;
     @Column(name="nameRole")

@@ -27,8 +27,8 @@ public class UserRegisterProfileService {
         }
         UserRegisterProfile user = new UserRegisterProfile();
         user.setDocument(userRequestDTO.getDocument());
-        user.setName(userRequestDTO.getName());
-        user.setLastName(userRequestDTO.getLastName());
+        user.setDocumentType(userRequestDTO.getDocumentType());
+        user.setFullName(userRequestDTO.getFullName());
         user.setPhone(userRequestDTO.getPhone());
         user.setNameRole(userRequestDTO.getNameRole());
         user.setBloodType(userRequestDTO.getBloodType());
@@ -44,8 +44,8 @@ public class UserRegisterProfileService {
         UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
         response.setId(user.getId());
         response.setDocument(userRequestDTO.getDocument());
-        response.setName(userRequestDTO.getName());
-        response.setLastName(userRequestDTO.getLastName());
+        response.setDocumentType(userRequestDTO.getDocumentType());
+        response.setFullName(userRequestDTO.getFullName());
         response.setEmail(userRequestDTO.getEmail());
         response.setPhone(userRequestDTO.getPhone());
         response.setNameRole(userRequestDTO.getNameRole());
@@ -68,8 +68,8 @@ public class UserRegisterProfileService {
             UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
             response.setId(user.getId());
             response.setDocument(user.getDocument());
-            response.setName(user.getName());
-            response.setLastName(user.getLastName());
+            response.setDocumentType(user.getDocumentType());
+            response.setFullName(user.getFullName());
             response.setEmail(user.getEmail());
             response.setPhone(user.getPhone());
             response.setNameRole(user.getNameRole());
@@ -92,8 +92,8 @@ public class UserRegisterProfileService {
             UserRegisterProfileResponseDTO responseDTO = new UserRegisterProfileResponseDTO();
             responseDTO.setId(user.getId());
             responseDTO.setDocument(user.getDocument());
-            responseDTO.setName(user.getName());
-            responseDTO.setLastName(user.getLastName());
+            user.setDocumentType(user.getDocumentType());
+            responseDTO.setFullName(user.getFullName());
             responseDTO.setEmail(user.getEmail());
             responseDTO.setPhone(user.getPhone());
             responseDTO.setPassword(user.getPassword());
@@ -116,8 +116,8 @@ public class UserRegisterProfileService {
             UserRegisterProfileResponseDTO responseDTO = new UserRegisterProfileResponseDTO();
             responseDTO.setId(user.getId());
             responseDTO.setDocument(user.getDocument());
-            responseDTO.setName(user.getName());
-            responseDTO.setLastName(user.getLastName());
+            responseDTO.setDocumentType(user.getDocumentType());
+            responseDTO.setFullName(user.getFullName());
             responseDTO.setEmail(user.getEmail());
             responseDTO.setPassword(user.getPassword());
             responseDTO.setPhone(user.getPhone());
@@ -137,8 +137,8 @@ public class UserRegisterProfileService {
         if (optionalUser.isPresent()) {
             UserRegisterProfile user = optionalUser.get();
             user.setDocument(userRequestDTO.getDocument());
-            user.setName(userRequestDTO.getName());
-            user.setLastName(userRequestDTO.getLastName());
+            user.setDocumentType(userRequestDTO.getDocumentType());
+            user.setFullName(userRequestDTO.getFullName());
             user.setPhone(userRequestDTO.getPhone());
             user.setEmail(userRequestDTO.getEmail());
             user.setPassword(userRequestDTO.getPassword());
@@ -151,8 +151,8 @@ public class UserRegisterProfileService {
             UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
             response.setId(updatedUser.getId());
             response.setDocument(updatedUser.getDocument());
-            response.setName(updatedUser.getName());
-            response.setLastName(updatedUser.getLastName());
+            response.setDocumentType(userRequestDTO.getDocumentType());
+            response.setFullName(updatedUser.getFullName());
             response.setEmail(updatedUser.getEmail());
             response.setPhone(updatedUser.getPhone());
             response.setPassword(updatedUser.getPassword());
@@ -178,8 +178,8 @@ public class UserRegisterProfileService {
         UserRegisterProfile user = users.get(0);
 
         user.setDocument(userRequestDTO.getDocument());
-        user.setName(userRequestDTO.getName());
-        user.setLastName(userRequestDTO.getLastName());
+        user.setDocumentType(userRequestDTO.getDocumentType());
+        user.setFullName(userRequestDTO.getFullName());
         user.setEmail(userRequestDTO.getEmail());
         user.setPhone(userRequestDTO.getPhone());
         user.setPassword(userRequestDTO.getPassword());
@@ -192,8 +192,8 @@ public class UserRegisterProfileService {
         UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
         response.setId(updatedUser.getId());
         response.setDocument(updatedUser.getDocument());
-        response.setName(updatedUser.getName());
-        response.setLastName(updatedUser.getLastName());
+        response.setDocumentType(userRequestDTO.getDocumentType());
+        response.setFullName(updatedUser.getFullName());
         response.setEmail(updatedUser.getEmail());
         response.setPassword(updatedUser.getPassword());
         response.setPhone(updatedUser.getPhone());

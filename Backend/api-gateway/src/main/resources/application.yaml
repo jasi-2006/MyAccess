@@ -1,0 +1,26 @@
+server:
+  port: ${GATEWAY_PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-routes
+          uri: ${BACKEND_URI:http://localhost:9090}
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - StripPrefix=2
+        - id: protected-routes
+          uri: ${BACKEND_URI:http://localhost:9090}
+          predicates:
+            - Path=/api/v1/**
+          filters:
+            - JwtAuthFilter
+            - StripPrefix=2
+
+security:
+  jwt:
+    secret-key: alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=

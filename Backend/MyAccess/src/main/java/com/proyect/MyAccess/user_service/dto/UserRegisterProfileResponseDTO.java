@@ -6,8 +6,8 @@ import lombok.Data;
 public class UserRegisterProfileResponseDTO {
     private Long id;
     private String document;
-    private String name;
-    private String lastName;
+    private String documentType;
+    private String fullName;
     private String password;
     private String email;
     private String phone;
@@ -17,7 +17,7 @@ public class UserRegisterProfileResponseDTO {
     private String bloodType;
     private String regional;
 
-    public String getName(){ return name; }
+    public String getName(){ return fullName; }
 
     public String getEmail(){ return email; }
 
