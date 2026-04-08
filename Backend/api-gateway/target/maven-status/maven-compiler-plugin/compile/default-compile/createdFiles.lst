@@ -1,0 +1,3 @@
+com\proyect\api_gateway\filter\JwtAuthFilter.class
+com\proyect\api_gateway\ApiGatewayApplication.class
+com\proyect\api_gateway\util\JwtUtil.class

@@ -13,5 +13,4 @@ public class UserRegisterEventsRequestsDTO {
     private LocalDate eventDate;
     private String description;
     private Long idUser;
-
 }

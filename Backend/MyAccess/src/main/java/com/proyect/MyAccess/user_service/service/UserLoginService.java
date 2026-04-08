@@ -1,6 +1,6 @@
 package com.proyect.MyAccess.user_service.service;
 
-import com.proyect.MyAccess.auth_service.dto.AuditRequestDTO;
+
 import com.proyect.MyAccess.user_service.dto.UserLoginRequestDTO;
 import com.proyect.MyAccess.user_service.entity.UserRegisterProfile;
 import com.proyect.MyAccess.user_service.repository.UserRegisterProfileRepository;
