@@ -24,7 +24,7 @@ public class UserRegisterEventsService {
         UserRegisterProfile userProfile = userProfileRepository.findById(userDTO.getIdUser())
                 .orElseThrow(() -> new RuntimeException("El usuario " + userDTO.getIdUser() + " no existe"));
         UserRegisterEvents user = new UserRegisterEvents();
-        user.setTipeEvent(userDTO.getTipeEvent());
+        user.setTypeEvent(userDTO.getTypeEvent());
         user.setProcessed(userDTO.getProcessed());
         user.setEventDate(userDTO.getEventDate());
         user.setDescription(userDTO.getDescription());
@@ -35,7 +35,7 @@ public class UserRegisterEventsService {
         UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
         response.setId(user.getId());
         response.setEventDate(userDTO.getEventDate());
-        response.setTipeEvent(userDTO.getTipeEvent());
+        response.setTypeEvent(userDTO.getTypeEvent());
         response.setProcessed(userDTO.getProcessed());
         response.setDescription(userDTO.getDescription());
         response.setIdUser(userProfile.getId());
@@ -52,7 +52,7 @@ public class UserRegisterEventsService {
             UserRegisterEventsResponseDTO dto = new UserRegisterEventsResponseDTO();
             dto.setId(event.getId());
             dto.setEventDate(event.getEventDate());
-            dto.setTipeEvent(event.getTipeEvent());
+            dto.setTypeEvent(event.getTypeEvent());
             dto.setProcessed(event.getProcessed());
             dto.setDescription(event.getDescription());
 
@@ -73,7 +73,7 @@ public class UserRegisterEventsService {
         UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
         response.setId(event.getId());
         response.setEventDate(event.getEventDate());
-        response.setTipeEvent(event.getTipeEvent());
+        response.setTypeEvent(event.getTypeEvent());
         response.setProcessed(event.getProcessed());
         response.setDescription(event.getDescription());
 
@@ -88,7 +88,7 @@ public class UserRegisterEventsService {
     public UserRegisterEventsResponseDTO update(Long id, UserRegisterEventsRequestsDTO userDTO) {
         UserRegisterEvents event = userEventsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El evento " + id + " no existe"));
-        event.setTipeEvent(userDTO.getTipeEvent());
+        event.setTypeEvent(userDTO.getTypeEvent());
         event.setProcessed(userDTO.getProcessed());
         event.setEventDate(userDTO.getEventDate());
         event.setDescription(userDTO.getDescription());
@@ -105,7 +105,7 @@ public class UserRegisterEventsService {
         UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
         response.setId(updated.getId());
         response.setEventDate(updated.getEventDate());
-        response.setTipeEvent(updated.getTipeEvent());
+        response.setTypeEvent(updated.getTypeEvent());
         response.setProcessed(updated.getProcessed());
         response.setDescription(updated.getDescription());
 
@@ -132,7 +132,7 @@ public class UserRegisterEventsService {
             UserRegisterEventsResponseDTO dto = new UserRegisterEventsResponseDTO();
             dto.setId(event.getId());
             dto.setEventDate(event.getEventDate());
-            dto.setTipeEvent(event.getTipeEvent());
+            dto.setTypeEvent(event.getTypeEvent());
             dto.setProcessed(event.getProcessed());
             dto.setDescription(event.getDescription());
             if (event.getUserProfile() != null) {

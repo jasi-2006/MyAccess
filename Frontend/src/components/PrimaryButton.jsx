@@ -1,15 +1,15 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors } from '../theme/colors.jsx';
 
-export default function CustomButton({ title, onPress, variant = 'primary', loading = false, disabled = false }) {
+export default function PrimaryButton({ title, onPress, variant = 'primary', loading = false, disabled = false }) {
   return (
     <TouchableOpacity
       style={[
         styles.button,
         variant === 'primary' && styles.primary,
         variant === 'secondary' && styles.secondary,
-        disabled && styles.disabled
+        disabled && styles.disabled,
       ]}
       onPress={onPress}
       disabled={disabled || loading}

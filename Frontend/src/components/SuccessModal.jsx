@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet } from 'react-native';
-import { colors } from '../theme/colors';
-import CustomButton from './CustomButton';
+import { colors } from '../theme/colors.jsx';
+import PrimaryButton from './PrimaryButton.jsx';
 
 export default function SuccessModal({ visible, onClose, title = '¡Éxito!', message }) {
   return (
@@ -16,7 +16,7 @@ export default function SuccessModal({ visible, onClose, title = '¡Éxito!', me
           <Text style={styles.icon}>✓</Text>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
-          <CustomButton title="Explorar" onPress={onClose} />
+          <PrimaryButton title="Explorar" onPress={onClose} />
         </View>
       </View>
     </Modal>

@@ -28,7 +28,7 @@ public class VerificationService {
         if(user.getCodeExpiration().isBefore(LocalDateTime.now())){
             throw new RuntimeException("el codigo ya expiro");
         }
-        if(user.getVerificationCode().equals(code)){
+        if(!user.getVerificationCode().equals(code)){
             throw  new RuntimeException("el codigo es incorrecto ");
         }
         user.setVerified(true);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors } from '../theme/colors.jsx';
 
 export default function HeaderCurved({ height = 200 }) {
   return (

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 @Data
 public class UserRegisterEventsResponseDTO {
     private Long id;
-    private String tipeEvent;
+    private String typeEvent;
     private Boolean processed;
     private LocalDate eventDate;
     private String description;

@@ -1,22 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import { colors } from '../theme/colors';
-import CustomButton from '../components/CustomButton';
+import { View, Text, StyleSheet } from 'react-native';
+import { colors } from '../theme/colors.jsx';
+
+import PrimaryButton from '../components/PrimaryButton.jsx';
 
 export default function OnboardingScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={require('../../assets/students.png')}
-        style={styles.imageBackground}
-        resizeMode="cover"
-      >
+      <View style={styles.hero}>
         <View style={styles.overlay} />
-      </ImageBackground>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>Bienvenido a MyAccess</Text>
         <Text style={styles.subtitle}>Tu plataforma educativa</Text>
-        <CustomButton
+        <PrimaryButton
           title="Comenzar"
           onPress={() => navigation.navigate('Login')}
         />
@@ -30,13 +27,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  imageBackground: {
+  hero: {
     flex: 1,
     width: '100%',
+    backgroundColor: colors.primary,
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
   },
   content: {
     position: 'absolute',
@@ -46,8 +44,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    padding: 30,
-    paddingBottom: 50,
+    padding: 50,
+    paddingBottom: 150,
+    marginTop: 60,
   },
   title: {
     fontSize: 28,

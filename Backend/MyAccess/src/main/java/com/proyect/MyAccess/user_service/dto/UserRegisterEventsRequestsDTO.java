@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class UserRegisterEventsRequestsDTO {
-    private String tipeEvent;
+    private String typeEvent;
     private Boolean processed;
     private LocalDate eventDate;
     private String description;

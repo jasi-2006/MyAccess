@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors } from '../theme/colors.jsx';
 
 export default function CustomInput({ 
   icon, 
@@ -30,7 +30,7 @@ export default function CustomInput({
         />
         {secureTextEntry && (
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-            <Text style={styles.eyeIcon}>{isPasswordVisible ? '👁️' : '👁️🗨️'}</Text>
+            <Text style={styles.eyeIcon}>{isPasswordVisible ? '👁️' : '👁️'}</Text>
           </TouchableOpacity>
         )}
       </View>

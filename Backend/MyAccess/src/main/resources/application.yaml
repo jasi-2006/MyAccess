@@ -2,34 +2,36 @@ server:
   port: ${SERVER_PORT:9090}
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: myaccess
 
   datasource:
     user-service:
-      jdbc-url: jdbc:mysql://${DB_HOST}:${DB_PORT}/user_service
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/user_service
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     auth-service:
-      jdbc-url: jdbc:mysql://${DB_HOST}:${DB_PORT}/auth_service
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/auth_service
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     card-service:
-      jdbc-url: jdbc:mysql://${DB_HOST}:${DB_PORT}/card_service
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/card_service
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     news-service:
-      jdbc-url: jdbc:mysql://${DB_HOST}:${DB_PORT}/news_service
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/news_service
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     notifications-service:
-      jdbc-url: jdbc:mysql://${DB_HOST}:${DB_PORT}/notifications_service
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/notifications_service
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -46,8 +48,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
@@ -62,5 +64,5 @@ logging:
 
 security:
   jwt:
-    secret-key: ${JWT_SECRET}
-    tokenExpiration: ${JWT_EXPIRATION}
+    secret-key: ${JWT_SECRET:}
+    tokenExpiration: ${JWT_EXPIRATION:600000}

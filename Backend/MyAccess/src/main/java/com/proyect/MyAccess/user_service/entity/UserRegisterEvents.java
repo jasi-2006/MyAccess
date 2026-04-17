@@ -15,8 +15,8 @@ public class UserRegisterEvents {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name="id")
     private Long id;
-    @Column(name="tipeEvent")
-    private String tipeEvent;
+    @Column(name="typeEvent")
+    private String typeEvent;
     @Column(name ="processed")
     private Boolean processed;
     @Column(name ="eventDate")

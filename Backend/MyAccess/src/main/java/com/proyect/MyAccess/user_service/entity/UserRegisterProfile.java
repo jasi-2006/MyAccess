@@ -15,7 +15,7 @@ public class UserRegisterProfile {
     private Long id;
     @Column(name ="document")
     private String document;
-    @Column(name="document_tipe")
+    @Column(name="documentType")
     private String documentType;
     @Column(name ="full_name")
     private String fullName;
