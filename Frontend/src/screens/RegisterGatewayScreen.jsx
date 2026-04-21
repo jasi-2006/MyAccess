@@ -5,12 +5,11 @@ import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import HeaderCurved from '../components/HeaderCurved.jsx';
 import { registerUser } from '../services/authService';
-import VerificationGatewayScreen from './VerificationGatewayScreen.jsx';
 
 export default function RegisterGatewayScreen({ navigation }) {
   // ========== ESTADOS ==========
   const [currentStep, setCurrentStep] = useState(0); // 0: Registrate, 1: Datos, 2: Login
-  const steps = ['Registrate', 'Datos', ''];
+  const steps = ['Registrate', 'Datos', 'login'];
 
   // Paso 1 (Registrate): Datos personales del carnet
   const [name, setName] = useState('');
@@ -28,6 +27,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   // Paso 3 (Login): Credenciales
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
 
   // Otros estados
   const [errors, setErrors] = useState({});
@@ -52,7 +52,7 @@ export default function RegisterGatewayScreen({ navigation }) {
     if (step === 2) {
       if (!email.includes('@')) newErrors.email = 'Email inválido';
       if (!password || password.length < 8) newErrors.password = 'Mín. 8 caracteres';
-      if (password !== confirmPassword) newErrors.confirmPassword = 'Las contraseñas no coinciden';
+     
     }
 
     setErrors(newErrors);
@@ -279,6 +279,8 @@ export default function RegisterGatewayScreen({ navigation }) {
         secureTextEntry
         error={errors.password}
       />
+
+    
 
       {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
 
