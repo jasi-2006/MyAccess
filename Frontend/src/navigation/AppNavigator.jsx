@@ -7,6 +7,7 @@ import RegisterScreen from '../screens/RegisterGatewayScreen.jsx';
 import VerificationGatewayScreen from '../screens/VerificationGatewayScreen.jsx';
 import RegisterGatewayScreen from '../screens/RegisterGatewayScreen.jsx';
 import LoginGatewayScreen from '../screens/LoginGatewayScreen.jsx';
+import HomeGatewayScreen from '../screens/HomeGatewayScreen.jsx';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Login" component={LoginGatewayScreen} />
         <Stack.Screen name="Register" component={RegisterGatewayScreen} />
         <Stack.Screen name="Verification" component={VerificationGatewayScreen} />
+        <Stack.Screen name= "Home" component={HomeGatewayScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

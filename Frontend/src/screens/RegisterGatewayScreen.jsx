@@ -7,8 +7,7 @@ import HeaderCurved from '../components/HeaderCurved.jsx';
 import { registerUser } from '../services/authService';
 
 export default function RegisterGatewayScreen({ navigation }) {
-  // ========== ESTADOS ==========
-  const [currentStep, setCurrentStep] = useState(0); // 0: Registrate, 1: Datos, 2: Login
+  const [currentStep, setCurrentStep] = useState(0); 
   const steps = ['Registrate', 'Datos', 'login'];
 
   // Paso 1 (Registrate): Datos personales del carnet
@@ -59,9 +58,9 @@ export default function RegisterGatewayScreen({ navigation }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ========== NAVEGACIÓN ==========
+  
   const goToStep = (step) => {
-    // Solo permite ir a pasos anteriores o al siguiente si el actual es válido
+    
     if (step < currentStep) {
       setCurrentStep(step);
       setErrors({});
@@ -293,7 +292,6 @@ export default function RegisterGatewayScreen({ navigation }) {
     </View>
   );
 
-  // ========== RENDER PRINCIPAL ==========
   return (
     <KeyboardAvoidingView
       style={styles.container}

@@ -2,7 +2,15 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { colors } from '../theme/colors.jsx';
 
-export default function PrimaryButton({ title, onPress, variant = 'primary', loading = false, disabled = false }) {
+export default function PrimaryButton({
+  title,
+  onPress,
+  variant = 'primary',
+  loading = false,
+  disabled = false,
+  style,
+  textStyle,
+}) {
   return (
     <TouchableOpacity
       style={[
@@ -10,6 +18,7 @@ export default function PrimaryButton({ title, onPress, variant = 'primary', loa
         variant === 'primary' && styles.primary,
         variant === 'secondary' && styles.secondary,
         disabled && styles.disabled,
+        style,
       ]}
       onPress={onPress}
       disabled={disabled || loading}
@@ -18,7 +27,7 @@ export default function PrimaryButton({ title, onPress, variant = 'primary', loa
       {loading ? (
         <ActivityIndicator color={variant === 'primary' ? colors.text : colors.background} />
       ) : (
-        <Text style={[styles.text, variant === 'secondary' && styles.textSecondary]}>
+        <Text style={[styles.text, variant === 'secondary' && styles.textSecondary, textStyle]}>
           {title}
         </Text>
       )}

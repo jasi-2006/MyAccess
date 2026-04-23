@@ -5,6 +5,7 @@ import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import HeaderCurved from '../components/HeaderCurved.jsx';
 import { loginUser } from '../services/authService';
+import {HomeGatewayScreen} from'../screens/HomeGatewayScreen.jsx';
 
 export default function LoginGatewayScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -29,6 +30,7 @@ export default function LoginGatewayScreen({ navigation }) {
       setSubmitError('');
       await loginUser({ email, password });
       Alert.alert('Inicio exitoso', 'Tu sesion fue iniciada correctamente.');
+      navigation.replace('HomeGatewayScreen')
     } catch (error) {
       const message = error.message || 'No fue posible iniciar sesion.';
       setSubmitError(message);
@@ -71,7 +73,13 @@ export default function LoginGatewayScreen({ navigation }) {
 
         {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
 
-        <PrimaryButton title="Iniciar" onPress={handleLogin} loading={loading} />
+        <PrimaryButton title="Iniciar" onPress={handleLogin} loading={loading}  /> ;
+
+        <TouchableOpacity onPress={() => navigation.navigate('')}>
+          <Text>
+            olvide mi contraseña
+          </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.switchButton} onPress={() => navigation.navigate('Register')}>
           <Text style={styles.switchText}>

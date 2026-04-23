@@ -1,5 +1,5 @@
 export const colors = {
-  primary: '#5DFFB1',
+  primary: '#5FF2B3',
   primaryLight: '#E8FFF5',
   primaryDark: '#00D97E',
   background: '#FFFFFF',
@@ -9,4 +9,5 @@ export const colors = {
   grayDark: '#CCCCCC',
   error: '#FF4444',
   overlay: 'rgba(0, 0, 0, 0.5)',
+  circle:'#2FB4A5'
 };
