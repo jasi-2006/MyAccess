@@ -1,0 +1,62 @@
+import { Platform } from 'react-native';
+
+// For a physical device, replace this host with your computer's local IP.
+const API_GATEWAY_URL = Platform.select({
+  android: 'http://10.0.2.2:8080',
+  web: 'http://localhost:8080',
+  default: 'http://localhost:8080',
+});
+
+async function parsePayload(response) {
+  const text = await response.text();
+
+  if (!text) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+function getErrorMessage(payload) {
+  if (!payload) {
+    return 'No fue posible completar la solicitud.';
+  }
+
+  if (typeof payload === 'string') {
+    return payload;
+  }
+
+  if (typeof payload.message === 'string' && payload.message.trim()) {
+    return payload.message;
+  }
+
+  if (typeof payload.error === 'string' && payload.error.trim()) {
+    return payload.error;
+  }
+
+  return 'No fue posible completar la solicitud.';
+}
+
+export async function apiRequest(path, options = {}) {
+  const response = await fetch(`${API_GATEWAY_URL}${path}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+
+  const payload = await parsePayload(response);
+
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload));
+  }
+
+  return payload;
+}
+
+export { API_GATEWAY_URL };
