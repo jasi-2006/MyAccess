@@ -115,7 +115,6 @@ export default function RegisterGatewayScreen({ navigation }) {
     }
   };
 
-  // ========== COMPONENTE DE TABS INFERIORES ==========
   const BottomTabs = () => (
     <View style={styles.tabsContainer}>
       {steps.map((step, index) => (
