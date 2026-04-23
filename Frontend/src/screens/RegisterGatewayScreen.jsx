@@ -86,7 +86,6 @@ export default function RegisterGatewayScreen({ navigation }) {
     }
   };
 
-  // ========== SUBMIT FINAL ==========
   const handleRegister = async () => {
     if (!validateStep(2)) return;
 
