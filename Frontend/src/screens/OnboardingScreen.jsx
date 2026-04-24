@@ -12,47 +12,56 @@ import PrimaryButton from '../components/PrimaryButton.jsx';
 
 export default function OnboardingScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
+  const isDesktop = width >= 980;
   const isSmallDevice = height < 700;
 
-  const circleSize = Math.min(width * 0.60, 280);
-  const imageWidth = Math.min(width * 0.78, 320);
+  // Ancho unificado para hero y content
+  const containerWidth = isDesktop ? Math.min(width * 0.68, 920) : width;
+  const contentPaddingHorizontal = isDesktop ? 40 : Math.max(width * 0.08, 24);
+  
+  const circleSize = isDesktop ? 220 : Math.min(width * 0.6, 280);
+  const imageWidth = isDesktop ? 330 : Math.min(width * 0.78, 320);
   const imageHeight = imageWidth * 0.74;
-  const logoWidth = Math.min(width * 0.5, 210);
+  const logoWidth = isDesktop ? 210 : Math.min(width * 0.5, 210);
   const logoHeight = logoWidth * 0.3;
-  const heroHeight = Math.max(height * 0.44, 220)/0.7;
-  const curveSize = Math.max(width * 1.6, height * 0.1);
-  const contentPaddingHorizontal = Math.max(width * 0.08 );
-  const contentPaddingBottom = Math.max(height * 0.06);
-  const contentPaddingTop = isSmallDevice ? 12 : 20;
+  const heroHeight = isDesktop
+    ? Math.min(Math.max(height * 0.42, 270), 340)
+    : Math.max(height * 0.44, 220) / 0.7;
+  const contentPaddingBottom = isDesktop ? 36 : Math.max(height * 0.06, 24);
+  const contentPaddingTop = isDesktop ? 28 : isSmallDevice ? 12 : 20;
 
   const styles = createStyles({
     width,
     height,
+    containerWidth,
     circleSize,
     imageWidth,
     imageHeight,
     logoWidth,
     logoHeight,
     heroHeight,
-    curveSize,
     contentPaddingHorizontal,
     contentPaddingBottom,
     contentPaddingTop,
+    isDesktop,
     isSmallDevice,
   });
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.hero}>
-        <View style={styles.overlay} />
-
-        <View style={styles.circle} />
-
-        <Image
-          source={require('../assets/students.png')}
-          style={styles.personasImage}
-          resizeMode="contain"
-        />
+      {/* Hero ahora usa el mismo ancho que el content */}
+      <View style={styles.heroWrapper}>
+        <View style={styles.hero}>
+          <View style={styles.overlay} />
+          <View style={styles.heroInner}>
+            <View style={styles.circle} />
+            <Image
+              source={require('../assets/students.png')}
+              style={styles.personasImage}
+              resizeMode="contain"
+            />
+          </View>
+        </View>
       </View>
 
       <View style={styles.bottomSection}>
@@ -83,70 +92,72 @@ export default function OnboardingScreen({ navigation }) {
 function createStyles({
   width,
   height,
+  containerWidth,
   circleSize,
   imageWidth,
   imageHeight,
   logoWidth,
   logoHeight,
   heroHeight,
-  curveSize,
   contentPaddingHorizontal,
   contentPaddingBottom,
   contentPaddingTop,
+  isDesktop,
   isSmallDevice,
 }) {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.primary,
+      backgroundColor: colors.background,
+    },
+    // Wrapper que limita el ancho del hero igual que el content
+    heroWrapper: {
+      width: '100%',
+      alignItems: 'center',
+      backgroundColor: colors.primary, // Color verde solo dentro del área del hero
     },
     hero: {
-      position: 'relative',
+      width: containerWidth, // Mismo ancho que el content
       height: heroHeight,
-      width: '100%',
-      backgroundColor: colors.primary,
+      position: 'relative',
       overflow: 'hidden',
+      alignItems: 'center',
+      backgroundColor: colors.primary,
     },
     overlay: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.15)',
+      backgroundColor: 'rgba(0, 0, 0, 0.04)',
     },
-    circle: {
-      position: 'absolute',
-      alignSelf: 'center',
-      top: Math.max(height * 0.08, 330),
-      width: circleSize,
-      height: circleSize,
-      backgroundColor: colors.circle,
-      borderRadius: circleSize / 2,
-      shadowColor: '#ffffff',
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.25,
-      shadowRadius: 10,
-      elevation: 3,
+    heroInner: {
+      width: '100%',
+      height: '100%',
+      position: 'relative',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      backgroundColor:colors.primary,
     },
+    
     personasImage: {
-      position: 'absolute',
-      alignSelf: 'center',
-      bottom: isSmallDevice ? 0 : 8,
+      top:11,
       width: imageWidth,
       height: imageHeight,
+      marginBottom: isDesktop ? 12 : isSmallDevice ? 0 : 8,
       zIndex: 1,
     },
     bottomSection: {
       flex: 1,
-      marginTop: -Math.min(height * 0.08, 56),
+      marginTop: isDesktop ? -18 : -Math.min(height * 0.08, 56),
       alignItems: 'center',
     },
     curve: {
-      width: curveSize,
-      height: curveSize,
-      borderRadius: curveSize / 2.2,
+      width: containerWidth, // Mismo ancho que el hero y el content
+      height: isDesktop ? 120 : Math.max(height * 0.18, 125),
       backgroundColor: colors.background,
-      marginBottom: -(curveSize - Math.max(height * 0.18, 125)),
+      borderTopLeftRadius: isDesktop ? 60 : width * 0.5,
+      borderTopRightRadius: isDesktop ? 60 : width * 0.5,
     },
     content: {
-      width: '100%',
+      width: containerWidth, // Mismo ancho que el hero
       flex: 1,
       backgroundColor: colors.background,
       alignItems: 'center',
@@ -157,19 +168,20 @@ function createStyles({
     logo: {
       width: logoWidth,
       height: logoHeight,
-      marginBottom: isSmallDevice ? 16 : 24,
+      marginBottom: isDesktop ? 20 : isSmallDevice ? 16 : 24,
     },
     subtitle: {
-      width: Math.min(width * 0.82, 340),
-      fontSize: width < 360 ? 15 : 16,
-      lineHeight: width < 360 ? 22 : 24,
+      width: isDesktop ? 360 : Math.min(width * 0.82, 340),
+      fontSize: 16,
+      lineHeight: 24,
       color: colors.textSecondary,
-      marginBottom: isSmallDevice ? 24 : 32,
+      marginBottom: isDesktop ? 28 : isSmallDevice ? 24 : 32,
       textAlign: 'center',
     },
     button: {
-      width: '100%',
+      width: isDesktop ? 220 : '100%',
       maxWidth: 340,
+      alignSelf: 'center',
     },
   });
 }

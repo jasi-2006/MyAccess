@@ -7,11 +7,13 @@ const STANDARD_HEIGHT = 812;
 
 const useResponsive = () => {
   const { width: deviceWidth, height: deviceHeight, scale: pixelScale } = useWindowDimensions();
+  const limitedWidth = Math.min(deviceWidth, 480);
+  const limitedHeight = Math.min(deviceHeight, 900);
 
-  const scale = (size) => (deviceWidth / STANDARD_WIDTH) * size;
-  const verticalScale = (size) => (deviceHeight / STANDARD_HEIGHT) * size;
+  const scale = (size) => (limitedWidth / STANDARD_WIDTH) * size;
+  const verticalScale = (size) => (limitedHeight / STANDARD_HEIGHT) * size;
   const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
-  const fontScale = (size) => PixelRatio.roundToNearestPixel(scale(size) * pixelScale);
+  const fontScale = (size) => PixelRatio.roundToNearestPixel(Math.min(scale(size), size * 1.12));
 
   const shadowProps = () => ({
     shadowColor: '#000',
@@ -69,7 +71,7 @@ export default function PrimaryButton({
         <Text style={[
           { 
             fontSize, 
-            fontWeight: '600', 
+            fontWeight: '400', 
             color: colors.text 
           },
           variant === 'secondary' && { color: colors.textSecondary },
