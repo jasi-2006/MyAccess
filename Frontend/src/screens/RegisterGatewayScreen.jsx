@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Image, SafeAreaView} from 'react-native';
 import { colors } from '../theme/colors.jsx';
 import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
@@ -9,6 +9,20 @@ import { registerUser } from '../services/authService';
 export default function RegisterGatewayScreen({ navigation }) {
   const [currentStep, setCurrentStep] = useState(0); 
   const steps = ['Registrate', 'Datos', 'login'];
+  const stepHeroContent = [
+    {
+      image: require('../assets/registro.png'),
+      text: 'Unete a nuestro equipo',
+    },
+    {
+      image: require('../assets/datos.png'),
+      text: 'Para tu carnet personal',
+    },
+    {
+      image: require('../assets/datos.png'),
+      text: 'Crea tus credenciales de acceso',
+    },
+  ];
 
   // Paso 1 (Registrate): Datos personales del carnet
   const [name, setName] = useState('');
@@ -141,13 +155,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   // ========== RENDERIZADO DE CADA PASO ==========
   const renderStep0 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.headerTitle}>Datos Personales!</Text>
-      <Text style={styles.headerSubtitle}>Para tu carnet digital</Text>
-      
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>Datos del carnet</Text>
-        <Text style={styles.cardIcon}>🪪</Text>
-      </View>
+      <Text style={styles.headerTitle}>Registrate! </Text>
 
       <CustomInput
         icon="👤"
@@ -194,13 +202,9 @@ export default function RegisterGatewayScreen({ navigation }) {
 
   const renderStep1 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.headerTitle}>Datos Personales!</Text>
-      <Text style={styles.headerSubtitle}>Para tu carnet digital</Text>
+      <Text style={styles.headerTitle}>datos del carnet ! </Text>
       
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>Datos del carnet</Text>
-        <Text style={styles.cardIcon}>🪪</Text>
-      </View>
+      
 
       <CustomInput
         icon="📄"
@@ -250,13 +254,8 @@ export default function RegisterGatewayScreen({ navigation }) {
 
   const renderStep2 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.headerTitle}>Datos Personales!</Text>
-      <Text style={styles.headerSubtitle}>Para tu carnet digital</Text>
-      
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>Credenciales de acceso</Text>
-        <Text style={styles.cardIcon}>🔐</Text>
-      </View>
+      <Text style={styles.headerTitle}>Credenciales de acceso ! </Text>
+    
 
       <CustomInput
         icon="📧"
@@ -287,65 +286,89 @@ export default function RegisterGatewayScreen({ navigation }) {
         loading={loading}
         style={styles.continueButton}
       />
-    </View>
+  </View>
   );
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <HeaderCurved height={180} />
-      
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.screen}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {currentStep === 0 && renderStep0()}
-        {currentStep === 1 && renderStep1()}
-        {currentStep === 2 && renderStep2()}
-      </ScrollView>
+        <HeaderCurved height={180} />
 
-      <BottomTabs />
-    </KeyboardAvoidingView>
+        <View style={styles.topHero}>
+          <Image
+            source={stepHeroContent[currentStep].image}
+            style={styles.topHeroImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.topHeroText}>{stepHeroContent[currentStep].text}</Text>
+        </View>
+        
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          {currentStep === 0 && renderStep0()}
+          {currentStep === 1 && renderStep1()}
+          {currentStep === 2 && renderStep2()}
+        </ScrollView>
+
+        <BottomTabs />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+
+  },
   container: {
     flex: 1,
-    backgroundColor: colors.background || '#E8F5E9', // Verde muy claro como en la imagen
+    backgroundColor:colors.background,
+    overflow: 'hidden',
   },
+  topHero: {
+    position: 'absolute',
+    top: 18,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 5,
+    pointerEvents: 'none',
+  },
+  topHeroImage: {
+    width: 350,
+    height: 120,
+  },
+
+  topHeroText: {
+    fontSize: 30,
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 20,
+    paddingTop: 35,
     paddingBottom: 100, // Espacio para los tabs
+
   },
   
   // Headers
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#4CAF50', // Verde principal
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 20,
+    fontWeight: '700',
+    color: colors.primary, // Verde principal
+    marginBottom: 10,
   },
 
-  // Card header
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
   cardTitle: {
     fontSize: 20,
     fontWeight: '600',
@@ -374,7 +397,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
     borderRadius: 25,
-    backgroundColor: '#81C784', // Verde medio
+    backgroundColor: colors.primary, // Verde medio
   },
 
   // Error
@@ -408,7 +431,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tabActive: {
-    backgroundColor: '#81C784', // Verde más oscuro para el activo
+    backgroundColor: colors.primary , // Verde más oscuro para el activo
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
