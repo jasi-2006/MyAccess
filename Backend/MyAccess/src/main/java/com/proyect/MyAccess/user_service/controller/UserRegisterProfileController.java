@@ -1,4 +1,5 @@
 package com.proyect.MyAccess.user_service.controller;
+import com.proyect.MyAccess.user_service.dto.UpdatePasswordRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.MyAccess.user_service.service.UserRegisterProfileService;
@@ -70,6 +71,12 @@ public class UserRegisterProfileController {
 		return response.map(r->ResponseEntity.status(HttpStatus.ACCEPTED).body(r))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
+	@PatchMapping("/user/password")
+	public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequestDTO dto) {
+		userService.updatePassword(dto);
+		return ResponseEntity.ok("Contraseña actualizada correctamente");
+	}
+
 	@DeleteMapping("/users/delete/{document}")
 	public ResponseEntity<?> deleteByDocument(@PathVariable String document) {
 		boolean deleted = userService.deleteUserDoc(document);

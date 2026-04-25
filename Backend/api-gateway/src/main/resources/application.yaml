@@ -15,12 +15,14 @@ spring:
       routes:
         - id: auth-routes
           uri: ${BACKEND_URI:http://localhost:9090}
+          order: 1
           predicates:
             - Path=/api/v1/auth/**
           filters:
             - StripPrefix=2
         - id: protected-routes
           uri: ${BACKEND_URI:http://localhost:9090}
+          order: 2
           predicates:
             - Path=/api/v1/**
           filters:

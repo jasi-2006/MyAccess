@@ -1,5 +1,6 @@
 package com.proyect.MyAccess.user_service.service;
 
+import com.proyect.MyAccess.user_service.dto.UpdatePasswordRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.MyAccess.user_service.entity.UserRegisterProfile;
@@ -204,6 +205,16 @@ public class UserRegisterProfileService {
         response.setBloodType(updatedUser.getBloodType());
 
         return Optional.of(response);
+    }
+
+    public void updatePassword(UpdatePasswordRequestDTO dto) {
+        UserRegisterProfile user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if (!BCrypt.checkpw(dto.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Contraseña actual incorrecta");
+        }
+        user.setPassword(BCrypt.hashpw(dto.getNewPassword(), BCrypt.gensalt()));
+        userRepository.save(user);
     }
 
     public boolean deleteUserDoc(String document) {

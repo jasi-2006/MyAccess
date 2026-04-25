@@ -3,6 +3,7 @@ package com.proyect.MyAccess.user_service.service;
 import com.proyect.MyAccess.user_service.entity.UserRegisterProfile;
 import com.proyect.MyAccess.user_service.repository.UserRegisterProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import  java.time.LocalDateTime;
 import java.util.Random;
@@ -35,6 +36,30 @@ public class VerificationService {
         user.setVerificationCode(null);
         user.setCodeExpiration(null);
         userRepository.save(user);
+    }
 
+    public void sendPasswordResetCode(String email) {
+        UserRegisterProfile user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("email no registrado"));
+        String code = String.valueOf(new Random().nextInt(900000) + 100000);
+        user.setVerificationCode(code);
+        user.setCodeExpiration(LocalDateTime.now().plusMinutes(10));
+        userRepository.save(user);
+        emailService.sendPasswordResetCode(email, code);
+    }
+
+    public void resetPassword(String email, String code, String newPassword) {
+        UserRegisterProfile user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("email no encontrado"));
+        if (user.getCodeExpiration().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("el codigo ya expiro");
+        }
+        if (!user.getVerificationCode().equals(code)) {
+            throw new RuntimeException("el codigo es incorrecto");
+        }
+        user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        user.setVerificationCode(null);
+        user.setCodeExpiration(null);
+        userRepository.save(user);
     }
 }

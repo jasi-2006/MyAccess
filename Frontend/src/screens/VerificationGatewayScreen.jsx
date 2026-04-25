@@ -1,28 +1,76 @@
 import React, { useRef, useState } from 'react';
-import {  View,  Text,  StyleSheet,  TextInput,  TouchableOpacity, useWindowDimensions,  KeyboardAvoidingView,  Platform,  ScrollView, SafeAreaView,} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 import { colors } from '../theme/colors.jsx';
-import HeaderCurved from '../components/HeaderCurved.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
-import { verifyUser } from '../services/authService';
+import { resendVerificationCode, verifyUser } from '../services/authService';
 
 export default function VerificationGatewayScreen({ navigation, route }) {
   const { width, height } = useWindowDimensions();
   const isSmallDevice = height < 700;
   const isTablet = width > 768;
+  const isDesktop = width >= 1024;
+
+  const topPadding = isDesktop ? 120 : isTablet ? 100 : isSmallDevice ? 80 : 96;
+  const fontSizeTitle = isDesktop ? 42 : isTablet ? 36 : isSmallDevice ? 28 : 32;
+  const fontSizeSubtitle = isDesktop ? 22 : isTablet ? 20 : isSmallDevice ? 14 : 16;
+  const inputSize = isDesktop ? 72 : isTablet ? 64 : isSmallDevice ? 42 : 48;
+  const fontSizeInput = isDesktop ? 28 : isTablet ? 24 : isSmallDevice ? 18 : 20;
+  const gap = isDesktop ? 16 : isTablet ? 14 : isSmallDevice ? 8 : 10;
+  const buttonHeight = isDesktop ? 64 : isTablet ? 58 : isSmallDevice ? 48 : 52;
 
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [resendMessage, setResendMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const inputs = useRef([]);
-  const email = route?.params?.email ?? '';
+  const email = (route?.params?.email ?? '').trim().toLowerCase();
+  const registerPayload = route?.params?.registerPayload ?? null;
 
   const handleChange = (text, index) => {
+    const sanitizedText = text.replace(/[^0-9]/g, '');
+
+    if (!sanitizedText) {
+      const newCode = [...code];
+      newCode[index] = '';
+      setCode(newCode);
+      return;
+    }
+
+    if (sanitizedText.length > 1) {
+      const newCode = [...code];
+
+      sanitizedText
+        .slice(0, code.length - index)
+        .split('')
+        .forEach((digit, offset) => {
+          newCode[index + offset] = digit;
+        });
+
+      setCode(newCode);
+
+      const nextIndex = Math.min(index + sanitizedText.length, code.length - 1);
+      inputs.current[nextIndex]?.focus();
+      return;
+    }
+
     const newCode = [...code];
-    newCode[index] = text.replace(/[^0-9]/g, '').slice(0, 1);
+    newCode[index] = sanitizedText;
     setCode(newCode);
 
-    if (text && index < code.length - 1) {
+    if (index < code.length - 1) {
       inputs.current[index + 1]?.focus();
     }
   };
@@ -34,15 +82,23 @@ export default function VerificationGatewayScreen({ navigation, route }) {
   };
 
   const handleVerify = async () => {
+    const sanitizedCode = code.join('').replace(/[^0-9]/g, '');
+
     if (!email) {
       setSubmitError('No encontramos el correo para verificar la cuenta.');
+      return;
+    }
+
+    if (sanitizedCode.length !== 6) {
+      setSubmitError('Ingresa los 6 digitos del codigo.');
       return;
     }
 
     try {
       setLoading(true);
       setSubmitError('');
-      await verifyUser(email, code.join(''));
+      setResendMessage('');
+      await verifyUser(email, sanitizedCode);
       setShowSuccess(true);
     } catch (error) {
       setSubmitError(error.message || 'No fue posible verificar la cuenta.');
@@ -51,8 +107,25 @@ export default function VerificationGatewayScreen({ navigation, route }) {
     }
   };
 
-  const handleResend = () => {
-    console.log('Reenviar código');
+  const handleResend = async () => {
+    if (!email) {
+      setSubmitError('No encontramos el correo para reenviar el codigo.');
+      return;
+    }
+
+    try {
+      setResendLoading(true);
+      setSubmitError('');
+      setResendMessage('');
+      await resendVerificationCode(email, registerPayload);
+      setCode(['', '', '', '', '', '']);
+      setResendMessage('Te enviamos un nuevo codigo de verificacion.');
+      inputs.current[0]?.focus();
+    } catch (error) {
+      setSubmitError(error.message || 'No fue posible reenviar el codigo.');
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   const isComplete = !code.some((digit) => digit === '');
@@ -68,7 +141,6 @@ export default function VerificationGatewayScreen({ navigation, route }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Botón de regreso */}
           <TouchableOpacity
             style={[styles.backButton, { top: isSmallDevice ? 10 : 20 }]}
             onPress={() => navigation.goBack()}
@@ -77,7 +149,6 @@ export default function VerificationGatewayScreen({ navigation, route }) {
           </TouchableOpacity>
 
           <View style={[styles.content, { paddingTop: topPadding }]}>
-            {/* Título */}
             <View style={styles.titleContainer}>
               <Text style={[styles.titleGreen, { fontSize: fontSizeTitle }]}>
                 Verifica tu
@@ -91,7 +162,6 @@ export default function VerificationGatewayScreen({ navigation, route }) {
               Te acabamos de enviar un codigo!
             </Text>
 
-            {/* 6 cajas de código responsivas */}
             <View style={[styles.codeContainer, { gap }]}>
               {code.map((digit, index) => (
                 <TextInput
@@ -124,7 +194,12 @@ export default function VerificationGatewayScreen({ navigation, route }) {
               </Text>
             ) : null}
 
-            {/* Botón verde */}
+            {resendMessage ? (
+              <Text style={[styles.successText, { fontSize: fontSizeSubtitle }]}>
+                {resendMessage}
+              </Text>
+            ) : null}
+
             <TouchableOpacity
               style={[
                 styles.verifyButton,
@@ -138,23 +213,17 @@ export default function VerificationGatewayScreen({ navigation, route }) {
               disabled={!isComplete || loading}
             >
               <Text style={[styles.verifyButtonText, { fontSize: fontSizeSubtitle + 4 }]}>
-                {loading ? 'Verificando...' : 'verificación'}
+                {loading ? 'Verificando...' : 'verificacion'}
               </Text>
             </TouchableOpacity>
 
-            {/* Reenviar código */}
             <View style={styles.resendContainer}>
               <Text style={[styles.resendText, { fontSize: fontSizeSubtitle - 1 }]}>
                 No recibiste el codigo?{' '}
               </Text>
-              <TouchableOpacity onPress={handleResend}>
-                <Text
-                  style={[
-                    styles.resendLink,
-                    { fontSize: fontSizeSubtitle - 1 },
-                  ]}
-                >
-                  Reenviar codigo
+              <TouchableOpacity onPress={handleResend} disabled={resendLoading}>
+                <Text style={[styles.resendLink, { fontSize: fontSizeSubtitle - 1 }]}>
+                  {resendLoading ? 'Reenviando...' : 'Reenviar codigo'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -234,6 +303,12 @@ const styles = StyleSheet.create({
   },
   submitError: {
     color: '#EF4444',
+    marginBottom: '4%',
+    textAlign: 'center',
+    paddingHorizontal: '5%',
+  },
+  successText: {
+    color: colors.primary,
     marginBottom: '4%',
     textAlign: 'center',
     paddingHorizontal: '5%',

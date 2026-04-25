@@ -27,6 +27,17 @@ public class EmailService {
                 "El equipo de MyAccess"
         );
         mailSender.send(message);
+    }
 
+    public void sendPasswordResetCode(String to, String code) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("MyAccess - Restablecer contraseña");
+        message.setText("Recibimos una solicitud para restablecer tu contraseña.\n\n" +
+                "Usa el siguiente código para continuar:\n\n" + code + "\n\n" +
+                "(Este código es válido por 10 minutos)\n\n" +
+                "Si no solicitaste esto, ignora este correo.\n\n" +
+                "El equipo de MyAccess");
+        mailSender.send(message);
     }
 }
