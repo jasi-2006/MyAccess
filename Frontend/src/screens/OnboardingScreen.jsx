@@ -19,16 +19,18 @@ export default function OnboardingScreen({ navigation }) {
   const containerWidth = isDesktop ? Math.min(width * 0.68, 920) : width;
   const contentPaddingHorizontal = isDesktop ? 40 : Math.max(width * 0.08, 24);
   
-  const circleSize = isDesktop ? 220 : Math.min(width * 0.6, 280);
-  const imageWidth = isDesktop ? 330 : Math.min(width * 0.78, 320);
+  const circleSize = isDesktop ? 220 : Math.min(width * 0.6, 390);
+  const imageWidth = isDesktop ? 330 : Math.min(width * 0.78, 340);
   const imageHeight = imageWidth * 0.74;
   const logoWidth = isDesktop ? 210 : Math.min(width * 0.5, 210);
   const logoHeight = logoWidth * 0.3;
   const heroHeight = isDesktop
     ? Math.min(Math.max(height * 0.42, 270), 340)
-    : Math.max(height * 0.44, 220) / 0.7;
-  const contentPaddingBottom = isDesktop ? 36 : Math.max(height * 0.06, 24);
-  const contentPaddingTop = isDesktop ? 28 : isSmallDevice ? 12 : 20;
+    : isSmallDevice
+      ? 280
+      : 550;
+  const contentPaddingBottom = isDesktop ? 6 : isSmallDevice ? 20 : 24;
+  const contentPaddingTop = isDesktop ? -14 : isSmallDevice ? 12 : 8;
 
   const styles = createStyles({
     width,
@@ -75,6 +77,7 @@ export default function OnboardingScreen({ navigation }) {
           />
 
           <Text style={styles.subtitle}>
+            Bienvenido a MyAccess!
             Innovamos la identificación con carnets digitales seguros y personalizados.
           </Text>
 
@@ -141,17 +144,17 @@ function createStyles({
       top:11,
       width: imageWidth,
       height: imageHeight,
-      marginBottom: isDesktop ? 12 : isSmallDevice ? 0 : 8,
+      marginBottom: isDesktop ? 12 : isSmallDevice ? 8 : 23,
       zIndex: 1,
     },
     bottomSection: {
       flex: 1,
-      marginTop: isDesktop ? -18 : -Math.min(height * 0.08, 56),
+      marginTop: isDesktop ? -18 : isSmallDevice ? -18 : -24,
       alignItems: 'center',
     },
     curve: {
       width: containerWidth, // Mismo ancho que el hero y el content
-      height: isDesktop ? 120 : Math.max(height * 0.18, 125),
+      height: isDesktop ? 100 : isSmallDevice ? 86 : 96,
       backgroundColor: colors.background,
       borderTopLeftRadius: isDesktop ? 60 : width * 0.5,
       borderTopRightRadius: isDesktop ? 60 : width * 0.5,
@@ -168,7 +171,7 @@ function createStyles({
     logo: {
       width: logoWidth,
       height: logoHeight,
-      marginBottom: isDesktop ? 20 : isSmallDevice ? 16 : 24,
+      marginBottom: isDesktop ? 20 : isSmallDevice ? 12 : 16,
     },
     subtitle: {
       width: isDesktop ? 360 : Math.min(width * 0.82, 340),

@@ -5,14 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Frontend/assets/students.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/PrimaryButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/PrimaryButton.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/UserRegisterProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/UserRegisterProfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/filter/JwtValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/filter/JwtValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterEventsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterEventsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/VerificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/VerificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/HomeGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/HomeGatewayScreen.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/LoginGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/LoginGatewayScreen.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/OnboardingScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/OnboardingScreen.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/RegisterGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/RegisterGatewayScreen.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/VerificationGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/VerificationGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/theme/colors.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/theme/colors.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/services/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/services/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/services/authService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

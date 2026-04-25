@@ -53,7 +53,10 @@ export async function apiRequest(path, options = {}) {
   const payload = await parsePayload(response);
 
   if (!response.ok) {
-    throw new Error(getErrorMessage(payload));
+    const error = new Error(getErrorMessage(payload));
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
   }
 
   return payload;

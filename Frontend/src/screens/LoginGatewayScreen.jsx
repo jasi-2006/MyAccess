@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
   Image,
   SafeAreaView,
   useWindowDimensions,
@@ -28,7 +27,7 @@ export default function LoginGatewayScreen({ navigation }) {
 
   // Responsive breakpoints
   const isSmallDevice = width < 375;
-  const isTablet = width >= 768 && width < 1024;
+  const isTablet = width >= 500 && width < 1024;
   const isDesktop = width >= 600;
   
   const scale = isDesktop ? 1.4 : isTablet ? 1.2 : isSmallDevice ? 0.9 : 1.7;
@@ -49,15 +48,17 @@ export default function LoginGatewayScreen({ navigation }) {
       setLoading(true);
       setSubmitError('');
       await loginUser({ email, password });
-      Alert.alert('Inicio exitoso', 'Tu sesión fue iniciada correctamente.');
-      navigation.replace('HomeGatewayScreen');
+      navigation.replace('Home');
     } catch (error) {
-      const message = error.message || 'No fue posible iniciar sesión.';
-      setSubmitError(message);
+      const raw = (error.message || '').toLowerCase();
+      let message = 'Correo o contraseña incorrectos.';
 
-      if (message.toLowerCase().includes('verificada')) {
+      if (raw.includes('verificada') || raw.includes('verificado')) {
+        message = 'Tu cuenta no está verificada. Revisa tu correo.';
         navigation.navigate('Verification', { email });
       }
+
+      setSubmitError(message);
     } finally {
       setLoading(false);
     }
@@ -123,7 +124,7 @@ export default function LoginGatewayScreen({ navigation }) {
       backgroundColor: '#FFFFFF',
       borderTopLeftRadius: isDesktop ? 60 : isTablet ? 40 : 30,
       borderTopRightRadius: isDesktop ? 60 : isTablet ? 40 : 30,
-      marginTop: -10,
+      marginTop: 10,
     },
   };
 
@@ -182,6 +183,14 @@ export default function LoginGatewayScreen({ navigation }) {
               error={errors.password}
             />
 
+            {/* Alerta de error */}
+            {submitError ? (
+              <View style={styles.alertBox}>
+                <Text style={styles.alertIcon}>⚠️</Text>
+                <Text style={styles.alertText}>{submitError}</Text>
+              </View>
+            ) : null}
+
             {/* Olvidé contraseña */}
             <TouchableOpacity
               style={styles.forgotContainer}
@@ -193,11 +202,15 @@ export default function LoginGatewayScreen({ navigation }) {
             </TouchableOpacity>
 
             {/* Botón Iniciar Sesión */}
-            <PrimaryButton 
-              title="Iniciar" 
-              onPress={handleLogin} 
-              loading={loading} 
-            />
+
+            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <PrimaryButton 
+                  title="Iniciar" 
+                  onPress={handleLogin} 
+                  loading={loading} 
+                />
+              </TouchableOpacity>
+            
 
             {/* Login Social */}
             <View style={styles.socialContainer}>
@@ -223,9 +236,7 @@ export default function LoginGatewayScreen({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            {submitError ? (
-              <Text style={styles.submitError}>{submitError}</Text>
-            ) : null}
+            {submitError ? null : null}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -236,7 +247,7 @@ export default function LoginGatewayScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.primary,
+    backgroundColor:  '#FFFFFF',
   },
   container: {
     flex: 1,
@@ -274,7 +285,7 @@ const styles = StyleSheet.create({
 
   // Inputs
   inputWrapper: {
-    marginBottom: 10,
+    marginBottom: 9,
     height:70,
   },
   inputContainer: {
@@ -371,4 +382,18 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontSize: 14,
   },
+  alertBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEE2E2',
+    borderLeftWidth: 4,
+    borderLeftColor: '#EF4444',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 16,
+    gap: 10,
+  },
+  alertIcon: { fontSize: 16 },
+  alertText: { flex: 1, color: '#B91C1C', fontSize: 14, fontWeight: '500' },
 });

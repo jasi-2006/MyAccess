@@ -103,25 +103,27 @@ export default function RegisterGatewayScreen({ navigation }) {
   const handleRegister = async () => {
     if (!validateStep(2)) return;
 
+    const registerPayload = {
+      document,
+      documentType,
+      fullName: name,
+      password,
+      email,
+      phone: '',
+      nameRole: 'APRENDIZ',
+      trainingProgram,
+      trainingCenter,
+      bloodType,
+      regional: regional.toLowerCase(),
+    };
+
     try {
       setLoading(true);
       setSubmitError('');
       
-      await registerUser({
-        document,
-        documentType,
-        fullName: name,
-        password,
-        email,
-        phone: '',
-        nameRole: 'APRENDIZ',
-        trainingProgram,
-        trainingCenter,
-        bloodType,
-        regional: regional.toLowerCase(),
-      });
+      await registerUser(registerPayload);
       
-      navigation.navigate('Verification', { email });
+      navigation.navigate('Verification', { email, registerPayload });
     } catch (error) {
       setSubmitError(error.message || 'No fue posible crear la cuenta.');
     } finally {
