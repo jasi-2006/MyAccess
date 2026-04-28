@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRegisterProfileRepository extends JpaRepository<UserRegisterProfile, Long> {
-
-    Optional<UserRegisterProfile> findById(Long id);
-    List <UserRegisterProfile> findByNameRole(String nameRole);
-    List <UserRegisterProfile> findByDocument(String document);
-    Optional <UserRegisterProfile> findByEmail(String email);
-    boolean existsByEmail(String email);
+    List<UserRegisterProfile> findByNameRole(String nameRole);
+    List<UserRegisterProfile> findByDocument(String document);
+    boolean existsByDocument(String document);
+    Optional<UserRegisterProfile> findByEmail(String email);
 }

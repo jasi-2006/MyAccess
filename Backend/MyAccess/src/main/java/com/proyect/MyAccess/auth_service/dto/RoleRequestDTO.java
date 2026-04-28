@@ -9,6 +9,6 @@ public class RoleRequestDTO {
     private String nameRole;
     private String description;
     private Boolean accessLevel;
-    private Boolean assest;
+    private Boolean asset;
     private LocalDateTime dateCreation;
 }

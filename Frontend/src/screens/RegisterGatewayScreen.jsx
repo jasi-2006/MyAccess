@@ -1,100 +1,71 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Image, SafeAreaView} from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity,
+  KeyboardAvoidingView, Platform, ScrollView,
+  Image, SafeAreaView, useWindowDimensions,
+} from 'react-native';
 import { colors } from '../theme/colors.jsx';
 import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
-import HeaderCurved from '../components/HeaderCurved.jsx';
 import { registerUser } from '../services/authService';
 
 export default function RegisterGatewayScreen({ navigation }) {
-  const [currentStep, setCurrentStep] = useState(0); 
-  const steps = ['Registrate', 'Datos', 'login'];
-  const stepHeroContent = [
-    {
-      image: require('../assets/registro.png'),
-      text: 'Unete a nuestro equipo',
-    },
-    {
-      image: require('../assets/datos.png'),
-      text: 'Para tu carnet personal',
-    },
-    {
-      image: require('../assets/datos.png'),
-      text: 'Crea tus credenciales de acceso',
-    },
-  ];
+  const { width, height } = useWindowDimensions();
 
-  // Paso 1 (Registrate): Datos personales del carnet
+  const isSmallDevice = width < 375;
+  const isTablet = width >= 500 && width < 1024;
+  const isDesktop = width >= 600;
+  const scale = isDesktop ? 1.4 : isTablet ? 1.2 : isSmallDevice ? 0.9 : 1.7;
+  const horizontalPadding = isDesktop ? width * 0.29 : isTablet ? width * 0.20 : width * 0.10;
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const steps = ['Personal', 'Datos', 'Acceso'];
+
   const [name, setName] = useState('');
-  const [documentType, setDocumentType] = useState('CC');
+  const [typeDocument, setTypeDocument] = useState('CC');
   const [document, setDocument] = useState('');
   const [bloodType, setBloodType] = useState('');
 
-  // Paso 2 (Datos): Información institucional
-  const [regional, setRegional] = useState('Quindio');
+  const [regional, setRegional] = useState('quindio');
   const [trainingCenter, setTrainingCenter] = useState('centro comercio y turismo');
-  const [nameRole, setNameRole] = useState('Aprendiz');
+  const [nameRole, setNameRole] = useState('APRENDIZ');
   const [trainingProgram, setTrainingProgram] = useState('');
   const [ficha, setFicha] = useState('');
 
-  // Paso 3 (Login): Credenciales
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-
-  // Otros estados
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // ========== VALIDACIÓN POR PASO ==========
   const validateStep = (step) => {
     const newErrors = {};
-    
     if (step === 0) {
       if (!name || name.length < 3) newErrors.name = 'Nombre requerido';
       if (!document || document.length < 5) newErrors.document = 'Documento requerido';
       if (!bloodType) newErrors.bloodType = 'Tipo de sangre requerido';
     }
-    
     if (step === 1) {
       if (!trainingProgram) newErrors.trainingProgram = 'Programa requerido';
       if (!ficha) newErrors.ficha = 'N° Ficha requerido';
     }
-
     if (step === 2) {
       if (!email.includes('@')) newErrors.email = 'Email inválido';
       if (!password || password.length < 8) newErrors.password = 'Mín. 8 caracteres';
-     
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  
   const goToStep = (step) => {
-    
-    if (step < currentStep) {
-      setCurrentStep(step);
-      setErrors({});
-      return;
-    }
-    
-    if (step === currentStep + 1) {
-      if (validateStep(currentStep)) {
-        setCurrentStep(step);
-        setErrors({});
-      }
-    }
+    if (step < currentStep) { setCurrentStep(step); setErrors({}); return; }
+    if (step === currentStep + 1 && validateStep(currentStep)) { setCurrentStep(step); setErrors({}); }
   };
 
   const handleContinue = () => {
     if (currentStep < 2) {
-      if (validateStep(currentStep)) {
-        setCurrentStep(currentStep + 1);
-        setErrors({});
-      }
+      if (validateStep(currentStep)) { setCurrentStep(currentStep + 1); setErrors({}); }
     } else {
       handleRegister();
     }
@@ -102,28 +73,17 @@ export default function RegisterGatewayScreen({ navigation }) {
 
   const handleRegister = async () => {
     if (!validateStep(2)) return;
-
-    const registerPayload = {
-      document,
-      documentType,
-      fullName: name,
-      password,
-      email,
-      phone: '',
-      nameRole: 'APRENDIZ',
-      trainingProgram,
-      trainingCenter,
-      bloodType,
-      regional: regional.toLowerCase(),
-    };
-
     try {
       setLoading(true);
       setSubmitError('');
-      
-      await registerUser(registerPayload);
-      
-      navigation.navigate('Verification', { email, registerPayload });
+      await registerUser({
+        email, password,
+        fullName: name, typeDocument, document,
+        trainingProgram, trainingCenter,
+        regional: regional.toLowerCase(),
+        bloodType, nameRole: 'APRENDIZ', ficha,
+      });
+      navigation.navigate('Verification', { email });
     } catch (error) {
       setSubmitError(error.message || 'No fue posible crear la cuenta.');
     } finally {
@@ -131,322 +91,161 @@ export default function RegisterGatewayScreen({ navigation }) {
     }
   };
 
-  const BottomTabs = () => (
-    <View style={styles.tabsContainer}>
-      {steps.map((step, index) => (
-        <TouchableOpacity
-          key={step}
-          style={[
-            styles.tab,
-            currentStep === index && styles.tabActive
-          ]}
-          onPress={() => goToStep(index)}
-          activeOpacity={0.8}
-        >
-          <Text style={[
-            styles.tabText,
-            currentStep === index && styles.tabTextActive
-          ]}>
-            {step}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+  const dynamicStyles = {
+    headerImage: {
+      width: isDesktop ? 200 : isTablet ? 240 : isSmallDevice ? 150 : 230,
+      height: isDesktop ? 320 : isTablet ? 240 : isSmallDevice ? 150 : 190,
+      resizeMode: 'contain',
+      alignSelf: 'center',
+      marginBottom: isDesktop ? -40 : -30,
+      marginTop: isDesktop ? -100 : -20,
+    },
+    headerCurved: {
+      backgroundColor: colors.primary,
+      paddingTop: isDesktop ? height * 0.003 : height * 0.04,
+      paddingBottom: isDesktop ? height * 0.02 : height * 0.03,
+      paddingHorizontal: horizontalPadding,
+    },
+    headerSubtitle: {
+      fontSize: (isDesktop ? 14 : isTablet ? 18 : isSmallDevice ? 13 : 15) * scale,
+      color: '#FFFFFF',
+      marginTop: isDesktop ? -80 : isTablet ? 12 : isSmallDevice ? 12 : 1,
+      opacity: 0.9,
+      textAlign: 'center',
+    },
+    curveDecoration: {
+      height: isDesktop ? 60 : isTablet ? 40 : 30,
+      backgroundColor: '#FFFFFF',
+      borderTopLeftRadius: isDesktop ? 60 : isTablet ? 40 : 30,
+      borderTopRightRadius: isDesktop ? 60 : isTablet ? 40 : 30,
+      marginTop: 10,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: horizontalPadding,
+      paddingTop: isDesktop ? 40 : 20 * scale,
+      paddingBottom: isDesktop ? 50 : 100,
+      backgroundColor: '#FFFFFF',
+    },
+    pageTitle: {
+      fontSize: (isDesktop ? 20 : isTablet ? 32 : isSmallDevice ? 11 : 20) * scale,
+      fontWeight: '600',
+      color: '#0F766E',
+      marginTop: isDesktop ? -65 : isTablet ? 31 : isSmallDevice ? -14 : -24,
+      marginBottom: 14,
+    },
+  };
 
-  // ========== RENDERIZADO DE CADA PASO ==========
-  const renderStep0 = () => (
-    <View style={styles.stepContent}>
-      <Text style={styles.headerTitle}>Registrate! </Text>
-
-      <CustomInput
-        icon="👤"
-        placeholder="Nombre completo"
-        value={name}
-        onChangeText={setName}
-        error={errors.name}
-        autoCapitalize="words"
-      />
-
-      <CustomInput
-        icon="🪪"
-        placeholder="Tipo de documento"
-        value={documentType}
-        onChangeText={setDocumentType}
-        error={errors.documentType}
-      />
-
-      <CustomInput
-        icon="#️⃣"
-        placeholder="Numero de documento"
-        value={document}
-        onChangeText={setDocument}
-        keyboardType="numeric"
-        error={errors.document}
-      />
-
-      <CustomInput
-        icon="🩸"
-        placeholder="Tipo de sangre"
-        value={bloodType}
-        onChangeText={setBloodType}
-        autoCapitalize="characters"
-        error={errors.bloodType}
-      />
-
-      <PrimaryButton 
-        title="Continuar" 
-        onPress={handleContinue}
-        style={styles.continueButton}
-      />
-    </View>
-  );
-
-  const renderStep1 = () => (
-    <View style={styles.stepContent}>
-      <Text style={styles.headerTitle}>datos del carnet ! </Text>
-      
-      
-
-      <CustomInput
-        icon="📄"
-        placeholder="Regional"
-        value={regional}
-        onChangeText={setRegional}
-      />
-
-      <CustomInput
-        icon="🏢"
-        placeholder="Centro"
-        value={trainingCenter}
-        onChangeText={setTrainingCenter}
-      />
-
-      <CustomInput
-        icon="👤"
-        placeholder="Rol"
-        value={nameRole}
-        onChangeText={setNameRole}
-      />
-
-      <CustomInput
-        icon="⚙️"
-        placeholder="Programa"
-        value={trainingProgram}
-        onChangeText={setTrainingProgram}
-        error={errors.trainingProgram}
-      />
-
-      <CustomInput
-        icon="🔢"
-        placeholder="N° Ficha"
-        value={ficha}
-        onChangeText={setFicha}
-        keyboardType="numeric"
-        error={errors.ficha}
-      />
-
-      <PrimaryButton 
-        title="Continuar" 
-        onPress={handleContinue}
-        style={styles.continueButton}
-      />
-    </View>
-  );
-
-  const renderStep2 = () => (
-    <View style={styles.stepContent}>
-      <Text style={styles.headerTitle}>Credenciales de acceso ! </Text>
-    
-
-      <CustomInput
-        icon="📧"
-        placeholder="Correo electronico"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        error={errors.email}
-      />
-
-      <CustomInput
-        icon="🔒"
-        placeholder="Contrasena"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        error={errors.password}
-      />
-
-    
-
-      {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
-
-      <PrimaryButton 
-        title={loading ? "Creando..." : "Iniciar sesion"} 
-        onPress={handleContinue}
-        loading={loading}
-        style={styles.continueButton}
-      />
-  </View>
-  );
+  const stepTitles = ['Datos personales', 'Datos del carnet', 'Credenciales de acceso'];
+  const stepImages = [
+    require('../assets/registro.png'),
+    require('../assets/datos.png'),
+    require('../assets/login.png'),
+  ];
+  const stepSubtitles = [
+    'Ingresa tu información personal.',
+    'Completa los datos de tu carnet.',
+    'Crea tus credenciales de acceso.',
+  ];
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <HeaderCurved height={180} />
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
-        <View style={styles.topHero}>
-          <Image
-            source={stepHeroContent[currentStep].image}
-            style={styles.topHeroImage}
-            resizeMode="contain"
-          />
-          <Text style={styles.topHeroText}>{stepHeroContent[currentStep].text}</Text>
-        </View>
-        
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-        >
-          {currentStep === 0 && renderStep0()}
-          {currentStep === 1 && renderStep1()}
-          {currentStep === 2 && renderStep2()}
+          {/* HEADER */}
+          <View style={styles.headerContainer}>
+            <View style={dynamicStyles.headerCurved}>
+              <Image style={dynamicStyles.headerImage} source={stepImages[currentStep]} />
+              <Text style={dynamicStyles.headerSubtitle}>{stepSubtitles[currentStep]}</Text>
+            </View>
+            <View style={dynamicStyles.curveDecoration} />
+          </View>
+
+          {/* CONTENIDO */}
+          <View style={dynamicStyles.content}>
+            <Text style={dynamicStyles.pageTitle}>{stepTitles[currentStep]}</Text>
+
+            {/* PASO 0 */}
+            {currentStep === 0 && <>
+              <CustomInput icon="👤" placeholder="Nombre completo" value={name} onChangeText={setName} error={errors.name} autoCapitalize="words" />
+              <CustomInput icon="🪪" placeholder="Tipo de documento" value={typeDocument} onChangeText={setTypeDocument} />
+              <CustomInput icon="#️⃣" placeholder="Número de documento" value={document} onChangeText={setDocument} keyboardType="numeric" error={errors.document} />
+              <CustomInput icon="🩸" placeholder="Tipo de sangre" value={bloodType} onChangeText={setBloodType} autoCapitalize="characters" error={errors.bloodType} />
+            </>}
+
+            {/* PASO 1 */}
+            {currentStep === 1 && <>
+              <CustomInput icon="📄" placeholder="Regional" value={regional} onChangeText={setRegional} />
+              <CustomInput icon="🏢" placeholder="Centro de formación" value={trainingCenter} onChangeText={setTrainingCenter} />
+              <CustomInput icon="👤" placeholder="Rol" value={nameRole} onChangeText={setNameRole} />
+              <CustomInput icon="⚙️" placeholder="Programa de formación" value={trainingProgram} onChangeText={setTrainingProgram} error={errors.trainingProgram} />
+              <CustomInput icon="🔢" placeholder="N° Ficha" value={ficha} onChangeText={setFicha} keyboardType="numeric" error={errors.ficha} />
+            </>}
+
+            {/* PASO 2 */}
+            {currentStep === 2 && <>
+              <CustomInput icon="📧" placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" error={errors.email} />
+              <CustomInput icon="🔒" placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry error={errors.password} />
+              {submitError ? (
+                <View style={styles.alertBox}>
+                  <Text style={styles.alertIcon}>⚠️</Text>
+                  <Text style={styles.alertText}>{submitError}</Text>
+                </View>
+              ) : null}
+            </>}
+
+            <PrimaryButton title={currentStep < 2 ? 'Continuar' : loading ? 'Creando...' : 'Registrarse'} onPress={handleContinue} loading={loading} />
+
+            {/* TABS */}
+            <View style={styles.tabsContainer}>
+              {steps.map((step, index) => (
+                <TouchableOpacity key={step} style={[styles.tab, currentStep === index && styles.tabActive]} onPress={() => goToStep(index)} activeOpacity={0.8}>
+                  <Text style={[styles.tabText, currentStep === index && styles.tabTextActive]}>{step}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.loginContainer}>
+              <Text style={styles.loginText}>¿Ya tienes cuenta? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.loginLink}>Inicia sesión</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
         </ScrollView>
-
-        <BottomTabs />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
+  safeArea:      { flex: 1, backgroundColor: '#FFFFFF' },
+  container:     { flex: 1, backgroundColor: '#FFFFFF' },
+  scrollContent: { flexGrow: 1 },
+  headerContainer: { width: '100%', backgroundColor: colors.primary },
 
+  alertBox: {
+    flexDirection: 'row', alignItems: 'center',
+    backgroundColor: '#FEE2E2', borderLeftWidth: 4, borderLeftColor: '#EF4444',
+    borderRadius: 8, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 16, gap: 10,
   },
-  container: {
-    flex: 1,
-    backgroundColor:colors.background,
-    overflow: 'hidden',
-  },
-  topHero: {
-    position: 'absolute',
-    top: 18,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    zIndex: 5,
-    pointerEvents: 'none',
-  },
-  topHeroImage: {
-    width: 350,
-    height: 120,
-  },
+  alertIcon: { fontSize: 16 },
+  alertText: { flex: 1, color: '#B91C1C', fontSize: 14, fontWeight: '500' },
 
-  topHeroText: {
-    fontSize: 30,
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 35,
-    paddingBottom: 100, // Espacio para los tabs
-
-  },
-  
-  // Headers
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    fontWeight: '700',
-    color: colors.primary, // Verde principal
-    marginBottom: 10,
-  },
-
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: colors.text || '#333',
-  },
-  cardIcon: {
-    fontSize: 24,
-  },
-
-  // Step content
-  stepContent: {
-    width: '100%',
-  },
-
-  // Inputs estilo de la imagen (fondo verde claro)
-  // Nota: Estos estilos van en CustomInput o los overrides aquí
-  inputOverride: {
-    backgroundColor: '#C8E6C9', // Verde menta claro
-    borderRadius: 25,
-    borderWidth: 0,
-    marginBottom: 12,
-  },
-
-  // Botón continuar
-  continueButton: {
-    marginTop: 10,
-    marginBottom: 20,
-    borderRadius: 25,
-    backgroundColor: colors.primary, // Verde medio
-  },
-
-  // Error
-  submitError: {
-    color: colors.error || '#F44336',
-    marginBottom: 16,
-    textAlign: 'center',
-    fontSize: 14,
-  },
-
-  // ========== TABS INFERIORES ==========
   tabsContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-    flexDirection: 'row',
-    backgroundColor: '#C8E6C9', // Verde menta claro como en la imagen
-    borderRadius: 25,
-    padding: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    flexDirection: 'row', backgroundColor: '#C8E6C9',
+    borderRadius: 25, padding: 4, marginTop: 20, marginBottom: 20,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  tabActive: {
-    backgroundColor: colors.primary , // Verde más oscuro para el activo
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#666',
-  },
-  tabTextActive: {
-    color: '#FFF',
-    fontWeight: 'bold',
-  },
+  tab:           { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 20 },
+  tabActive:     { backgroundColor: colors.primary, elevation: 2 },
+  tabText:       { fontSize: 14, fontWeight: '500', color: '#666' },
+  tabTextActive: { color: '#FFF', fontWeight: 'bold' },
+
+  loginContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
+  loginText:      { fontSize: 14, color: '#6B7280' },
+  loginLink:      { fontSize: 14, color: '#0F766E', fontWeight: '600' },
 });

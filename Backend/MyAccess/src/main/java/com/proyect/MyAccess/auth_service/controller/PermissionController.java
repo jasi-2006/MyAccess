@@ -6,21 +6,26 @@ import com.proyect.MyAccess.auth_service.service.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
+/*
+ * Controlador REST para la gestión de permisos del sistema.
+ * Expone endpoints para crear y asociar permisos a roles.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/register")
 public class PermissionController {
-    public  final PermissionService permissionService;
 
+    private final PermissionService permissionService;
+
+    /*
+     * Crea un nuevo permiso y lo asocia a un rol si se proporciona idRole.
+     * @param dto Datos del permiso a crear
+     * @return ResponseEntity con el permiso creado y estado 201 Created
+     */
     @PostMapping("/permissions")
-    public ResponseEntity<PermissionResponseDTO> permission(@RequestBody PermissionRequestDTO requestDTO){
-        PermissionResponseDTO response = permissionService.create (requestDTO);
-         return  ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<PermissionResponseDTO> create(@RequestBody PermissionRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.create(dto));
     }
 }

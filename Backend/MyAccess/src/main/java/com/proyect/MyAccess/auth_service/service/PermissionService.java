@@ -10,35 +10,53 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/*
+ * Servicio para gestionar los permisos del sistema.
+ * Permite crear permisos y asociarlos a roles existentes.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class PermissionService {
-    public final PermissionRepository permissionRepository;
-    public final RoleRepository roleRepository;
 
-    public PermissionResponseDTO create(PermissionRequestDTO requestDTO) {
+    private final PermissionRepository permissionRepository;
+    private final RoleRepository roleRepository;
+
+    /*
+     * Crea un nuevo permiso y lo asocia a un rol si se proporciona idRole.
+     * @param dto Datos del permiso a crear, incluyendo opcionalmente el idRole
+     * @return PermissionResponseDTO con los datos del permiso creado
+     */
+    public PermissionResponseDTO create(PermissionRequestDTO dto) {
         Permissions permission = new Permissions();
-        permission.setDescription(requestDTO.getDescription());
-        permission.setPermissionCode(requestDTO.getPermissionCode());
-        permission.setPermissionName(requestDTO.getPermissionName());
-        permission.setModule(requestDTO.getModule());
+        permission.setDescription(dto.getDescription());
+        permission.setPermissionCode(dto.getPermissionCode());
+        permission.setPermissionName(dto.getPermissionName());
+        permission.setModule(dto.getModule());
 
-        if (requestDTO.getIdRole() != null) {
-            Role role = roleRepository.findById(requestDTO.getIdRole())
-                    .orElseThrow(() -> new RuntimeException("Rol no encontrado con id: " + requestDTO.getIdRole()));
+        if (dto.getIdRole() != null) {
+            Role role = roleRepository.findById(dto.getIdRole())
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado con id: " + dto.getIdRole()));
             permission.setRole(role);
         }
 
         permissionRepository.save(permission);
+        return toResponse(permission);
+    }
 
-        PermissionResponseDTO responseDTO = new PermissionResponseDTO();
-        responseDTO.setId(permission.getId());
-        responseDTO.setDescription(permission.getDescription());
-        responseDTO.setPermissionCode(permission.getPermissionCode());
-        responseDTO.setPermissionName(permission.getPermissionName());
-        responseDTO.setModule(permission.getModule());
-        responseDTO.setIdRole(permission.getRole() != null ? permission.getRole().getId() : null);
-        return responseDTO;
+    /*
+     * Convierte una entidad Permissions en su DTO de respuesta.
+     * @param permission Entidad de permiso a convertir
+     * @return PermissionResponseDTO con los datos mapeados
+     */
+    private PermissionResponseDTO toResponse(Permissions permission) {
+        PermissionResponseDTO r = new PermissionResponseDTO();
+        r.setId(permission.getId());
+        r.setDescription(permission.getDescription());
+        r.setPermissionCode(permission.getPermissionCode());
+        r.setPermissionName(permission.getPermissionName());
+        r.setModule(permission.getModule());
+        r.setIdRole(permission.getRole() != null ? permission.getRole().getId() : null);
+        return r;
     }
 }

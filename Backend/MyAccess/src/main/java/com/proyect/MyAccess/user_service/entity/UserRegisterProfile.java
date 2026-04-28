@@ -3,42 +3,41 @@ package com.proyect.MyAccess.user_service.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
-import java.time.LocalDateTime;
-
 @Entity
 @Data
-@Table(name ="user_profile")
+@Table(name = "user_profile")
 public class UserRegisterProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name ="document")
+
+    @Column(name = "document", nullable = false, unique = true)
     private String document;
-    @Column(name="documentType")
-    private String documentType;
-    @Column(name ="full_name")
+
+    @Column(name = "type_document")
+    private String typeDocument;
+
+    @Column(name = "full_name", nullable = false)
     private String fullName;
-    @Column(name ="phone")
-    private String phone;
-    @Column(name="nameRole")
-    private String nameRole;
-    @Column(name ="bloodType")
-    private String bloodType;
-    @Column(name ="regional")
-    private String regional;
-    @Column(name="trainingCenter")
-    private String trainingCenter;
-    @Column(name ="trainingProgram")
+
+    @Column(name = "trainingProgram")
     private String trainingProgram;
-    @Column(name="email")
+
+    @Column(name = "trainingCenter")
+    private String trainingCenter;
+
+    @Column(name = "regional")
+    private String regional;
+
+    @Column(name = "bloodType")
+    private String bloodType;
+
+    @Column(name = "nameRole")
+    private String nameRole;
+
+    @Column(name = "ficha")
+    private String ficha;
+
+    @Column(name = "email", unique = true)
     private String email;
-    @Column(name="password")
-    private String password;
-    @Column (name="verificationCode")
-    private String verificationCode;
-    @Column (name= "codeExpiration")
-    private LocalDateTime codeExpiration;
-    @Column (name="verified")
-    private Boolean verified;
 }

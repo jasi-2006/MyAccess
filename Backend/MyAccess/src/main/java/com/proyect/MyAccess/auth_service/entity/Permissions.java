@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "permission")
+@Table(name = "permissions")
 public class Permissions {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -20,7 +19,6 @@ public class Permissions {
     private String description;
     @Column(name = "module")
     private String module;
-
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role role;

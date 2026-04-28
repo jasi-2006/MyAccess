@@ -1,14 +1,15 @@
 package com.proyect.MyAccess.user_service.dto;
 
 import lombok.Data;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 @Data
 public class UserRegisterEventsResponseDTO {
     private Long id;
-    private String typeEvent;
+    private String tipeEvent;
     private Boolean processed;
-    private LocalDate eventDate;
-    private String description;
+    private LocalDateTime eventDate;
+    private String descriptions;
     private Long idUser;
 }

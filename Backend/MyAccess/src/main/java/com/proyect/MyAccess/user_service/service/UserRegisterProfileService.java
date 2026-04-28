@@ -1,13 +1,11 @@
 package com.proyect.MyAccess.user_service.service;
 
-import com.proyect.MyAccess.user_service.dto.UpdatePasswordRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.MyAccess.user_service.entity.UserRegisterProfile;
 import com.proyect.MyAccess.user_service.repository.UserRegisterProfileRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,206 +18,62 @@ import java.util.Optional;
 public class UserRegisterProfileService {
 
     private final UserRegisterProfileRepository userRepository;
-    private  final VerificationService verificationService;
 
-    public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO userRequestDTO) {
-        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
+    public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO dto) {
+        if (userRepository.existsByDocument(dto.getDocument())) {
+            throw new RuntimeException("El documento ya está registrado");
         }
         UserRegisterProfile user = new UserRegisterProfile();
-        user.setDocument(userRequestDTO.getDocument());
-        user.setDocumentType(userRequestDTO.getDocumentType());
-        user.setFullName(userRequestDTO.getFullName());
-        user.setPhone(userRequestDTO.getPhone());
-        user.setNameRole(userRequestDTO.getNameRole());
-        user.setBloodType(userRequestDTO.getBloodType());
-        user.setTrainingProgram(userRequestDTO.getTrainingProgram());
-        user.setEmail(userRequestDTO.getEmail());
-
-
-        String encryptedPassword = BCrypt.hashpw(userRequestDTO.getPassword(), BCrypt.gensalt());
-        user.setPassword(encryptedPassword);
-
-       userRepository.save(user);
-
-        UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-        response.setId(user.getId());
-        response.setDocument(userRequestDTO.getDocument());
-        response.setDocumentType(userRequestDTO.getDocumentType());
-        response.setFullName(userRequestDTO.getFullName());
-        response.setEmail(userRequestDTO.getEmail());
-        response.setPhone(userRequestDTO.getPhone());
-        response.setNameRole(userRequestDTO.getNameRole());
-        response.setRegional(userRequestDTO.getRegional());
-        response.setTrainingCenter(userRequestDTO.getTrainingCenter());
-        response.setBloodType(userRequestDTO.getBloodType());
-        response.setTrainingProgram(userRequestDTO.getTrainingProgram());
-        response.setPassword(userRequestDTO.getPassword());
-        verificationService.sendCode(userRequestDTO.getEmail());
-
-        return response;
+        applyUpdate(user, dto);
+        userRepository.save(user);
+        return toResponse(user);
     }
 
-
     public List<UserRegisterProfileResponseDTO> getUsuarios() {
-        List<UserRegisterProfile> users = userRepository.findAll();
         List<UserRegisterProfileResponseDTO> list = new ArrayList<>();
-
-        for (UserRegisterProfile user : users) {
-            UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-            response.setId(user.getId());
-            response.setDocument(user.getDocument());
-            response.setDocumentType(user.getDocumentType());
-            response.setFullName(user.getFullName());
-            response.setEmail(user.getEmail());
-            response.setPhone(user.getPhone());
-            response.setNameRole(user.getNameRole());
-            response.setPassword(user.getPassword());
-            response.setRegional(user.getRegional());
-            response.setTrainingCenter(user.getTrainingCenter());
-            response.setBloodType(user.getBloodType());
-            response.setTrainingProgram(user.getTrainingProgram());
-            list.add(response);
+        for (UserRegisterProfile user : userRepository.findAll()) {
+            list.add(toResponse(user));
         }
         return list;
     }
 
-
     public List<UserRegisterProfileResponseDTO> getForNameRol(String nameRole) {
-        List<UserRegisterProfile> users = userRepository.findByNameRole(nameRole);
-        List<UserRegisterProfileResponseDTO> response = new ArrayList<>();
-
-        for (UserRegisterProfile user : users) {
-            UserRegisterProfileResponseDTO responseDTO = new UserRegisterProfileResponseDTO();
-            responseDTO.setId(user.getId());
-            responseDTO.setDocument(user.getDocument());
-            user.setDocumentType(user.getDocumentType());
-            responseDTO.setFullName(user.getFullName());
-            responseDTO.setEmail(user.getEmail());
-            responseDTO.setPhone(user.getPhone());
-            responseDTO.setPassword(user.getPassword());
-            responseDTO.setNameRole(user.getNameRole());
-            responseDTO.setTrainingProgram(user.getTrainingProgram());
-            responseDTO.setTrainingCenter(user.getTrainingCenter());
-            responseDTO.setBloodType(user.getBloodType());
-            responseDTO.setRegional(user.getRegional());
-            response.add(responseDTO);
+        List<UserRegisterProfileResponseDTO> list = new ArrayList<>();
+        for (UserRegisterProfile user : userRepository.findByNameRole(nameRole)) {
+            list.add(toResponse(user));
         }
-        return response;
+        return list;
     }
-
 
     public List<UserRegisterProfileResponseDTO> getForDocument(String document) {
-        List<UserRegisterProfile> users = userRepository.findByDocument(document);
-        List<UserRegisterProfileResponseDTO> response = new ArrayList<>();
-
-        for (UserRegisterProfile user : users) {
-            UserRegisterProfileResponseDTO responseDTO = new UserRegisterProfileResponseDTO();
-            responseDTO.setId(user.getId());
-            responseDTO.setDocument(user.getDocument());
-            responseDTO.setDocumentType(user.getDocumentType());
-            responseDTO.setFullName(user.getFullName());
-            responseDTO.setEmail(user.getEmail());
-            responseDTO.setPassword(user.getPassword());
-            responseDTO.setPhone(user.getPhone());
-            responseDTO.setNameRole(user.getNameRole());
-            responseDTO.setRegional(user.getRegional());
-            responseDTO.setBloodType(user.getBloodType());
-            responseDTO.setTrainingCenter(user.getTrainingCenter());
-            responseDTO.setTrainingProgram(user.getTrainingProgram());
-            response.add(responseDTO);
+        List<UserRegisterProfileResponseDTO> list = new ArrayList<>();
+        for (UserRegisterProfile user : userRepository.findByDocument(document)) {
+            list.add(toResponse(user));
         }
-        return response;
+        return list;
     }
 
-    public Optional<UserRegisterProfileResponseDTO> updateUser(Long id, UserRegisterProfileRequestDTO userRequestDTO) {
-        Optional<UserRegisterProfile> optionalUser = userRepository.findById(id);
-
-        if (optionalUser.isPresent()) {
-            UserRegisterProfile user = optionalUser.get();
-            user.setDocument(userRequestDTO.getDocument());
-            user.setDocumentType(userRequestDTO.getDocumentType());
-            user.setFullName(userRequestDTO.getFullName());
-            user.setPhone(userRequestDTO.getPhone());
-            user.setEmail(userRequestDTO.getEmail());
-            user.setPassword(userRequestDTO.getPassword());
-            user.setNameRole(userRequestDTO.getNameRole());
-            user.setTrainingProgram(userRequestDTO.getTrainingProgram());
-            user.setBloodType(userRequestDTO.getBloodType());
-
-            UserRegisterProfile updatedUser = userRepository.save(user);
-
-            UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-            response.setId(updatedUser.getId());
-            response.setDocument(updatedUser.getDocument());
-            response.setDocumentType(userRequestDTO.getDocumentType());
-            response.setFullName(updatedUser.getFullName());
-            response.setEmail(updatedUser.getEmail());
-            response.setPhone(updatedUser.getPhone());
-            response.setPassword(updatedUser.getPassword());
-            response.setBloodType(updatedUser.getBloodType());
-            response.setTrainingCenter(updatedUser.getTrainingCenter());
-            response.setTrainingProgram(updatedUser.getTrainingProgram());
-            response.setNameRole(updatedUser.getNameRole());
-            response.setRegional(updatedUser.getRegional());
-
-            return Optional.of(response);
-        } else {
-            return Optional.empty();
-        }
+    public Optional<UserRegisterProfileResponseDTO> getByEmail(String email) {
+        return userRepository.findByEmail(email).map(this::toResponse);
     }
 
-    public Optional<UserRegisterProfileResponseDTO> updateUserForDocument(String document, UserRegisterProfileRequestDTO userRequestDTO) {
+    public Optional<UserRegisterProfileResponseDTO> updateUser(Long id, UserRegisterProfileRequestDTO dto) {
+        return userRepository.findById(id).map(user -> {
+            applyUpdate(user, dto);
+            return toResponse(userRepository.save(user));
+        });
+    }
+
+    public Optional<UserRegisterProfileResponseDTO> updateUserForDocument(String document, UserRegisterProfileRequestDTO dto) {
         List<UserRegisterProfile> users = userRepository.findByDocument(document);
-
-        if (users.isEmpty()) {
-            return Optional.empty();
-        }
-
+        if (users.isEmpty()) return Optional.empty();
         UserRegisterProfile user = users.get(0);
-
-        user.setDocument(userRequestDTO.getDocument());
-        user.setDocumentType(userRequestDTO.getDocumentType());
-        user.setFullName(userRequestDTO.getFullName());
-        user.setEmail(userRequestDTO.getEmail());
-        user.setPhone(userRequestDTO.getPhone());
-        user.setPassword(userRequestDTO.getPassword());
-        user.setNameRole(userRequestDTO.getNameRole());
-        user.setTrainingProgram(userRequestDTO.getTrainingProgram());
-        user.setBloodType(userRequestDTO.getBloodType());
-
-        UserRegisterProfile updatedUser = userRepository.save(user);
-
-        UserRegisterProfileResponseDTO response = new UserRegisterProfileResponseDTO();
-        response.setId(updatedUser.getId());
-        response.setDocument(updatedUser.getDocument());
-        response.setDocumentType(userRequestDTO.getDocumentType());
-        response.setFullName(updatedUser.getFullName());
-        response.setEmail(updatedUser.getEmail());
-        response.setPassword(updatedUser.getPassword());
-        response.setPhone(updatedUser.getPhone());
-        response.setNameRole(updatedUser.getNameRole());
-        response.setTrainingProgram(updatedUser.getTrainingProgram());
-        response.setTrainingCenter(updatedUser.getTrainingCenter());
-        response.setRegional(updatedUser.getRegional());
-        response.setBloodType(updatedUser.getBloodType());
-
-        return Optional.of(response);
-    }
-
-    public void updatePassword(UpdatePasswordRequestDTO dto) {
-        UserRegisterProfile user = userRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if (!BCrypt.checkpw(dto.getCurrentPassword(), user.getPassword())) {
-            throw new RuntimeException("Contraseña actual incorrecta");
-        }
-        user.setPassword(BCrypt.hashpw(dto.getNewPassword(), BCrypt.gensalt()));
-        userRepository.save(user);
+        applyUpdate(user, dto);
+        return Optional.of(toResponse(userRepository.save(user)));
     }
 
     public boolean deleteUserDoc(String document) {
         List<UserRegisterProfile> users = userRepository.findByDocument(document);
-
         if (!users.isEmpty()) {
             userRepository.delete(users.get(0));
             return true;
@@ -227,5 +81,32 @@ public class UserRegisterProfileService {
         return false;
     }
 
+    private void applyUpdate(UserRegisterProfile user, UserRegisterProfileRequestDTO dto) {
+        user.setDocument(dto.getDocument());
+        user.setTypeDocument(dto.getTypeDocument());
+        user.setFullName(dto.getFullName());
+        user.setTrainingProgram(dto.getTrainingProgram());
+        user.setTrainingCenter(dto.getTrainingCenter());
+        user.setRegional(dto.getRegional());
+        user.setBloodType(dto.getBloodType());
+        user.setNameRole(dto.getNameRole());
+        user.setFicha(dto.getFicha());
+        user.setEmail(dto.getEmail());
+    }
 
+    private UserRegisterProfileResponseDTO toResponse(UserRegisterProfile user) {
+        UserRegisterProfileResponseDTO r = new UserRegisterProfileResponseDTO();
+        r.setId(user.getId());
+        r.setDocument(user.getDocument());
+        r.setTypeDocument(user.getTypeDocument());
+        r.setFullName(user.getFullName());
+        r.setTrainingProgram(user.getTrainingProgram());
+        r.setTrainingCenter(user.getTrainingCenter());
+        r.setRegional(user.getRegional());
+        r.setBloodType(user.getBloodType());
+        r.setNameRole(user.getNameRole());
+        r.setFicha(user.getFicha());
+        r.setEmail(user.getEmail());
+        return r;
+    }
 }

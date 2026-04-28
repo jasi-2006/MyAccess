@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     fontSize: 24,
-    color: '#2A8D7C',
+    color: colors.primary,
     marginTop: -2,
   },
   headerContent: {
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 56,
-    backgroundColor: '#D5F9E8',
+    backgroundColor: colors.primary,
     borderRadius: 28,
     paddingHorizontal: 24,
     textAlign: 'center',

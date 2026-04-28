@@ -5,26 +5,23 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="user_auth")
+@Table(name = "user_auth")
 public class UserAuth {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    @Column(name = "document_type")
-    private String documentType;
-    @Column (name="numberDocument")
-    private String numberDocument;
-    @Column(name ="email")
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name ="password")
+
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column (name = "verified_email")
+
+    @Column(name = "verified_email")
     private Boolean verifiedEmail;
 
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role role;
-
-
 }

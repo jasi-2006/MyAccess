@@ -3,8 +3,13 @@ package com.proyect.MyAccess.user_service.dto;
 import lombok.Data;
 
 @Data
-public class UserRegisterProfileResponseDTO {
-    private Long id;
+public class RegisterRequestDTO {
+    // user_auth
+    private String email;
+    private String password;
+
+
+    // user_profile
     private String document;
     private String typeDocument;
     private String fullName;
@@ -13,6 +18,5 @@ public class UserRegisterProfileResponseDTO {
     private String regional;
     private String bloodType;
     private String nameRole;
-    private String ficha;
-    private String email;
+    private String Ficha;
 }

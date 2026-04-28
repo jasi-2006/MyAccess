@@ -1,63 +1,51 @@
-create database auth_service;
-use auth_service;
-drop database auth_service;
-create table roles(
-id int primary key auto_increment,
-name_role varchar (40),
-description text (40),
-access_level integer default 1 ,
-assest boolean default true,
-date_creation timestamp default current_timestamp
+CREATE DATABASE IF NOT EXISTS auth_service;
+USE auth_service;
+
+CREATE TABLE roles (
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    name_role     VARCHAR(40) ,
+    description   TEXT,
+    asset         BOOLEAN DEFAULT TRUE,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-drop table roles;
-drop table permissions;
-
-
-create table permissions(
-id int primary key auto_increment,
-permission_code varchar (50) not null unique,
-permission_name varchar (100) not null,
-description text,
-module varchar (50),
-id_role int,
-foreign key (id_role) references roles (id)
+CREATE TABLE permissions (
+    id              INT PRIMARY KEY AUTO_INCREMENT,
+    permission_code VARCHAR(50) ,
+    permission_name VARCHAR(100) ,
+    description     TEXT,
+    module          VARCHAR(50),
+    id_role         INT,
+    FOREIGN KEY (id_role) REFERENCES roles(id)
 );
 
-
-
-drop table role_permission;
-create table user_auth(
-id int primary key auto_increment,
-document_tipe varchar(20) unique,
-number_document varchar(20) unique,
-email varchar (40),
-password varchar (255),
-id_role int, 
-verified_email boolean default false,
-foreign key (id_role) references roles(id)
+CREATE TABLE user_auth (
+    id             INT PRIMARY KEY AUTO_INCREMENT,
+    email          VARCHAR(100) ,
+    password       VARCHAR(255) ,
+    id_role        INT,
+    verified_email BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_role) REFERENCES roles(id)
 );
 
-drop table user_auth;
-create table audit(
-id int  primary key auto_increment,
-id_user int,
-acction varchar(50),
-module varchar (50),
-description text,
-foreign key (id_user) references user_auth (id)
+CREATE TABLE audit (
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    id_user     INT ,
+    acction     VARCHAR(50),
+    module      VARCHAR(50),
+    description TEXT,
+    audit_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES user_auth(id)
 );
 
-drop table audit;
-create table sesions_actives(
-id int primary key auto_increment,
-id_user int,
-tocken varchar (255),
-ip_addre varchar(255),
-active boolean default false,
-foreign key (id_user) references user_auth (id)
+CREATE TABLE sessions_active (
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    id_user      INT ,
+    token        VARCHAR(255),
+    ip_addr      VARCHAR(255),
+    active       BOOLEAN DEFAULT FALSE,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES user_auth(id)
 );
 
-drop table sesions_actives;
-
-drop database auth_service;
+select * from user_auth;
