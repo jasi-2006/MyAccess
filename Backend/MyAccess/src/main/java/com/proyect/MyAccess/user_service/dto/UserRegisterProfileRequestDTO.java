@@ -5,14 +5,13 @@ import lombok.Data;
 @Data
 public class UserRegisterProfileRequestDTO {
     private String document;
-    private String documentType;
+    private String typeDocument;
     private String fullName;
-    private String password;
-    private String email;
-    private String phone;
-    private String nameRole;
     private String trainingProgram;
     private String trainingCenter;
-    private String bloodType;
     private String regional;
+    private String bloodType;
+    private String nameRole;
+    private String ficha;
+    private String email;
 }

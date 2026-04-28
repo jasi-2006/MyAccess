@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/*
+ * Servicio para gestionar las configuraciones del sistema de notificaciones.
+ * Permite crear, consultar y actualizar parámetros de configuración por clave.
+ */
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -20,88 +24,79 @@ public class ConfigService {
 
     private final ConfigRepository configRepository;
 
+    /*
+     * Crea y persiste una nueva configuración. Asigna la fecha de modificación automáticamente.
+     * @param dto Datos de la configuración a crear
+     * @return ConfigResponseDTO con los datos de la configuración creada
+     */
     public ConfigResponseDTO create(ConfigRequestDTO dto) {
         Config config = new Config();
+        applyUpdate(config, dto);
+        configRepository.save(config);
+        return toResponse(config);
+    }
+
+    /*
+     * Retorna todas las configuraciones registradas en el sistema.
+     * @return Lista de ConfigResponseDTO con todas las configuraciones
+     */
+    public List<ConfigResponseDTO> getAll() {
+        List<ConfigResponseDTO> list = new ArrayList<>();
+        for (Config config : configRepository.findAll()) {
+            list.add(toResponse(config));
+        }
+        return list;
+    }
+
+    /*
+     * Busca una configuración por su clave única.
+     * @param clue Clave de la configuración a buscar
+     * @return Optional con el ConfigResponseDTO encontrado, vacío si no existe
+     */
+    public Optional<ConfigResponseDTO> getByClue(String clue) {
+        return configRepository.findByClue(clue).map(this::toResponse);
+    }
+
+    /*
+     * Actualiza los datos de una configuración existente por su ID.
+     * Actualiza la fecha de modificación automáticamente.
+     * @param id Identificador de la configuración a actualizar
+     * @param dto Nuevos datos de la configuración
+     * @return Optional con el ConfigResponseDTO actualizado, vacío si no existe
+     */
+    public Optional<ConfigResponseDTO> update(Long id, ConfigRequestDTO dto) {
+        return configRepository.findById(id).map(config -> {
+            applyUpdate(config, dto);
+            return toResponse(configRepository.save(config));
+        });
+    }
+
+    /*
+     * Aplica los datos del DTO sobre una entidad Config (usado en create y update).
+     * @param config Entidad Config a modificar
+     * @param dto Datos a aplicar
+     */
+    private void applyUpdate(Config config, ConfigRequestDTO dto) {
         config.setClue(dto.getClue());
         config.setValue(dto.getValue());
         config.setDescription(dto.getDescription());
         config.setModifiedBy(dto.getModifiedBy());
         config.setModifiedDate(LocalDateTime.now());
-
-        configRepository.save(config);
-
-        ConfigResponseDTO response = new ConfigResponseDTO();
-        response.setIdConfig(config.getIdConfig());
-        response.setClue(config.getClue());
-        response.setValue(config.getValue());
-        response.setDescription(config.getDescription());
-        response.setModifiedBy(config.getModifiedBy());
-        response.setModifiedDate(config.getModifiedDate());
-
-        return response;
     }
 
-    public List<ConfigResponseDTO> getAll() {
-        List<Config> configs = configRepository.findAll();
-        List<ConfigResponseDTO> list = new ArrayList<>();
-
-        for (Config config : configs) {
-            ConfigResponseDTO response = new ConfigResponseDTO();
-            response.setIdConfig(config.getIdConfig());
-            response.setClue(config.getClue());
-            response.setValue(config.getValue());
-            response.setDescription(config.getDescription());
-            response.setModifiedBy(config.getModifiedBy());
-            response.setModifiedDate(config.getModifiedDate());
-            list.add(response);
-        }
-        return list;
-    }
-
-    public Optional<ConfigResponseDTO> getByClue(String clue) {
-        Optional<Config> optionalConfig = configRepository.findByClue(clue);
-
-        if (optionalConfig.isPresent()) {
-            Config config = optionalConfig.get();
-
-            ConfigResponseDTO response = new ConfigResponseDTO();
-            response.setIdConfig(config.getIdConfig());
-            response.setClue(config.getClue());
-            response.setValue(config.getValue());
-            response.setDescription(config.getDescription());
-            response.setModifiedBy(config.getModifiedBy());
-            response.setModifiedDate(config.getModifiedDate());
-
-            return Optional.of(response);
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<ConfigResponseDTO> update(Long id, ConfigRequestDTO dto) {
-        Optional<Config> optionalConfig = configRepository.findById(id);
-
-        if (optionalConfig.isPresent()) {
-            Config config = optionalConfig.get();
-            config.setClue(dto.getClue());
-            config.setValue(dto.getValue());
-            config.setDescription(dto.getDescription());
-            config.setModifiedBy(dto.getModifiedBy());
-            config.setModifiedDate(LocalDateTime.now());
-
-            Config updated = configRepository.save(config);
-
-            ConfigResponseDTO response = new ConfigResponseDTO();
-            response.setIdConfig(updated.getIdConfig());
-            response.setClue(updated.getClue());
-            response.setValue(updated.getValue());
-            response.setDescription(updated.getDescription());
-            response.setModifiedBy(updated.getModifiedBy());
-            response.setModifiedDate(updated.getModifiedDate());
-
-            return Optional.of(response);
-        } else {
-            return Optional.empty();
-        }
+    /*
+     * Convierte una entidad Config en su DTO de respuesta.
+     * @param config Entidad de configuración a convertir
+     * @return ConfigResponseDTO con los datos mapeados
+     */
+    private ConfigResponseDTO toResponse(Config config) {
+        ConfigResponseDTO r = new ConfigResponseDTO();
+        r.setIdConfig(config.getIdConfig());
+        r.setClue(config.getClue());
+        r.setValue(config.getValue());
+        r.setDescription(config.getDescription());
+        r.setModifiedBy(config.getModifiedBy());
+        r.setModifiedDate(config.getModifiedDate());
+        return r;
     }
 }

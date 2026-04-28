@@ -1,48 +1,26 @@
-create database user_service;
-use user_service;
-drop database user_profile;
+CREATE DATABASE IF NOT EXISTS user_service;
+USE user_service;
 
-
-create table user_profile (
-id int primary key auto_increment,
-name varchar(100),
-lastName varchar(100),
-document varchar(29),
-phone varchar(20),
-trainingProgram varchar (250),
-trainingCenter varchar (100) default "comercio y turismo" ,
-regional varchar (50) default "quindio" ,
-bloodType varchar(5),
-password varchar (255),
-email varchar (100),
-nameRole varchar(50)
+CREATE TABLE user_profile (
+    id              INT PRIMARY KEY AUTO_INCREMENT,
+    document        VARCHAR(29) NOT NULL UNIQUE,
+    type_document   VARCHAR(12),
+    full_name       VARCHAR(100) NOT NULL,
+    trainingProgram VARCHAR(250),
+    trainingCenter  VARCHAR(100),
+    regional        VARCHAR(50),
+    bloodType       VARCHAR(5),
+    nameRole        VARCHAR(50),
+    ficha           VARCHAR(20),
+    email           VARCHAR(100) UNIQUE
 );
 
-drop table user_profile;
-select * from user_profile;
-
-CREATE TABLE user_events(
-    id int PRIMARY KEY AUTO_INCREMENT,
-    tipeEvent VARCHAR(50),
-    idUser INTEGER,
-    processed BOOLEAN DEFAULT FALSE,
+CREATE TABLE user_events (
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    tipeEvent    VARCHAR(50),
+    idUser       INTEGER NOT NULL,
+    processed    BOOLEAN DEFAULT FALSE,
     eventDate    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    descriptions varchar(255),
-    foreign key (idUser) references user_profile(id)
-    );
-
-
-select E.*, u.* from user_events E
-inner join user_profile u on  E.idUser = u.id;
-
-select * from user_events;
-drop table user_events;
-
-
-alter table user_profile
-	ADD column verificationCode varchar(6),
-    ADD column codeExpiration dateTime,
-    ADD COLUMN verified boolean default false
-    ;
-
-	
+    descriptions VARCHAR(255),
+    FOREIGN KEY (idUser) REFERENCES user_profile(id)
+);

@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/*
+ * Servicio para gestionar los carnets de los usuarios.
+ * Permite crear, consultar, actualizar y eliminar carnets digitales y físicos.
+ */
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -19,8 +23,75 @@ public class CardService {
 
     private final CardRepository cardRepository;
 
+    /*
+     * Crea y persiste un nuevo carnet para un usuario.
+     * @param dto Datos del carnet a crear
+     * @return CardResponseDTO con los datos del carnet creado
+     */
     public CardResponseDTO create(CardRequestDTO dto) {
         Card card = new Card();
+        applyUpdate(card, dto);
+        cardRepository.save(card);
+        return toResponse(card);
+    }
+
+    /*
+     * Retorna todos los carnets registrados en el sistema.
+     * @return Lista de CardResponseDTO con todos los carnets
+     */
+    public List<CardResponseDTO> getAll() {
+        List<CardResponseDTO> list = new ArrayList<>();
+        for (Card card : cardRepository.findAll()) {
+            list.add(toResponse(card));
+        }
+        return list;
+    }
+
+    /*
+     * Retorna todos los carnets asociados a un usuario específico.
+     * @param idUser Identificador del usuario
+     * @return Lista de CardResponseDTO con los carnets del usuario
+     */
+    public List<CardResponseDTO> getByUser(Integer idUser) {
+        List<CardResponseDTO> list = new ArrayList<>();
+        for (Card card : cardRepository.findByIdUser(idUser)) {
+            list.add(toResponse(card));
+        }
+        return list;
+    }
+
+    /*
+     * Actualiza los datos de un carnet existente por su ID.
+     * @param id Identificador del carnet a actualizar
+     * @param dto Nuevos datos del carnet
+     * @return Optional con el CardResponseDTO actualizado, vacío si no existe
+     */
+    public Optional<CardResponseDTO> update(Long id, CardRequestDTO dto) {
+        return cardRepository.findById(id).map(card -> {
+            applyUpdate(card, dto);
+            return toResponse(cardRepository.save(card));
+        });
+    }
+
+    /*
+     * Elimina un carnet por su ID.
+     * @param id Identificador del carnet a eliminar
+     * @return true si fue eliminado, false si no existía
+     */
+    public boolean delete(Long id) {
+        if (cardRepository.existsById(id)) {
+            cardRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * Aplica los datos del DTO sobre una entidad Card (usado en create y update).
+     * @param card Entidad Card a modificar
+     * @param dto Datos a aplicar
+     */
+    private void applyUpdate(Card card, CardRequestDTO dto) {
         card.setIdUser(dto.getIdUser());
         card.setPhotoUrl(dto.getPhotoUrl());
         card.setValidPhoto(dto.getValidPhoto());
@@ -31,111 +102,26 @@ public class CardService {
         card.setExpirationDate(dto.getExpirationDate());
         card.setReprints(dto.getReprints());
         card.setReasonForLastReprints(dto.getReasonForLastReprints());
-
-        cardRepository.save(card);
-
-        CardResponseDTO response = new CardResponseDTO();
-        response.setIdCard(card.getIdCard());
-        response.setIdUser(card.getIdUser());
-        response.setPhotoUrl(card.getPhotoUrl());
-        response.setValidPhoto(card.getValidPhoto());
-        response.setDigitalState(card.getDigitalState());
-        response.setPhysicalState(card.getPhysicalState());
-        response.setDigitalIssueDate(card.getDigitalIssueDate());
-        response.setPhysicalStateDate(card.getPhysicalStateDate());
-        response.setExpirationDate(card.getExpirationDate());
-        response.setReprints(card.getReprints());
-        response.setReasonForLastReprints(card.getReasonForLastReprints());
-
-        return response;
     }
 
-    public List<CardResponseDTO> getAll() {
-        List<Card> cards = cardRepository.findAll();
-        List<CardResponseDTO> list = new ArrayList<>();
-
-        for (Card card : cards) {
-            CardResponseDTO response = new CardResponseDTO();
-            response.setIdCard(card.getIdCard());
-            response.setIdUser(card.getIdUser());
-            response.setPhotoUrl(card.getPhotoUrl());
-            response.setValidPhoto(card.getValidPhoto());
-            response.setDigitalState(card.getDigitalState());
-            response.setPhysicalState(card.getPhysicalState());
-            response.setDigitalIssueDate(card.getDigitalIssueDate());
-            response.setPhysicalStateDate(card.getPhysicalStateDate());
-            response.setExpirationDate(card.getExpirationDate());
-            response.setReprints(card.getReprints());
-            response.setReasonForLastReprints(card.getReasonForLastReprints());
-            list.add(response);
-        }
-        return list;
-    }
-
-    public List<CardResponseDTO> getByUser(Integer idUser) {
-        List<Card> cards = cardRepository.findByIdUser(idUser);
-        List<CardResponseDTO> list = new ArrayList<>();
-
-        for (Card card : cards) {
-            CardResponseDTO response = new CardResponseDTO();
-            response.setIdCard(card.getIdCard());
-            response.setIdUser(card.getIdUser());
-            response.setPhotoUrl(card.getPhotoUrl());
-            response.setValidPhoto(card.getValidPhoto());
-            response.setDigitalState(card.getDigitalState());
-            response.setPhysicalState(card.getPhysicalState());
-            response.setDigitalIssueDate(card.getDigitalIssueDate());
-            response.setPhysicalStateDate(card.getPhysicalStateDate());
-            response.setExpirationDate(card.getExpirationDate());
-            response.setReprints(card.getReprints());
-            response.setReasonForLastReprints(card.getReasonForLastReprints());
-            list.add(response);
-        }
-        return list;
-    }
-
-    public Optional<CardResponseDTO> update(Long id, CardRequestDTO dto) {
-        Optional<Card> optionalCard = cardRepository.findById(id);
-
-        if (optionalCard.isPresent()) {
-            Card card = optionalCard.get();
-            card.setIdUser(dto.getIdUser());
-            card.setPhotoUrl(dto.getPhotoUrl());
-            card.setValidPhoto(dto.getValidPhoto());
-            card.setDigitalState(dto.getDigitalState());
-            card.setPhysicalState(dto.getPhysicalState());
-            card.setDigitalIssueDate(dto.getDigitalIssueDate());
-            card.setPhysicalStateDate(dto.getPhysicalStateDate());
-            card.setExpirationDate(dto.getExpirationDate());
-            card.setReprints(dto.getReprints());
-            card.setReasonForLastReprints(dto.getReasonForLastReprints());
-
-            Card updated = cardRepository.save(card);
-
-            CardResponseDTO response = new CardResponseDTO();
-            response.setIdCard(updated.getIdCard());
-            response.setIdUser(updated.getIdUser());
-            response.setPhotoUrl(updated.getPhotoUrl());
-            response.setValidPhoto(updated.getValidPhoto());
-            response.setDigitalState(updated.getDigitalState());
-            response.setPhysicalState(updated.getPhysicalState());
-            response.setDigitalIssueDate(updated.getDigitalIssueDate());
-            response.setPhysicalStateDate(updated.getPhysicalStateDate());
-            response.setExpirationDate(updated.getExpirationDate());
-            response.setReprints(updated.getReprints());
-            response.setReasonForLastReprints(updated.getReasonForLastReprints());
-
-            return Optional.of(response);
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public boolean delete(Long id) {
-        if (cardRepository.existsById(id)) {
-            cardRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    /*
+     * Convierte una entidad Card en su DTO de respuesta.
+     * @param card Entidad de carnet a convertir
+     * @return CardResponseDTO con los datos mapeados
+     */
+    private CardResponseDTO toResponse(Card card) {
+        CardResponseDTO r = new CardResponseDTO();
+        r.setIdCard(card.getIdCard());
+        r.setIdUser(card.getIdUser());
+        r.setPhotoUrl(card.getPhotoUrl());
+        r.setValidPhoto(card.getValidPhoto());
+        r.setDigitalState(card.getDigitalState());
+        r.setPhysicalState(card.getPhysicalState());
+        r.setDigitalIssueDate(card.getDigitalIssueDate());
+        r.setPhysicalStateDate(card.getPhysicalStateDate());
+        r.setExpirationDate(card.getExpirationDate());
+        r.setReprints(card.getReprints());
+        r.setReasonForLastReprints(card.getReasonForLastReprints());
+        return r;
     }
 }

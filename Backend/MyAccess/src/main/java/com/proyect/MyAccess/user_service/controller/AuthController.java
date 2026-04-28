@@ -1,7 +1,11 @@
 package com.proyect.MyAccess.user_service.controller;
 
+import com.proyect.MyAccess.auth_service.dto.UserAuthRequestDTO;
+import com.proyect.MyAccess.auth_service.dto.UserAuthResponseDTO;
+import com.proyect.MyAccess.auth_service.service.UserAuthService;
 import com.proyect.MyAccess.user_service.dto.AuthResponseDTO;
 import com.proyect.MyAccess.user_service.dto.ResetPasswordRequestDTO;
+import com.proyect.MyAccess.user_service.dto.RegisterRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserLoginRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserRegisterProfileResponseDTO;
@@ -20,7 +24,8 @@ public class AuthController {
 
     private final UserLoginService userLoginService;
     private final UserRegisterProfileService userRegisterProfileService;
-    private  final VerificationService verificationService;
+    private final UserAuthService userAuthService;
+    private final VerificationService verificationService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginRequestDTO request) {
@@ -29,15 +34,40 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterProfileResponseDTO> register(@RequestBody UserRegisterProfileRequestDTO request) {
-        UserRegisterProfileResponseDTO response = userRegisterProfileService.userCreated(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<UserRegisterProfileResponseDTO> register(@RequestBody RegisterRequestDTO request) {
+        UserAuthRequestDTO authDTO = new UserAuthRequestDTO();
+        authDTO.setEmail(request.getEmail());
+        authDTO.setPassword(request.getPassword());
+        userAuthService.create(authDTO);
+
+        UserRegisterProfileRequestDTO profileDTO = new UserRegisterProfileRequestDTO();
+        profileDTO.setDocument(request.getDocument());
+        profileDTO.setTypeDocument(request.getTypeDocument());
+        profileDTO.setFullName(request.getFullName());
+        profileDTO.setTrainingProgram(request.getTrainingProgram());
+        profileDTO.setTrainingCenter(request.getTrainingCenter());
+        profileDTO.setRegional(request.getRegional());
+        profileDTO.setBloodType(request.getBloodType());
+        profileDTO.setNameRole(request.getNameRole());
+        profileDTO.setFicha(request.getFicha());
+        profileDTO.setEmail(request.getEmail());
+        UserRegisterProfileResponseDTO profileResponse = userRegisterProfileService.userCreated(profileDTO);
+
+        verificationService.sendCode(request.getEmail());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse);
+    }
+
+    @PostMapping("/resend")
+    public ResponseEntity<String> resend(@RequestParam String email) {
+        verificationService.sendCode(email);
+        return ResponseEntity.ok("codigo reenviado al correo");
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verify (@RequestParam String email, @RequestParam String code){
+    public ResponseEntity<String> verify(@RequestParam String email, @RequestParam String code) {
         verificationService.VerifiCode(email, code);
-        return ResponseEntity.ok("cuenta verificada correctamente ");
+        return ResponseEntity.ok("cuenta verificada correctamente");
     }
 
     @PostMapping("/forgot-password")

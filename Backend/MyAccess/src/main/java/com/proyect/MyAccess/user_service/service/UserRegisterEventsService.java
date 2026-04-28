@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Servicio para gestionar los eventos de registro de usuarios.
+ * Permite crear, consultar, actualizar y eliminar eventos asociados a perfiles de usuario.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserRegisterEventsService {
@@ -19,104 +23,72 @@ public class UserRegisterEventsService {
     private final UserRegisterEventsRepository userEventsRepository;
     private final UserRegisterProfileRepository userProfileRepository;
 
-
-    public UserRegisterEventsResponseDTO create(UserRegisterEventsRequestsDTO userDTO) {
-        UserRegisterProfile userProfile = userProfileRepository.findById(userDTO.getIdUser())
-                .orElseThrow(() -> new RuntimeException("El usuario " + userDTO.getIdUser() + " no existe"));
-        UserRegisterEvents user = new UserRegisterEvents();
-        user.setTypeEvent(userDTO.getTypeEvent());
-        user.setProcessed(userDTO.getProcessed());
-        user.setEventDate(userDTO.getEventDate());
-        user.setDescription(userDTO.getDescription());
-        user.setUserProfile(userProfile);
-
-        userEventsRepository.save(user);
-
-        UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
-        response.setId(user.getId());
-        response.setEventDate(userDTO.getEventDate());
-        response.setTypeEvent(userDTO.getTypeEvent());
-        response.setProcessed(userDTO.getProcessed());
-        response.setDescription(userDTO.getDescription());
-        response.setIdUser(userProfile.getId());
-
-        return response;
+    /*
+     * Crea y persiste un nuevo evento de registro asociado a un perfil de usuario.
+     * @param dto Datos del evento, incluyendo el idUser del perfil asociado
+     * @return UserRegisterEventsResponseDTO con los datos del evento creado
+     */
+    public UserRegisterEventsResponseDTO create(UserRegisterEventsRequestsDTO dto) {
+        UserRegisterProfile userProfile = userProfileRepository.findById(dto.getIdUser())
+                .orElseThrow(() -> new RuntimeException("El usuario " + dto.getIdUser() + " no existe"));
+        UserRegisterEvents event = new UserRegisterEvents();
+        event.setTipeEvent(dto.getTipeEvent());
+        event.setProcessed(dto.getProcessed());
+        event.setEventDate(dto.getEventDate());
+        event.setDescriptions(dto.getDescriptions());
+        event.setUserProfile(userProfile);
+        userEventsRepository.save(event);
+        return toResponse(event);
     }
 
-
+    /*
+     * Retorna todos los eventos de registro del sistema.
+     * @return Lista de UserRegisterEventsResponseDTO con todos los eventos
+     */
     public List<UserRegisterEventsResponseDTO> getAll() {
-        List<UserRegisterEvents> events = userEventsRepository.findAll();
-        List<UserRegisterEventsResponseDTO> responseList = new ArrayList<>();
-
-        for (UserRegisterEvents event : events) {
-            UserRegisterEventsResponseDTO dto = new UserRegisterEventsResponseDTO();
-            dto.setId(event.getId());
-            dto.setEventDate(event.getEventDate());
-            dto.setTypeEvent(event.getTypeEvent());
-            dto.setProcessed(event.getProcessed());
-            dto.setDescription(event.getDescription());
-
-            if (event.getUserProfile() != null) {
-                dto.setIdUser(event.getUserProfile().getId());
-            }
-
-            responseList.add(dto);
+        List<UserRegisterEventsResponseDTO> list = new ArrayList<>();
+        for (UserRegisterEvents event : userEventsRepository.findAll()) {
+            list.add(toResponse(event));
         }
-        return responseList;
+        return list;
     }
 
-
+    /*
+     * Busca un evento de registro por su ID.
+     * @param id Identificador del evento a buscar
+     * @return UserRegisterEventsResponseDTO con los datos del evento encontrado
+     */
     public UserRegisterEventsResponseDTO getById(Long id) {
-        UserRegisterEvents event = userEventsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El evento " + id + " no existe"));
-
-        UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
-        response.setId(event.getId());
-        response.setEventDate(event.getEventDate());
-        response.setTypeEvent(event.getTypeEvent());
-        response.setProcessed(event.getProcessed());
-        response.setDescription(event.getDescription());
-
-        if (event.getUserProfile() != null) {
-            response.setIdUser(event.getUserProfile().getId());
-        }
-
-        return response;
+        return toResponse(userEventsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("El evento " + id + " no existe")));
     }
 
-
-    public UserRegisterEventsResponseDTO update(Long id, UserRegisterEventsRequestsDTO userDTO) {
+    /*
+     * Actualiza los datos de un evento existente por su ID.
+     * Si se proporciona idUser, actualiza también el perfil de usuario asociado.
+     * @param id Identificador del evento a actualizar
+     * @param dto Nuevos datos del evento
+     * @return UserRegisterEventsResponseDTO con los datos del evento actualizado
+     */
+    public UserRegisterEventsResponseDTO update(Long id, UserRegisterEventsRequestsDTO dto) {
         UserRegisterEvents event = userEventsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El evento " + id + " no existe"));
-        event.setTypeEvent(userDTO.getTypeEvent());
-        event.setProcessed(userDTO.getProcessed());
-        event.setEventDate(userDTO.getEventDate());
-        event.setDescription(userDTO.getDescription());
-
-
-        if (userDTO.getIdUser() != null) {
-            UserRegisterProfile userProfile = userProfileRepository.findById(userDTO.getIdUser())
-                    .orElseThrow(() -> new RuntimeException("El usuario " + userDTO.getIdUser() + " no existe"));
+        event.setTipeEvent(dto.getTipeEvent());
+        event.setProcessed(dto.getProcessed());
+        event.setEventDate(dto.getEventDate());
+        event.setDescriptions(dto.getDescriptions());
+        if (dto.getIdUser() != null) {
+            UserRegisterProfile userProfile = userProfileRepository.findById(dto.getIdUser())
+                    .orElseThrow(() -> new RuntimeException("El usuario " + dto.getIdUser() + " no existe"));
             event.setUserProfile(userProfile);
         }
-
-        UserRegisterEvents updated = userEventsRepository.save(event);
-
-        UserRegisterEventsResponseDTO response = new UserRegisterEventsResponseDTO();
-        response.setId(updated.getId());
-        response.setEventDate(updated.getEventDate());
-        response.setTypeEvent(updated.getTypeEvent());
-        response.setProcessed(updated.getProcessed());
-        response.setDescription(updated.getDescription());
-
-        if (updated.getUserProfile() != null) {
-            response.setIdUser(updated.getUserProfile().getId());
-        }
-
-        return response;
+        return toResponse(userEventsRepository.save(event));
     }
 
-
+    /*
+     * Elimina un evento de registro por su ID.
+     * @param id Identificador del evento a eliminar
+     */
     public void delete(Long id) {
         if (!userEventsRepository.existsById(id)) {
             throw new RuntimeException("El evento " + id + " no existe");
@@ -124,24 +96,34 @@ public class UserRegisterEventsService {
         userEventsRepository.deleteById(id);
     }
 
+    /*
+     * Retorna todos los eventos asociados a un usuario específico.
+     * @param userId Identificador del perfil de usuario
+     * @return Lista de UserRegisterEventsResponseDTO con los eventos del usuario
+     */
     public List<UserRegisterEventsResponseDTO> getByUserId(Long userId) {
-        List<UserRegisterEvents> events = userEventsRepository.findByUserProfileId(userId);
-        List<UserRegisterEventsResponseDTO> responseList = new ArrayList<>();
-
-        for (UserRegisterEvents event : events) {
-            UserRegisterEventsResponseDTO dto = new UserRegisterEventsResponseDTO();
-            dto.setId(event.getId());
-            dto.setEventDate(event.getEventDate());
-            dto.setTypeEvent(event.getTypeEvent());
-            dto.setProcessed(event.getProcessed());
-            dto.setDescription(event.getDescription());
-            if (event.getUserProfile() != null) {
-                dto.setIdUser(event.getUserProfile().getId());
-            }
-            responseList.add(dto);
+        List<UserRegisterEventsResponseDTO> list = new ArrayList<>();
+        for (UserRegisterEvents event : userEventsRepository.findByUserProfileId(userId)) {
+            list.add(toResponse(event));
         }
-        return responseList;
+        return list;
     }
 
-
+    /*
+     * Convierte una entidad UserRegisterEvents en su DTO de respuesta.
+     * @param event Entidad de evento a convertir
+     * @return UserRegisterEventsResponseDTO con los datos mapeados
+     */
+    private UserRegisterEventsResponseDTO toResponse(UserRegisterEvents event) {
+        UserRegisterEventsResponseDTO r = new UserRegisterEventsResponseDTO();
+        r.setId(event.getId());
+        r.setTipeEvent(event.getTipeEvent());
+        r.setProcessed(event.getProcessed());
+        r.setEventDate(event.getEventDate());
+        r.setDescriptions(event.getDescriptions());
+        if (event.getUserProfile() != null) {
+            r.setIdUser(event.getUserProfile().getId());
+        }
+        return r;
+    }
 }

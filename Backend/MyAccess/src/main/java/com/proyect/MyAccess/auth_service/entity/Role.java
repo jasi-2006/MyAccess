@@ -10,17 +10,15 @@ import java.time.LocalDateTime;
 @Table(name ="roles")
 public class Role {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
-    @Column (name ="name_role")
+    @Column(name ="name_role")
     private String nameRole;
     @Column(name="description")
     private String description;
-    @Column (name="access_level")
-    private Boolean accessLevel;
-    @Column (name="assest")
-    private Boolean assest;
-    @Column (name="date_creation")
+    @Column(name="asset")
+    private Boolean asset;
+    @Column(name="date_creation")
     private LocalDateTime dateCreation;
 }

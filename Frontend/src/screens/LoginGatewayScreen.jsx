@@ -203,13 +203,11 @@ export default function LoginGatewayScreen({ navigation }) {
 
             {/* Botón Iniciar Sesión */}
 
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                <PrimaryButton 
-                  title="Iniciar" 
-                  onPress={handleLogin} 
-                  loading={loading} 
-                />
-              </TouchableOpacity>
+            <PrimaryButton 
+              title="Iniciar" 
+              onPress={handleLogin} 
+              loading={loading} 
+            />
             
 
             {/* Login Social */}
@@ -356,8 +354,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 20,
-    marginBottom: 25,
-    marginTop:23,
+    marginBottom: 30,
+    marginTop:43,
   },
 
   // Registro

@@ -17,16 +17,16 @@ import { resendVerificationCode, verifyUser } from '../services/authService';
 
 export default function VerificationGatewayScreen({ navigation, route }) {
   const { width, height } = useWindowDimensions();
-  const isSmallDevice = height < 700;
-  const isTablet = width > 768;
+  const isSmallDevice = height < 500;
+  const isTablet = width > 501;
   const isDesktop = width >= 1024;
 
-  const topPadding = isDesktop ? 120 : isTablet ? 100 : isSmallDevice ? 80 : 96;
+  const topPadding = isDesktop ? 35 : isTablet ? 100 : isSmallDevice ? 80 : 96;
   const fontSizeTitle = isDesktop ? 42 : isTablet ? 36 : isSmallDevice ? 28 : 32;
-  const fontSizeSubtitle = isDesktop ? 22 : isTablet ? 20 : isSmallDevice ? 14 : 16;
-  const inputSize = isDesktop ? 72 : isTablet ? 64 : isSmallDevice ? 42 : 48;
+  const fontSizeSubtitle = isDesktop ? 17 : isTablet ? 20 : isSmallDevice ? 14 : 16;
+  const inputSize = isDesktop ? 60 : isTablet ? 64 : isSmallDevice ? 42 : 48;
   const fontSizeInput = isDesktop ? 28 : isTablet ? 24 : isSmallDevice ? 18 : 20;
-  const gap = isDesktop ? 16 : isTablet ? 14 : isSmallDevice ? 8 : 10;
+  const gap = isDesktop ? 9 : isTablet ? 14 : isSmallDevice ? 8 : 10;
   const buttonHeight = isDesktop ? 64 : isTablet ? 58 : isSmallDevice ? 48 : 52;
 
   const [code, setCode] = useState(['', '', '', '', '', '']);
@@ -258,14 +258,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: '5%',
     zIndex: 10,
-    padding: 8,
+    padding: 4,
   },
   backArrow: {
     color: '#999999',
   },
   content: {
     flex: 1,
-    paddingHorizontal: '6%',
+    paddingHorizontal: '15%',
     alignItems: 'center',
   },
   titleContainer: {
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   },
   titleGreen: {
     fontWeight: 'bold',
-    color: '#4ADE80',
+    color: colors.primary,
     textAlign: 'center',
   },
   titleDark: {
@@ -315,11 +315,11 @@ const styles = StyleSheet.create({
   },
   verifyButton: {
     width: '100%',
-    backgroundColor: '#4ADE80',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: '5%',
-    shadowColor: '#4ADE80',
+    shadowColor: colors.textSecondary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
