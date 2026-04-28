@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
+  
   tab:           { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 20 },
   tabActive:     { backgroundColor: colors.primary, elevation: 2 },
   tabText:       { fontSize: 14, fontWeight: '500', color: '#666' },
