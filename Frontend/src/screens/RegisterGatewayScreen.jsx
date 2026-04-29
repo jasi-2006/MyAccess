@@ -30,7 +30,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [trainingCenter, setTrainingCenter] = useState('centro comercio y turismo');
   const [nameRole, setNameRole] = useState('APRENDIZ');
   const [trainingProgram, setTrainingProgram] = useState('');
-  const [ficha, setFicha] = useState('');
+  const [Ficha, setFicha] = useState('');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,7 +48,7 @@ export default function RegisterGatewayScreen({ navigation }) {
     }
     if (step === 1) {
       if (!trainingProgram) newErrors.trainingProgram = 'Programa requerido';
-      if (!ficha) newErrors.ficha = 'N° Ficha requerido';
+      if (!Ficha) newErrors.Ficha = 'N° Ficha requerido';
     }
     if (step === 2) {
       if (!email.includes('@')) newErrors.email = 'Email inválido';
@@ -81,7 +81,7 @@ export default function RegisterGatewayScreen({ navigation }) {
         fullName: name, typeDocument, document,
         trainingProgram, trainingCenter,
         regional: regional.toLowerCase(),
-        bloodType, nameRole: 'APRENDIZ', ficha,
+        bloodType, nameRole: 'APRENDIZ', Ficha,
       });
       navigation.navigate('Verification', { email });
     } catch (error) {
@@ -180,7 +180,7 @@ export default function RegisterGatewayScreen({ navigation }) {
               <CustomInput icon="🏢" placeholder="Centro de formación" value={trainingCenter} onChangeText={setTrainingCenter} />
               <CustomInput icon="👤" placeholder="Rol" value={nameRole} onChangeText={setNameRole} />
               <CustomInput icon="⚙️" placeholder="Programa de formación" value={trainingProgram} onChangeText={setTrainingProgram} error={errors.trainingProgram} />
-              <CustomInput icon="🔢" placeholder="N° Ficha" value={ficha} onChangeText={setFicha} keyboardType="numeric" error={errors.ficha} />
+              <CustomInput icon="🔢" placeholder="N° Ficha" value={Ficha} onChangeText={setFicha} keyboardType="numeric" error={errors.Ficha} />
             </>}
 
             {/* PASO 2 */}
@@ -221,17 +221,35 @@ export default function RegisterGatewayScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safeArea:      { flex: 1, backgroundColor: '#FFFFFF' },
-  container:     { flex: 1, backgroundColor: '#FFFFFF' },
-  scrollContent: { flexGrow: 1 },
-  headerContainer: { width: '100%', backgroundColor: colors.primary },
+  safeArea:      { flex: 1, 
+    backgroundColor: '#FFFFFF' 
+  },
+  container:     { flex: 1, 
+    backgroundColor: '#FFFFFF'
+  },
+  scrollContent: { 
+    flexGrow: 1 
+  },
+  headerContainer: { 
+    width: '100%', 
+    backgroundColor: colors.primary 
+  },
 
   alertBox: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#FEE2E2', borderLeftWidth: 4, borderLeftColor: '#EF4444',
-    borderRadius: 8, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 16, gap: 10,
+    flexDirection: 'row', 
+    alignItems: 'center',
+    backgroundColor: '#FEE2E2', 
+    borderLeftWidth: 4, 
+    borderLeftColor: '#EF4444',
+    borderRadius: 8, 
+    paddingHorizontal: 14, 
+    paddingVertical: 12, 
+    marginBottom: 16, 
+    gap: 10,
   },
-  alertIcon: { fontSize: 16 },
+  alertIcon: { 
+    fontSize: 16 
+  },
   alertText: { flex: 1, color: '#B91C1C', fontSize: 14, fontWeight: '500' },
 
   tabsContainer: {
@@ -240,7 +258,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
-  
+
   tab:           { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 20 },
   tabActive:     { backgroundColor: colors.primary, elevation: 2 },
   tabText:       { fontSize: 14, fontWeight: '500', color: '#666' },
