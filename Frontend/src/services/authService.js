@@ -53,6 +53,13 @@ export async function requestPasswordResetCode(email) {
   return apiRequest(`/api/v1/auth/forgot-password?email=${encodeURIComponent(String(email).trim().toLowerCase())}`, { method: 'POST' });
 }
 
+export async function updateUserProfile(document, dto) {
+  return apiRequest(`/api/v1/register/users/document/${encodeURIComponent(document)}`, {
+    method: 'PUT',
+    body: JSON.stringify(dto),
+  });
+}
+
 export async function updatePasswordWithCode(email, code, newPassword) {
   return apiRequest('/api/v1/auth/reset-password', {
     method: 'POST',

@@ -14,7 +14,7 @@ CREATE TABLE user_profile (
     ficha           VARCHAR(20),
     email           VARCHAR(100) UNIQUE
 );
-
+select * from user_profile;
 CREATE TABLE user_events (
     id           INT PRIMARY KEY AUTO_INCREMENT,
     tipeEvent    VARCHAR(50),

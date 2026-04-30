@@ -36,7 +36,7 @@ public class UserRegisterProfile {
     private String nameRole;
 
     @Column(name = "ficha")
-    private String ficha;
+    private String Ficha;
 
     @Column(name = "email", unique = true)
     private String email;

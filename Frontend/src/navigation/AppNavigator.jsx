@@ -10,6 +10,8 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordScreen.jsx';
 import VerifyResetCodeScreen from '../screens/VerifyResetCodeScreen.jsx';
 import ResetPasswordScreen from '../screens/ResetPasswordScreen.jsx';
 import CarnetGatewayScreen from '../screens/CarnetGatewayScreen.jsx';
+import UserProfile from '../screens/UserProfile.jsx';
+
 
 const Stack = createStackNavigator();
 
@@ -36,6 +38,8 @@ export default function AppNavigator() {
         <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         <Stack.Screen name="Home" component={HomeGatewayScreen} />
         <Stack.Screen name="Card" component={CarnetGatewayScreen} />
+        <Stack.Screen name="User" component={UserProfile} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
