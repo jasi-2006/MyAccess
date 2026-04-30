@@ -1,64 +1,98 @@
-import React, {useEffect,useState}from 'react';
-import {View, Text, StyleSheet,ScrollView}from 'react-native';
-import { getUserProfile } from '../services/authService';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Alert, useWindowDimensions } from 'react-native';
+import { getUserProfile, updateUserProfile } from '../services/authService';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
-import CarnetSidebar from '../components/CarnetSidebar.jsx';
+import UserSidebar from '../components/UserSidebar.jsx';
+import ProfileInfoCard from '../components/ProfileInfoCard.jsx';
+import ProfileEditModal from '../components/ProfileEditModal.jsx';
 
-export default function UserProfile({navigation}){
-    // const {width}= useWindowsDimentions ();
-    // const isMobile= width < 480;
-    // const isTablet = width >= 490 &&   width <900;
-    // const isDesktop = width >= 910;
-    // const px = desktop ? 70: isTablet ? 60:20;
+export default function UserProfile({ navigation }) {
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768;
+  const isDesktop = width >= 910;
+  const isTablet = width >= 490 && width < 910;
+  const px = isDesktop ? 70 : isTablet ? 60 : 20;
 
-    useEffect(()=>{
-        getUSerProfile()
-            .then(setProfile)
-            .catch(()=>setProfile(null))
-            .finally(()=>setLoading(false));
-    }, []);
-    
-    const fields =[
-        {label: 'nombre completo', value: profile?.fullName},
-        {label: 'Tipo documento', value: profile?.TypeDocument},
-        {label: 'Docuemto', value: profile?.document},
-        {label: 'tipo de sangre', value: profile?.bloodType},
-        {label: 'Ficha', value: profile?.Ficha},
-        {label: 'Programa ', value: profile?.trainingProgram},
-        {label: 'Centro', value: profile?.trainingCenter},
-        {label: 'Regional', value: profile?.regional},
-        {label: 'Rol', value: profile?.nameRole},
-    ];
-    
-    return(
-        <View>
-            <CarnatTopbar
-            navigation={navigation}
-            studentName={studentName}
-            studentInitial={studentInital}
-            />
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [form, setForm] = useState({});
+  const [saving, setSaving] = useState(false);
 
-            <View style={[styles.section, { paddingHorizontal: px }]}>
-            <Text style={[styles.sectionTitle, { fontSize: isDesktop ? 22 : 18 }]}>Mi Información</Text>
-            {loading ? (
-              <ActivityIndicator size="large" color="#0F766E" style={{ marginTop: 24 }} />
-            ) : profile ? (
-              <View style={[styles.profileGrid, isDesktop && { flexDirection: 'row', flexWrap: 'wrap', gap: 16 }]}>
-                {fields.map((f) => f.value ? (
-                    <View key={f.label} style={[styles.fieldCard, isDesktop && { width: '47%' }]}>
-                      <Text style={styles.fieldLabel}>{f.label}</Text>
-                    <Text style={[styles.fieldValue, { fontSize: isDesktop ? 16 : 14 }]}>{f.value}</Text>
-                  </View>
-                ) : null)}
-              </View>
-            ) : (
-              <View style={styles.emptyCard}>
-                <Text style={styles.emptyText}>No se encontró información del perfil.</Text>
-              </View>
-            )}
-          </View>
-        </View>
-    )
+  useEffect(() => {
+    getUserProfile()
+      .then(setProfile)
+      .catch(() => setProfile(null))
+      .finally(() => setLoading(false));
+  }, []);
 
+  const fields = [
+    { label: 'Nombre completo',  value: profile?.fullName,        key: 'fullName' },
+    { label: 'Tipo documento',   value: profile?.typeDocument,    key: 'typeDocument' },
+    { label: 'Documento',        value: profile?.document,        key: 'document' },
+    { label: 'Tipo de sangre',   value: profile?.bloodType,       key: 'bloodType' },
+    { label: 'Ficha',            value: profile?.ficha,           key: 'ficha' },
+    { label: 'Programa',         value: profile?.trainingProgram, key: 'trainingProgram' },
+    { label: 'Centro',           value: profile?.trainingCenter,  key: 'trainingCenter' },
+    { label: 'Regional',         value: profile?.regional,        key: 'regional' },
+    { label: 'Rol',              value: profile?.nameRole,        key: 'nameRole' },
+    { label: 'email',            value: profile?.email,           key: 'email'}
+  ];
 
- }
+  const openEdit = () => {
+    setForm(Object.fromEntries(fields.map((f) => [f.key, profile?.[f.key] || ''])));
+    setModalVisible(true);
+  };
+
+  const handleSave = async () => {
+    if (!profile?.document) return;
+    setSaving(true);
+    try {
+      const updated = await updateUserProfile(profile.document, form);
+      setProfile(updated);
+      setModalVisible(false);
+    } catch {
+      Alert.alert('Error', 'No se pudo actualizar el perfil.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const studentName = profile?.fullName || '';
+  const studentInitial = studentName.charAt(0).toUpperCase();
+
+  return (
+    <View style={styles.container}>
+      <CarnetTopbar navigation={navigation} studentName={studentName} studentInitial={studentInitial} />
+      <View style={styles.body}>
+        {!isMobile && <UserSidebar navigation={navigation} />}
+        <ScrollView style={styles.main}>
+          {isMobile && <UserSidebar navigation={navigation} />} 
+          <ProfileInfoCard
+            profile={profile}
+            loading={loading}
+            fields={fields}
+            onEdit={openEdit}
+            px={px}
+          />
+        </ScrollView>
+      </View>
+
+      <ProfileEditModal
+        visible={modalVisible}
+        fields={fields}
+        form={form}
+        onChange={(key, value) => setForm((prev) => ({ ...prev, [key]: value }))}
+        onSave={handleSave}
+        onCancel={() => setModalVisible(false)}
+        saving={saving}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  body: { flex: 1, flexDirection: 'row' },
+  main: { flex: 1 },
+});

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { getUserProfile } from '../services/authService';
 import HomeNavbar   from '../components/HomeNavbar.jsx';
-import HomeSidebar  from '../components/HomeSidebar.jsx';
 import HomeHero     from '../components/HomeHero.jsx';
 import HomeCards    from '../components/HomeCards.jsx';
 import HomeAbout    from '../components/HomeAbout.jsx';
@@ -42,11 +41,8 @@ export default function HomeGatewayScreen({ navigation }) {
       <HomeNavbar navigation={navigation} />
 
       <View style={styles.body}>
-        {!isMobile && <HomeSidebar navigation={navigation} />}
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-
-          {isMobile && <HomeSidebar navigation={navigation} />}
 
           <HomeHero fullName={profile?.fullName} />
 

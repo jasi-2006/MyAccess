@@ -21,11 +21,13 @@ export default function HomeNavbar({ navigation }) {
           <TouchableOpacity>
             <Text style={styles.navLink}>Notificaciones</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={()=> navigation.replace('Login')}> 
+            <Text style={styles.logoutText}>salir</Text>
+
+          </TouchableOpacity>
         </View>
       )}
-      <TouchableOpacity onPress={() => navigation.replace('Login')}>
-        <Text style={styles.logoutText}>Salir</Text>
-      </TouchableOpacity>
+
     </View>
   );
 }
