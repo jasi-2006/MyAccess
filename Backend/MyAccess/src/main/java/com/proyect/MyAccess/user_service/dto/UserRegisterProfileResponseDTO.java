@@ -15,4 +15,5 @@ public class UserRegisterProfileResponseDTO {
     private String nameRole;
     private String ficha;
     private String email;
+    private String photoUrl;
 }

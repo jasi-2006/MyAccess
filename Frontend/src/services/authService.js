@@ -23,9 +23,17 @@ export async function getUserProfile() {
 }
 
 export async function registerUser(payload) {
+  const isFormData = payload instanceof FormData;
   return apiRequest('/api/v1/auth/register', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: isFormData ? payload : JSON.stringify(payload),
+  });
+}
+
+export async function uploadPhoto(document, formData) {
+  return apiRequest(`/api/v1/auth/photo/${encodeURIComponent(document)}`, {
+    method: 'POST',
+    body: formData,
   });
 }
 

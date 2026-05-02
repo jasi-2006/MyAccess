@@ -35,9 +35,10 @@ function getErrorMessage(payload) {
 
 export async function apiRequest(path, options = {}) {
   const token = getToken();
+  const isFormData = options.body instanceof FormData;
   const response = await fetch(`${API_GATEWAY_URL}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
     },

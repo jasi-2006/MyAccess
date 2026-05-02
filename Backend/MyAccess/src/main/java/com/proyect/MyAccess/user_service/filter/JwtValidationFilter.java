@@ -15,13 +15,26 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component("userJwtValidationFilter")
 public class JwtValidationFilter extends OncePerRequestFilter {
 
+    private boolean isPublicPath(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/auth/")
+                || path.equals("/register/user/password")
+                || path.startsWith("/uploads/")
+                || path.equals("/error")
+                || request.getMethod().equalsIgnoreCase("OPTIONS");
+    }
+
+    private void addCorsHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getServletPath();
-
-        if (path.startsWith("/auth/") || path.equals("/register/user/password")) {
+        if (isPublicPath(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,6 +56,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     }
 
     private void sendError(HttpServletResponse response, String message) throws IOException {
+        addCorsHeaders(response);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"" + message + "\"}");

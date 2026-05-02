@@ -1,5 +1,7 @@
 server:
   port: ${SERVER_PORT:9090}
+  tomcat:
+    max-part-count: 50
 
 spring:
   config:
@@ -56,6 +58,12 @@ spring:
           auth: true
           starttls:
             enable: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 20MB
 
 logging:
   level:

@@ -14,8 +14,10 @@ import com.proyect.MyAccess.user_service.service.UserRegisterProfileService;
 import com.proyect.MyAccess.user_service.service.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/auth")
@@ -80,5 +82,18 @@ public class AuthController {
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
         verificationService.resetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
         return ResponseEntity.ok("contrasena actualizada correctamente");
+    }
+
+    @PostMapping(value = "/photo/{document}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserRegisterProfileResponseDTO> uploadPhoto(
+            @PathVariable String document,
+            @RequestParam("photo") MultipartFile photo) {
+        try {
+            return userRegisterProfileService.uploadPhoto(document, photo)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

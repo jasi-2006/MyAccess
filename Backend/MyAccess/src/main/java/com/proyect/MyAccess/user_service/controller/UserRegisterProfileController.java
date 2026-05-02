@@ -6,8 +6,10 @@ import com.proyect.MyAccess.user_service.service.UserRegisterProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -110,6 +112,19 @@ public class UserRegisterProfileController {
      * @param document Número de documento del perfil a eliminar
      * @return ResponseEntity 204 No Content si se eliminó, 404 si no existía
      */
+    @PostMapping(value = "/users/photo/{document}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserRegisterProfileResponseDTO> uploadPhoto(
+            @PathVariable String document,
+            @RequestParam("photo") MultipartFile photo) {
+        try {
+            return userService.uploadPhoto(document, photo)
+                    .map(r -> ResponseEntity.status(HttpStatus.OK).body(r))
+                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @DeleteMapping("/users/delete/{document}")
     public ResponseEntity<?> deleteByDocument(@PathVariable String document) {
         return userService.deleteUserDoc(document)
