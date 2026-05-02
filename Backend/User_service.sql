@@ -12,7 +12,8 @@ CREATE TABLE user_profile (
     bloodType       VARCHAR(5),
     nameRole        VARCHAR(50),
     ficha           VARCHAR(20),
-    email           VARCHAR(100) UNIQUE
+    email           VARCHAR(100) UNIQUE,
+    photo_url       VARCHAR(500) NULL
 );
 select * from user_profile;
 CREATE TABLE user_events (

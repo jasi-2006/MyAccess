@@ -7,10 +7,16 @@ import com.proyect.MyAccess.user_service.repository.UserRegisterProfileRepositor
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -92,6 +98,19 @@ public class UserRegisterProfileService {
         user.setNameRole(dto.getNameRole());
         user.setFicha(dto.getFicha());
         user.setEmail(dto.getEmail());
+        if (dto.getPhotoUrl() != null) user.setPhotoUrl(dto.getPhotoUrl());
+    }
+
+    public Optional<UserRegisterProfileResponseDTO> uploadPhoto(String document, MultipartFile photo) throws IOException {
+        List<UserRegisterProfile> users = userRepository.findByDocument(document);
+        if (users.isEmpty()) return Optional.empty();
+        UserRegisterProfile user = users.get(0);
+        String filename = UUID.randomUUID() + ".jpg";
+        Path uploadDir = Paths.get("uploads");
+        Files.createDirectories(uploadDir);
+        Files.write(uploadDir.resolve(filename), photo.getBytes());
+        user.setPhotoUrl("http://localhost:8080/uploads/" + filename);
+        return Optional.of(toResponse(userRepository.save(user)));
     }
 
     private UserRegisterProfileResponseDTO toResponse(UserRegisterProfile user) {
@@ -107,6 +126,7 @@ public class UserRegisterProfileService {
         r.setNameRole(user.getNameRole());
         r.setFicha(user.getFicha());
         r.setEmail(user.getEmail());
+        r.setPhotoUrl(user.getPhotoUrl());
         return r;
     }
 }

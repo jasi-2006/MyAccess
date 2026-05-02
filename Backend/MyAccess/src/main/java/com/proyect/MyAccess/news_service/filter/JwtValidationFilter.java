@@ -21,7 +21,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        if (path.startsWith("/auth/")) {
+        if (path.startsWith("/auth/") || request.getMethod().equalsIgnoreCase("OPTIONS")) {
             filterChain.doFilter(request, response);
             return;
         }

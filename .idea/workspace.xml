@@ -6,14 +6,30 @@
   <component name="ChangeListManager">
     <list default="true" id="3b8414f7-dde4-4ab0-b8d7-edc31ae1bc1e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/auth_service/filter/JwtValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/auth_service/filter/JwtValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/filter/JwtValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/filter/JwtValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/news_service/filter/JwtValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/news_service/filter/JwtValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/filter/JwtValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/filter/JwtValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/UserRegisterProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/UserRegisterProfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/dto/UserRegisterProfileRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/dto/UserRegisterProfileRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/dto/UserRegisterProfileResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/dto/UserRegisterProfileResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/entity/UserRegisterProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/entity/UserRegisterProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/filter/JwtValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/filter/JwtValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/User_service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/User_service.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/api-gateway/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/CarnetSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/CarnetSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/HomeCards.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/HomeCards.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/HomeNavbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/HomeNavbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/HomeSidebar.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/CarnetGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/CarnetGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/HomeGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/HomeGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/UserProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/src/main/java/com/proyect/api_gateway/filter/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/src/main/java/com/proyect/api_gateway/filter/JwtAuthFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/target/classes/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/target/classes/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/target/classes/com/proyect/api_gateway/filter/JwtAuthFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/target/classes/com/proyect/api_gateway/filter/JwtAuthFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/CarnetCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/CarnetCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/components/RegisterSteps.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/RegisterSteps.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/RegisterGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/RegisterGatewayScreen.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/api.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/services/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/authService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,6 +72,14 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="MyAccess" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

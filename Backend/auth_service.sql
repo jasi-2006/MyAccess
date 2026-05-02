@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS auth_service;
 USE auth_service;
 
+
 CREATE TABLE roles (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     name_role     VARCHAR(40) ,

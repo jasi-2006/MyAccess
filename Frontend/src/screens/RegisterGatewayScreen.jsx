@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import RegisterSteps from '../components/RegisterSteps.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { colors } from '../theme/colors.jsx';
-import { registerUser } from '../services/authService';
+import { registerUser, uploadPhoto } from '../services/authService';
 
 const STEPS = ['Personal', 'Datos', 'Acceso'];
 const TITLES = ['Datos personales', 'Datos del carnet', 'Credenciales de acceso'];
@@ -23,6 +23,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState(null);
 
   const [values, setValues] = useState({
     name: '', typeDocument: 'CC', document: '', bloodType: '',
@@ -77,6 +78,15 @@ export default function RegisterGatewayScreen({ navigation }) {
         trainingCenter: values.trainingCenter, regional: values.regional.toLowerCase(),
         bloodType: values.bloodType, nameRole: 'APRENDIZ', Ficha: values.Ficha,
       });
+      if (photo) {
+        const formData = new FormData();
+        if (Platform.OS === 'web' && photo.file) {
+          formData.append('photo', photo.file, 'profile.jpg');
+        } else {
+          formData.append('photo', { uri: photo.uri, name: 'profile.jpg', type: 'image/jpeg' });
+        }
+        await uploadPhoto(values.document, formData);
+      }
       navigation.navigate('Verification', { email: values.email });
     } catch (error) {
       setSubmitError(error.message || 'No fue posible crear la cuenta.');
@@ -115,6 +125,8 @@ export default function RegisterGatewayScreen({ navigation }) {
         errors={errors}
         isMobile={isMobile}
         showLabels
+        photo={photo}
+        onPhotoChange={setPhoto}
       />
 
       {step === 2 && submitError ? (

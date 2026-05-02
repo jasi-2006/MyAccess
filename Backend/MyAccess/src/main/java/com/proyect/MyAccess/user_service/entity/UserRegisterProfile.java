@@ -40,4 +40,7 @@ public class UserRegisterProfile {
 
     @Column(name = "email", unique = true)
     private String email;
+
+    @Column(name = "photo_url")
+    private String photoUrl;
 }
