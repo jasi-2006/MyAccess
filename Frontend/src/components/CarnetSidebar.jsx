@@ -5,6 +5,7 @@ const sidebarItems = [
   { key: 'home',    label: 'Inicio',             icon: '🏠' },
   { key: 'cards',   label: 'Mi carnets',          icon: '🪪', active: true },
   { key: 'User',    label: 'Mi perfil',           icon: '👤' },
+  { key: 'Notifications', label: 'Notificaciones',       icon: '🔔' },
   { key: 'status',  label: 'Mi estado de tramite', icon: '☑' },
 ];
 
@@ -15,6 +16,7 @@ export default function CarnetSidebar({ navigation }) {
   const handlePress = (key) => {
     if (key === 'home') navigation.navigate('Home');
     if (key === 'User') navigation.navigate('User');
+    if (key === 'Notifications') navigation.navigate('Notifications')
   };
 
   if (isMobile) {
@@ -58,36 +60,32 @@ export default function CarnetSidebar({ navigation }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 122, backgroundColor: '#FFFFFF',
-    borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 18,
+    width: 72, backgroundColor: '#FFFFFF',
+    borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 10,
   },
-  sidebarTitle: {
-    fontSize: 16, lineHeight: 20, fontWeight: '700', color: '#2FD16A',
-    paddingHorizontal: 10, marginBottom: 26,
-  },
-  sidebarList: { gap: 10 },
+  sidebarList: { gap: 4 },
   sidebarItem: {
-    paddingHorizontal: 10, paddingVertical: 12, gap: 8,
-    marginHorizontal: 6, borderRadius: 28, alignItems: 'center',
+    paddingHorizontal: 4, paddingVertical: 6, gap: 4,
+    marginHorizontal: 3, borderRadius: 16, alignItems: 'center',
   },
-  sidebarLabel: { fontSize: 12, color: '#232323', lineHeight: 15, textAlign: 'center' },
+  sidebarLabel: { fontSize: 9, color: '#232323', lineHeight: 11, textAlign: 'center' },
   mobileMenu: {
-    flexDirection: 'row', justifyContent: 'space-between', gap: 10, marginBottom: 18,
+    flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
   mobileMenuItem: {
-    flex: 1, minHeight: 76, backgroundColor: '#FFFFFF',
-    borderWidth: 1, borderColor: '#D8EBDD', borderRadius: 28,
-    paddingHorizontal: 8, paddingVertical: 10,
-    justifyContent: 'center', alignItems: 'center', gap: 6,
+    flex: 1, minHeight: 48, backgroundColor: '#FFFFFF',
+    borderWidth: 1, borderColor: '#D8EBDD', borderRadius: 16,
+    paddingHorizontal: 3, paddingVertical: 5,
+    justifyContent: 'center', alignItems: 'center', gap: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
-  mobileMenuLabel: { fontSize: 11, color: '#28323C', textAlign: 'center', lineHeight: 13 },
+  mobileMenuLabel: { fontSize: 9, color: '#28323C', textAlign: 'center', lineHeight: 11 },
   menuItemActive: {
     backgroundColor: '#2FD16A',
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
   menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
-  menuIcon: { fontSize: 24 },
+  menuIcon: { fontSize: 16 },
 });

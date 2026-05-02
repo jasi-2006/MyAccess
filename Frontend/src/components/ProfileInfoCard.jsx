@@ -37,18 +37,18 @@ export default function ProfileInfoCard({ profile, loading, fields, onEdit, px }
 }
 
 const styles = StyleSheet.create({
-  section: { paddingVertical: 24 },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  section: { paddingVertical: 14 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   sectionTitle: { fontWeight: '700', color: '#1E293B' },
-  editBtn: { backgroundColor: '#0F766E', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 },
-  editBtnText: { color: '#fff', fontWeight: '600', fontSize: 14 },
-  profileGrid: { gap: 12 },
+  editBtn: { backgroundColor: '#0F766E', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 },
+  editBtnText: { color: '#fff', fontWeight: '600', fontSize: 12 },
+  profileGrid: { gap: 8 },
   fieldCard: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 16,
-    shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
+    backgroundColor: '#fff', borderRadius: 8, padding: 10,
+    shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 3, elevation: 1,
   },
-  fieldLabel: { fontSize: 12, color: '#64748B', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 },
+  fieldLabel: { fontSize: 10, color: '#64748B', marginBottom: 2, textTransform: 'uppercase', letterSpacing: 0.5 },
   fieldValue: { fontWeight: '600', color: '#1E293B' },
-  emptyCard: { backgroundColor: '#fff', borderRadius: 12, padding: 24, alignItems: 'center' },
-  emptyText: { color: '#94A3B8', fontSize: 14 },
+  emptyCard: { backgroundColor: '#fff', borderRadius: 8, padding: 16, alignItems: 'center' },
+  emptyText: { color: '#94A3B8', fontSize: 13 },
 });

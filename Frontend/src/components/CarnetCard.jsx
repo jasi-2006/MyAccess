@@ -7,8 +7,8 @@ export default function CarnetCard({ profile, loading }) {
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1100;
 
-  const cardWidth  = isMobile ? Math.min(width - 36, 320) : isTablet ? 300 : 350;
-  const cardHeight = isMobile ? 420 : 520;
+  const cardWidth  = isMobile ? Math.min(width - 36, 220) : isTablet ? 200 : 230;
+  const cardHeight = isMobile ? 470 : 420;
 
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
@@ -114,26 +114,26 @@ export default function CarnetCard({ profile, loading }) {
 }
 
 const styles = StyleSheet.create({
-  cardStage:   { flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingTop: 8 },
+  cardStage:   { flex: 1, alignItems: 'center', justifyContent: 'flex-start', paddingTop: 6 },
   mockCard: {
     backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DDDDDD',
-    padding: 22, justifyContent: 'space-between',
+    padding: 12, justifyContent: 'space-between',
   },
   mockCardBack: { backgroundColor: '#0F766E' },
   cardHeader:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  cardBrand:   { fontSize: 22, fontWeight: '800', color: colors.primary },
-  cardType:    { fontSize: 12, color: '#6B7280', marginTop: 4 },
-  cardChip:    { width: 42, height: 30, borderRadius: 8, backgroundColor: '#E8E8E8' },
-  cardBody:    { alignItems: 'center', gap: 12 },
+  cardBrand:   { fontSize: 13, fontWeight: '800', color: colors.primary },
+  cardType:    { fontSize: 9, color: '#6B7280', marginTop: 2 },
+  cardChip:    { width: 22, height: 16, borderRadius: 4, backgroundColor: '#E8E8E8' },
+  cardBody:    { alignItems: 'center', gap: 5 },
   profileCircle: {
-    width: 92, height: 92, borderRadius: 46,
+    width: 46, height: 46, borderRadius: 23,
     backgroundColor: '#E5F8EC', alignItems: 'center', justifyContent: 'center',
   },
-  profileInitial: { fontSize: 34, fontWeight: '800', color: colors.primary },
-  studentName:    { fontSize: 22, fontWeight: '700', color: '#202020', textAlign: 'center' },
-  studentMeta:    { fontSize: 13, lineHeight: 18, color: '#69707A', textAlign: 'center', maxWidth: 220 },
+  profileInitial: { fontSize: 18, fontWeight: '800', color: colors.primary },
+  studentName:    { fontSize: 13, fontWeight: '700', color: '#202020', textAlign: 'center' },
+  studentMeta:    { fontSize: 10, lineHeight: 13, color: '#69707A', textAlign: 'center', maxWidth: 200 },
   cardFooter:     { flexDirection: 'row', justifyContent: 'space-between' },
-  cardFooterLabel:{ fontSize: 11, textTransform: 'uppercase', color: '#7A7A7A', marginBottom: 4 },
-  cardFooterValue:{ fontSize: 15, fontWeight: '700', color: '#1F2937' },
-  flipHint:       { textAlign: 'center', fontSize: 12, color: '#9CA3AF', marginTop: 8 },
+  cardFooterLabel:{ fontSize: 8, textTransform: 'uppercase', color: '#7A7A7A', marginBottom: 2 },
+  cardFooterValue:{ fontSize: 11, fontWeight: '700', color: '#1F2937' },
+  flipHint:       { textAlign: 'center', fontSize: 9, color: '#9CA3AF', marginTop: 2 },
 });

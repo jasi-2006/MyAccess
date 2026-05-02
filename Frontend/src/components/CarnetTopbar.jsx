@@ -18,12 +18,12 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial }
             <TouchableOpacity onPress={() => navigation.navigate('Home')}>
               <Text style={styles.topLink}>Inicio</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=> navigation.navigate('User')}>
               <Text style={styles.topLink}>Configuracion</Text>
             </TouchableOpacity>
-            <View style={styles.bellWrap}>
+            <TouchableOpacity style={styles.bellWrap} onPress={()=> navigation.navigate('Notifications')}>
               <Text style={styles.bellIcon}>🔔</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -41,23 +41,23 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial }
 
 const styles = StyleSheet.create({
   topbar: {
-    minHeight: 64, backgroundColor: '#FFFFFF',
+    minHeight: 42, backgroundColor: '#FFFFFF',
     borderTopWidth: 1, borderTopColor: '#2FD16A',
     borderBottomWidth: 1, borderBottomColor: '#DADADA',
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
-  topbarLeft:  { flexDirection: 'row', alignItems: 'center', gap: 28 },
-  brand:       { fontSize: 22, fontWeight: '800', color: '#2FD16A' },
-  topLinks:    { flexDirection: 'row', alignItems: 'center', gap: 28 },
-  topLink:     { fontSize: 14, color: '#8B8B8B' },
-  bellWrap:    { width: 28, height: 28, alignItems: 'center', justifyContent: 'center' },
-  bellIcon:    { fontSize: 22 },
-  topbarRight: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  avatar:      { flexDirection: 'row', alignItems: 'center', gap: 10, maxWidth: 170 },
+  topbarLeft:  { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  brand:       { fontSize: 14, fontWeight: '800', color: '#2FD16A' },
+  topLinks:    { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  topLink:     { fontSize: 11, color: '#8B8B8B' },
+  bellWrap:    { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
+  bellIcon:    { fontSize: 14 },
+  topbarRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  avatar:      { flexDirection: 'row', alignItems: 'center', gap: 6, maxWidth: 130 },
   avatarBadge: {
-    width: 42, height: 42, borderRadius: 21,
+    width: 26, height: 26, borderRadius: 13,
     backgroundColor: '#E6DDD7', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
-  avatarInitial: { color: '#8B6D58', fontWeight: '700', fontSize: 16 },
-  avatarText:    { color: '#3E3E3E', fontWeight: '600', fontSize: 14, flexShrink: 1 },
+  avatarInitial: { color: '#8B6D58', fontWeight: '700', fontSize: 11 },
+  avatarText:    { color: '#3E3E3E', fontWeight: '600', fontSize: 11, flexShrink: 1 },
 });

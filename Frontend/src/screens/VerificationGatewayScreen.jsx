@@ -14,6 +14,7 @@ import {
 import { colors } from '../theme/colors.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
 import { resendVerificationCode, verifyUser } from '../services/authService';
+import WebFrame from '../components/WebFrame.jsx';
 
 export default function VerificationGatewayScreen({ navigation, route }) {
   const { width, height } = useWindowDimensions();
@@ -21,13 +22,13 @@ export default function VerificationGatewayScreen({ navigation, route }) {
   const isTablet = width > 501;
   const isDesktop = width >= 1024;
 
-  const topPadding = isDesktop ? 35 : isTablet ? 100 : isSmallDevice ? 80 : 96;
-  const fontSizeTitle = isDesktop ? 42 : isTablet ? 36 : isSmallDevice ? 28 : 32;
-  const fontSizeSubtitle = isDesktop ? 17 : isTablet ? 20 : isSmallDevice ? 14 : 16;
-  const inputSize = isDesktop ? 60 : isTablet ? 64 : isSmallDevice ? 42 : 48;
-  const fontSizeInput = isDesktop ? 28 : isTablet ? 24 : isSmallDevice ? 18 : 20;
-  const gap = isDesktop ? 9 : isTablet ? 14 : isSmallDevice ? 8 : 10;
-  const buttonHeight = isDesktop ? 64 : isTablet ? 58 : isSmallDevice ? 48 : 52;
+  const topPadding = isDesktop ? 28 : isTablet ? 70 : isSmallDevice ? 60 : 72;
+  const fontSizeTitle = isDesktop ? 34 : isTablet ? 28 : isSmallDevice ? 22 : 26;
+  const fontSizeSubtitle = isDesktop ? 14 : isTablet ? 16 : isSmallDevice ? 12 : 13;
+  const inputSize = isDesktop ? 48 : isTablet ? 52 : isSmallDevice ? 36 : 40;
+  const fontSizeInput = isDesktop ? 22 : isTablet ? 20 : isSmallDevice ? 15 : 17;
+  const gap = isDesktop ? 7 : isTablet ? 10 : isSmallDevice ? 6 : 8;
+  const buttonHeight = isDesktop ? 50 : isTablet ? 46 : isSmallDevice ? 40 : 44;
 
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -132,6 +133,7 @@ export default function VerificationGatewayScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <WebFrame>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -230,6 +232,7 @@ export default function VerificationGatewayScreen({ navigation, route }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </WebFrame>
 
       <SuccessModal
         visible={showSuccess}
