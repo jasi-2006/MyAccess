@@ -7,7 +7,7 @@ export default function HomeFooter() {
   const { width } = useWindowDimensions();
   const isTablet  = width >= 480 && width < 900;
   const isDesktop = width >= 900;
-  const px = isDesktop ? 80 : isTablet ? 40 : 20;
+  const px = isDesktop ? 40 : isTablet ? 24 : 16;
 
   return (
     <View style={[styles.footer, { paddingHorizontal: px }]}>

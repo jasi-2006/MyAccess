@@ -12,6 +12,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
+import WebFrame from '../components/WebFrame.jsx';
 
 export default function VerifyResetCodeScreen({ navigation, route }) {
   const { width, height } = useWindowDimensions();
@@ -19,13 +20,13 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
   const isTablet = width > 768;
   const isDesktop = width >= 1024;
 
-  const topPadding = isDesktop ? 60 : isTablet ? 100 : isSmallDevice ? 80 : 96;
-  const fontSizeTitle = isDesktop ? 42 : isTablet ? 36 : isSmallDevice ? 28 : 32;
-  const fontSizeSubtitle = isDesktop ? 22 : isTablet ? 20 : isSmallDevice ? 14 : 16;
-  const inputSize = isDesktop ? 72 : isTablet ? 64 : isSmallDevice ? 42 : 48;
-  const fontSizeInput = isDesktop ? 28 : isTablet ? 24 : isSmallDevice ? 18 : 20;
-  const gap = isDesktop ? 16 : isTablet ? 14 : isSmallDevice ? 8 : 10;
-  const buttonHeight = isDesktop ? 64 : isTablet ? 58 : isSmallDevice ? 48 : 52;
+  const topPadding = isDesktop ? 48 : isTablet ? 80 : isSmallDevice ? 60 : 72;
+  const fontSizeTitle = isDesktop ? 34 : isTablet ? 28 : isSmallDevice ? 22 : 26;
+  const fontSizeSubtitle = isDesktop ? 18 : isTablet ? 16 : isSmallDevice ? 12 : 13;
+  const inputSize = isDesktop ? 58 : isTablet ? 52 : isSmallDevice ? 36 : 40;
+  const fontSizeInput = isDesktop ? 22 : isTablet ? 20 : isSmallDevice ? 15 : 17;
+  const gap = isDesktop ? 12 : isTablet ? 10 : isSmallDevice ? 6 : 8;
+  const buttonHeight = isDesktop ? 50 : isTablet ? 46 : isSmallDevice ? 40 : 44;
 
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
@@ -78,6 +79,7 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <WebFrame>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -152,6 +154,7 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </WebFrame>
     </SafeAreaView>
   );
 }

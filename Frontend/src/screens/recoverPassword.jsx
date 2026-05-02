@@ -14,6 +14,7 @@ import {
 import { colors } from '../theme/colors.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import { requestPasswordResetCode, updatePasswordWithCode } from '../services/authService';
+import WebFrame from '../components/WebFrame.jsx';
 
 export default function RecoverPasswordScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
@@ -30,11 +31,11 @@ export default function RecoverPasswordScreen({ navigation }) {
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const cardWidth = isDesktop ? 460 : isTablet ? Math.min(width * 0.72, 430) : Math.min(width * 0.86, 360);
-  const headerHeight = isDesktop ? 330 : isTablet ? 300 : isSmallDevice ? 260 : 285;
-  const titleSize = isDesktop ? 54 : isTablet ? 48 : isSmallDevice ? 34 : 42;
-  const subtitleSize = isDesktop ? 19 : isTablet ? 17 : 15;
-  const contentTop = isDesktop ? -18 : isTablet ? -16 : -10;
+  const cardWidth = isDesktop ? 380 : isTablet ? Math.min(width * 0.6, 360) : Math.min(width * 0.82, 320);
+  const headerHeight = isDesktop ? 260 : isTablet ? 240 : isSmallDevice ? 210 : 230;
+  const titleSize = isDesktop ? 42 : isTablet ? 38 : isSmallDevice ? 28 : 34;
+  const subtitleSize = isDesktop ? 15 : isTablet ? 14 : 13;
+  const contentTop = isDesktop ? -14 : isTablet ? -12 : -8;
 
   const resetMessages = () => {
     setSubmitError('');
@@ -110,6 +111,7 @@ export default function RecoverPasswordScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.screen}>
+      <WebFrame>
       <KeyboardAvoidingView
         style={styles.screen}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -241,6 +243,7 @@ export default function RecoverPasswordScreen({ navigation }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </WebFrame>
     </SafeAreaView>
   );
 }

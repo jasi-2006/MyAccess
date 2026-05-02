@@ -6,6 +6,7 @@ import HomeHero     from '../components/HomeHero.jsx';
 import HomeCards    from '../components/HomeCards.jsx';
 import HomeAbout    from '../components/HomeAbout.jsx';
 import HomeFooter   from '../components/HomeFooter.jsx';
+import WebFrame     from '../components/WebFrame.jsx';
 
 export default function HomeGatewayScreen({ navigation }) {
   const { width } = useWindowDimensions();
@@ -37,12 +38,13 @@ export default function HomeGatewayScreen({ navigation }) {
   ];
 
   return (
-    <View style={styles.root}>
-      <HomeNavbar navigation={navigation} />
+    <WebFrame>
+      <View style={styles.root}>
+        <HomeNavbar navigation={navigation} />
 
-      <View style={styles.body}>
+        <View style={styles.body}>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+          <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView} contentContainerStyle={styles.scroll}>
 
           <HomeHero fullName={profile?.fullName} />
 
@@ -51,19 +53,24 @@ export default function HomeGatewayScreen({ navigation }) {
           {/* PERFIL */}
           
 
-          <HomeAbout />
-          <HomeFooter />
+            <HomeAbout />
+            <View style={styles.footerEnd}>
+              <HomeFooter />
+            </View>
 
-        </ScrollView>
+          </ScrollView>
+        </View>
       </View>
-    </View>
+    </WebFrame>
   );
 }
 
 const styles = StyleSheet.create({
   root:   { flex: 1, backgroundColor: '#F0F9F6' },
   body:   { flex: 1, flexDirection: 'row' },
-  scroll: { flexGrow: 1, paddingBottom: 40 },
+  scrollView: { flex: 1 },
+  scroll: { flexGrow: 1 },
+  footerEnd: { marginTop: 'auto' },
 
   section:      { paddingVertical: 32 },
   sectionTitle: { fontWeight: '700', color: '#1F2937', marginBottom: 20 },

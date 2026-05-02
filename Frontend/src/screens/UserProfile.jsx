@@ -5,13 +5,14 @@ import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import ProfileInfoCard from '../components/ProfileInfoCard.jsx';
 import ProfileEditModal from '../components/ProfileEditModal.jsx';
+import WebFrame from '../components/WebFrame.jsx';
 
 export default function UserProfile({ navigation }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const isDesktop = width >= 910;
   const isTablet = width >= 490 && width < 910;
-  const px = isDesktop ? 70 : isTablet ? 60 : 20;
+  const px = isDesktop ? 50 : isTablet ? 40 : 14;
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,32 +63,34 @@ export default function UserProfile({ navigation }) {
   const studentInitial = studentName.charAt(0).toUpperCase();
 
   return (
-    <View style={styles.container}>
-      <CarnetTopbar navigation={navigation} studentName={studentName} studentInitial={studentInitial} />
-      <View style={styles.body}>
-        {!isMobile && <UserSidebar navigation={navigation} />}
-        <ScrollView style={styles.main}>
-          {isMobile && <UserSidebar navigation={navigation} />} 
-          <ProfileInfoCard
-            profile={profile}
-            loading={loading}
-            fields={fields}
-            onEdit={openEdit}
-            px={px}
-          />
-        </ScrollView>
-      </View>
+    <WebFrame>
+      <View style={styles.container}>
+        <CarnetTopbar navigation={navigation} studentName={studentName} studentInitial={studentInitial} />
+        <View style={styles.body}>
+          {!isMobile && <UserSidebar navigation={navigation} activeKey="User" />}
+          <ScrollView style={styles.main}>
+            {isMobile && <UserSidebar navigation={navigation} activeKey="User" />} 
+            <ProfileInfoCard
+              profile={profile}
+              loading={loading}
+              fields={fields}
+              onEdit={openEdit}
+              px={px}
+            />
+          </ScrollView>
+        </View>
 
-      <ProfileEditModal
-        visible={modalVisible}
-        fields={fields}
-        form={form}
-        onChange={(key, value) => setForm((prev) => ({ ...prev, [key]: value }))}
-        onSave={handleSave}
-        onCancel={() => setModalVisible(false)}
-        saving={saving}
-      />
-    </View>
+        <ProfileEditModal
+          visible={modalVisible}
+          fields={fields}
+          form={form}
+          onChange={(key, value) => setForm((prev) => ({ ...prev, [key]: value }))}
+          onSave={handleSave}
+          onCancel={() => setModalVisible(false)}
+          saving={saving}
+        />
+      </View>
+    </WebFrame>
   );
 }
 

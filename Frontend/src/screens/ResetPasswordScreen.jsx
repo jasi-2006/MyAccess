@@ -6,6 +6,7 @@ import PrimaryButton from '../components/PrimaryButton.jsx';
 import HeaderCurved from '../components/HeaderCurved.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
 import { resetPassword } from '../services/authService';
+import WebFrame from '../components/WebFrame.jsx';
 
 export default function ResetPasswordScreen({ navigation, route }) {
   const [password, setPassword] = useState('');
@@ -40,6 +41,7 @@ export default function ResetPasswordScreen({ navigation, route }) {
   };
 
   return (
+    <WebFrame>
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -81,13 +83,14 @@ export default function ResetPasswordScreen({ navigation, route }) {
         message="Contraseña actualizada correctamente"
       />
     </KeyboardAvoidingView>
+    </WebFrame>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 30, paddingTop: 60 },
-  title: { fontSize: 28, fontWeight: 'bold', color: colors.text, marginBottom: 8 },
-  subtitle: { fontSize: 16, color: colors.textSecondary, marginBottom: 30 },
+  content: { padding: 20, paddingTop: 40 },
+  title: { fontSize: 22, fontWeight: 'bold', color: colors.text, marginBottom: 6 },
+  subtitle: { fontSize: 14, color: colors.textSecondary, marginBottom: 22 },
   submitError: { color: colors.error, marginBottom: 16, textAlign: 'center' },
 });

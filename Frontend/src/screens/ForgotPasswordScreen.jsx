@@ -14,6 +14,7 @@ import { colors } from '../theme/colors.jsx';
 import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import { forgotPassword } from '../services/authService';
+import WebFrame from '../components/WebFrame.jsx';
 
 export default function ForgotPasswordScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
@@ -23,7 +24,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
   const isDesktop = width >= 1024;
   const isTablet = width >= 768 && width < 1024;
-  const horizontalPadding = isDesktop ? width * 0.25 : isTablet ? width * 0.15 : width * 0.08;
+  const horizontalPadding = isDesktop ? width * 0.18 : isTablet ? width * 0.1 : width * 0.06;
 
   const handleSend = async () => {
     if (!email.includes('@')) {
@@ -44,6 +45,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <WebFrame>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -110,6 +112,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </WebFrame>
     </SafeAreaView>
   );
 }
@@ -134,8 +137,8 @@ const styles = StyleSheet.create({
   },
   headerCurved: {
     backgroundColor: '#5AEDB8',
-    paddingTop: 20,
-    paddingBottom: 50,
+    paddingTop: 16,
+    paddingBottom: 36,
     position: 'relative',
   },
   backButton: {
@@ -156,12 +159,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerTitle: {
-    fontSize: 42,
+    fontSize: 32,
     fontWeight: '900',
     color: '#FFFFFF',
     textAlign: 'center',
-    marginTop: 40,
-    lineHeight: 50,
+    marginTop: 30,
+    lineHeight: 40,
   },
   headerSubtitle: {
     fontSize: 16,
