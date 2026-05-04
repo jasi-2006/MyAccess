@@ -26,9 +26,7 @@ public class UserRegisterProfileService {
     private final UserRegisterProfileRepository userRepository;
 
     public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO dto) {
-        if (userRepository.existsByDocument(dto.getDocument())) {
-            throw new RuntimeException("El documento ya está registrado");
-        }
+
         UserRegisterProfile user = new UserRegisterProfile();
         applyUpdate(user, dto);
         userRepository.save(user);

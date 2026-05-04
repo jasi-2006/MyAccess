@@ -117,16 +117,6 @@ export default function NotificationsScreen({ navigation }) {
                 </TouchableOpacity>
               ))}
             </View>
-
-            <View style={[styles.sidePanel, isDesktop && styles.sidePanelDesktop]}>
-              <Text style={styles.sideTitle}>Estado</Text>
-              <Text style={styles.sideText}>
-                Tus avisos importantes apareceran aqui para que no tengas que buscarlos en distintos modulos.
-              </Text>
-              <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-                <Text style={styles.backButtonText}>Volver al inicio</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </View>
@@ -136,10 +126,22 @@ export default function NotificationsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#F0F9F6' },
-  contentFrame: { flex: 1, flexDirection: 'row' },
-  mainArea: { flex: 1 },
-  scroll: { flexGrow: 1, paddingTop: 16, paddingBottom: 28 },
+  root: { 
+    flex: 1, 
+    backgroundColor: '#F0F9F6' 
+  },
+  contentFrame: { 
+    flex: 1, 
+    flexDirection: 'row' 
+  },
+  mainArea: { 
+    flex: 1
+   },
+  scroll: { 
+    flexGrow: 1, 
+    paddingTop: 16, 
+    paddingBottom: 28 
+  },
   hero: {
     backgroundColor: '#079B72',
     borderRadius: 20,
@@ -163,8 +165,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textTransform: 'uppercase',
   },
-  title: { color: '#FFFFFF', fontWeight: '800', letterSpacing: -0.4, lineHeight: 28 },
-  subtitle: { color: '#E7FFF5', fontSize: 12, fontWeight: '600', lineHeight: 18, marginTop: 6, maxWidth: 640 },
+  title: { 
+    color: '#FFFFFF', 
+    fontWeight: '800', 
+    letterSpacing: -0.4, 
+    lineHeight: 28 
+  },
+  subtitle: { 
+    color: '#E7FFF5', 
+    fontSize: 12, 
+    fontWeight: '600', 
+    lineHeight: 18, 
+    marginTop: 6, 
+    maxWidth: 640 
+  },
   summaryCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
@@ -177,14 +191,48 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 4,
   },
-  summaryNumber: { color: '#079B72', fontSize: 24, fontWeight: '900' },
-  summaryLabel: { color: '#6B7280', fontSize: 11, fontWeight: '800', textAlign: 'center', textTransform: 'uppercase' },
-  contentGrid: { gap: 12, marginTop: 14 },
-  contentGridDesktop: { flexDirection: 'row', alignItems: 'flex-start' },
-  listPanel: { flex: 1, backgroundColor: '#FFFFFF', borderRadius: 18, padding: 14 },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
-  sectionTitle: { color: '#1F2937', fontSize: 16, fontWeight: '800' },
-  sectionHint: { color: '#9CA3AF', fontSize: 12, fontWeight: '700' },
+  summaryNumber: { 
+    color: '#079B72', 
+    fontSize: 24, 
+    fontWeight: '900' 
+  },
+  summaryLabel: { 
+    color: '#6B7280', 
+    fontSize: 11, 
+    fontWeight: '800', 
+    textAlign: 'center', 
+    textTransform: 'uppercase' 
+  },
+  contentGrid: { 
+    gap: 12, 
+    marginTop: 14 
+  },
+  contentGridDesktop: { 
+    flexDirection: 'row', 
+    alignItems: 'flex-start' 
+  },
+  listPanel: { 
+    flex: 1, 
+    backgroundColor: '#FFFFFF', 
+    borderRadius: 18, 
+    padding: 14 
+  },
+  sectionHeader: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginBottom: 14 
+  },
+  sectionTitle: { 
+    color: '#1F2937', 
+    fontSize: 16, 
+    fontWeight: '800' 
+  },
+  sectionHint: { 
+    color: '#9CA3AF', 
+    fontSize: 12, 
+    fontWeight: '700' 
+  },
   notificationCard: {
     flexDirection: 'row',
     gap: 14,
@@ -220,26 +268,5 @@ const styles = StyleSheet.create({
   time: { color: '#9CA3AF', fontSize: 11, fontWeight: '700' },
   notificationTitle: { color: '#1F2937', fontSize: 14, fontWeight: '800', marginTop: 6 },
   notificationMessage: { color: '#6B7280', fontSize: 13, lineHeight: 20, marginTop: 5 },
-  sidePanel: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    padding: 16,
-    width: '100%',
-    maxWidth: 260,
-  },
-  sidePanelDesktop: { width: 260 },
-  sideTitle: { color: '#1F2937', fontSize: 18, fontWeight: '800', marginBottom: 10 },
-  sideText: { color: '#6B7280', fontSize: 13, lineHeight: 21 },
-  notificationCardOpen: { borderColor: '#079B72', backgroundColor: '#EDFFF7' },
-  notificationDetail: { marginTop: 10, padding: 10, backgroundColor: '#F0FFF8', borderRadius: 10 },
-  notificationDetailText: { color: '#374151', fontSize: 13, lineHeight: 20 },
-  backButton: {
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: '#24C565',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  backButtonText: { color: '#FFFFFF', fontSize: 13, fontWeight: '800' },
+  
 });

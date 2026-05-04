@@ -19,6 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+/*
+ * cotrolador rest para la gestion del inicio de sesion del usuario
+ * expone enpoint para el inicio de sesion, recuperacion de contraseña, validacion del correo
+ */
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,6 +34,7 @@ public class AuthController {
     private final UserRegisterProfileService userRegisterProfileService;
     private final UserAuthService userAuthService;
     private final VerificationService verificationService;
+    
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginRequestDTO request) {
