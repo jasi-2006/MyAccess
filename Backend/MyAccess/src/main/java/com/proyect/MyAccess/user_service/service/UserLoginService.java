@@ -14,6 +14,10 @@ public class UserLoginService {
     private final UserAuthRepository userAuthRepository;
     private final JwtService jwtService;
 
+    /**
+     * metodo para la el inicio de sesion del usuario con verificacionde la identidad del usuario
+     * @param request  recibe los datos del usuario
+     * */
     public String login(UserLoginRequestDTO request) {
         UserAuth user = userAuthRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

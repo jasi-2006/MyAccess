@@ -11,14 +11,19 @@ import java.time.LocalDateTime;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name="id")
     private Long id;
+
     @Column(name ="name_role")
     private String nameRole;
+
     @Column(name="description")
     private String description;
+
     @Column(name="asset")
     private Boolean asset;
+
     @Column(name="date_creation")
     private LocalDateTime dateCreation;
 }
