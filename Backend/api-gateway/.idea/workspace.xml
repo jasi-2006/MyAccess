@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/auth_service/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/auth_service/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserLoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserLoginService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
