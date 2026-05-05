@@ -1,6 +1,7 @@
 package com.proyect.MyAccess.user_service.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -9,8 +10,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender mailSender;
+    @Value("${spring.mail.username}")
+    private String from;
+
     public void sendVerificationCode(String to, String code){
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
         message.setTo(to);
         message.setSubject("MyAccess¡Ya casi estás ha dentro!🚀 ");
         message.setText("Estamos muy emocionados de tenerte con nosotros. Para empezar a usar MyAccess, solo necesitamos confirmar que esta dirección de correo te pertenece.\n" +
@@ -31,6 +36,7 @@ public class EmailService {
 
     public void sendPasswordResetCode(String to, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
         message.setTo(to);
         message.setSubject("MyAccess - Restablecer contraseña");
         message.setText("Recibimos una solicitud para restablecer tu contraseña.\n\n" +
