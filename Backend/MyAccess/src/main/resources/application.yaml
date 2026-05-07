@@ -73,4 +73,4 @@ logging:
 security:
   jwt:
     secret-key: ${JWT_SECRET:}
-    tokenExpiration: ${JWT_EXPIRATION:600000}
+    tokenExpiration: ${JWT_EXPIRATION:28800000}

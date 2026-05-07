@@ -5,6 +5,7 @@ import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import CarnetCard from '../components/CarnetCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
+import RequestCardButton from '../components/RequestCardButton.jsx';
 
 export default function CarnetGatewayScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
@@ -36,7 +37,7 @@ export default function CarnetGatewayScreen({ navigation }) {
         />
 
         <View style={styles.contentFrame}>
-          {!isMobile && <CarnetSidebar navigation={navigation} />}
+          {!isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} />}
 
           <ScrollView
             style={styles.mainArea}
@@ -44,7 +45,7 @@ export default function CarnetGatewayScreen({ navigation }) {
             showsVerticalScrollIndicator={false}
             overScrollMode="never"
           >
-            {isMobile && <CarnetSidebar navigation={navigation} />}
+            {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} />}
 
             <View style={styles.headerBlock}>
               <Text style={styles.pageTitle}>Carnets</Text>
@@ -54,10 +55,10 @@ export default function CarnetGatewayScreen({ navigation }) {
             </View>
 
             <CarnetCard profile={profile} loading={loading} />
+            <RequestCardButton />
 
           </ScrollView>
         </View>
-
       </View>
     </WebFrame>
   );

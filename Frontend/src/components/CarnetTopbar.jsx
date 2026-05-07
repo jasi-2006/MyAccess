@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { countUnreadNotifications, getNotifications } from '../services/notificationService.js';
 
-export default function CarnetTopbar({ navigation, studentName, studentInitial }) {
+export default function CarnetTopbar({ navigation, studentName, studentInitial, notificationRefreshKey }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1100;
   const pagePadding = isMobile ? 14 : isTablet ? 18 : 24;
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  const loadNotificationCount = useCallback(async () => {
+    try {
+      const response = await getNotifications();
+      setNotificationCount(countUnreadNotifications(response));
+    } catch {
+      setNotificationCount(0);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadNotificationCount();
+    }, [loadNotificationCount])
+  );
+
+  useEffect(() => {
+    if (notificationRefreshKey !== undefined) {
+      loadNotificationCount();
+    }
+  }, [loadNotificationCount, notificationRefreshKey]);
+
+  const badgeText = notificationCount > 99 ? '99+' : String(notificationCount);
 
   return (
     <View style={[styles.topbar, { paddingHorizontal: pagePadding }]}>
@@ -23,6 +49,11 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial }
             </TouchableOpacity>
             <TouchableOpacity style={styles.bellWrap} onPress={()=> navigation.navigate('Notifications')}>
               <Text style={styles.bellIcon}>🔔</Text>
+              {notificationCount > 0 ? (
+                <View style={styles.notificationBadge}>
+                  <Text style={styles.notificationBadgeText}>{badgeText}</Text>
+                </View>
+              ) : null}
             </TouchableOpacity>
           </View>
         )}
@@ -50,8 +81,27 @@ const styles = StyleSheet.create({
   brand:       { fontSize: 14, fontWeight: '800', color: '#2FD16A' },
   topLinks:    { flexDirection: 'row', alignItems: 'center', gap: 16 },
   topLink:     { fontSize: 11, color: '#8B8B8B' },
-  bellWrap:    { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
+  bellWrap:    { width: 24, height: 24, alignItems: 'center', justifyContent: 'center', position: 'relative' },
   bellIcon:    { fontSize: 14 },
+  notificationBadge: {
+    position: 'absolute',
+    top: -7,
+    right: -9,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    paddingHorizontal: 4,
+    backgroundColor: '#EF4444',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+  },
+  notificationBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '900',
+  },
   topbarRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   avatar:      { flexDirection: 'row', alignItems: 'center', gap: 6, maxWidth: 130 },
   avatarBadge: {

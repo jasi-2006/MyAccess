@@ -94,6 +94,19 @@ public class NotificationService {
         });
     }
 
+    public Optional<NotificationResponseDTO> markAsRead(Long id, Long userId, String role) {
+        return notificationRepository.findById(id).map(notification -> {
+            if ("APRENDIZ".equalsIgnoreCase(role)
+                    && (notification.getIdUser() == null || !userId.equals(notification.getIdUser().longValue()))) {
+                throw new RuntimeException("No tienes permiso para leer esta notificacion");
+            }
+            if (notification.getReadingDate() == null) {
+                notification.setReadingDate(LocalDateTime.now());
+            }
+            return toResponse(notificationRepository.save(notification));
+        });
+    }
+
     /*
      * Busca una configuración por su ID. Lanza excepción si no existe.
      * @param idConfig Identificador de la configuración
