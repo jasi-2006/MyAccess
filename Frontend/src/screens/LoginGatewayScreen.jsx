@@ -6,7 +6,8 @@ import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import SocialButtons from '../components/SocialButtons.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
-import { loginUser } from '../services/authService';
+import { getUserProfile, loginUser } from '../services/authService';
+import { getHomeRouteForRole } from '../utils/accessControl';
 
 export default function LoginGatewayScreen({ navigation }) {
   const { width } = useWindowDimensions();
@@ -31,8 +32,15 @@ export default function LoginGatewayScreen({ navigation }) {
     try {
       setLoading(true);
       setSubmitError('');
-      await loginUser({ email, password });
-      navigation.replace('Home');
+      const loginResponse = await loginUser({ email, password });
+      let role = loginResponse?.role || loginResponse?.nameRole;
+
+      try {
+        const profile = await getUserProfile();
+        role = profile?.nameRole || role;
+      } catch {}
+
+      navigation.replace(getHomeRouteForRole(role));
     } catch (error) {
       const raw = (error.message || '').toLowerCase();
       if (raw.includes('verificada') || raw.includes('verificado')) {

@@ -1,7 +1,5 @@
 CREATE DATABASE IF NOT EXISTS auth_service;
 USE auth_service;
-
-
 CREATE TABLE roles (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     name_role     VARCHAR(40) ,
@@ -10,6 +8,7 @@ CREATE TABLE roles (
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+select * from roles;
 CREATE TABLE permissions (
     id              INT PRIMARY KEY AUTO_INCREMENT,
     permission_code VARCHAR(50) ,
@@ -50,3 +49,6 @@ CREATE TABLE sessions_active (
 );
 
 select * from user_auth;
+
+
+

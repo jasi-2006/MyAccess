@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import WebFrame from '../components/WebFrame.jsx';
+import { markNotificationAsRead } from '../services/notificationService.js';
 
 export default function NotificationDetailScreen({ navigation, route }) {
   const { item } = route.params;
@@ -10,11 +11,32 @@ export default function NotificationDetailScreen({ navigation, route }) {
   const isMobile = width < 768;
   const isDesktop = width >= 900;
   const px = isDesktop ? 24 : isMobile ? 10 : 16;
+  const [notification, setNotification] = useState(item);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const markAsRead = async () => {
+      if (!notification?.id) return;
+
+      try {
+        const updated = await markNotificationAsRead(notification.id);
+        setNotification((current) => ({
+          ...current,
+          raw: updated,
+          unread: false,
+        }));
+        setRefreshKey((current) => current + 1);
+      } catch {
+      }
+    };
+
+    markAsRead();
+  }, [notification?.id]);
 
   return (
     <WebFrame>
       <View style={styles.root}>
-        <CarnetTopbar navigation={navigation} />
+        <CarnetTopbar navigation={navigation} notificationRefreshKey={refreshKey} />
 
         <View style={styles.contentFrame}>
           {!isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" />}
@@ -32,18 +54,18 @@ export default function NotificationDetailScreen({ navigation, route }) {
 
             <View style={styles.card}>
               <View style={styles.cardTop}>
-                <View style={[styles.iconBubble, item.unread && styles.iconBubbleUnread]}>
-                  <Text style={styles.iconText}>{item.unread ? '!' : 'i'}</Text>
+                <View style={[styles.iconBubble, notification.unread && styles.iconBubbleUnread]}>
+                  <Text style={styles.iconText}>{notification.unread ? '!' : 'i'}</Text>
                 </View>
                 <View style={styles.cardTopInfo}>
-                  <Text style={styles.badge}>{item.type}</Text>
-                  <Text style={styles.time}>{item.time}</Text>
+                  <Text style={styles.badge}>{notification.type}</Text>
+                  <Text style={styles.time}>{notification.time}</Text>
                 </View>
               </View>
 
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>{notification.title}</Text>
               <View style={styles.divider} />
-              <Text style={styles.message}>{item.message}</Text>
+              <Text style={styles.message}>{notification.message}</Text>
             </View>
           </ScrollView>
         </View>

@@ -98,4 +98,18 @@ public class NotificationController {
                 .map(r -> ResponseEntity.status(HttpStatus.ACCEPTED).body(r))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}/read")
+    public ResponseEntity<NotificationResponseDTO> markAsRead(@PathVariable Long id, HttpServletRequest request) {
+        String role = (String) request.getAttribute("role");
+        Long userId = (Long) request.getAttribute("userId");
+
+        try {
+            return notificationService.markAsRead(id, userId, role)
+                    .map(notification -> ResponseEntity.status(HttpStatus.ACCEPTED).body(notification))
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }

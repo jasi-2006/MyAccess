@@ -25,7 +25,7 @@ CREATE TABLE notifications (
     id_config        INT,
     FOREIGN KEY (id_config) REFERENCES config(id_config)
 );
-
+select * from notifications;
 CREATE TABLE templates_notification (
     id_template      INT PRIMARY KEY AUTO_INCREMENT,
     id_notifications INT,
