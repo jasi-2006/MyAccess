@@ -36,7 +36,6 @@ export default function UserProfile({ navigation }) {
     { label: 'Programa',         value: profile?.trainingProgram, key: 'trainingProgram' },
     { label: 'Centro',           value: profile?.trainingCenter,  key: 'trainingCenter' },
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
-    { label: 'Rol',              value: profile?.nameRole,        key: 'nameRole' },
     { label: 'email',            value: profile?.email,           key: 'email'}
   ];
 
@@ -67,9 +66,9 @@ export default function UserProfile({ navigation }) {
       <View style={styles.container}>
         <CarnetTopbar navigation={navigation} studentName={studentName} studentInitial={studentInitial} />
         <View style={styles.body}>
-          {!isMobile && <UserSidebar navigation={navigation} activeKey="User" />}
+          {!isMobile && <UserSidebar navigation={navigation} activeKey="User" role={profile?.nameRole} />}
           <ScrollView style={styles.main}>
-            {isMobile && <UserSidebar navigation={navigation} activeKey="User" />} 
+            {isMobile && <UserSidebar navigation={navigation} activeKey="User" role={profile?.nameRole} />} 
             <ProfileInfoCard
               profile={profile}
               loading={loading}

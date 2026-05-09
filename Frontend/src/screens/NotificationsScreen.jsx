@@ -160,7 +160,7 @@ export default function NotificationsScreen({ navigation }) {
         <CarnetTopbar navigation={navigation} notificationRefreshKey={notificationRefreshKey} />
 
         <View style={styles.contentFrame}>
-          {!isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" />}
+          {!isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" role={profileRole} />}
 
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -175,7 +175,7 @@ export default function NotificationsScreen({ navigation }) {
             />
           }
         >
-          {isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" />}
+          {isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" role={profileRole} />}
         <View style={[styles.hero, isDesktop && styles.heroDesktop]}>
           <View style={styles.heroCopy}>
             <Text style={styles.eyebrow}>Centro de notificaciones</Text>

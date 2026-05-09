@@ -3,12 +3,16 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensio
 import WebFrame from './WebFrame.jsx';
 
 const menuItems = [
-  { key: 'Home', label: 'Inicio', route: 'Home' },
-  { key: 'Instructor', label: 'Gestion', route: 'Instructor' },
-  { key: 'Card', label: 'Carnet digital', route: 'Card' },
-  { key: 'Fichas', label: 'Gestion de ficha', route: 'Fichas' },
-  { key: 'Solicitudes', label: 'Solicitudes', route: 'Solicitudes' },
-  { key: 'Historial', label: 'Historial', route: 'Historial' },
+  { key: 'home',        label: 'Inicio',             icon: '🏠' },
+  { key: 'Carnet',      label: 'Mi carnet',           icon: '🪪',},
+  { key: 'User',        label: 'Mi perfil',           icon: '👤' },
+  { key: 'Notifications', label: 'Notificaciones',   icon: '🔔' },
+  { key: 'status',      label: 'Estado tramite',      icon: '🔀', aprendizOnly: true },
+  { key: 'Instructor',  label: 'Dashboard',           icon: '📊', managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
+  { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
+  { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
+  
 ];
 
 export default function Layout({ children, title, navigation, activeKey = 'Instructor' }) {
@@ -18,7 +22,6 @@ export default function Layout({ children, title, navigation, activeKey = 'Instr
   const menu = (
     <View style={[styles.sidebar, isMobile && styles.sidebarMobile]}>
       <Text style={styles.logo}>MyAccess</Text>
-      <Text style={styles.area}>Area de instructor</Text>
       {menuItems.map((item) => (
         <TouchableOpacity
           key={item.key}

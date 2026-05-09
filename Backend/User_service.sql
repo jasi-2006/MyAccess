@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS user_service;
 USE user_service;
-
+-- drop database user_service;
 CREATE TABLE user_profile (
     id              INT PRIMARY KEY AUTO_INCREMENT,
     document        VARCHAR(29) NOT NULL UNIQUE,
