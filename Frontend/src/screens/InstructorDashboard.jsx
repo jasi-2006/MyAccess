@@ -1,107 +1,94 @@
-import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
-import Layout from '../components/Layout.jsx';
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
+import CarnetTopbar from '../components/CarnetTopbar.jsx';
+import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
+import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
+import WebFrame from '../components/WebFrame.jsx';
+import { getUserProfile } from '../services/authService';
 
 export default function InstructorDashboard({ navigation }) {
+  const { width, height } = useWindowDimensions();
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1100;
+  const pagePadding = isMobile ? 10 : isTablet ? 14 : 18;
+
+  const [profile, setProfile] = useState(null);
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
 
+  const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
+  const userInitial = userName.charAt(0).toUpperCase();
+
+  useEffect(() => {
+    getUserProfile().then(setProfile).catch(() => setProfile(null));
+  }, []);
+
   return (
-    <Layout title="Area de instructor" navigation={navigation} activeKey="Instructor">
-      <Text style={styles.subtitle}>
-        Seleccione sus fichas, revise solicitudes o consulte el carnet digital.
-      </Text>
+    <WebFrame>
+      <View style={styles.screen}>
+        <CarnetTopbar navigation={navigation} studentName={userName} studentInitial={userInitial} />
+        <View style={styles.contentFrame}>
+          {!isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Instructor" />}
+          <ScrollView
+            style={styles.mainArea}
+            contentContainerStyle={[styles.mainScroll, { paddingHorizontal: pagePadding, minHeight: height - 60 }]}
+            showsVerticalScrollIndicator={false}
+          >
+            {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Instructor" />}
 
-      <View style={styles.row}>
-        <StatCard title="Fichas" value="128" />
-        <StatCard title="Solicitudes" value="12" />
-        <StatCard title="Validados" value="8" />
-        <StatCard title="Impresos" value="45" />
-      </View>
+            <View style={styles.headerBlock}>
+              <Text style={styles.pageTitle}>Área de instructor</Text>
+              <Text style={styles.pageSubtitle}>Seleccione sus fichas, revise solicitudes o consulte el carnet digital.</Text>
+            </View>
 
-      <View style={styles.actions}>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => navigation.navigate('Fichas')}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.actionTitle}>Ver fichas</Text>
-          <Text style={styles.actionText}>Gestionar grupos y programas activos.</Text>
-        </TouchableOpacity>
+            <View style={styles.row}>
+              <StatCard title="Fichas"      value="128" />
+              <StatCard title="Solicitudes" value="12" />
+              <StatCard title="Validados"   value="8" />
+              <StatCard title="Impresos"    value="45" />
+            </View>
 
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => navigation.navigate('Solicitudes')}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.actionTitle}>Ver solicitudes</Text>
-          <Text style={styles.actionText}>Revisar estados de impresion de carnets.</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => navigation.navigate('Card')}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.actionTitle}>Ver carnet digital</Text>
-          <Text style={styles.actionText}>Abrir la misma estructura de carnet que ve el aprendiz.</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => setNotificationModalVisible(true)}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.actionTitle}>Crear notificacion</Text>
-          <Text style={styles.actionText}>Enviar un aviso a un usuario o dejarlo registrado en gestion.</Text>
-        </TouchableOpacity>
+            <View style={styles.actions}>
+              {[
+                { title: 'Ver fichas',          text: 'Gestionar grupos y programas activos.',                          route: 'Fichas' },
+                { title: 'Ver solicitudes',      text: 'Revisar estados de impresión de carnets.',                      route: 'Solicitudes' },
+                { title: 'Ver carnet digital',   text: 'Abrir la misma estructura de carnet que ve el aprendiz.',       route: 'Carnet' },
+                { title: 'Crear notificación',   text: 'Enviar un aviso a un usuario o dejarlo registrado en gestión.', route: null },
+              ].map((a) => (
+                <TouchableOpacity
+                  key={a.title}
+                  style={styles.actionButton}
+                  onPress={() => a.route ? navigation.navigate(a.route) : setNotificationModalVisible(true)}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.actionTitle}>{a.title}</Text>
+                  <Text style={styles.actionText}>{a.text}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
       </View>
 
       <CreateNotificationModal
         visible={notificationModalVisible}
         onClose={() => setNotificationModalVisible(false)}
       />
-    </Layout>
+    </WebFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  subtitle: {
-    color: '#6B7280',
-    fontSize: 14,
-    fontWeight: '700',
-    marginBottom: 14,
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  actions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginTop: 15,
-  },
-  actionButton: {
-    flexBasis: 240,
-    flexGrow: 1,
-    backgroundColor: '#FFFFFF',
-    borderColor: '#DDF7EC',
-    borderRadius: 10,
-    borderWidth: 1,
-    padding: 16,
-  },
-  actionTitle: {
-    color: '#079B72',
-    fontSize: 16,
-    fontWeight: '900',
-    marginBottom: 6,
-  },
-  actionText: {
-    color: '#6B7280',
-    fontSize: 13,
-    fontWeight: '700',
-  },
+  screen:        { flex: 1, backgroundColor: '#EAE6E6' },
+  contentFrame:  { flex: 1, flexDirection: 'row' },
+  mainArea:      { flex: 1 },
+  mainScroll:    { flexGrow: 1, paddingTop: 6, paddingBottom: 16 },
+  headerBlock:   { marginBottom: 10 },
+  pageTitle:     { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
+  pageSubtitle:  { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
+  row:           { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  actions:       { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
+  actionButton:  { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
+  actionTitle:   { color: '#079B72', fontSize: 16, fontWeight: '900', marginBottom: 6 },
+  actionText:    { color: '#6B7280', fontSize: 13, fontWeight: '700' },
 });

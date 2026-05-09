@@ -1,5 +1,6 @@
 CREATE DATABASE IF NOT EXISTS auth_service;
 USE auth_service;
+-- drop database auth_service;
 CREATE TABLE roles (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     name_role     VARCHAR(40) ,
@@ -8,7 +9,7 @@ CREATE TABLE roles (
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-select * from roles;
+
 CREATE TABLE permissions (
     id              INT PRIMARY KEY AUTO_INCREMENT,
     permission_code VARCHAR(50) ,
@@ -38,17 +39,8 @@ CREATE TABLE audit (
     FOREIGN KEY (id_user) REFERENCES user_auth(id)
 );
 
-CREATE TABLE sessions_active (
-    id           INT PRIMARY KEY AUTO_INCREMENT,
-    id_user      INT ,
-    token        VARCHAR(255),
-    ip_addr      VARCHAR(255),
-    active       BOOLEAN DEFAULT FALSE,
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES user_auth(id)
-);
-
 select * from user_auth;
+
 
 
 

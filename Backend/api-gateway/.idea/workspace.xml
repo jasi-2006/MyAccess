@@ -7,22 +7,19 @@
     <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MyAccess/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/controller/NotificationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/service/NotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/config/FilterConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/config/FilterConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../User_service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../User_service.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../auth_service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../auth_service.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../notifications_service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../notifications_service.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/CarnetSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/CarnetSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/CarnetTopbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/CarnetTopbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/HomeCards.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/HomeCards.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/HomeNavbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/HomeNavbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/CarnetGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/CarnetGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/HomeGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/HomeGatewayScreen.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/Layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/Layout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/UserSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/UserSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Historial.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Historial.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/InstructorDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/InstructorDashboard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/LoginGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/LoginGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/NotificationDetailScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/NotificationDetailScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/NotificationsScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/NotificationsScreen.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Solicitudes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Solicitudes.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/UserProfile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +55,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;paulo&quot;,

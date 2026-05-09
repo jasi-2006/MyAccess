@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensio
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import WebFrame from '../components/WebFrame.jsx';
+import { getUserProfile } from '../services/authService';
 import { markNotificationAsRead } from '../services/notificationService.js';
 
 export default function NotificationDetailScreen({ navigation, route }) {
@@ -13,6 +14,23 @@ export default function NotificationDetailScreen({ navigation, route }) {
   const px = isDesktop ? 24 : isMobile ? 10 : 16;
   const [notification, setNotification] = useState(item);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [profileRole, setProfileRole] = useState('');
+
+  useEffect(() => {
+    let mounted = true;
+
+    getUserProfile()
+      .then((profile) => {
+        if (mounted) setProfileRole(profile?.nameRole || '');
+      })
+      .catch(() => {
+        if (mounted) setProfileRole('');
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const markAsRead = async () => {
@@ -39,14 +57,14 @@ export default function NotificationDetailScreen({ navigation, route }) {
         <CarnetTopbar navigation={navigation} notificationRefreshKey={refreshKey} />
 
         <View style={styles.contentFrame}>
-          {!isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" />}
+          {!isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" role={profileRole} />}
 
           <ScrollView
             style={styles.mainArea}
             contentContainerStyle={[styles.scroll, { paddingHorizontal: px }]}
             showsVerticalScrollIndicator={false}
           >
-            {isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" />}
+            {isMobile && <UserSidebar navigation={navigation} activeKey="Notifications" role={profileRole} />}
 
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
               <Text style={styles.backBtnText}>← Volver</Text>

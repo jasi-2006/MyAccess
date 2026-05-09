@@ -6,8 +6,8 @@ import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import SocialButtons from '../components/SocialButtons.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
-import { getUserProfile, loginUser } from '../services/authService';
-import { getHomeRouteForRole } from '../utils/accessControl';
+import { loginUser } from '../services/authService';
+import { getToken } from '../services/api';
 
 export default function LoginGatewayScreen({ navigation }) {
   const { width } = useWindowDimensions();
@@ -32,24 +32,25 @@ export default function LoginGatewayScreen({ navigation }) {
     try {
       setLoading(true);
       setSubmitError('');
-      const loginResponse = await loginUser({ email, password });
-      let role = loginResponse?.role || loginResponse?.nameRole;
-
-      try {
-        const profile = await getUserProfile();
-        role = profile?.nameRole || role;
-      } catch {}
-
-      navigation.replace(getHomeRouteForRole(role));
+      await loginUser({ email, password });
     } catch (error) {
       const raw = (error.message || '').toLowerCase();
       if (raw.includes('verificada') || raw.includes('verificado')) {
         navigation.navigate('Verification', { email });
+        return;
       }
       setSubmitError('Correo o contraseña incorrectos.');
-    } finally {
       setLoading(false);
+      return;
     }
+
+    const token = getToken();
+    if (token) {
+      navigation.replace('Home');
+    } else {
+      setSubmitError('Error al iniciar sesión. Intenta de nuevo.');
+    }
+    setLoading(false);
   };
 
   return (
