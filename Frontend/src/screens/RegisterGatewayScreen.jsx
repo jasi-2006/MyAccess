@@ -76,7 +76,7 @@ export default function RegisterGatewayScreen({ navigation }) {
         fullName: values.name, typeDocument: values.typeDocument,
         document: values.document, trainingProgram: values.trainingProgram,
         trainingCenter: values.trainingCenter, regional: values.regional.toLowerCase(),
-        bloodType: values.bloodType, nameRole: 'APRENDIZ', Ficha: values.Ficha,
+        bloodType: values.bloodType, nameRole: values.nameRole, Ficha: values.Ficha,
       });
       if (photo) {
         const formData = new FormData();
