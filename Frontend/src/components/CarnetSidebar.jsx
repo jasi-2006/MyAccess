@@ -4,7 +4,7 @@ import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio',             icon: '🏠' },
-  { key: 'Carnet',      label: 'Mi carnet',           icon: '🪪',},
+  { key: 'Carnet',      label: 'Mi carnet',           icon: '🪪', management: true},
   { key: 'User',        label: 'Mi perfil',           icon: '👤' },
   { key: 'Notifications', label: 'Notificaciones',   icon: '🔔' },
   { key: 'status',      label: 'Estado tramite',      icon: '🔀', aprendizOnly: true },
