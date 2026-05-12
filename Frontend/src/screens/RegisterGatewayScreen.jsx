@@ -81,7 +81,7 @@ export default function RegisterGatewayScreen({ navigation }) {
       if (photo) {
         const formData = new FormData();
         if (Platform.OS === 'web' && photo.file) {
-          formData.append('photo', photo.file, 'profile.jpg');
+          formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
         } else {
           formData.append('photo', { uri: photo.uri, name: 'profile.jpg', type: 'image/jpeg' });
         }

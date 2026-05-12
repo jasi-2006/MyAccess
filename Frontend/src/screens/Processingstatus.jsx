@@ -78,9 +78,9 @@ export default function ProcessingStatus({navigation}) {
 
                 <View style={styles.row}>
                     <StatCard title="Total fichas" value={String()} />
-                    <StatCard title="Aprendices" value={String(learners.length)} />
-                    <StatCard title="Carnets activos" value={String(activeCards)} />
-                    <StatCard title="Carnets inactivos" value={String(inactiveCards)} />
+                    <StatCard title="Aprendices" value={String()} />
+                    <StatCard title="Carnets activos" value={String()} />
+                    <StatCard title="Carnets inactivos" value={String()} />
                 </View>
 
     

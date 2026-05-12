@@ -13,6 +13,36 @@ import { colors } from '../theme/colors.jsx';
 import { API_GATEWAY_URL } from '../services/api.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
+function resolveImageUrl(url) {
+  if (!url) return null;
+
+  const value = String(url).trim();
+  if (!value) return null;
+
+  if (value.startsWith('/')) {
+    return `${API_GATEWAY_URL}${value}`;
+  }
+
+  if (/^https?:\/\//i.test(value)) {
+    try {
+      const parsedUrl = new URL(value);
+      const gatewayUrl = new URL(API_GATEWAY_URL);
+
+      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
+        parsedUrl.protocol = gatewayUrl.protocol;
+        parsedUrl.hostname = gatewayUrl.hostname;
+        parsedUrl.port = gatewayUrl.port;
+      }
+
+      return parsedUrl.toString();
+    } catch {
+      return value;
+    }
+  }
+
+  return `${API_GATEWAY_URL}/${value.replace(/^\/+/, '')}`;
+}
+
 const QR_PATTERN = [
   '11111110001001111111',
   '10000010110010100001',
@@ -131,11 +161,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   const trainingCenter = profile?.trainingCenter || 'Centro de Comercio y Turismo';
   const trainingProgram = profile?.trainingProgram || 'ADSO';
   const ficha = profile?.ficha || profile?.Ficha || '0000000';
-  const photoUrl = profile?.photoUrl
-    ? profile.photoUrl.startsWith('http')
-      ? profile.photoUrl
-      : `${API_GATEWAY_URL}${profile.photoUrl}`
-    : null;
+  const photoUrl = resolveImageUrl(profile?.photoUrl || card?.photoUrl);
 
   const accessHashTop = `${documentType}${documentNumber}${studentName}`.replace(/\s+/g, '').toUpperCase();
   const accessHashBottom = `${regional}${trainingCenter}${ficha}`.replace(/\s+/g, '').toUpperCase();
@@ -349,7 +375,7 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   cardDisabled: {
-    opacity: 0.62,
+    borderColor: '#B42318',
   },
   loader: {
     flex: 1,
