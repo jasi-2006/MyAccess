@@ -15,6 +15,7 @@ CREATE TABLE card (
     reprints                INTEGER DEFAULT 0,
     reason_for_last_reprints TEXT
 );
+select * from card;
 
 CREATE TABLE request_card (
     id_request        INT PRIMARY KEY AUTO_INCREMENT,

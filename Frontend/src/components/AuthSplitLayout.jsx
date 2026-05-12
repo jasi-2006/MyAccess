@@ -10,6 +10,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { colors } from '../theme/colors';
 
 const logo = require('../assets/LogoMyAccess.png');
 const students = require('../assets/students.png');
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
   brandPanel: {
     flex: 1,
-    backgroundColor: '#079B72',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 44,
@@ -113,8 +114,8 @@ const styles = StyleSheet.create({
     marginBottom: 54,
   },
   brandTitle: {
-    color: '#FFFFFF',
-    fontSize: 24,
+    color: '#ffffff',
+    fontSize: 30,
     fontWeight: '800',
     textAlign: 'center',
     letterSpacing: -0.3,
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 20,
     marginTop: 16,
-    maxWidth: 560,
+    maxWidth: 450,
     textAlign: 'center',
   },
   students: {

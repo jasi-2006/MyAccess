@@ -103,12 +103,32 @@ public class UserRegisterProfileService {
         List<UserRegisterProfile> users = userRepository.findByDocument(document);
         if (users.isEmpty()) return Optional.empty();
         UserRegisterProfile user = users.get(0);
-        String filename = UUID.randomUUID() + ".jpg";
+        String filename = UUID.randomUUID() + getImageExtension(photo);
         Path uploadDir = Paths.get("uploads");
         Files.createDirectories(uploadDir);
         Files.write(uploadDir.resolve(filename), photo.getBytes());
-        user.setPhotoUrl("http://localhost:8080/uploads/" + filename);
+        user.setPhotoUrl("/uploads/" + filename);
         return Optional.of(toResponse(userRepository.save(user)));
+    }
+
+    private String getImageExtension(MultipartFile photo) {
+        String contentType = photo.getContentType();
+        if ("image/png".equalsIgnoreCase(contentType)) return ".png";
+        if ("image/webp".equalsIgnoreCase(contentType)) return ".webp";
+        if ("image/gif".equalsIgnoreCase(contentType)) return ".gif";
+        if ("image/jpeg".equalsIgnoreCase(contentType) || "image/jpg".equalsIgnoreCase(contentType)) return ".jpg";
+
+        String originalFilename = photo.getOriginalFilename();
+        if (originalFilename != null) {
+            String lowerName = originalFilename.toLowerCase();
+            if (lowerName.endsWith(".png")) return ".png";
+            if (lowerName.endsWith(".webp")) return ".webp";
+            if (lowerName.endsWith(".gif")) return ".gif";
+            if (lowerName.endsWith(".jpeg")) return ".jpg";
+            if (lowerName.endsWith(".jpg")) return ".jpg";
+        }
+
+        return ".jpg";
     }
 
     private UserRegisterProfileResponseDTO toResponse(UserRegisterProfile user) {

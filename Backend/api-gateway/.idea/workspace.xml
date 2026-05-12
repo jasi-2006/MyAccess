@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/controller/CardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/entity/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/entity/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/card_service/service/CardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../card_service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../card_service.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/CarnetCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/CarnetCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/CarnetSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/CarnetSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/CarnetGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/CarnetGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Fichas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Fichas.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/InstructorDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/InstructorDashboard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/services/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/services/authService.js" afterDir="false" />
-    </list>
+    <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

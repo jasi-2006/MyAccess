@@ -8,6 +8,7 @@ import SocialButtons from '../components/SocialButtons.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { loginUser } from '../services/authService';
 import { getToken } from '../services/api';
+import { colors } from '../theme/colors.jsx';
 
 export default function LoginGatewayScreen({ navigation }) {
   const { width } = useWindowDimensions();
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
   subtitle:  { fontSize: 13, fontWeight: '600', color: '#6B7280', marginBottom: 24 },
   forgot:    { alignSelf: 'flex-end', marginBottom: 14, marginTop: -4 },
   forgotText:{ fontSize: 12, color: '#0F9F76', fontWeight: '800' },
-  primaryButton: { height: 44, borderRadius: 8, backgroundColor: '#24C565', shadowOpacity: 0, elevation: 0 },
+  primaryButton: { height: 44, borderRadius: 8, backgroundColor: colors.primary, shadowOpacity: 0, elevation: 0 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 13, fontWeight: '800' },
   dividerRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 22 },
   divider: { flex: 1, height: 1, backgroundColor: '#E5E7EB' },
