@@ -11,6 +11,7 @@ public class CardResponseDTO {
     private Boolean validPhoto;
     private String digitalState;
     private String physicalState;
+    private Boolean active;
     private LocalDateTime digitalIssueDate;
     private LocalDateTime physicalStateDate;
     private LocalDateTime expirationDate;

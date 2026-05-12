@@ -18,6 +18,8 @@ import InstructorDashboard from '../screens/InstructorDashboard.jsx';
 import FichasScreen from '../screens/Fichas.jsx';
 import SolicitudesScreen from '../screens/Solicitudes.jsx';
 import HistorialScreen from '../screens/Historial.jsx';
+import GestionFichas from '../screens/GestionFichas.jsx';
+import ProcessingStatus from '../screens/Processingstatus.jsx';
 import { getAuthToken, getUserProfile } from '../services/authService';
 import { canAccessRoute, getHomeRouteForRole, getRoleFromToken, normalizeRole } from '../utils/accessControl';
 
@@ -95,6 +97,8 @@ const ProtectedInstructor = protect('Instructor', InstructorDashboard);
 const ProtectedFichas = protect('Fichas', FichasScreen);
 const ProtectedSolicitudes = protect('Solicitudes', SolicitudesScreen);
 const ProtectedHistorial = protect('Historial', HistorialScreen);
+const protectedGestion = protect ('Gestion', GestionFichas );
+const ProtectedProcessingStatus = protect('ProcessingStatus', ProcessingStatus);
 
 export default function AppNavigator() {
   return (
@@ -128,6 +132,8 @@ export default function AppNavigator() {
         <Stack.Screen name="Fichas" component={ProtectedFichas} />
         <Stack.Screen name="Solicitudes" component={ProtectedSolicitudes} />
         <Stack.Screen name="Historial" component={ProtectedHistorial} />
+        <Stack.Screen name="Gestion" component={protectedGestion}/>
+        <Stack.Screen name="Tramite" component={ProcessingStatus}/>
 
       </Stack.Navigator>
     </NavigationContainer>

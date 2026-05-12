@@ -23,13 +23,14 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
   const visibleItems = sidebarItems.filter((item) => {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
+    if (item.aprendizOnly && canManage) return false;
     return true;
   });
 
   const handlePress = (key) => {
     const routes = {
       home: 'Home', Carnet: 'Card', User: 'User',
-      Notifications: 'Notifications', Instructor: 'Instructor',
+      status: 'Tramite', Notifications: 'Notifications', Instructor: 'Instructor',
       Fichas: 'Fichas', Solicitudes: 'Solicitudes', Historial: 'Historial',
 
     };
