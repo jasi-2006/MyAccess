@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
 import { API_GATEWAY_URL } from '../services/api.js';
+import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const QR_PATTERN = [
   '11111110001001111111',
@@ -79,7 +80,7 @@ function SenaLogo() {
   );
 }
 
-export default function CarnetCard({ profile, loading }) {
+export default function CarnetCard({ profile, card, loading, cardError }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
 
@@ -122,6 +123,10 @@ export default function CarnetCard({ profile, loading }) {
   const documentNumber = profile?.document || '0.000.000.000';
   const bloodType = profile?.bloodType || 'RH O+';
   const role = profile?.nameRole || 'APRENDIZ';
+  const normalizedRole = normalizeRole(role);
+  const canManageCard = [ROLES.ADMIN, ROLES.INSTRUCTOR].includes(normalizedRole);
+  const isActive = card?.active ?? true;
+  const hasCardRecord = Boolean(card?.idCard);
   const regional = profile?.regional || 'Regional Quindio';
   const trainingCenter = profile?.trainingCenter || 'Centro de Comercio y Turismo';
   const trainingProgram = profile?.trainingProgram || 'ADSO';
@@ -137,12 +142,28 @@ export default function CarnetCard({ profile, loading }) {
 
   return (
     <View style={styles.cardStage}>
+      <View style={styles.statusPanel}>
+        <View>
+          <Text style={styles.statusLabel}>Estado del carnet</Text>
+          <Text style={[styles.statusValue, isActive ? styles.statusActive : styles.statusInactive]}>
+            {isActive ? 'Activo' : 'Inactivo'}
+          </Text>
+        </View>
+
+      </View>
+
+      {!!cardError && <Text style={styles.statusError}>{cardError}</Text>}
+      {canManageCard && !loading && !hasCardRecord && (
+        <Text style={styles.statusHint}>Aun no hay un registro de carnet para actualizar.</Text>
+      )}
+
       <TouchableOpacity onPress={flipCard} activeOpacity={1}>
         <View style={{ width: cardWidth, height: cardHeight }}>
           <Animated.View
             style={[
               styles.cardBase,
               styles.cardFront,
+              !isActive && styles.cardDisabled,
               {
                 width: cardWidth,
                 height: cardHeight,
@@ -177,11 +198,22 @@ export default function CarnetCard({ profile, loading }) {
                 </View>
 
                 <View style={styles.frontFooter}>
+                  {!isActive && (
+                    <View style={styles.inactiveBadge}>
+                      <Text style={styles.inactiveBadgeText}>CARNET INACTIVO</Text>
+                    </View>
+                  )}
                   <Text style={styles.footerPrimary}>Regional {regional}</Text>
                   <Text style={styles.footerSecondary}>{trainingCenter}</Text>
                   <Text style={styles.footerTertiary}>{trainingProgram}</Text>
                   <Text style={styles.footerTertiary}>{`Grupo No ${ficha}`}</Text>
                 </View>
+
+                {!isActive && (
+                  <View style={styles.inactiveOverlay}>
+                    <Text style={styles.inactiveOverlayText}>DESACTIVADO</Text>
+                  </View>
+                )}
               </>
             )}
           </Animated.View>
@@ -190,6 +222,7 @@ export default function CarnetCard({ profile, loading }) {
             style={[
               styles.cardBase,
               styles.cardBack,
+              !isActive && styles.cardDisabled,
               {
                 width: cardWidth,
                 height: cardHeight,
@@ -222,6 +255,12 @@ export default function CarnetCard({ profile, loading }) {
                 <Text style={styles.hashBottom}>
                   Si por algun motivo este carné es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
                 </Text>
+
+                {!isActive && (
+                  <View style={styles.inactiveOverlay}>
+                    <Text style={styles.inactiveOverlayText}>DESACTIVADO</Text>
+                  </View>
+                )}
               </>
             )}
           </Animated.View>
@@ -237,6 +276,54 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: 6,
+  },
+  statusPanel: {
+    width: '100%',
+    maxWidth: 360,
+    minHeight: 54,
+    marginBottom: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#D8E8E1',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  statusLabel: {
+    fontSize: 11,
+    color: '#59645F',
+    fontWeight: '700',
+  },
+  statusValue: {
+    marginTop: 2,
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  statusActive: {
+    color: '#087C4A',
+  },
+  statusInactive: {
+    color: '#B42318',
+  },
+  statusError: {
+    width: '100%',
+    maxWidth: 360,
+    marginBottom: 8,
+    color: '#B42318',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  statusHint: {
+    width: '100%',
+    maxWidth: 360,
+    marginBottom: 8,
+    color: '#59645F',
+    fontSize: 12,
+    fontWeight: '700',
   },
   cardBase: {
     backgroundColor: '#FFFFFF',
@@ -260,6 +347,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingTop: 14,
     paddingBottom: 14,
+  },
+  cardDisabled: {
+    opacity: 0.62,
   },
   loader: {
     flex: 1,
@@ -391,6 +481,38 @@ const styles = StyleSheet.create({
   },
   frontFooter: {
     gap: 2,
+  },
+  inactiveBadge: {
+    alignSelf: 'flex-start',
+    marginBottom: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    backgroundColor: '#FEE4E2',
+  },
+  inactiveBadgeText: {
+    color: '#B42318',
+    fontSize: 9,
+    fontWeight: '900',
+  },
+  inactiveOverlay: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    top: '44%',
+    height: 44,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#B42318',
+    backgroundColor: 'rgba(254, 228, 226, 0.92)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transform: [{ rotate: '-12deg' }],
+  },
+  inactiveOverlayText: {
+    color: '#B42318',
+    fontSize: 18,
+    fontWeight: '900',
   },
   footerPrimary: {
     fontSize: 13,

@@ -8,6 +8,7 @@ CREATE TABLE card (
     valid_photo             BOOLEAN DEFAULT FALSE,
     digital_state           VARCHAR(20) DEFAULT 'pendiente',
     physical_state          VARCHAR(20) DEFAULT 'no solicitado',
+    active                  BOOLEAN DEFAULT TRUE,
     digital_issue_date      TIMESTAMP,
     physical_state_date     TIMESTAMP,
     expiration_date         TIMESTAMP,
@@ -28,3 +29,6 @@ CREATE TABLE request_card (
     id_card           INT,
     FOREIGN KEY (id_card) REFERENCES card(id_card)
 );
+
+-- Si la base de datos ya existe, ejecute manualmente:
+-- ALTER TABLE card ADD COLUMN active BOOLEAN DEFAULT TRUE;

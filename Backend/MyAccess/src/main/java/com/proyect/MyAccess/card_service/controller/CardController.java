@@ -86,6 +86,23 @@ public class CardController {
     }
 
     /*
+     * Activa o desactiva un carnet. Solo ADMIN e INSTRUCTOR pueden cambiar este estado.
+     * @param id Identificador del carnet a actualizar
+     * @param active true para activar, false para desactivar
+     * @param request Solicitud HTTP con atributos de autenticacion (role)
+     * @return ResponseEntity con el carnet actualizado, 403 si es APRENDIZ, 404 si no existe
+     */
+    @RequestMapping(value = "/{id}/active", method = {RequestMethod.PATCH, RequestMethod.PUT})
+    public ResponseEntity<CardResponseDTO> updateActiveState(@PathVariable Long id, @RequestParam Boolean active, HttpServletRequest request) {
+        if ("APRENDIZ".equalsIgnoreCase((String) request.getAttribute("role"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return cardService.updateActiveState(id, active)
+                .map(r -> ResponseEntity.status(HttpStatus.ACCEPTED).body(r))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /*
      * Elimina un carnet por su ID. Solo ADMIN e INSTRUCTOR pueden eliminar.
      * @param id Identificador del carnet a eliminar
      * @param request Solicitud HTTP con atributos de autenticación (role)

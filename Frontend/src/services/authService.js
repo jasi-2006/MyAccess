@@ -22,6 +22,10 @@ export async function getUserProfile() {
   return apiRequest('/api/v1/register/profile/me');
 }
 
+export async function getAllUserProfiles() {
+  return apiRequest('/api/v1/register');
+}
+
 export async function registerUser(payload) {
   const isFormData = payload instanceof FormData;
   return apiRequest('/api/v1/auth/register', {

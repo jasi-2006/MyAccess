@@ -30,7 +30,7 @@ public class CardService {
      */
     public CardResponseDTO create(CardRequestDTO dto) {
         Card card = new Card();
-        applyUpdate(card, dto);
+        applyCreate(card, dto);
         cardRepository.save(card);
         return toResponse(card);
     }
@@ -68,7 +68,20 @@ public class CardService {
      */
     public Optional<CardResponseDTO> update(Long id, CardRequestDTO dto) {
         return cardRepository.findById(id).map(card -> {
-            applyUpdate(card, dto);
+            applyPartialUpdate(card, dto);
+            return toResponse(cardRepository.save(card));
+        });
+    }
+
+    /*
+     * Activa o desactiva un carnet sin modificar el resto de sus datos.
+     * @param id Identificador del carnet
+     * @param active Nuevo estado activo/inactivo
+     * @return Optional con el CardResponseDTO actualizado, vacio si no existe
+     */
+    public Optional<CardResponseDTO> updateActiveState(Long id, Boolean active) {
+        return cardRepository.findById(id).map(card -> {
+            card.setActive(Boolean.TRUE.equals(active));
             return toResponse(cardRepository.save(card));
         });
     }
@@ -91,17 +104,37 @@ public class CardService {
      * @param card Entidad Card a modificar
      * @param dto Datos a aplicar
      */
-    private void applyUpdate(Card card, CardRequestDTO dto) {
+    private void applyCreate(Card card, CardRequestDTO dto) {
         card.setIdUser(dto.getIdUser());
         card.setPhotoUrl(dto.getPhotoUrl());
-        card.setValidPhoto(dto.getValidPhoto());
-        card.setDigitalState(dto.getDigitalState());
-        card.setPhysicalState(dto.getPhysicalState());
+        card.setValidPhoto(dto.getValidPhoto() != null ? dto.getValidPhoto() : false);
+        card.setDigitalState(dto.getDigitalState() != null ? dto.getDigitalState() : "pendiente");
+        card.setPhysicalState(dto.getPhysicalState() != null ? dto.getPhysicalState() : "no solicitado");
+        if (dto.getActive() != null) card.setActive(dto.getActive());
         card.setDigitalIssueDate(dto.getDigitalIssueDate());
         card.setPhysicalStateDate(dto.getPhysicalStateDate());
         card.setExpirationDate(dto.getExpirationDate());
-        card.setReprints(dto.getReprints());
+        card.setReprints(dto.getReprints() != null ? dto.getReprints() : 0);
         card.setReasonForLastReprints(dto.getReasonForLastReprints());
+    }
+
+    /*
+     * Actualiza solo los campos recibidos para evitar borrar datos del carnet.
+     * @param card Entidad Card a modificar
+     * @param dto Datos parciales a aplicar
+     */
+    private void applyPartialUpdate(Card card, CardRequestDTO dto) {
+        if (dto.getIdUser() != null) card.setIdUser(dto.getIdUser());
+        if (dto.getPhotoUrl() != null) card.setPhotoUrl(dto.getPhotoUrl());
+        if (dto.getValidPhoto() != null) card.setValidPhoto(dto.getValidPhoto());
+        if (dto.getDigitalState() != null) card.setDigitalState(dto.getDigitalState());
+        if (dto.getPhysicalState() != null) card.setPhysicalState(dto.getPhysicalState());
+        if (dto.getActive() != null) card.setActive(dto.getActive());
+        if (dto.getDigitalIssueDate() != null) card.setDigitalIssueDate(dto.getDigitalIssueDate());
+        if (dto.getPhysicalStateDate() != null) card.setPhysicalStateDate(dto.getPhysicalStateDate());
+        if (dto.getExpirationDate() != null) card.setExpirationDate(dto.getExpirationDate());
+        if (dto.getReprints() != null) card.setReprints(dto.getReprints());
+        if (dto.getReasonForLastReprints() != null) card.setReasonForLastReprints(dto.getReasonForLastReprints());
     }
 
     /*
@@ -117,6 +150,7 @@ public class CardService {
         r.setValidPhoto(card.getValidPhoto());
         r.setDigitalState(card.getDigitalState());
         r.setPhysicalState(card.getPhysicalState());
+        r.setActive(card.getActive());
         r.setDigitalIssueDate(card.getDigitalIssueDate());
         r.setPhysicalStateDate(card.getPhysicalStateDate());
         r.setExpirationDate(card.getExpirationDate());
