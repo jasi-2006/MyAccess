@@ -1,0 +1,66 @@
+// components/Layout.js
+import { View, Text, StyleSheet } from "react-native";
+import { colors } from "colors";
+
+export default function Layout({ children, title }) {
+  return (
+    <View style={styles.container}>
+      
+
+      <View style={styles.sidebar}>
+        <Text style={styles.logo}>MyAccess</Text>
+
+        <Text style={styles.menu}>Solicitudes</Text>
+        <Text style={styles.menu}>Validaciones</Text>
+        <Text style={styles.menu}>Seleccion ficha</Text>
+        <Text style={styles.menu}>Historial</Text>
+      </View>
+
+      {/* Content */}
+      <View style={styles.content}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+
+        {children}
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, flexDirection: "row" },
+
+  sidebar: {
+    width: 90,
+    backgroundColor: "#E8F8EF",
+    padding: 10,
+  },
+
+  logo: {
+    fontWeight: "bold",
+    color: colors.primary,
+    marginBottom: 20,
+  },
+
+  menu: {
+    marginVertical: 10,
+    color: colors.gray,
+  },
+
+  content: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: 15,
+  },
+
+  header: {
+    marginBottom: 10,
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+});
