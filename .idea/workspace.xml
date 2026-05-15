@@ -5,19 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b8414f7-dde4-4ab0-b8d7-edc31ae1bc1e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/controller/CardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/dto/CardResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/entity/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/entity/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/MyAccess/src/main/java/com/proyect/MyAccess/card_service/service/CardService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/api-gateway/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/card_service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/card_service.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/CarnetCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/CarnetCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/navigation/AppNavigator.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/navigation/AppNavigator.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/CarnetGatewayScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/CarnetGatewayScreen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/Fichas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/Fichas.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/services/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/authService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/screens/Processingstatus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/screens/Processingstatus.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

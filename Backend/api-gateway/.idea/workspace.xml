@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="" />
+    <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Processingstatus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Processingstatus.jsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

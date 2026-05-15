@@ -80,7 +80,6 @@ export default function ProcessingStatus({navigation}) {
                     <StatCard title="Total fichas" value={String()} />
                     <StatCard title="Aprendices" value={String()} />
                     <StatCard title="Carnets activos" value={String()} />
-                    <StatCard title="Carnets inactivos" value={String()} />
                 </View>
 
     
