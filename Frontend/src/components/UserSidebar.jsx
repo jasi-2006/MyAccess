@@ -31,10 +31,11 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (key === 'Card')         navigation.navigate('Card');
     if (key === 'User')          navigation.navigate('User');
     if (key === 'Notifications') navigation.navigate('Notifications');
-    if(key === 'Instructor')     navigation.navigate('Instructor');
-    if(key === 'Fichas')         navigation.navigate('Fichas');
-    if(key === 'Solicitudes')     navigation.navigate('Solicitudes');
-    if(key === 'Historial')     navigation.navigate('Historial');
+    if (key === 'Instructor')     navigation.navigate('Instructor');
+    if (key === 'Fichas')         navigation.navigate('Fichas');
+    if (key === 'Solicitudes')     navigation.navigate('Solicitudes');
+    if (key === 'Historial')     navigation.navigate('Historial');
+    if (key === 'status') navigation.navigate('status');
   };
 
   if (isMobile) {
