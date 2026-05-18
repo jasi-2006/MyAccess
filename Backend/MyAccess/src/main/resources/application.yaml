@@ -74,3 +74,4 @@ security:
   jwt:
     secret-key: ${JWT_SECRET:}
     tokenExpiration: ${JWT_EXPIRATION:28800000}
+    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:604800000}

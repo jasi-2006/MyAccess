@@ -12,6 +12,7 @@ const sidebarItems = [
   { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
   { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
+  {key: 'imprimir',     label: 'imprimir',            icon: 'P', managementOnly:true},
 ];
 
 export default function UserSidebar({ navigation, activeKey, role }) {

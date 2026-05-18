@@ -46,11 +46,7 @@ public class NotificationService {
      * @return Lista de NotificationResponseDTO con todas las notificaciones
      */
     public List<NotificationResponseDTO> getAll() {
-        List<NotificationResponseDTO> list = new ArrayList<>();
-        for (Notification notification : notificationRepository.findAll()) {
-            list.add(toResponse(notification));
-        }
-        return list;
+        return toResponseList(notificationRepository.findAll());
     }
 
     /*
@@ -59,11 +55,7 @@ public class NotificationService {
      * @return Lista de NotificationResponseDTO con las notificaciones del usuario
      */
     public List<NotificationResponseDTO> getByUser(Integer idUser) {
-        List<NotificationResponseDTO> list = new ArrayList<>();
-        for (Notification notification : notificationRepository.findByIdUser(idUser)) {
-            list.add(toResponse(notification));
-        }
-        return list;
+        return toResponseList(notificationRepository.findByIdUser(idUser));
     }
 
     /*
@@ -72,11 +64,21 @@ public class NotificationService {
      * @return Lista de NotificationResponseDTO con las notificaciones en ese estado
      */
     public List<NotificationResponseDTO> getByState(String statedSend) {
-        List<NotificationResponseDTO> list = new ArrayList<>();
-        for (Notification notification : notificationRepository.findByStatedSend(statedSend)) {
-            list.add(toResponse(notification));
+        return toResponseList(notificationRepository.findByStatedSend(statedSend));
+    }
+
+    public List<NotificationResponseDTO> search(String filter) {
+        if (filter == null || filter.isBlank()) {
+            return getAll();
         }
-        return list;
+        return toResponseList(notificationRepository.search(filter.trim()));
+    }
+
+    public List<NotificationResponseDTO> searchByUser(Integer idUser, String filter) {
+        if (filter == null || filter.isBlank()) {
+            return getByUser(idUser);
+        }
+        return toResponseList(notificationRepository.searchByUser(idUser, filter.trim()));
     }
 
     /*
@@ -153,5 +155,13 @@ public class NotificationService {
         r.setCreatedDate(notification.getCreatedDate());
         r.setIdConfig(notification.getConfig() != null ? notification.getConfig().getIdConfig() : null);
         return r;
+    }
+
+    private List<NotificationResponseDTO> toResponseList(List<Notification> notifications) {
+        List<NotificationResponseDTO> list = new ArrayList<>();
+        for (Notification notification : notifications) {
+            list.add(toResponse(notification));
+        }
+        return list;
     }
 }

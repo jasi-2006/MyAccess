@@ -2,8 +2,12 @@ import { apiRequest } from './api';
 
 const NOTIFICATIONS_PATH = '/api/v1/notificationsService/notifications';
 
-export async function getNotifications() {
-  return apiRequest(NOTIFICATIONS_PATH);
+export async function getNotifications(filter = '') {
+  const query = String(filter || '').trim();
+  const path = query
+    ? `${NOTIFICATIONS_PATH}?filter=${encodeURIComponent(query)}`
+    : NOTIFICATIONS_PATH;
+  return apiRequest(path);
 }
 
 export async function getNotificationsByUser(idUser) {

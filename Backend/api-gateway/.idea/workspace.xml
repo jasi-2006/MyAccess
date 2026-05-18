@@ -6,12 +6,28 @@
   <component name="ChangeListManager">
     <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/controller/NotificationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/repository/NotificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/repository/NotificationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/notifications_service/service/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/dto/AuthResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/dto/AuthResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/JwtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserLoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserLoginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/java/com/proyect/MyAccess/user_service/service/UserRegisterProfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/proyect/api_gateway/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/proyect/api_gateway/util/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/proyect/api_gateway/util/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/proyect/api_gateway/util/JwtUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/CarnetSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/CarnetSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/ProfileInfoCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/ProfileInfoCard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/UserSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/UserSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/navigation/AppNavigator.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Historial.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Historial.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Processingstatus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Processingstatus.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/utils/accessControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/utils/accessControl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/Imprimir.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/Imprimir.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/NotificationsScreen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/NotificationsScreen.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/UserProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/services/notificationService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/services/notificationService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
