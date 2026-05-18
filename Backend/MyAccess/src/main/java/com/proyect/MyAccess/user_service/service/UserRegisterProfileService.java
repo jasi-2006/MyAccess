@@ -86,17 +86,17 @@ public class UserRegisterProfileService {
     }
 
     private void applyUpdate(UserRegisterProfile user, UserRegisterProfileRequestDTO dto) {
-        user.setDocument(dto.getDocument());
-        user.setTypeDocument(dto.getTypeDocument());
-        user.setFullName(dto.getFullName());
-        user.setTrainingProgram(dto.getTrainingProgram());
-        user.setTrainingCenter(dto.getTrainingCenter());
-        user.setRegional(dto.getRegional());
-        user.setBloodType(dto.getBloodType());
-        user.setNameRole(dto.getNameRole());
-        user.setFicha(dto.getFicha());
-        user.setEmail(dto.getEmail());
-        if (dto.getPhotoUrl() != null) user.setPhotoUrl(dto.getPhotoUrl());
+        if (dto.getDocument() != null)        user.setDocument(dto.getDocument());
+        if (dto.getTypeDocument() != null)    user.setTypeDocument(dto.getTypeDocument());
+        if (dto.getFullName() != null)        user.setFullName(dto.getFullName());
+        if (dto.getTrainingProgram() != null) user.setTrainingProgram(dto.getTrainingProgram());
+        if (dto.getTrainingCenter() != null)  user.setTrainingCenter(dto.getTrainingCenter());
+        if (dto.getRegional() != null)        user.setRegional(dto.getRegional());
+        if (dto.getBloodType() != null)       user.setBloodType(dto.getBloodType());
+        if (dto.getNameRole() != null)        user.setNameRole(dto.getNameRole());
+        if (dto.getFicha() != null)           user.setFicha(dto.getFicha());
+        if (dto.getEmail() != null)           user.setEmail(dto.getEmail());
+        if (dto.getPhotoUrl() != null)        user.setPhotoUrl(dto.getPhotoUrl());
     }
 
     public Optional<UserRegisterProfileResponseDTO> uploadPhoto(String document, MultipartFile photo) throws IOException {

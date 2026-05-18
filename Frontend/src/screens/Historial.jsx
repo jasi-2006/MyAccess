@@ -75,8 +75,16 @@ export default function HistorialScreen({ navigation }) {
             {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Historial" />}
 
             <View style={styles.headerBlock}>
-              <Text style={styles.pageTitle}>Historial de solicitudes</Text>
-              <Text style={styles.pageSubtitle}>Consulta el historial completo de solicitudes de carnet.</Text>
+              <View style={styles.headerText}>
+                <Text style={styles.pageTitle}>Historial de solicitudes</Text>
+                <Text style={styles.pageSubtitle}>Consulta el historial completo de solicitudes de carnet.</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.headerPrintBtn}
+                onPress={() => navigation.navigate('Imprimir')}
+              >
+                <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
+              </TouchableOpacity>
             </View>
 
             <View style={styles.row}>
@@ -194,23 +202,39 @@ const styles = StyleSheet.create({
   contentFrame: { flex: 1, flexDirection: 'row' },
   mainArea: { flex: 1 },
   mainScroll: { flexGrow: 1, paddingTop: 6, paddingBottom: 16 },
-  headerBlock: { marginBottom: 10 },
+  headerBlock: {
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 10,
+    flexWrap: 'wrap',
+  },
+  headerText: { flex: 1, minWidth: 220 },
   pageTitle: { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
   pageSubtitle: { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
+  headerPrintBtn: {
+    backgroundColor: '#079B72',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  headerPrintBtnText: { color: '#FFFFFF', fontSize: 12, fontWeight: '800' },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   filterRow: { marginTop: 12, marginBottom: 4 },
   filterContent: { paddingRight: 4 },
   filterBtn: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: 10,
+    height:60,
+    paddingVertical: 16,
+    borderRadius: 16,
     backgroundColor: '#FFFFFF',
-    marginRight: 8,
+    marginRight: 6,
     borderWidth: 1,
     borderColor: '#D1FAE5',
   },
   filterBtnActive: { backgroundColor: '#079B72', borderColor: '#079B72' },
-  filterText: { fontSize: 12, color: '#374151', fontWeight: '600' },
+  filterText: { fontSize: 11, color: '#374151', fontWeight: '600' },
   filterTextActive: { color: '#FFFFFF' },
   tableCard: {
     backgroundColor: '#FFFFFF',
@@ -221,44 +245,44 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   tableTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '800',
     color: '#1F2937',
-    padding: 14,
+    padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
   tableScroll: { width: '100%' },
-  tableContent: { minWidth: 920 },
+  tableContent: { minWidth: 700 },
   tableHeader: { backgroundColor: '#F9FAFB' },
   tableRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 46,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    minHeight: 34,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
   rowEven: { backgroundColor: '#FAFAFA' },
-  cell: { flex: 1, minWidth: 110, fontSize: 11, color: '#374151', paddingHorizontal: 6 },
-  cellIndex: { flex: 0.45, minWidth: 44 },
-  cellUser: { flex: 1.25, minWidth: 120 },
-  cellAction: { flex: 0.8, minWidth: 86 },
+  cell: { flex: 1, minWidth: 80, fontSize: 10, color: '#374151', paddingHorizontal: 4 },
+  cellIndex: { flex: 0.35, minWidth: 30 },
+  cellUser: { flex: 1.1, minWidth: 90 },
+  cellAction: { flex: 0.7, minWidth: 70 },
   cellCenter: { justifyContent: 'center', alignItems: 'flex-start' },
-  cellHeader: { fontWeight: '700', color: '#6B7280', fontSize: 11 },
-  emptyText: { textAlign: 'center', color: '#9CA3AF', padding: 24, fontSize: 13 },
-  loader: { marginTop: 20, marginBottom: 20 },
-  badge: { maxWidth: 96, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12, alignSelf: 'flex-start' },
-  badgeText: { fontSize: 10, fontWeight: '700' },
+  cellHeader: { fontWeight: '700', color: '#6B7280', fontSize: 10 },
+  emptyText: { textAlign: 'center', color: '#9CA3AF', padding: 16, fontSize: 12 },
+  loader: { marginTop: 16, marginBottom: 16 },
+  badge: { maxWidth: 86, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 10, alignSelf: 'flex-start' },
+  badgeText: { fontSize: 9, fontWeight: '700' },
   printBtn: {
     backgroundColor: '#EFF6FF',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
     alignSelf: 'flex-start',
   },
-  printBtnText: { fontSize: 11, color: '#2563EB', fontWeight: '700' },
+  printBtnText: { fontSize: 10, color: '#2563EB', fontWeight: '700' },
   mobileList: { padding: 10, gap: 10 },
   mobileCard: {
     backgroundColor: '#FFFFFF',
@@ -275,7 +299,7 @@ const styles = StyleSheet.create({
   mobileValue: { fontSize: 12, color: '#1F2937', flex: 1, fontWeight: '600' },
   mobilePrintBtn: {
     backgroundColor: '#EFF6FF',
-    paddingHorizontal: 12,
+    paddingHorizontal: 120,
     paddingVertical: 8,
     borderRadius: 8,
     alignSelf: 'flex-start',

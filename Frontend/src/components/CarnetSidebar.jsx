@@ -12,6 +12,7 @@ const sidebarItems = [
   { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
   { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
+  { key: 'Imprimir',    label: 'Imprimir',            icon: 'P', managementOnly: true },
 ];
 
 export default function CarnetSidebar({ navigation, role, activeKey }) {
@@ -32,6 +33,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
       home: 'Home', Carnet: 'Card', User: 'User',
       status: 'Tramite', Notifications: 'Notifications', Instructor: 'Instructor',
       Fichas: 'Fichas', Solicitudes: 'Solicitudes', Historial: 'Historial',
+      Imprimir: 'Imprimir',
 
     };
     if (routes[key]) navigation.navigate(routes[key]);
