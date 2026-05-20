@@ -113,78 +113,109 @@ function createStyles({
       flex: 1,
       backgroundColor: colors.background,
     },
-    // Wrapper que limita el ancho del hero igual que el content
-    heroWrapper: {
-      width: '100%',
-      alignItems: 'center',
-      backgroundColor: colors.primary, // Color verde solo dentro del área del hero
+
+    // CONTENEDOR VERDE PRINCIPAL
+  heroWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    paddingTop: isDesktop ? 70 : 60,
+    shadowColor: '#000',
+    shadowOffset: {
+     width: 0,
+    height: 6,
     },
-    hero: {
-      width: containerWidth, // Mismo ancho que el content
-      height: heroHeight,
-      position: 'relative',
-      overflow: 'hidden',
-      alignItems: 'center',
-      backgroundColor: colors.primary,
-    },
-    overlay: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.04)',
-    },
-    heroInner: {
-      width: '100%',
-      height: '100%',
-      position: 'relative',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      backgroundColor:colors.primary,
-    },
-    
-    personasImage: {
-      top:11,
-      width: imageWidth,
-      height: imageHeight,
-      marginBottom: isDesktop ? 12 : isSmallDevice ? 8 : 23,
-      zIndex: 1,
-    },
-    bottomSection: {
-      flex: 1,
-      marginTop: isDesktop ? -18 : isSmallDevice ? -18 : -24,
-      alignItems: 'center',
-    },
-    curve: {
-      width: containerWidth, // Mismo ancho que el hero y el content
-      height: isDesktop ? 100 : isSmallDevice ? 86 : 96,
-      backgroundColor: colors.background,
-      borderTopLeftRadius: isDesktop ? 60 : width * 0.5,
-      borderTopRightRadius: isDesktop ? 60 : width * 0.5,
-    },
-    content: {
-      width: containerWidth, // Mismo ancho que el hero
-      flex: 1,
-      backgroundColor: colors.background,
-      alignItems: 'center',
-      paddingTop: contentPaddingTop,
-      paddingHorizontal: contentPaddingHorizontal,
-      paddingBottom: contentPaddingBottom,
-    },
-    logo: {
-      width: logoWidth,
-      height: logoHeight,
-      marginBottom: isDesktop ? 20 : isSmallDevice ? 12 : 16,
-    },
-    subtitle: {
-      width: isDesktop ? 360 : Math.min(width * 0.82, 340),
-      fontSize: 16,
-      lineHeight: 24,
-      color: colors.textSecondary,
-      marginBottom: isDesktop ? 28 : isSmallDevice ? 24 : 32,
-      textAlign: 'center',
-    },
-    button: {
-      width: isDesktop ? 220 : '100%',
-      maxWidth: 340,
-      alignSelf: 'center',
-    },
+
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+
+  hero: {
+    width: containerWidth,
+    height: heroHeight + 60, 
+    position: 'relative',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+  },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+  },
+
+  heroInner: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: colors.primary,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+
+  personasImage: {
+  width: imageWidth + 150,
+  height: imageHeight + 150,
+  top: 60,
+  marginBottom: isDesktop ? 18 : isSmallDevice ? 12 : 28,
+  zIndex: 1,
+
+  },
+
+  bottomSection: {
+    flex: 1,
+    marginTop: isDesktop ? -25 : -22,
+    alignItems: 'center',
+  },
+
+  curve: {
+  width: 580,
+  height: 300,
+  backgroundColor: colors.background,
+  transform: [{ translateY: -78 }],
+  borderTopLeftRadius: 400,
+  borderTopRightRadius: 400,
+  alignSelf: 'center',
+  },
+
+  content: {
+    width: containerWidth,
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: 'center',
+    paddingTop: contentPaddingTop + 10,
+    paddingHorizontal: contentPaddingHorizontal + 8,
+    paddingBottom: contentPaddingBottom + 20,
+  },
+
+  logo: {
+    width: logoWidth,
+    height: logoHeight,
+    marginBottom: isDesktop ? 24 : 18,
+    transform: [{ translateY: -300 }],
+
+  },
+
+  subtitle: {
+    width: isDesktop ? 360 : Math.min(width * 0.84, 340),
+    fontSize: 14,
+    lineHeight: 25,
+    color: colors.textSecondary,
+    marginBottom: isDesktop ? 32 : 28,
+    textAlign: 'center',
+    transform: [{ translateY: -300 }],
+
+  },
+
+  button: {
+    width: isDesktop ? 190 : '100%',
+    maxWidth: 340,
+    alignSelf: 'center',
+    transform: [{ translateY: -300 }],
+  },
   });
 }
