@@ -36,7 +36,8 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (key === 'Fichas')         navigation.navigate('Fichas');
     if (key === 'Solicitudes')     navigation.navigate('Solicitudes');
     if (key === 'Historial')     navigation.navigate('Historial');
-    if (key === 'status') navigation.navigate('status');
+    if (key === 'status')        navigation.navigate('status');
+    if (key === 'imprimir')      navigation.navigate('Imprimir');
   };
 
   if (isMobile) {
