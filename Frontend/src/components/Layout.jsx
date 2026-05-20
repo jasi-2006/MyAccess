@@ -1,18 +1,67 @@
 import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import WebFrame from './WebFrame.jsx';
 
 const menuItems = [
-  { key: 'home',        label: 'Inicio',             icon: '🏠' },
-  { key: 'Carnet',      label: 'Mi carnet',           icon: '🪪',},
-  { key: 'User',        label: 'Mi perfil',           icon: '👤' },
-  { key: 'Notifications', label: 'Notificaciones',   icon: '🔔' },
-  { key: 'status',      label: 'Estado tramite',      icon: '🔀', aprendizOnly: true },
-  { key: 'Instructor',  label: 'Dashboard',           icon: '📊', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
-  { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
-  
+  {
+    key: 'home',
+    label: 'Inicio',
+    icon: 'home',
+  },
+
+  {
+    key: 'Carnet',
+    label: 'Mi carnet',
+    icon: 'card',
+  },
+
+  {
+    key: 'User',
+    label: 'Mi perfil',
+    icon: 'person',
+  },
+
+  {
+    key: 'Notifications',
+    label: 'Notificaciones',
+    icon: 'notifications',
+  },
+
+  {
+    key: 'status',
+    label: 'Estado tramite',
+    icon: 'swap-horizontal',
+    aprendizOnly: true,
+  },
+
+  {
+    key: 'Instructor',
+    label: 'Dashboard',
+    icon: 'stats-chart',
+    managementOnly: true,
+  },
+
+  {
+    key: 'Fichas',
+    label: 'Fichas',
+    icon: 'folder-open',
+    managementOnly: true,
+  },
+
+  {
+    key: 'Solicitudes',
+    label: 'Solicitudes',
+    icon: 'clipboard',
+    managementOnly: true,
+  },
+
+  {
+    key: 'Historial',
+    label: 'Historial',
+    icon: 'time',
+    managementOnly: true,
+  },
 ];
 
 export default function Layout({ children, title, navigation, activeKey = 'Instructor' }) {

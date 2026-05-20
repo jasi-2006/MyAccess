@@ -59,7 +59,7 @@ export default function LoginGatewayScreen({ navigation }) {
       panelTitle="Excelencia en la Gestión Académica"
       panelSubtitle="Accede a tu portal unificado para el seguimiento de fichas, gestión de aprendices y reportes estadísticos en tiempo real."
     >
-      <Text style={styles.title}>Bienvenido MyAccess</Text>
+      <Text style={styles.title}>Bienvenido!</Text>
       <Text style={styles.subtitle}>Gestión Institucional Centralizada</Text>
 
       <CustomInput
@@ -93,7 +93,7 @@ export default function LoginGatewayScreen({ navigation }) {
       </TouchableOpacity>
 
       <PrimaryButton
-        title="Iniciar Sesión →"
+        title="Iniciar Sesión"
         onPress={handleLogin}
         loading={loading}
         style={styles.primaryButton}
@@ -119,19 +119,99 @@ export default function LoginGatewayScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  title:     { fontSize: 24, fontWeight: '800', color: '#1F2937', marginBottom: 4 },
-  subtitle:  { fontSize: 13, fontWeight: '600', color: '#6B7280', marginBottom: 24 },
-  forgot:    { alignSelf: 'flex-end', marginBottom: 14, marginTop: -4 },
-  forgotText:{ fontSize: 12, color: '#0F9F76', fontWeight: '800' },
-  primaryButton: { height: 44, borderRadius: 8, backgroundColor: colors.primary, shadowOpacity: 0, elevation: 0 },
-  primaryButtonText: { color: '#FFFFFF', fontSize: 13, fontWeight: '800' },
-  dividerRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 22 },
-  divider: { flex: 1, height: 1, backgroundColor: '#E5E7EB' },
-  dividerText: { color: '#9CA3AF', fontSize: 11, fontWeight: '600' },
-  alertBox:  { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FEE2E2', borderLeftWidth: 4, borderLeftColor: '#EF4444', borderRadius: 8, paddingHorizontal: 14, paddingVertical: 10, marginBottom: 14, gap: 10 },
-  alertIcon: { fontSize: 15 },
-  alertText: { flex: 1, color: '#B91C1C', fontSize: 13, fontWeight: '500' },
-  row:       { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  mutedText: { fontSize: 14, color: '#6B7280' },
-  link:      { fontSize: 14, color: '#0F766E', fontWeight: '600' },
+  title:     { 
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#1F2937',
+    marginBottom: 4 },
+
+  subtitle:  { 
+    fontSize: 13, 
+    fontWeight: '600', 
+    color: '#6B7280', 
+    marginBottom: 24 
+  },
+
+  forgot: 
+     { 
+      alignSelf: 'flex-end', 
+      marginBottom: 14, 
+      marginTop: -4 
+    
+  },
+
+  forgotText:{ 
+    fontSize: 12, 
+    color: '  #0F9F76', 
+    fontWeight: '800' 
+  },
+
+  primaryButton: { 
+    height: 44, 
+    borderRadius: 8,
+     backgroundColor: '#0F9F76', 
+     shadowOpacity: 0, elevation: 0 
+    },
+
+  primaryButtonText: { 
+    color: '#FFFFFF', 
+    fontSize: 13, 
+    fontWeight: '800' 
+  },
+
+  dividerRow: {
+     flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8, 
+      marginTop: 22 
+    },
+
+  divider: { 
+    flex: 1, 
+    height: 1,
+   backgroundColor: '#E5E7EB' 
+  },
+
+  dividerText: { 
+    color: '#9CA3AF', 
+    fontSize: 11, 
+    fontWeight: '600'
+   },
+
+  alertBox:  {
+     flexDirection: 'row', 
+     alignItems: 'center', 
+     backgroundColor: '#FEE2E2',
+      borderLeftWidth: 4, 
+      borderLeftColor: '#EF4444', 
+      borderRadius: 8, 
+      paddingHorizontal: 14,
+       paddingVertical: 10, 
+       marginBottom: 14, gap: 10 },
+
+  alertIcon: { 
+  fontSize: 15 },
+
+  alertText: { 
+    flex: 1, 
+    color: '#B91C1C', 
+    fontSize: 13, 
+    fontWeight: '500'
+   },
+
+  row:       { 
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+
+  mutedText: { 
+    fontSize: 14, 
+    color: '#6B7280' 
+  },
+
+  link:      {
+     fontSize: 14, 
+     color: '#0F766E', 
+     fontWeight: '600' },
 });

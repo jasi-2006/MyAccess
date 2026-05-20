@@ -5,31 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Frontend/expo-dev.err.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/expo-dev.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/src/components/UserSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/components/UserSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/_expo/static/js/web/AppEntry-4dcb9b78b68ba65991fe3d69b4d2e7e3.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/LogoMyAccess.5b7a9806c8b6c426e1a94122073ea372.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/google.b4269762d50f07aa5d11e02cdd5b7ae8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/logoM.61e77650165ed911308d40bc7187ac40.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/logoSena.beb1529309da129c98022f97a13c1b6f.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/microsoftLogo.643c65648a806a2263e101917835324d.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/person.913c22bda197ca81f545c66eed180ca5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/person2.1728ef5d4e2ff7f5c4f61451fd33b715.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/assets/src/assets/students.e3453f15dacc714de5102d22a1463848.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check-2/metadata.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/_expo/static/js/web/AppEntry-0a4fff4bfbca1a841f3cd813a15b5b42.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/LogoMyAccess.5b7a9806c8b6c426e1a94122073ea372.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/google.b4269762d50f07aa5d11e02cdd5b7ae8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/logoM.61e77650165ed911308d40bc7187ac40.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/logoSena.beb1529309da129c98022f97a13c1b6f.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/microsoftLogo.643c65648a806a2263e101917835324d.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/person.913c22bda197ca81f545c66eed180ca5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/person2.1728ef5d4e2ff7f5c4f61451fd33b715.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/assets/src/assets/students.e3453f15dacc714de5102d22a1463848.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/web-dist-check/metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,30 +43,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;paulo&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gmurg/Desktop/MyAccess/Backend/api-gateway&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.ApiGatewayApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/moral/OneDrive/Desktop/MyAccess/Backend/api-gateway",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
@@ -110,6 +92,7 @@
       <updated>1775820664711</updated>
       <workItem from="1777991046244" duration="1018000" />
       <workItem from="1777992156744" duration="628000" />
+      <workItem from="1778601855700" duration="1575000" />
     </task>
     <servers />
   </component>
