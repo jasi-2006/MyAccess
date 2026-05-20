@@ -15,22 +15,34 @@ public class JwtService {
 
     private final SecretKey secretKey;
     private final long expiration;
+    private final long refreshExpiration;
 
     public JwtService(
             @Value("${security.jwt.secret-key}") String secret,
-            @Value("${security.jwt.tokenExpiration}") long expiration) {
+            @Value("${security.jwt.tokenExpiration}") long expiration,
+            @Value("${security.jwt.refreshTokenExpiration:604800000}") long refreshExpiration) {
         this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
         this.expiration = expiration;
+        this.refreshExpiration = refreshExpiration;
     }
 
     public String generateToken(Long userId, String email, String role) {
+        return generateToken(userId, email, role, expiration, "access");
+    }
+
+    public String generateRefreshToken(Long userId, String email, String role) {
+        return generateToken(userId, email, role, refreshExpiration, "refresh");
+    }
+
+    private String generateToken(Long userId, String email, String role, long tokenExpiration, String tokenType) {
         return Jwts.builder()
                 .subject(email)
                 .claim("userId", userId)
                 .claim("emailId", email)
                 .claim("role", role)
+                .claim("tokenType", tokenType)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
                 .signWith(secretKey)
                 .compact();
     }
@@ -57,6 +69,10 @@ public class JwtService {
     }
 
     public String extractRole(String token) {return getClaims(token).get("role", String.class);
+    }
+
+    public boolean isRefreshToken(String token) {
+        return "refresh".equals(getClaims(token).get("tokenType", String.class));
     }
 
     private Claims getClaims(String token) {

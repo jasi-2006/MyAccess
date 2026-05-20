@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -74,9 +75,10 @@ export default function NotificationsScreen({ navigation }) {
   const [notificationRefreshKey, setNotificationRefreshKey] = useState(0);
   const [profileRole, setProfileRole] = useState('');
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [filterText, setFilterText] = useState('');
   const canCreateNotifications = [ROLES.ADMIN, ROLES.INSTRUCTOR].includes(normalizeRole(profileRole));
 
-  const loadNotifications = useCallback(async ({ refresh = false } = {}) => {
+  const loadNotifications = useCallback(async ({ refresh = false, filter = filterText } = {}) => {
     try {
       if (refresh) {
         setRefreshing(true);
@@ -84,7 +86,7 @@ export default function NotificationsScreen({ navigation }) {
         setLoading(true);
       }
       setError('');
-      const response = await getNotifications();
+      const response = await getNotifications(filter);
       const list = Array.isArray(response) ? response : [];
       const sortedList = [...list].sort((a, b) => getNotificationDateValue(b) - getNotificationDateValue(a));
       setNotifications(sortedList.map(mapNotification));
@@ -94,7 +96,15 @@ export default function NotificationsScreen({ navigation }) {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [filterText]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      loadNotifications({ refresh: true, filter: filterText });
+    }, 350);
+
+    return () => clearTimeout(timeout);
+  }, [filterText, loadNotifications]);
 
   useFocusEffect(
     useCallback(() => {
@@ -211,6 +221,25 @@ export default function NotificationsScreen({ navigation }) {
                 </View>
               </View>
 
+              <View style={styles.searchRow}>
+                <TextInput
+                  style={styles.searchInput}
+                  value={filterText}
+                  onChangeText={setFilterText}
+                  placeholder="Buscar por asunto, mensaje, categoria, estado o usuario"
+                  placeholderTextColor="#9CA3AF"
+                />
+                {filterText ? (
+                  <TouchableOpacity
+                    style={styles.clearSearchButton}
+                    onPress={() => setFilterText('')}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.clearSearchText}>Limpiar</Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+
               {loading ? (
                 <View style={styles.stateBox}>
                   <ActivityIndicator color="#079B72" />
@@ -229,7 +258,9 @@ export default function NotificationsScreen({ navigation }) {
 
               {!loading && !error && notifications.length === 0 ? (
                 <View style={styles.stateBox}>
-                  <Text style={styles.stateText}>No tienes notificaciones por ahora.</Text>
+                  <Text style={styles.stateText}>
+                    {filterText ? 'No hay notificaciones que coincidan con la busqueda.' : 'No tienes notificaciones por ahora.'}
+                  </Text>
                 </View>
               ) : null}
 
@@ -393,6 +424,36 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '900',
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  searchInput: {
+    flex: 1,
+    minHeight: 38,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#DDF7EC',
+    backgroundColor: '#F8FFFC',
+    paddingHorizontal: 12,
+    color: '#1F2937',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  clearSearchButton: {
+    minHeight: 38,
+    borderRadius: 10,
+    backgroundColor: '#EEF2F7',
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+  },
+  clearSearchText: {
+    color: '#374151',
+    fontSize: 12,
+    fontWeight: '800',
   },
   notificationCard: {
     flexDirection: 'row',

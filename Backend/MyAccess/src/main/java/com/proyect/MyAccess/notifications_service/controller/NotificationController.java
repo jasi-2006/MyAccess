@@ -43,13 +43,15 @@ public class NotificationController {
      * @return ResponseEntity con la lista de notificaciones y estado 200 OK
      */
     @GetMapping
-    public ResponseEntity<List<NotificationResponseDTO>> getAll(HttpServletRequest request) {
+    public ResponseEntity<List<NotificationResponseDTO>> getAll(
+            @RequestParam(required = false) String filter,
+            HttpServletRequest request) {
         String role = (String) request.getAttribute("role");
         Long userId = (Long) request.getAttribute("userId");
         if ("APRENDIZ".equalsIgnoreCase(role)) {
-            return ResponseEntity.ok(notificationService.getByUser(userId.intValue()));
+            return ResponseEntity.ok(notificationService.searchByUser(userId.intValue(), filter));
         }
-        return ResponseEntity.ok(notificationService.getAll());
+        return ResponseEntity.ok(notificationService.search(filter));
     }
 
     /*

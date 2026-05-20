@@ -12,6 +12,7 @@ const sidebarItems = [
   { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
   { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
+  {key: 'imprimir',     label: 'imprimir',            icon: 'P', managementOnly:true},
 ];
 
 export default function UserSidebar({ navigation, activeKey, role }) {
@@ -31,10 +32,12 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (key === 'Card')         navigation.navigate('Card');
     if (key === 'User')          navigation.navigate('User');
     if (key === 'Notifications') navigation.navigate('Notifications');
-    if(key === 'Instructor')     navigation.navigate('Instructor');
-    if(key === 'Fichas')         navigation.navigate('Fichas');
-    if(key === 'Solicitudes')     navigation.navigate('Solicitudes');
-    if(key === 'Historial')     navigation.navigate('Historial');
+    if (key === 'Instructor')     navigation.navigate('Instructor');
+    if (key === 'Fichas')         navigation.navigate('Fichas');
+    if (key === 'Solicitudes')     navigation.navigate('Solicitudes');
+    if (key === 'Historial')     navigation.navigate('Historial');
+    if (key === 'status')        navigation.navigate('status');
+    if (key === 'imprimir')      navigation.navigate('Imprimir');
   };
 
   if (isMobile) {

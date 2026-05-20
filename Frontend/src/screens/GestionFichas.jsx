@@ -5,55 +5,22 @@ import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
 import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
 import WebFrame from '../components/WebFrame.jsx';
-import { getAllUserProfiles, getUserProfile } from '../services/authService';
-import { normalizeRole, ROLES } from '../utils/accessControl';
+import { getUserProfile } from '../services/authService';
 
-export default function InstructorDashboard({ navigation }) {
+export default function GestionFichas({ navigation }) {
   const { width, height } = useWindowDimensions();
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1100;
   const pagePadding = isMobile ? 10 : isTablet ? 14 : 18;
 
   const [profile, setProfile] = useState(null);
-  const [fichasCount, setFichasCount] = useState(0);
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
 
   const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
 
   useEffect(() => {
-    let mounted = true;
-
-    async function loadDashboardData() {
-      try {
-        const [currentProfile, allUsers] = await Promise.all([
-          getUserProfile(),
-          getAllUserProfiles(),
-        ]);
-
-        if (!mounted) return;
-
-        const registeredFichas = new Set(
-          (Array.isArray(allUsers) ? allUsers : [])
-            .filter((user) => normalizeRole(user?.nameRole) === ROLES.APRENDIZ)
-            .map((user) => String(user.ficha || user.Ficha || '').trim())
-            .filter(Boolean)
-        );
-
-        setProfile(currentProfile);
-        setFichasCount(registeredFichas.size);
-      } catch {
-        if (!mounted) return;
-        setProfile(null);
-        setFichasCount(0);
-      }
-    }
-
-    loadDashboardData();
-
-    return () => {
-      mounted = false;
-    };
+    getUserProfile().then(setProfile).catch(() => setProfile(null));
   }, []);
 
   return (
@@ -70,17 +37,11 @@ export default function InstructorDashboard({ navigation }) {
             {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Instructor" />}
 
             <View style={styles.headerBlock}>
-              <Text style={styles.pageTitle}>Área de instructor</Text>
+              <Text style={styles.pageTitle}>Área de gestion de fichas</Text>
               <Text style={styles.pageSubtitle}>Seleccione sus fichas, revise solicitudes o consulte el carnet digital.</Text>
             </View>
 
-            <View style={styles.row}>
-              <StatCard title="Fichas"      value={String(fichasCount)} />
-              <StatCard title="Solicitudes" value="12" />
-              <StatCard title="Validados"   value="8" />
-              <StatCard title="Impresos"    value="45" />
-            </View>
-
+           
             <View style={styles.actions}>
               {[
                 { title: 'Ver fichas',          text: 'Gestionar grupos y programas activos.',                          route: 'Fichas' },
@@ -119,7 +80,6 @@ const styles = StyleSheet.create({
   headerBlock:   { marginBottom: 10 },
   pageTitle:     { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
   pageSubtitle:  { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
-  row:           { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   actions:       { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
   actionButton:  { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
   actionTitle:   { color: '#079B72', fontSize: 16, fontWeight: '900', marginBottom: 6 },

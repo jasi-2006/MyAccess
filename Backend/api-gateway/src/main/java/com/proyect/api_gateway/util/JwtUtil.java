@@ -12,9 +12,10 @@ import java.util.Base64;
 @Component
 public class JwtUtil {
 
+    private static final String DEFAULT_BASE64_SECRET = "alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=";
     private final SecretKey secretKey;
 
-    public JwtUtil(@Value("${security.jwt.secret-key}") String secret) {
+    public JwtUtil(@Value("${security.jwt.secret-key:${JWT_SECRET_KEY:" + DEFAULT_BASE64_SECRET + "}}") String secret) {
         this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
     }
 

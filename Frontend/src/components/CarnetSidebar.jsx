@@ -12,6 +12,7 @@ const sidebarItems = [
   { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
   { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
+  { key: 'Imprimir',    label: 'Imprimir',            icon: 'P', managementOnly: true },
 ];
 
 export default function CarnetSidebar({ navigation, role, activeKey }) {
@@ -23,14 +24,16 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
   const visibleItems = sidebarItems.filter((item) => {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
+    if (item.aprendizOnly && canManage) return false;
     return true;
   });
 
   const handlePress = (key) => {
     const routes = {
       home: 'Home', Carnet: 'Card', User: 'User',
-      Notifications: 'Notifications', Instructor: 'Instructor',
+      status: 'Tramite', Notifications: 'Notifications', Instructor: 'Instructor',
       Fichas: 'Fichas', Solicitudes: 'Solicitudes', Historial: 'Historial',
+      Imprimir: 'Imprimir',
 
     };
     if (routes[key]) navigation.navigate(routes[key]);

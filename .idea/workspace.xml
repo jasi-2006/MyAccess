@@ -9,6 +9,11 @@
       <change beforePath="$PROJECT_DIR$/Backend/api-gateway/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/api-gateway/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/api-gateway/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/src/main/java/com/proyect/api_gateway/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/src/main/java/com/proyect/api_gateway/util/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/api-gateway/target/classes/com/proyect/api_gateway/util/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/api-gateway/target/classes/com/proyect/api_gateway/util/JwtUtil.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

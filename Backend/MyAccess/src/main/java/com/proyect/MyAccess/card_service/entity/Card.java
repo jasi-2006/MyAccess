@@ -28,6 +28,9 @@ public class Card {
     @Column(name = "physical_state")
     private String physicalState = "no solicitado";
 
+    @Column(name = "active")
+    private Boolean active = true;
+
     @Column(name = "digital_issue_date")
     private LocalDateTime digitalIssueDate;
 
