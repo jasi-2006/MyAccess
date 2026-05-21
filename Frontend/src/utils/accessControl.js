@@ -26,10 +26,12 @@ const ROLE_ROUTE_ACCESS = {
     'Fichas',
     'Solicitudes',
     'Historial',
+    'Imprimir',
   ],
   [ROLES.APRENDIZ]: [
     'Home',
     'Card',
+    'Tramite',
     'User',
     'Notifications',
     'NotificationDetail',
@@ -44,22 +46,18 @@ const ROLE_HOME_ROUTE = {
 
 export function normalizeRole(role) {
   const value = String(role || '').trim().toUpperCase();
-
   if (value === 'ADMINISTRADOR') return ROLES.ADMIN;
   if (value === 'ADMIN') return ROLES.ADMIN;
   if (value === 'INSTRUCTOR') return ROLES.INSTRUCTOR;
   if (value === 'APRENDIZ') return ROLES.APRENDIZ;
-
   return value;
 }
 
 export function canAccessRoute(role, routeName) {
   const normalizedRole = normalizeRole(role);
   const access = ROLE_ROUTE_ACCESS[normalizedRole];
-
   if (PUBLIC_ROUTES.includes(routeName)) return true;
   if (access === '*') return true;
-
   return Array.isArray(access) && access.includes(routeName);
 }
 
@@ -75,11 +73,9 @@ export function getRoutesForRole(role) {
 function decodeBase64Url(value) {
   const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
   const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
-
   if (typeof atob === 'function') {
     return atob(padded);
   }
-
   return '';
 }
 

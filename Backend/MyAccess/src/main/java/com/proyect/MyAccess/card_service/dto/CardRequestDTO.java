@@ -10,6 +10,7 @@ public class CardRequestDTO {
     private Boolean validPhoto;
     private String digitalState;
     private String physicalState;
+    private Boolean active;
     private LocalDateTime digitalIssueDate;
     private LocalDateTime physicalStateDate;
     private LocalDateTime expirationDate;

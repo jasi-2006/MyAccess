@@ -4,6 +4,7 @@ import com.proyect.MyAccess.auth_service.dto.UserAuthRequestDTO;
 import com.proyect.MyAccess.auth_service.dto.UserAuthResponseDTO;
 import com.proyect.MyAccess.auth_service.service.UserAuthService;
 import com.proyect.MyAccess.user_service.dto.AuthResponseDTO;
+import com.proyect.MyAccess.user_service.dto.RefreshTokenRequestDTO;
 import com.proyect.MyAccess.user_service.dto.ResetPasswordRequestDTO;
 import com.proyect.MyAccess.user_service.dto.RegisterRequestDTO;
 import com.proyect.MyAccess.user_service.dto.UserLoginRequestDTO;
@@ -38,8 +39,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginRequestDTO request) {
-        String token = userLoginService.login(request);
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        return ResponseEntity.ok(userLoginService.login(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO request) {
+        return ResponseEntity.ok(userLoginService.refreshToken(request.getRefreshToken()));
     }
 
     @PostMapping("/register")

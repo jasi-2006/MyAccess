@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert, useWindowDimensions } from 'react-native';
+import { View, Image, StyleSheet, ScrollView, Alert, useWindowDimensions } from 'react-native';
 import { getUserProfile, updateUserProfile } from '../services/authService';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
@@ -36,7 +36,8 @@ export default function UserProfile({ navigation }) {
     { label: 'Programa',         value: profile?.trainingProgram, key: 'trainingProgram' },
     { label: 'Centro',           value: profile?.trainingCenter,  key: 'trainingCenter' },
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
-    { label: 'email',            value: profile?.email,           key: 'email'}
+    { label: 'Rol',              value: profile?.nameRole,        key: 'nameRole' },
+    { label: 'email',            value: profile?.email,           key: 'email' },
   ];
 
   const openEdit = () => {
@@ -48,7 +49,10 @@ export default function UserProfile({ navigation }) {
     if (!profile?.document) return;
     setSaving(true);
     try {
-      const updated = await updateUserProfile(profile.document, form);
+      const updated = await updateUserProfile(profile.document, {
+        ...form,
+        nameRole: form.nameRole || profile?.nameRole,
+      });
       setProfile(updated);
       setModalVisible(false);
     } catch {

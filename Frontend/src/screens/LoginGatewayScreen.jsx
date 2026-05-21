@@ -8,6 +8,7 @@ import SocialButtons from '../components/SocialButtons.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { loginUser } from '../services/authService';
 import { getToken } from '../services/api';
+import { colors } from '../theme/colors.jsx';
 
 export default function LoginGatewayScreen({ navigation }) {
   const { width } = useWindowDimensions();

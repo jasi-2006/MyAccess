@@ -86,29 +86,49 @@ public class UserRegisterProfileService {
     }
 
     private void applyUpdate(UserRegisterProfile user, UserRegisterProfileRequestDTO dto) {
-        user.setDocument(dto.getDocument());
-        user.setTypeDocument(dto.getTypeDocument());
-        user.setFullName(dto.getFullName());
-        user.setTrainingProgram(dto.getTrainingProgram());
-        user.setTrainingCenter(dto.getTrainingCenter());
-        user.setRegional(dto.getRegional());
-        user.setBloodType(dto.getBloodType());
-        user.setNameRole(dto.getNameRole());
-        user.setFicha(dto.getFicha());
-        user.setEmail(dto.getEmail());
-        if (dto.getPhotoUrl() != null) user.setPhotoUrl(dto.getPhotoUrl());
+        if (dto.getDocument() != null)        user.setDocument(dto.getDocument());
+        if (dto.getTypeDocument() != null)    user.setTypeDocument(dto.getTypeDocument());
+        if (dto.getFullName() != null)        user.setFullName(dto.getFullName());
+        if (dto.getTrainingProgram() != null) user.setTrainingProgram(dto.getTrainingProgram());
+        if (dto.getTrainingCenter() != null)  user.setTrainingCenter(dto.getTrainingCenter());
+        if (dto.getRegional() != null)        user.setRegional(dto.getRegional());
+        if (dto.getBloodType() != null)       user.setBloodType(dto.getBloodType());
+        if (dto.getNameRole() != null)        user.setNameRole(dto.getNameRole());
+        if (dto.getFicha() != null)           user.setFicha(dto.getFicha());
+        if (dto.getEmail() != null)           user.setEmail(dto.getEmail());
+        if (dto.getPhotoUrl() != null)        user.setPhotoUrl(dto.getPhotoUrl());
     }
 
     public Optional<UserRegisterProfileResponseDTO> uploadPhoto(String document, MultipartFile photo) throws IOException {
         List<UserRegisterProfile> users = userRepository.findByDocument(document);
         if (users.isEmpty()) return Optional.empty();
         UserRegisterProfile user = users.get(0);
-        String filename = UUID.randomUUID() + ".jpg";
+        String filename = UUID.randomUUID() + getImageExtension(photo);
         Path uploadDir = Paths.get("uploads");
         Files.createDirectories(uploadDir);
         Files.write(uploadDir.resolve(filename), photo.getBytes());
-        user.setPhotoUrl("http://localhost:8080/uploads/" + filename);
+        user.setPhotoUrl("/uploads/" + filename);
         return Optional.of(toResponse(userRepository.save(user)));
+    }
+
+    private String getImageExtension(MultipartFile photo) {
+        String contentType = photo.getContentType();
+        if ("image/png".equalsIgnoreCase(contentType)) return ".png";
+        if ("image/webp".equalsIgnoreCase(contentType)) return ".webp";
+        if ("image/gif".equalsIgnoreCase(contentType)) return ".gif";
+        if ("image/jpeg".equalsIgnoreCase(contentType) || "image/jpg".equalsIgnoreCase(contentType)) return ".jpg";
+
+        String originalFilename = photo.getOriginalFilename();
+        if (originalFilename != null) {
+            String lowerName = originalFilename.toLowerCase();
+            if (lowerName.endsWith(".png")) return ".png";
+            if (lowerName.endsWith(".webp")) return ".webp";
+            if (lowerName.endsWith(".gif")) return ".gif";
+            if (lowerName.endsWith(".jpeg")) return ".jpg";
+            if (lowerName.endsWith(".jpg")) return ".jpg";
+        }
+
+        return ".jpg";
     }
 
     private UserRegisterProfileResponseDTO toResponse(UserRegisterProfile user) {
