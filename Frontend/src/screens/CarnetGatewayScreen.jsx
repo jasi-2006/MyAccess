@@ -84,7 +84,7 @@ export default function CarnetGatewayScreen({ navigation }) {
               loading={loading}
               cardError={cardError}
             />
-            <RequestCardButton />
+            <RequestCardButton profile={profile} />
 
           </ScrollView>
         </View>

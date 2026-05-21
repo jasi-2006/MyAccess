@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
 import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getAllUserProfiles, getUserProfile } from '../services/authService';
+import { getAllRequestCards } from '../services/requestCardService';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 export default function InstructorDashboard({ navigation }) {
@@ -16,19 +18,22 @@ export default function InstructorDashboard({ navigation }) {
 
   const [profile, setProfile] = useState(null);
   const [fichasCount, setFichasCount] = useState(0);
+  const [requests, setRequests] = useState([]);
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
 
   const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     let mounted = true;
 
     async function loadDashboardData() {
       try {
-        const [currentProfile, allUsers] = await Promise.all([
+        const [currentProfile, allUsers, allRequests] = await Promise.all([
           getUserProfile(),
           getAllUserProfiles(),
+          getAllRequestCards(),
         ]);
 
         if (!mounted) return;
@@ -42,6 +47,7 @@ export default function InstructorDashboard({ navigation }) {
 
         setProfile(currentProfile);
         setFichasCount(registeredFichas.size);
+        setRequests(Array.isArray(allRequests) ? allRequests : []);
       } catch {
         if (!mounted) return;
         setProfile(null);
@@ -54,7 +60,8 @@ export default function InstructorDashboard({ navigation }) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [])
+  );
 
   return (
     <WebFrame>
@@ -76,9 +83,9 @@ export default function InstructorDashboard({ navigation }) {
 
             <View style={styles.row}>
               <StatCard title="Fichas"      value={String(fichasCount)} />
-              <StatCard title="Solicitudes" value="12" />
-              <StatCard title="Validados"   value="8" />
-              <StatCard title="Impresos"    value="45" />
+              <StatCard title="Solicitudes" value={String(requests.length)} />
+              <StatCard title="Validados"   value={String(requests.filter(r => r.state?.toLowerCase() === 'validado').length)} />
+              <StatCard title="Impresos"    value={String(requests.filter(r => r.state?.toLowerCase() === 'impreso').length)} />
             </View>
 
             <View style={styles.actions}>
