@@ -64,6 +64,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+    curve: {
+    width: 580,
+    height: 300,
+    backgroundColor: colors.background,
+    transform: [{ translateY: -78 }],
+    borderTopLeftRadius: 400,
+    borderTopRightRadius: 400,
+    alignSelf: 'center',
+    },
   keyboard: {
     flex: 1,
   },

@@ -158,9 +158,9 @@ function createStyles({
   },
 
   personasImage: {
-  width: imageWidth + 150,
-  height: imageHeight + 150,
-  top: 60,
+  width: imageWidth + 200,
+  height: imageHeight + 200,
+  top: 100,
   marginBottom: isDesktop ? 18 : isSmallDevice ? 12 : 28,
   zIndex: 1,
 
