@@ -1,4 +1,4 @@
-package com.proyect.notifications_service.config;
+package com.proyect.auth_service.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,25 +16,25 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.proyect.notifications_service.repository",
-        entityManagerFactoryRef = "notificationsEntityManagerFactory",
-        transactionManagerRef = "notificationsTransactionManager"
+        basePackages = "com.proyect.auth_service.repository",
+        entityManagerFactoryRef = "authEntityManagerFactory",
+        transactionManagerRef = "authTransactionManager"
 )
-public class NotificationsDataSourceConfig {
+public class AuthDataSourceConfig {
 
-    @Bean(name = "notificationsDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.notifications-service")
+    @Bean(name = "authDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.auth-service")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "notificationsEntityManagerFactory")
+    @Bean(name = "authEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            @Qualifier("notificationsDataSource") DataSource dataSource) {
+            @Qualifier("authDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(dataSource);
-        factory.setPackagesToScan("com.proyect.notifications_service.entity");
-        factory.setPersistenceUnitName("notifications");
+        factory.setPackagesToScan("com.proyect.auth_service.entity");
+        factory.setPersistenceUnitName("auth");
         factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         Properties props = new Properties();
         props.setProperty("hibernate.hbm2ddl.auto", "update");
@@ -42,9 +42,9 @@ public class NotificationsDataSourceConfig {
         return factory;
     }
 
-    @Bean(name = "notificationsTransactionManager")
+    @Bean(name = "authTransactionManager")
     public PlatformTransactionManager transactionManager(
-            @Qualifier("notificationsEntityManagerFactory") LocalContainerEntityManagerFactoryBean factory) {
+            @Qualifier("authEntityManagerFactory") LocalContainerEntityManagerFactoryBean factory) {
         return new JpaTransactionManager(factory.getObject());
     }
 }

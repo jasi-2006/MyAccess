@@ -12,3 +12,47 @@ services:
         value: 10000
       - key: SPRING_PROFILES_ACTIVE
         value: render
+  - type: web
+    name: auth-service
+    runtime: docker
+    rootDir: auth-service
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVER_PORT
+        value: 10000
+  - type: web
+    name: card-service
+    runtime: docker
+    rootDir: card-service
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVER_PORT
+        value: 10000
+  - type: web
+    name: news-service
+    runtime: docker
+    rootDir: news-service
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVER_PORT
+        value: 10000
+  - type: web
+    name: notifications-service
+    runtime: docker
+    rootDir: notifications-service
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVER_PORT
+        value: 10000
