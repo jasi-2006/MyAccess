@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, useWindowDimensions,
-  TouchableOpacity, Image, ActivityIndicator, Platform, Modal,
+  TouchableOpacity, Image, ActivityIndicator, Platform, Modal, Animated,
 } from 'react-native';
 import WebFrame from '../components/WebFrame.jsx';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import { getUserProfile, getAllUserProfiles } from '../services/authService';
-import { getAllCards } from '../services/cardService';
+import { getAllCards, updateCard } from '../services/cardService';
+import { getAllRequestCards, updateRequestCard } from '../services/requestCardService';
 import { API_GATEWAY_URL } from '../services/api';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
@@ -195,21 +196,145 @@ export default function ImprimirScreen({ navigation }) {
   ).slice().sort(compareLearners);
   const fichasToPrint = isPrintingAll ? fichas : selectedFicha ? [selectedFicha] : [];
 
+  const buildCarnetPairHtml = (learner, card) => {
+    const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
+    const role = learner?.nameRole || 'APRENDIZ';
+    const docType = learner?.typeDocument || 'CC';
+    const docNum = learner?.document || 'NA';
+    const blood = learner?.bloodType || '';
+    const regional = learner?.regional || 'Regional Quindio';
+    const center = learner?.trainingCenter || 'centro comercio y turismo';
+    const program = learner?.trainingProgram || 'NA';
+    const ficha = learner?.ficha || learner?.files || 'NA';
+
+    const photoHtml = photoUrl
+      ? `<img src="${photoUrl}" style="width:122px;height:152px;border-radius:10px;object-fit:cover;" />`
+      : `<div style="width:122px;height:152px;border-radius:10px;background:#E9E9E9;"></div>`;
+
+    const bars = [2,1,3,1,1,2,4,1,2,1,3,2,1,1,4,2,1,3,1,2,2,1,3,1];
+    const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:34px;margin-bottom:10px;">${
+      bars.map((w, i) => `<div style="width:${w}px;height:28px;background:#111;${i < bars.length-1 ? 'margin-right:1px;' : ''}"></div>`).join('')
+    }</div>`;
+
+    const QR_PATTERN = [
+      '11111110001001111111','10000010110010100001','10111010101110101101','10111010010000101101',
+      '10111010111110101101','10000010001000100001','11111110101010111111','00000000110110000000',
+      '10110111100011101011','00101100111001011001','11100011101011100011','00111001010100101110',
+      '10101110111110001011','00000000101000100000','11111110110101111111','10000010001100100001',
+      '10111010111010101101','10111010010100101101','10000010101110100001','11111110011000111111',
+    ];
+    const qrHtml = `<div style="padding:6px;background:#fff;border:1px solid #111;display:inline-block;">${
+      QR_PATTERN.map(row =>
+        `<div style="display:flex;">${row.split('').map(c =>
+          `<div style="width:4px;height:4px;background:${c==='1'?'#111':'#fff'};"></div>`
+        ).join('')}</div>`
+      ).join('')
+    }</div>`;
+
+    const logoHtml = `<img src="${window.location.origin}/static/media/logoSena.png" style="width:80px;height:80px;" onerror="this.style.display='none'" />`;
+
+    const front = `
+      <div style="width:265px;height:420px;border-radius:12px;border:1px solid #D7D7D7;background:#FDFDFD;padding:14px 14px 12px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="width:88px;text-align:center;margin-top:2px;">${logoHtml}</div>
+          ${photoHtml}
+        </div>
+        <div style="margin-top:10px;">
+          <div style="font-size:14px;color:#2F2F2F;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;">${role}</div>
+          <div style="height:4px;background:#0A8A4A;border-radius:2px;margin-bottom:8px;"></div>
+          <div style="font-size:17px;font-weight:900;color:#118449;margin-bottom:6px;">MyAccess</div>
+          <div style="font-size:10px;color:#3A3A3A;margin-bottom:10px;">${docType} ${docNum}${blood ? ' '+blood : ''}</div>
+          ${barcodeHtml}
+        </div>
+        <div>
+          <div style="color:#555;font-size:13px;font-weight:900;">${regional}</div>
+          <div style="color:#118449;font-size:11px;font-weight:800;">${center}</div>
+          <div style="color:#4A4A4A;font-size:10px;">${program}</div>
+          <div style="color:#4A4A4A;font-size:10px;">Grupo No ${ficha}</div>
+        </div>
+      </div>`;
+
+    const back = `
+      <div style="width:265px;height:420px;border-radius:12px;border:1px solid #D7D7D7;background:#FFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+        <div style="font-size:10px;color:#2E2E2E;line-height:14px;">Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus funciones y para la obtención de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboración para su desempeño.</div>
+        <div style="text-align:center;margin:8px 0;">${qrHtml}</div>
+        <div style="text-align:center;margin-bottom:10px;">
+          <div style="font-size:10px;color:#2B2B2B;">cesar augusto ospina p</div>
+          <div style="font-size:11px;color:#333;">Firma de autoría</div>
+        </div>
+        <div style="font-size:10px;color:#2E2E2E;line-height:14px;">Si por algún motivo este carné es extraviado, por favor diríjase a la Dirección Regional Quindío - Avenida Centenario #44 Norte -15</div>
+      </div>`;
+
+    return `<div style="display:flex;gap:16px;break-inside:avoid;page-break-inside:avoid;margin-bottom:24px;">${front}${back}</div>`;
+  };
+
+  const markAsPrinted = async (learnersList) => {
+    const [allCards, allRequests] = await Promise.all([
+      getAllCards().catch(() => []),
+      getAllRequestCards().catch(() => []),
+    ]);
+
+    const printedBy = profile?.fullName || profile?.full_name || 'instructor';
+
+    await Promise.allSettled(
+      learnersList.map(async (learner) => {
+        const card = allCards.find((c) => c.idUser === learner.id);
+        if (card?.idCard) {
+          await updateCard(card.idCard, { ...card, physicalState: 'impreso' }).catch(() => {});
+        }
+
+        const request = allRequests.find((r) => r.idUser === learner.id);
+        if (request?.idRequest) {
+          await updateRequestCard(request.idRequest, { ...request, state: 'impreso', printedBy }).catch(() => {});
+        }
+      })
+    );
+  };
+
   const handlePrint = () => {
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      document.body.classList.remove('print-single-carnet');
-      window.print();
-    }
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+
+    markAsPrinted(fichaLearners);
+
+    const pairsHtml = fichaLearners.map((learner) => {
+      const card = cardsByUser[learner.id];
+      return buildCarnetPairHtml(learner, card);
+    }).join('');
+
+    const printWin = window.open('', '_blank', 'width=800,height=600');
+    printWin.document.write(`
+      <!DOCTYPE html><html><head><meta charset="utf-8"/>
+      <style>
+        body { margin: 0; padding: 20px; background: #fff; }
+        @media print { body { padding: 10px; } }
+      </style></head>
+      <body>${pairsHtml}</body></html>
+    `);
+    printWin.document.close();
+    printWin.focus();
+    printWin.onload = () => { printWin.print(); printWin.close(); };
   };
 
   const handlePrintSelected = () => {
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      document.body.classList.add('print-single-carnet');
-      window.print();
-      window.setTimeout(() => {
-        document.body.classList.remove('print-single-carnet');
-      }, 300);
-    }
+    if (Platform.OS !== 'web' || typeof window === 'undefined' || !selectedCarnet) return;
+
+    markAsPrinted([selectedCarnet.learner]);
+
+    const { learner, card } = selectedCarnet;
+    const pairHtml = buildCarnetPairHtml(learner, card);
+
+    const printWin = window.open('', '_blank', 'width=700,height=500');
+    printWin.document.write(`
+      <!DOCTYPE html><html><head><meta charset="utf-8"/>
+      <style>
+        body { margin: 0; padding: 20px; background: #fff; display: flex; justify-content: center; }
+        @media print { body { padding: 10px; } }
+      </style></head>
+      <body>${pairHtml}</body></html>
+    `);
+    printWin.document.close();
+    printWin.focus();
+    printWin.onload = () => { printWin.print(); printWin.close(); };
   };
 
   return (
@@ -356,13 +481,18 @@ export default function ImprimirScreen({ navigation }) {
               </View>
 
               {selectedCarnet && (
-                <View style={styles.singlePrintArea} nativeID="single-print-area">
+                <ScrollView
+                  style={{ maxHeight: 520 }}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={styles.singlePrintArea}
+                  nativeID="single-print-area"
+                >
                   <IndividualCarnet
                     learner={selectedCarnet.learner}
                     card={selectedCarnet.card}
                     name={selectedCarnet.name}
                   />
-                </View>
+                </ScrollView>
               )}
 
               <View style={styles.modalActions}>
@@ -395,6 +525,48 @@ function BarcodeBlock() {
   );
 }
 
+const QR_PATTERN = [
+  '11111110001001111111',
+  '10000010110010100001',
+  '10111010101110101101',
+  '10111010010000101101',
+  '10111010111110101101',
+  '10000010001000100001',
+  '11111110101010111111',
+  '00000000110110000000',
+  '10110111100011101011',
+  '00101100111001011001',
+  '11100011101011100011',
+  '00111001010100101110',
+  '10101110111110001011',
+  '00000000101000100000',
+  '11111110110101111111',
+  '10000010001100100001',
+  '10111010111010101101',
+  '10111010010100101101',
+  '10000010101110100001',
+  '11111110011000111111',
+];
+
+function QrBlock() {
+  return (
+    <View style={styles.qrOuter}>
+      <View style={styles.qrGrid}>
+        {QR_PATTERN.map((row, rowIndex) => (
+          <View key={`row-${rowIndex}`} style={styles.qrRow}>
+            {row.split('').map((cell, colIndex) => (
+              <View
+                key={`cell-${rowIndex}-${colIndex}`}
+                style={[styles.qrCell, cell === '1' ? styles.qrCellDark : styles.qrCellLight]}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 function IndividualCarnet({ learner, card, name }) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const role = learner?.nameRole || 'APRENDIZ';
@@ -406,35 +578,80 @@ function IndividualCarnet({ learner, card, name }) {
   const trainingProgram = learner?.trainingProgram || 'NA';
   const ficha = learner?.ficha || learner?.files || 'NA';
 
+  const [flipped, setFlipped] = useState(false);
+  const flipAnim = useRef(new Animated.Value(0)).current;
+
+  const flipCard = () => {
+    const next = flipped ? 0 : 1;
+    Animated.spring(flipAnim, { toValue: next, friction: 8, tension: 12, useNativeDriver: true }).start();
+    setFlipped(!flipped);
+  };
+
+  const frontRotate = flipAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
+  const backRotate  = flipAnim.interpolate({ inputRange: [0, 1], outputRange: ['180deg', '360deg'] });
+  const frontOpacity = flipAnim.interpolate({ inputRange: [0.4, 0.5], outputRange: [1, 0] });
+  const backOpacity  = flipAnim.interpolate({ inputRange: [0.4, 0.5], outputRange: [0, 1] });
+
   return (
-    <View style={styles.verticalCarnet}>
-      <View style={styles.verticalTop}>
-        <View style={styles.verticalLogoBox}>
-          <Image source={require('../assets/logoSena.png')} style={styles.verticalLogo} resizeMode="contain" />
-        </View>
-        <View style={styles.verticalPhotoFrame}>
-          {photoUrl ? (
-            <Image source={{ uri: photoUrl }} style={styles.verticalPhoto} resizeMode="cover" />
-          ) : null}
-        </View>
-      </View>
+    <View style={{ alignItems: 'center', gap: 10 }}>
+      <TouchableOpacity onPress={flipCard} activeOpacity={1}>
+        <View style={{ width: 265, height: 420 }}>
+          {/* Frente */}
+          <Animated.View style={[
+            styles.verticalCarnet,
+            { position: 'absolute', backfaceVisibility: 'hidden', transform: [{ rotateY: frontRotate }], opacity: frontOpacity },
+          ]}>
+            <View style={styles.verticalTop}>
+              <View style={styles.verticalLogoBox}>
+                <Image source={require('../assets/logoSena.png')} style={styles.verticalLogo} resizeMode="contain" />
+              </View>
+              <View style={styles.verticalPhotoFrame}>
+                {photoUrl ? (
+                  <Image source={{ uri: photoUrl }} style={styles.verticalPhoto} resizeMode="cover" />
+                ) : null}
+              </View>
+            </View>
+            <View style={styles.verticalBody}>
+              <Text style={styles.verticalRole}>{role}</Text>
+              <View style={styles.verticalGreenRule} />
+              <Text style={styles.verticalBrand}>MyAccess</Text>
+              <Text style={styles.verticalIdentity}>
+                {`${documentType} ${documentNumber}${bloodType ? ` ${bloodType}` : ''}`}
+              </Text>
+              <BarcodeBlock />
+            </View>
+            <View style={styles.verticalFooter}>
+              <Text style={styles.verticalRegional}>{regional}</Text>
+              <Text style={styles.verticalCenter}>{trainingCenter}</Text>
+              <Text style={styles.verticalMuted}>{trainingProgram}</Text>
+              <Text style={styles.verticalMuted}>{`Grupo No ${ficha}`}</Text>
+            </View>
+          </Animated.View>
 
-      <View style={styles.verticalBody}>
-        <Text style={styles.verticalRole}>{role}</Text>
-        <View style={styles.verticalGreenRule} />
-        <Text style={styles.verticalBrand}>MyAccess</Text>
-        <Text style={styles.verticalIdentity}>
-          {`${documentType} ${documentNumber}${bloodType ? ` ${bloodType}` : ''}`}
-        </Text>
-        <BarcodeBlock />
-      </View>
-
-      <View style={styles.verticalFooter}>
-        <Text style={styles.verticalRegional}>{regional}</Text>
-        <Text style={styles.verticalCenter}>{trainingCenter}</Text>
-        <Text style={styles.verticalMuted}>{trainingProgram}</Text>
-        <Text style={styles.verticalMuted}>{`Grupo No ${ficha}`}</Text>
-      </View>
+          {/* Reverso */}
+          <Animated.View style={[
+            styles.verticalCarnet,
+            styles.verticalCarnetBack,
+            { position: 'absolute', backfaceVisibility: 'hidden', transform: [{ rotateY: backRotate }], opacity: backOpacity },
+          ]}>
+            <Text style={styles.verticalBackText}>
+              Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus funciones y para la obtención de servicios que el SENA presta a sus funcionarios y/o contratistas.
+e solicita a las autoridades civiles y militares prestarle toda la colaboración para su desempeño.
+            </Text>
+            <View style={{ alignItems: 'center', marginVertical: 8 }}>
+              <QrBlock />
+            </View>
+            <View style={{ alignItems: 'center', marginBottom: 10 }}>
+              <Text style={styles.verticalSignatureName}>cesar augusto ospina p</Text>
+              <Text style={styles.verticalSignatureLabel}>Firma de autoría</Text>
+            </View>
+            <Text style={styles.verticalBackText}>
+              Si por algún motivo este carné es extraviado, por favor diríjase a la Dirección Regional Quindío - Avenida Centenario #44 Norte -15
+            </Text>
+          </Animated.View>
+        </View>
+      </TouchableOpacity>
+      <Text style={styles.flipHint}>{flipped ? 'Toca para ver el frente' : 'Toca para ver el reverso'}</Text>
     </View>
   );
 }
@@ -540,7 +757,7 @@ const styles = StyleSheet.create({
   modalSubtitle:  { fontSize: 12, fontWeight: '700', color: '#6B7280', marginTop: 2 },
   closeBtn:       { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 8, backgroundColor: '#F3F4F6' },
   closeBtnText:   { fontSize: 12, fontWeight: '800', color: '#374151' },
-  singlePrintArea: { alignItems: 'center' },
+  singlePrintArea: { alignItems: 'center', paddingVertical: 8 },
   modalActions:   { alignItems: 'flex-end' },
   verticalCarnet:  {
     width: 265,
@@ -602,6 +819,17 @@ const styles = StyleSheet.create({
   verticalRegional: { color: '#555555', fontSize: 13, fontWeight: '900' },
   verticalCenter:  { color: '#118449', fontSize: 11, fontWeight: '800' },
   verticalMuted:   { color: '#4A4A4A', fontSize: 10 },
+  verticalCarnetBack: { backgroundColor: '#FFFFFF', justifyContent: 'space-between' },
+  verticalBackText: { fontSize: 10, color: '#2E2E2E', lineHeight: 14 },
+  verticalSignatureName: { fontSize: 10, color: '#2B2B2B', marginBottom: 3, textAlign: 'center' },
+  verticalSignatureLabel: { fontSize: 11, color: '#333333', textAlign: 'center' },
+  flipHint: { fontSize: 11, color: '#6B7280', fontWeight: '600' },
+  qrOuter: { padding: 6, backgroundColor: '#FFFFFF' },
+  qrGrid: { borderWidth: 1, borderColor: '#111111' },
+  qrRow: { flexDirection: 'row' },
+  qrCell: { width: 4, height: 4 },
+  qrCellDark: { backgroundColor: '#111111' },
+  qrCellLight: { backgroundColor: '#FFFFFF' },
   /* Encabezado */
   headerRow:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14, flexWrap: 'wrap', gap: 10 },
   pageTitle:      { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },

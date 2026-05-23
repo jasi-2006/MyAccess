@@ -1,0 +1,55 @@
+services:
+
+  backend:
+    build:
+      context: ./Backend/MyAccess
+    container_name: myaccess-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      SERVER_PORT: 9090
+    expose:
+      - "9090"
+    networks:
+      - myaccess-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  gateway:
+    build:
+      context: ./Backend/api-gateway
+    container_name: myaccess-gateway
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      GATEWAY_PORT: 8080
+      BACKEND_URI: http://backend:9090
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - myaccess-net
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: myaccess-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    networks:
+      - myaccess-net
+
+networks:
+  myaccess-net:
+    driver: bridge
