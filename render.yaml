@@ -1,12 +1,13 @@
 services:
+
   - type: web
-    name: myaccess-backend
+    name: myaccess-user-service
     runtime: docker
-    dockerfilePath: ./Backend/MyAccess/Dockerfile
-    dockerContext: ./Backend/MyAccess
+    dockerfilePath: ./Backend/user-service/Dockerfile
+    dockerContext: ./Backend/user-service
     envVars:
       - key: PORT
-        value: 9090
+        value: 9091
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -23,6 +24,51 @@ services:
         sync: false
 
   - type: web
+    name: myaccess-card-service
+    runtime: docker
+    dockerfilePath: ./Backend/card-service/Dockerfile
+    dockerContext: ./Backend/card-service
+    envVars:
+      - key: PORT
+        value: 9092
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: myaccess-news-service
+    runtime: docker
+    dockerfilePath: ./Backend/news-service/Dockerfile
+    dockerContext: ./Backend/news-service
+    envVars:
+      - key: PORT
+        value: 9093
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: myaccess-notifications-service
+    runtime: docker
+    dockerfilePath: ./Backend/notifications-service/Dockerfile
+    dockerContext: ./Backend/notifications-service
+    envVars:
+      - key: PORT
+        value: 9094
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
     name: myaccess-gateway
     runtime: docker
     dockerfilePath: ./Backend/api-gateway/Dockerfile
@@ -30,10 +76,7 @@ services:
     envVars:
       - key: PORT
         value: 8080
-      - key: BACKEND_URI
-        fromService:
-          name: myaccess-backend
-          type: web
-          property: hostport
       - key: JWT_SECRET
+        sync: false
+      - key: BACKEND_URI
         sync: false

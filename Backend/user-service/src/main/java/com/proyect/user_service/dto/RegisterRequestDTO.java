@@ -1,0 +1,22 @@
+package com.proyect.user_service.dto;
+
+import lombok.Data;
+
+@Data
+public class RegisterRequestDTO {
+    // user_auth
+    private String email;
+    private String password;
+
+
+    // user_profile
+    private String document;
+    private String typeDocument;
+    private String fullName;
+    private String trainingProgram;
+    private String trainingCenter;
+    private String regional;
+    private String bloodType;
+    private String nameRole;
+    private String Ficha;
+}
