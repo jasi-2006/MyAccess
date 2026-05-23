@@ -9,7 +9,7 @@ spring:
     name: news-service
   datasource:
     news-service:
-      jdbc-url: ${NEWS_DB_URL:jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/news_service?sslMode=REQUIRED}
+      url: ${NEWS_DB_URL:jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/news_service?sslMode=REQUIRED}
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver

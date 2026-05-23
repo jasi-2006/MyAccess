@@ -1,8 +1,9 @@
 package com.proyect.news_service.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,10 +23,19 @@ import java.util.Properties;
 )
 public class NewsDataSourceConfig {
 
-    @Bean(name = "newsDataSource")
+    @Bean(name = "newsDataSourceProperties")
     @ConfigurationProperties(prefix = "spring.datasource.news-service")
-    public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
+    public DataSourceProperties newsDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean(name = "newsDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.news-service.hikari")
+    public DataSource dataSource(
+            @Qualifier("newsDataSourceProperties") DataSourceProperties properties) {
+        return properties.initializeDataSourceBuilder()
+                .type(HikariDataSource.class)
+                .build();
     }
 
     @Bean(name = "newsEntityManagerFactory")
