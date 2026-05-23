@@ -17,6 +17,7 @@ const STATE_COLORS = {
   rechazado: { bg: '#FEF2F2', text: '#DC2626' },
 };
 
+
 export default function SolicitudesScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
   const isMobile    = width < 768;
