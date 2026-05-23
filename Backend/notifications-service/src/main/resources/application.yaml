@@ -1,5 +1,6 @@
 server:
-  port: ${PORT:9094}
+  port: ${PORT:${SERVER_PORT:9094}}
+  address: 0.0.0.0
 
 spring:
   config:
