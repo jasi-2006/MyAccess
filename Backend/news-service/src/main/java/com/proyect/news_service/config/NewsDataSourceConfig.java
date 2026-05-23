@@ -1,7 +1,6 @@
 package com.proyect.news_service.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +12,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.Properties;
-
 @Configuration
 @EnableJpaRepositories(
         basePackages = "com.proyect.news_service.repository",
@@ -22,15 +19,6 @@ import java.util.Properties;
         transactionManagerRef = "newsTransactionManager"
 )
 public class NewsDataSourceConfig {
-
-    @Value("${spring.datasource.news-service.jdbc-url}")
-    private String jdbcUrl;
-
-    @Value("${spring.datasource.news-service.username}")
-    private String username;
-
-    @Value("${spring.datasource.news-service.password}")
-    private String password;
 
     @Bean(name = "newsDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.news-service")
@@ -46,14 +34,8 @@ public class NewsDataSourceConfig {
         factory.setPackagesToScan("com.proyect.news_service.entity");
         factory.setPersistenceUnitName("news");
         factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        Properties props = new Properties();
-        props.setProperty("hibernate.hbm2ddl.auto", "update");
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        props.setProperty("jakarta.persistence.jdbc.url", jdbcUrl);
-        props.setProperty("jakarta.persistence.jdbc.user", username);
-        props.setProperty("jakarta.persistence.jdbc.password", password);
-        props.setProperty("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
-        factory.setJpaProperties(props);
+        factory.getJpaPropertyMap().put("hibernate.hbm2ddl.auto", "update");
+        factory.getJpaPropertyMap().put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         return factory;
     }
 
