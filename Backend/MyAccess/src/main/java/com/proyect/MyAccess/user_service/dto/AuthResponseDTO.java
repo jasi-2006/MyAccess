@@ -1,0 +1,15 @@
+package com.proyect.MyAccess.user_service.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class AuthResponseDTO {
+    private String token;
+    private String refreshToken;
+
+    public AuthResponseDTO(String token) {
+        this.token = token;
+    }
+}
