@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: user-service
+    runtime: docker
+    rootDir: user-service
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVER_PORT
+        value: 10000
+      - key: SPRING_PROFILES_ACTIVE
+        value: render

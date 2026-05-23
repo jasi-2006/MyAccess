@@ -38,7 +38,6 @@ public class AuthDataSourceConfig {
         factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         Properties props = new Properties();
         props.setProperty("hibernate.hbm2ddl.auto", "update");
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         factory.setJpaProperties(props);
         return factory;
     }
