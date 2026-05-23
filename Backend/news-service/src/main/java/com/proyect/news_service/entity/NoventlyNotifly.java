@@ -13,7 +13,7 @@ public class NoventlyNotifly {
 
     @Id
     @Column(name = "id_novently")
-    private Integer idNovently;
+    private Long idNovently;
 
     @Id
     @Column(name = "id_user")
@@ -38,7 +38,7 @@ public class NoventlyNotifly {
 
     @Data
     public static class NoventlyNotiflyId implements Serializable {
-        private Integer idNovently;
+        private Long idNovently;
         private Integer idUser;
         private String chanel;
     }
