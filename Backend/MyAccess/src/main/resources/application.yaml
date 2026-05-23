@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:${SERVER_PORT:9090}}
+  port: ${PORT:9090}
   tomcat:
     max-part-count: 50
 
