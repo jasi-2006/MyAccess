@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: myaccess-backend
+    runtime: docker
+    dockerfilePath: ./Backend/MyAccess/Dockerfile
+    dockerContext: ./Backend/MyAccess
+    envVars:
+      - key: PORT
+        value: 9090
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION
+        value: 600000
+      - key: JWT_REFRESH_EXPIRATION
+        value: 600000
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+  - type: web
+    name: myaccess-gateway
+    runtime: docker
+    dockerfilePath: ./Backend/api-gateway/Dockerfile
+    dockerContext: ./Backend/api-gateway
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: BACKEND_URI
+        fromService:
+          name: myaccess-backend
+          type: web
+          property: hostport
+      - key: JWT_SECRET
+        sync: false
