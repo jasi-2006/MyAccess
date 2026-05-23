@@ -7,7 +7,7 @@ services:
     dockerContext: ./Backend/user-service
     envVars:
       - key: PORT
-        value: 9091
+        value: 10000
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -30,7 +30,7 @@ services:
     dockerContext: ./Backend/card-service
     envVars:
       - key: PORT
-        value: 9092
+        value: 10000
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -45,7 +45,7 @@ services:
     dockerContext: ./Backend/news-service
     envVars:
       - key: PORT
-        value: 9093
+        value: 10000
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -60,7 +60,7 @@ services:
     dockerContext: ./Backend/notifications-service
     envVars:
       - key: PORT
-        value: 9094
+        value: 10000
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -75,8 +75,14 @@ services:
     dockerContext: ./Backend/api-gateway
     envVars:
       - key: PORT
-        value: 8080
+        value: 10000
       - key: JWT_SECRET
         sync: false
-      - key: BACKEND_URI
-        sync: false
+      - key: USER_SERVICE_URI
+        value: https://myaccess-user-service.onrender.com
+      - key: CARD_SERVICE_URI
+        value: https://myaccess-card-service.onrender.com
+      - key: NEWS_SERVICE_URI
+        value: https://myaccess-news-service.onrender.com
+      - key: NOTIFICATIONS_SERVICE_URI
+        value: https://myaccess-notifications-service.onrender.com
