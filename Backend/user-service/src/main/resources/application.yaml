@@ -4,6 +4,8 @@ server:
     max-part-count: 50
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: user-service
   datasource:
