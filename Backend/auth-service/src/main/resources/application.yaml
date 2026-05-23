@@ -1,15 +1,15 @@
 server:
-  port: ${PORT:${SERVER_PORT:9092}}
+  port: ${PORT:${SERVER_PORT:9095}}
   address: 0.0.0.0
 
 spring:
   config:
     import: optional:file:.env[.properties]
   application:
-    name: card-service
+    name: auth-service
   datasource:
-    card-service:
-      jdbc-url: ${CARD_DB_URL:jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/card_service?sslMode=REQUIRED}
+    auth-service:
+      jdbc-url: ${AUTH_DB_URL:jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/auth_service?sslMode=REQUIRED}
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -25,3 +25,4 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET:alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=}
+    tokenExpiration: ${JWT_EXPIRATION:600000}
