@@ -2,6 +2,8 @@ server:
   port: ${PORT:9092}
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: card-service
   datasource:
