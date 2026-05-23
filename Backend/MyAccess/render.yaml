@@ -1,0 +1,112 @@
+services:
+  # API Gateway
+  - type: web
+    name: api-gateway
+    runtime: docker
+    rootDir: Backend/api-gateway
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: JWT_SECRET
+        sync: false
+
+  # User Service
+  - type: web
+    name: user-service
+    runtime: docker
+    rootDir: Backend/user-service
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_USERNAME
+        value: 34CYnHYfoLKzGXQ.root
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: user_service
+
+  # Auth Service
+  - type: web
+    name: auth-service
+    runtime: docker
+    rootDir: Backend/auth-service
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_USERNAME
+        value: 34CYnHYfoLKzGXQ.root
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: auth_service
+      - key: JWT_SECRET
+        sync: false
+
+  # Card Service
+  - type: web
+    name: card-service
+    runtime: docker
+    rootDir: Backend/card-service
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_USERNAME
+        value: 34CYnHYfoLKzGXQ.root
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: card_service
+
+  # News Service
+  - type: web
+    name: news-service
+    runtime: docker
+    rootDir: Backend/news-service
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_USERNAME
+        value: 34CYnHYfoLKzGXQ.root
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: news_service
+
+  # Notifications Service
+  - type: web
+    name: notifications-service
+    runtime: docker
+    rootDir: Backend/notifications-service
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_USERNAME
+        value: 34CYnHYfoLKzGXQ.root
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: notifications_service
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false

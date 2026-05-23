@@ -5,35 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8aa1b6e1-32c7-4e82-940a-0c8133950eef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MyAccess/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/0e0e7412-5c1b-420d-ab8d-3ad698410cae.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/21056c12-73b3-48fa-8fdd-38a7a5a0e932.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/2bd07f40-cd87-4469-a9bf-8d5910413ffd.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/2e8dfddf-69b0-4e7f-b045-13f990a351dd.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/3836b9bb-665f-4da3-92ac-53decb64a8d8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/44938c8b-518c-43dc-8974-ec37a1da3a0f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/47948e9b-c275-4363-badb-9da9d6a92e7c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/4b2ce42d-e7d3-4760-82d6-c23183980ea9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/5bd84cb8-daa7-469a-b963-4917c0e80c28.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/5d52a08c-6e42-459b-b001-c3fb4bac018b.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/5eee1ae0-ab25-4c76-9e14-33fb06856220.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/6b787311-1a1d-41d8-960b-63232b3e0ee3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/6f9dc5bc-850a-4810-b91d-ae4cab15c080.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/86639631-0f26-4ae0-a012-00584fc5da2b.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/89d25f98-3d9a-40d0-a0c8-9a6ce63bbc48.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/93b59cac-9149-4f3a-9d1f-cbe348fd4708.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/a64c369e-8d78-411d-8a39-4ca2775cfef4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/a6fedf2c-3336-45e0-bc65-ed980b6ed3bc.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/d99b9f3c-6f01-4235-b6c6-51132e23cc60.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/e0a7bbf7-5d08-422d-ab6b-4b94fb747a00.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/eb05b762-f81c-448e-86bc-a12f4471d67c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/f24b7616-938e-4547-b995-1807ed799317.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/f60d99e9-2f04-44b6-8f36-9d37ff0f51c9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MyAccess/uploads/fb772e69-c467-4d2d-bea7-bb76ffc67f38.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyAccess/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../MyAccess/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Frontend/src/screens/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../Frontend/src/screens/UserProfile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +20,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="15" />
+    <option name="cachedIndexableFilesCount" value="16" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -65,30 +44,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.ApiGatewayApplication.executor": "Run",
-    "git-widget-placeholder": "feature/paulo",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/MI PC/OneDrive/Desktop/MyAccessClean/Backend/api-gateway",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/paulo&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/MI PC/OneDrive/Desktop/MyAccessClean/Backend/api-gateway&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />

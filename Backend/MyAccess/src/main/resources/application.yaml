@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:9090}
+  port: ${PORT:${SERVER_PORT:9090}}
   tomcat:
     max-part-count: 50
 
@@ -11,27 +11,27 @@ spring:
 
   datasource:
     user-service:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/user_service
+      jdbc-url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/user_service?sslMode=REQUIRED
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     auth-service:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/auth_service
+      jdbc-url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/card_service?sslMode=REQUIRED
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     card-service:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/card_service
+      jdbc-url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/news_service?sslMode=REQUIRED
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     news-service:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/news_service
+      jdbc-url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/notifications_service?sslMode=REQUIRED
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
     notifications-service:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/notifications_service
+      jdbc-url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/auth_service?sslMode=REQUIRED
       username: ${DB_USERNAME:root}
       password: ${DB_PASSWORD:}
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -73,5 +73,5 @@ logging:
 security:
   jwt:
     secret-key: ${JWT_SECRET:}
-    tokenExpiration: ${JWT_EXPIRATION:28800000}
-    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:604800000}
+    tokenExpiration: ${JWT_EXPIRATION:600000}
+    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:600000}

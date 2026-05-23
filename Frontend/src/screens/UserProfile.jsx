@@ -36,7 +36,7 @@ export default function UserProfile({ navigation }) {
     { label: 'Programa',         value: profile?.trainingProgram, key: 'trainingProgram' },
     { label: 'Centro',           value: profile?.trainingCenter,  key: 'trainingCenter' },
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
-    { label: 'Rol',              value: profile?.nameRole,        key: 'nameRole' },
+    // { label: 'Role',              value: profile?.nameRole,        key: 'nameRole' },
     { label: 'email',            value: profile?.email,           key: 'email' },
   ];
 
