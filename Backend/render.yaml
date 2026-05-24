@@ -35,6 +35,10 @@ services:
         value: 10000
       - key: SPRING_PROFILES_ACTIVE
         value: render
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
   - type: web
     name: auth-service
     runtime: docker
