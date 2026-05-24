@@ -1,10 +1,13 @@
 import { Platform } from 'react-native';
 
-const API_GATEWAY_URL = Platform.select({
-  android: 'http://10.0.2.2:8080',
-  web: 'http://localhost:8080',
-  default: 'http://localhost:8080',
-});
+const DEFAULT_GATEWAY_URL = 'https://myaccess-gateway.onrender.com';
+const API_GATEWAY_URL =
+  process.env.EXPO_PUBLIC_API_GATEWAY_URL ||
+  Platform.select({
+    android: DEFAULT_GATEWAY_URL,
+    web: DEFAULT_GATEWAY_URL,
+    default: DEFAULT_GATEWAY_URL,
+  });
 
 // Manejo del token aquí para evitar importación circular
 export function saveToken(token) {

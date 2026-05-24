@@ -58,7 +58,11 @@ Antes de desplegar en cualquier plataforma, ten estos valores a mano:
 | `JWT_SECRET` | Clave secreta para firmar tokens JWT | `alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=` |
 | `JWT_EXPIRATION` | Duración del token en ms | `600000` |
 | `JWT_REFRESH_EXPIRATION` | Duración del refresh token en ms | `600000` |
-| `BACKEND_URI` | URL del servicio MyAccess (solo para el gateway) | `https://myaccess-backend.onrender.com` |
+| `AUTH_SERVICE_URI` | URL pública del servicio de autenticación | `https://myaccess-ztwd.onrender.com` |
+| `USER_SERVICE_URI` | URL pública del servicio de usuarios | `https://myaccess.onrender.com` |
+| `CARD_SERVICE_URI` | URL pública del servicio de tarjetas | `https://myaccess-card.onrender.com` |
+| `NEWS_SERVICE_URI` | URL pública del servicio de noticias | `https://myaccess-news.onrender.com` |
+| `NOTIFICATIONS_SERVICE_URI` | URL pública del servicio de notificaciones | `https://myaccess-notification.onrender.com` |
 
 > **Importante:** El `JWT_SECRET` debe ser **exactamente el mismo** en `MyAccess` y en `api-gateway`.
 
@@ -140,11 +144,13 @@ JWT_REFRESH_EXPIRATION = 600000
 4. Agrega las variables de entorno:
 
 ```
-JWT_SECRET    = alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=
-BACKEND_URI   = https://myaccess-backend.onrender.com
+JWT_SECRET               = alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=
+AUTH_SERVICE_URI         = https://myaccess-ztwd.onrender.com
+USER_SERVICE_URI         = https://myaccess.onrender.com
+CARD_SERVICE_URI         = https://myaccess-card.onrender.com
+NEWS_SERVICE_URI         = https://myaccess-news.onrender.com
+NOTIFICATIONS_SERVICE_URI = https://myaccess-notification.onrender.com
 ```
-
-> Reemplaza la URL de `BACKEND_URI` con la URL real que obtuviste en el Paso 2.
 
 5. Haz clic en **"Create Web Service"**
 6. Cuando diga **"Live"**, la URL del gateway es la que debes usar en el frontend, por ejemplo:
@@ -205,8 +211,12 @@ Igual que en Render, el código debe estar en GitHub con el `.env` en el `.gitig
    - **Start Command:** `java -jar target/api-gateway-0.0.1-SNAPSHOT.jar`
 4. Agrega las variables:
    ```
-   JWT_SECRET   = tu_jwt_secret
-   BACKEND_URI  = https://url-de-myaccess.railway.app
+   JWT_SECRET                = tu_jwt_secret
+   AUTH_SERVICE_URI          = https://myaccess-ztwd.onrender.com
+   USER_SERVICE_URI          = https://myaccess.onrender.com
+   CARD_SERVICE_URI          = https://myaccess-card.onrender.com
+   NEWS_SERVICE_URI          = https://myaccess-news.onrender.com
+   NOTIFICATIONS_SERVICE_URI = https://myaccess-notification.onrender.com
    ```
 
 ---
@@ -286,7 +296,11 @@ nano .env
 ```
 GATEWAY_PORT=8080
 JWT_SECRET=tu_jwt_secret
-BACKEND_URI=http://localhost:9090
+AUTH_SERVICE_URI=http://localhost:9095
+USER_SERVICE_URI=http://localhost:9091
+CARD_SERVICE_URI=http://localhost:9092
+NEWS_SERVICE_URI=http://localhost:9093
+NOTIFICATIONS_SERVICE_URI=http://localhost:9094
 ```
 
 Ejecuta:
