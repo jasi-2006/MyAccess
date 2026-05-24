@@ -22,19 +22,15 @@ services:
 
   gateway:
     build:
-      context: ./Backend/api-gateway
+      context: ./Backend/kong-gateway
     container_name: myaccess-gateway
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
-      GATEWAY_PORT: 8080
-      BACKEND_URI: http://backend:9090
+      JWT_SECRET: ${JWT_SECRET}
+      KONG_PROXY_LISTEN: 0.0.0.0:8080
+      KONG_STATUS_LISTEN: "off"
     ports:
       - "8080:8080"
-    depends_on:
-      backend:
-        condition: service_healthy
     networks:
       - myaccess-net
 
