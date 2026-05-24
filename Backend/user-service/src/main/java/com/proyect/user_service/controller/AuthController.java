@@ -51,8 +51,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterProfileResponseDTO> register(@RequestBody RegisterRequestDTO request) {
+        String email = request.getEmail() == null ? null : request.getEmail().trim().toLowerCase();
+        request.setEmail(email);
+        userRegisterProfileService.validateRegistrationAvailable(email, request.getDocument());
+
         UserAuthRequestDTO authDTO = new UserAuthRequestDTO();
-        authDTO.setEmail(request.getEmail());
+        authDTO.setEmail(email);
         authDTO.setPassword(request.getPassword());
         userAuthService.create(authDTO);
 
@@ -66,13 +70,13 @@ public class AuthController {
         profileDTO.setBloodType(request.getBloodType());
         profileDTO.setNameRole(request.getNameRole());
         profileDTO.setFicha(request.getFicha());
-        profileDTO.setEmail(request.getEmail());
+        profileDTO.setEmail(email);
         UserRegisterProfileResponseDTO profileResponse = userRegisterProfileService.userCreated(profileDTO);
 
         try {
-            verificationService.sendCode(request.getEmail());
+            verificationService.sendCode(email);
         } catch (Exception ex) {
-            log.error("Failed to send verification code for {}", request.getEmail(), ex);
+            log.error("Failed to send verification code for {}", email, ex);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse);
