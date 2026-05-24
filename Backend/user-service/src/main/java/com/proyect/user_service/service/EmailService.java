@@ -1,6 +1,7 @@
 package com.proyect.user_service.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -8,12 +9,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailService {
     private final JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String from;
 
     public void sendVerificationCode(String to, String code){
+        if (!isMailConfigured()) {
+            log.warn("MAIL_USERNAME is not configured. Verification code for {} was not sent.", to);
+            return;
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
         message.setTo(to);
@@ -35,6 +42,11 @@ public class EmailService {
     }
 
     public void sendPasswordResetCode(String to, String code) {
+        if (!isMailConfigured()) {
+            log.warn("MAIL_USERNAME is not configured. Password reset code for {} was not sent.", to);
+            return;
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
         message.setTo(to);
@@ -45,5 +57,9 @@ public class EmailService {
                 "Si no solicitaste esto, ignora este correo.\n\n" +
                 "El equipo de MyAccess");
         mailSender.send(message);
+    }
+
+    private boolean isMailConfigured() {
+        return from != null && !from.isBlank();
     }
 }
