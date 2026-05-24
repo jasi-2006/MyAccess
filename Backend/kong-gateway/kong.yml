@@ -16,6 +16,9 @@ services:
     write_timeout: 30000
     routes:
       - name: auth-public-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/auth
         strip_path: true
@@ -28,6 +31,9 @@ services:
     write_timeout: 30000
     routes:
       - name: uploads-route
+        protocols:
+          - http
+          - https
         paths:
           - /uploads
         strip_path: false
@@ -40,10 +46,72 @@ services:
     write_timeout: 30000
     routes:
       - name: user-register-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/register
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: &jwt_config
+              key_claim_name: tokenType
+              claims_to_verify:
+                - exp
+              secret_is_base64: true
+              run_on_preflight: false
+          - name: pre-function
+            config: &claims_headers_config
+              access:
+                - |
+                  local authorization = kong.request.get_header("authorization")
+                  if not authorization then
+                    return
+                  end
+
+                  local payload = authorization:match("^[Bb]earer%s+[^%.]+%.([^%.]+)%.")
+                  if not payload then
+                    return
+                  end
+
+                  local function decode_base64url(value)
+                    value = value:gsub("-", "+"):gsub("_", "/")
+                    local remainder = #value % 4
+                    if remainder == 2 then
+                      value = value .. "=="
+                    elseif remainder == 3 then
+                      value = value .. "="
+                    elseif remainder ~= 0 then
+                      return nil
+                    end
+                    return ngx.decode_base64(value)
+                  end
+
+                  local decoded = decode_base64url(payload)
+                  if not decoded then
+                    return
+                  end
+
+                  local cjson = require "cjson.safe"
+                  local claims = cjson.decode(decoded)
+                  if type(claims) ~= "table" then
+                    return
+                  end
+
+                  kong.service.request.clear_header("x-User-id")
+                  kong.service.request.clear_header("X-User-Email")
+                  kong.service.request.clear_header("X-User-role")
+
+                  if claims.userId ~= nil then
+                    kong.service.request.set_header("x-User-id", tostring(claims.userId))
+                  end
+                  if claims.emailId ~= nil then
+                    kong.service.request.set_header("X-User-Email", tostring(claims.emailId))
+                  end
+                  if claims.role ~= nil then
+                    kong.service.request.set_header("X-User-role", tostring(claims.role))
+                  end
 
   - name: auth-users-service
     url: https://myaccess-auth-pzen.onrender.com/authService
@@ -52,10 +120,18 @@ services:
     write_timeout: 30000
     routes:
       - name: auth-service-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/authService
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
   - name: auth-role-service
     url: https://myaccess-auth-pzen.onrender.com/role
@@ -64,10 +140,18 @@ services:
     write_timeout: 30000
     routes:
       - name: role-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/role
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
   - name: auth-audit-service
     url: https://myaccess-auth-pzen.onrender.com/register/audit
@@ -76,10 +160,18 @@ services:
     write_timeout: 30000
     routes:
       - name: register-audit-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/register/audit
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
   - name: auth-permissions-service
     url: https://myaccess-auth-pzen.onrender.com/register/permissions
@@ -88,10 +180,18 @@ services:
     write_timeout: 30000
     routes:
       - name: register-permissions-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/register/permissions
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
   - name: card-service
     url: https://myaccess-card-a4e6.onrender.com/cardService
@@ -100,10 +200,18 @@ services:
     write_timeout: 30000
     routes:
       - name: card-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/cardService
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
   - name: news-service
     url: https://myaccess-news-poqo.onrender.com/newsService
@@ -112,10 +220,18 @@ services:
     write_timeout: 30000
     routes:
       - name: news-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/newsService
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
   - name: notifications-service
     url: https://myaccess-notification-mjsk.onrender.com/notificationsService
@@ -124,10 +240,18 @@ services:
     write_timeout: 30000
     routes:
       - name: notifications-route
+        protocols:
+          - http
+          - https
         paths:
           - /api/v1/notificationsService
         strip_path: true
         path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+          - name: pre-function
+            config: *claims_headers_config
 
 plugins:
   - name: cors
@@ -154,129 +278,3 @@ plugins:
     config:
       minute: 100
       policy: local
-
-  - name: jwt
-    route:
-      name: user-register-route
-    config: &jwt_config
-      key_claim_name: tokenType
-      claims_to_verify:
-        - exp
-      secret_is_base64: true
-      run_on_preflight: false
-  - name: pre-function
-    route:
-      name: user-register-route
-    config: &claims_headers_config
-      access:
-        - |
-          local authorization = kong.request.get_header("authorization")
-          if not authorization then
-            return
-          end
-
-          local payload = authorization:match("^[Bb]earer%s+[^%.]+%.([^%.]+)%.")
-          if not payload then
-            return
-          end
-
-          local function decode_base64url(value)
-            value = value:gsub("-", "+"):gsub("_", "/")
-            local remainder = #value % 4
-            if remainder == 2 then
-              value = value .. "=="
-            elseif remainder == 3 then
-              value = value .. "="
-            elseif remainder ~= 0 then
-              return nil
-            end
-            return ngx.decode_base64(value)
-          end
-
-          local decoded = decode_base64url(payload)
-          if not decoded then
-            return
-          end
-
-          local cjson = require "cjson.safe"
-          local claims = cjson.decode(decoded)
-          if type(claims) ~= "table" then
-            return
-          end
-
-          kong.service.request.clear_header("x-User-id")
-          kong.service.request.clear_header("X-User-Email")
-          kong.service.request.clear_header("X-User-role")
-
-          if claims.userId ~= nil then
-            kong.service.request.set_header("x-User-id", tostring(claims.userId))
-          end
-          if claims.emailId ~= nil then
-            kong.service.request.set_header("X-User-Email", tostring(claims.emailId))
-          end
-          if claims.role ~= nil then
-            kong.service.request.set_header("X-User-role", tostring(claims.role))
-          end
-
-  - name: jwt
-    route:
-      name: auth-service-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: auth-service-route
-    config: *claims_headers_config
-
-  - name: jwt
-    route:
-      name: role-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: role-route
-    config: *claims_headers_config
-
-  - name: jwt
-    route:
-      name: register-audit-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: register-audit-route
-    config: *claims_headers_config
-
-  - name: jwt
-    route:
-      name: register-permissions-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: register-permissions-route
-    config: *claims_headers_config
-
-  - name: jwt
-    route:
-      name: card-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: card-route
-    config: *claims_headers_config
-
-  - name: jwt
-    route:
-      name: news-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: news-route
-    config: *claims_headers_config
-
-  - name: jwt
-    route:
-      name: notifications-route
-    config: *jwt_config
-  - name: pre-function
-    route:
-      name: notifications-route
-    config: *claims_headers_config
