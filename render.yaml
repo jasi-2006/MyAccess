@@ -71,20 +71,12 @@ services:
   - type: web
     name: myaccess-gateway
     runtime: docker
-    dockerfilePath: ./Backend/api-gateway/Dockerfile
-    dockerContext: ./Backend/api-gateway
+    dockerfilePath: ./Backend/kong-gateway/Dockerfile
+    dockerContext: ./Backend/kong-gateway
     envVars:
-      - key: PORT
-        value: 10000
       - key: JWT_SECRET
         sync: false
-      - key: AUTH_SERVICE_URI
-        value: https://myaccess-auth-pzen.onrender.com
-      - key: USER_SERVICE_URI
-        value: https://myaccess-user.onrender.com
-      - key: CARD_SERVICE_URI
-        value: https://myaccess-card-a4e6.onrender.com
-      - key: NEWS_SERVICE_URI
-        value: https://myaccess-news-poqo.onrender.com
-      - key: NOTIFICATIONS_SERVICE_URI
-        value: https://myaccess-notification-mjsk.onrender.com
+      - key: KONG_PROXY_LISTEN
+        value: 0.0.0.0:10000
+      - key: KONG_STATUS_LISTEN
+        value: "off"

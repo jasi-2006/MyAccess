@@ -1,0 +1,282 @@
+_format_version: "3.0"
+_transform: true
+
+consumers:
+  - username: myaccess-jwt
+    jwt_secrets:
+      - key: access
+        algorithm: HS256
+        secret: "{vault://env/jwt-secret}"
+
+services:
+  - name: user-auth-service
+    url: https://myaccess-user.onrender.com/auth
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: auth-public-route
+        paths:
+          - /api/v1/auth
+        strip_path: true
+        path_handling: v0
+
+  - name: user-uploads-service
+    url: https://myaccess-user.onrender.com
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: uploads-route
+        paths:
+          - /uploads
+        strip_path: false
+        path_handling: v0
+
+  - name: user-register-service
+    url: https://myaccess-user.onrender.com/register
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: user-register-route
+        paths:
+          - /api/v1/register
+        strip_path: true
+        path_handling: v0
+
+  - name: auth-users-service
+    url: https://myaccess-auth-pzen.onrender.com/authService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: auth-service-route
+        paths:
+          - /api/v1/authService
+        strip_path: true
+        path_handling: v0
+
+  - name: auth-role-service
+    url: https://myaccess-auth-pzen.onrender.com/role
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: role-route
+        paths:
+          - /api/v1/role
+        strip_path: true
+        path_handling: v0
+
+  - name: auth-audit-service
+    url: https://myaccess-auth-pzen.onrender.com/register/audit
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: register-audit-route
+        paths:
+          - /api/v1/register/audit
+        strip_path: true
+        path_handling: v0
+
+  - name: auth-permissions-service
+    url: https://myaccess-auth-pzen.onrender.com/register/permissions
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: register-permissions-route
+        paths:
+          - /api/v1/register/permissions
+        strip_path: true
+        path_handling: v0
+
+  - name: card-service
+    url: https://myaccess-card-a4e6.onrender.com/cardService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: card-route
+        paths:
+          - /api/v1/cardService
+        strip_path: true
+        path_handling: v0
+
+  - name: news-service
+    url: https://myaccess-news-poqo.onrender.com/newsService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: news-route
+        paths:
+          - /api/v1/newsService
+        strip_path: true
+        path_handling: v0
+
+  - name: notifications-service
+    url: https://myaccess-notification-mjsk.onrender.com/notificationsService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: notifications-route
+        paths:
+          - /api/v1/notificationsService
+        strip_path: true
+        path_handling: v0
+
+plugins:
+  - name: cors
+    config:
+      origins:
+        - "*"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+        - PATCH
+        - HEAD
+      headers:
+        - "*"
+      exposed_headers:
+        - "*"
+      credentials: false
+      max_age: 3600
+      preflight_continue: false
+
+  - name: rate-limiting
+    config:
+      minute: 100
+      policy: local
+
+  - name: jwt
+    route:
+      name: user-register-route
+    config: &jwt_config
+      key_claim_name: tokenType
+      claims_to_verify:
+        - exp
+      secret_is_base64: true
+      run_on_preflight: false
+  - name: pre-function
+    route:
+      name: user-register-route
+    config: &claims_headers_config
+      access:
+        - |
+          local authorization = kong.request.get_header("authorization")
+          if not authorization then
+            return
+          end
+
+          local payload = authorization:match("^[Bb]earer%s+[^%.]+%.([^%.]+)%.")
+          if not payload then
+            return
+          end
+
+          local function decode_base64url(value)
+            value = value:gsub("-", "+"):gsub("_", "/")
+            local remainder = #value % 4
+            if remainder == 2 then
+              value = value .. "=="
+            elseif remainder == 3 then
+              value = value .. "="
+            elseif remainder ~= 0 then
+              return nil
+            end
+            return ngx.decode_base64(value)
+          end
+
+          local decoded = decode_base64url(payload)
+          if not decoded then
+            return
+          end
+
+          local cjson = require "cjson.safe"
+          local claims = cjson.decode(decoded)
+          if type(claims) ~= "table" then
+            return
+          end
+
+          kong.service.request.clear_header("x-User-id")
+          kong.service.request.clear_header("X-User-Email")
+          kong.service.request.clear_header("X-User-role")
+
+          if claims.userId ~= nil then
+            kong.service.request.set_header("x-User-id", tostring(claims.userId))
+          end
+          if claims.emailId ~= nil then
+            kong.service.request.set_header("X-User-Email", tostring(claims.emailId))
+          end
+          if claims.role ~= nil then
+            kong.service.request.set_header("X-User-role", tostring(claims.role))
+          end
+
+  - name: jwt
+    route:
+      name: auth-service-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: auth-service-route
+    config: *claims_headers_config
+
+  - name: jwt
+    route:
+      name: role-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: role-route
+    config: *claims_headers_config
+
+  - name: jwt
+    route:
+      name: register-audit-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: register-audit-route
+    config: *claims_headers_config
+
+  - name: jwt
+    route:
+      name: register-permissions-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: register-permissions-route
+    config: *claims_headers_config
+
+  - name: jwt
+    route:
+      name: card-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: card-route
+    config: *claims_headers_config
+
+  - name: jwt
+    route:
+      name: news-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: news-route
+    config: *claims_headers_config
+
+  - name: jwt
+    route:
+      name: notifications-route
+    config: *jwt_config
+  - name: pre-function
+    route:
+      name: notifications-route
+    config: *claims_headers_config
