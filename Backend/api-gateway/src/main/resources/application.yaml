@@ -30,13 +30,13 @@ spring:
             maxAge: 3600
       routes:
         - id: options-preflight
-          uri: ${USER_SERVICE_URI:http://localhost:9091}
+          uri: ${USER_SERVICE_URI:https://myaccess-user.onrender.com}
           order: 0
           predicates:
             - Method=OPTIONS
 
         - id: uploads-routes
-          uri: ${USER_SERVICE_URI:http://localhost:9091}
+          uri: ${USER_SERVICE_URI:https://myaccess-user.onrender.com}
           order: 1
           predicates:
             - Path=/uploads/**
