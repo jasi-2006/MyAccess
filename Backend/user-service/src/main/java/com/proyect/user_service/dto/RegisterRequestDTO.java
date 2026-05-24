@@ -1,5 +1,6 @@
 package com.proyect.user_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
 
 @Data
@@ -18,5 +19,6 @@ public class RegisterRequestDTO {
     private String regional;
     private String bloodType;
     private String nameRole;
-    private String Ficha;
+    @JsonAlias("Ficha")
+    private String ficha;
 }

@@ -8,6 +8,7 @@ export async function loginUser(credentials) {
   const response = await apiRequest('/api/v1/auth/login', {
     method: 'POST',
     body: JSON.stringify(credentials),
+    skipAuth: true,
   });
   if (response?.token) saveToken(response.token);
   return response;
@@ -31,6 +32,7 @@ export async function registerUser(payload) {
   return apiRequest('/api/v1/auth/register', {
     method: 'POST',
     body: isFormData ? payload : JSON.stringify(payload),
+    skipAuth: true,
   });
 }
 
@@ -38,31 +40,33 @@ export async function uploadPhoto(document, formData) {
   return apiRequest(`/api/v1/auth/photo/${encodeURIComponent(document)}`, {
     method: 'POST',
     body: formData,
+    skipAuth: true,
   });
 }
 
 export async function verifyUser(email, code) {
   const query = `email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`;
-  return apiRequest(`/api/v1/auth/verify?${query}`, { method: 'POST' });
+  return apiRequest(`/api/v1/auth/verify?${query}`, { method: 'POST', skipAuth: true });
 }
 
 export async function forgotPassword(email) {
-  return apiRequest(`/api/v1/auth/forgot-password?email=${encodeURIComponent(email)}`, { method: 'POST' });
+  return apiRequest(`/api/v1/auth/forgot-password?email=${encodeURIComponent(email)}`, { method: 'POST', skipAuth: true });
 }
 
 export async function resetPassword(email, code, newPassword) {
   return apiRequest('/api/v1/auth/reset-password', {
     method: 'POST',
     body: JSON.stringify({ email, code, newPassword }),
+    skipAuth: true,
   });
 }
 
 export async function resendVerificationCode(email) {
-  return apiRequest(`/api/v1/auth/resend?email=${encodeURIComponent(email.trim().toLowerCase())}`, { method: 'POST' });
+  return apiRequest(`/api/v1/auth/resend?email=${encodeURIComponent(email.trim().toLowerCase())}`, { method: 'POST', skipAuth: true });
 }
 
 export async function requestPasswordResetCode(email) {
-  return apiRequest(`/api/v1/auth/forgot-password?email=${encodeURIComponent(String(email).trim().toLowerCase())}`, { method: 'POST' });
+  return apiRequest(`/api/v1/auth/forgot-password?email=${encodeURIComponent(String(email).trim().toLowerCase())}`, { method: 'POST', skipAuth: true });
 }
 
 export async function updateUserProfile(document, dto) {
@@ -80,5 +84,6 @@ export async function updatePasswordWithCode(email, code, newPassword) {
       code: String(code).trim(),
       newPassword: String(newPassword),
     }),
+    skipAuth: true,
   });
 }

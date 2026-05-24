@@ -39,13 +39,14 @@ function getErrorMessage(payload) {
 export async function apiRequest(path, options = {}) {
   const token = getToken();
   const isFormData = options.body instanceof FormData;
+  const { skipAuth = false, headers, ...fetchOptions } = options;
   const response = await fetch(`${API_GATEWAY_URL}${path}`, {
     headers: {
       ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
+      ...(!skipAuth && token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(headers || {}),
     },
-    ...options,
+    ...fetchOptions,
   });
 
   const payload = await parsePayload(response);
