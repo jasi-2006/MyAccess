@@ -25,6 +25,15 @@ public class UserRegisterProfileService {
 
     private final UserRegisterProfileRepository userRepository;
 
+    public void validateRegistrationAvailable(String email, String document) {
+        if (email != null && userRepository.existsByEmail(email)) {
+            throw new RuntimeException("El email ya esta registrado");
+        }
+        if (document != null && userRepository.existsByDocument(document)) {
+            throw new RuntimeException("El documento ya esta registrado");
+        }
+    }
+
     public UserRegisterProfileResponseDTO userCreated(UserRegisterProfileRequestDTO dto) {
 
         UserRegisterProfile user = new UserRegisterProfile();
