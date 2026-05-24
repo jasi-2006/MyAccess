@@ -14,6 +14,7 @@ import com.proyect.user_service.service.UserLoginService;
 import com.proyect.user_service.service.UserRegisterProfileService;
 import com.proyect.user_service.service.VerificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final UserLoginService userLoginService;
@@ -67,7 +69,11 @@ public class AuthController {
         profileDTO.setEmail(request.getEmail());
         UserRegisterProfileResponseDTO profileResponse = userRegisterProfileService.userCreated(profileDTO);
 
-        verificationService.sendCode(request.getEmail());
+        try {
+            verificationService.sendCode(request.getEmail());
+        } catch (Exception ex) {
+            log.error("Failed to send verification code for {}", request.getEmail(), ex);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse);
     }
