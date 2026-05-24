@@ -80,3 +80,13 @@ services:
         value: 0.0.0.0:10000
       - key: KONG_STATUS_LISTEN
         value: "off"
+      - key: KONG_NGINX_WORKER_PROCESSES
+        value: "1"
+      - key: KONG_NGINX_WORKER_CONNECTIONS
+        value: "512"
+      - key: KONG_MEM_CACHE_SIZE
+        value: 32m
+      - key: KONG_LOG_LEVEL
+        value: notice
+      - key: KONG_ANONYMOUS_REPORTS
+        value: "off"
