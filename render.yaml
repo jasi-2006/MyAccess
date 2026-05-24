@@ -78,11 +78,13 @@ services:
         value: 10000
       - key: JWT_SECRET
         sync: false
+      - key: AUTH_SERVICE_URI
+        value: https://myaccess-auth-pzen.onrender.com
       - key: USER_SERVICE_URI
-        value: https://myaccess-user-service.onrender.com
+        value: https://myaccess-user.onrender.com
       - key: CARD_SERVICE_URI
-        value: https://myaccess-card-service.onrender.com
+        value: https://myaccess-card-a4e6.onrender.com
       - key: NEWS_SERVICE_URI
-        value: https://myaccess-news-service.onrender.com
+        value: https://myaccess-news-poqo.onrender.com
       - key: NOTIFICATIONS_SERVICE_URI
-        value: https://myaccess-notifications-service.onrender.com
+        value: https://myaccess-notification-mjsk.onrender.com

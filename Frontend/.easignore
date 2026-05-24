@@ -1,0 +1,11 @@
+# Ignorar carpeta Backend completamente
+Backend/
+backend/
+
+# IDEs y temporales
+.idea/
+*.iml
+node_modules/
+.expo/
+dist/
+*.log
