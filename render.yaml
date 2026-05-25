@@ -1,13 +1,17 @@
 services:
 
   - type: web
-    name: myaccess-user-service
+    name: myaccess-user
     runtime: docker
     dockerfilePath: ./Backend/user-service/Dockerfile
     dockerContext: ./Backend/user-service
     envVars:
       - key: PORT
         value: 10000
+      - key: USER_DB_URL
+        sync: false
+      - key: AUTH_DB_URL
+        sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -24,13 +28,15 @@ services:
         sync: false
 
   - type: web
-    name: myaccess-card-service
+    name: myaccess-card-4tuh
     runtime: docker
     dockerfilePath: ./Backend/card-service/Dockerfile
     dockerContext: ./Backend/card-service
     envVars:
       - key: PORT
         value: 10000
+      - key: CARD_DB_URL
+        sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -39,13 +45,15 @@ services:
         sync: false
 
   - type: web
-    name: myaccess-news-service
+    name: myaccess-news-ft80
     runtime: docker
     dockerfilePath: ./Backend/news-service/Dockerfile
     dockerContext: ./Backend/news-service
     envVars:
       - key: PORT
         value: 10000
+      - key: NEWS_DB_URL
+        sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -54,13 +62,15 @@ services:
         sync: false
 
   - type: web
-    name: myaccess-notifications-service
+    name: myaccess-notification-1cxp
     runtime: docker
     dockerfilePath: ./Backend/notifications-service/Dockerfile
     dockerContext: ./Backend/notifications-service
     envVars:
       - key: PORT
         value: 10000
+      - key: NOTIFICATIONS_DB_URL
+        sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
@@ -69,7 +79,26 @@ services:
         sync: false
 
   - type: web
-    name: myaccess-gateway
+    name: myaccess-1
+    runtime: docker
+    dockerfilePath: ./Backend/auth-service/Dockerfile
+    dockerContext: ./Backend/auth-service
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: AUTH_DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION
+        value: 1200000
+
+  - type: web
+    name: myaccess-kong
     runtime: docker
     dockerfilePath: ./Backend/kong-gateway/Dockerfile
     dockerContext: ./Backend/kong-gateway
