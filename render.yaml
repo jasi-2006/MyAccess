@@ -18,9 +18,9 @@ services:
         value: 1200000
       - key: JWT_REFRESH_EXPIRATION
         value: 1200000
-      - key: MAIL_USERNAME
+      - key: RESEND_API_KEY
         sync: false
-      - key: MAIL_PASSWORD
+      - key: EMAIL_FROM
         sync: false
 
   - type: web
