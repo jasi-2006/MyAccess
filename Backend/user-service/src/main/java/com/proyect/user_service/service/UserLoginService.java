@@ -54,7 +54,11 @@ public class UserLoginService {
     }
 
     private AuthResponseDTO generateAuthResponse(UserAuth user) {
-        String nameRole = user.getRole() != null ? user.getRole().getNameRole() : "";
+        if (user.getRole() == null || user.getRole().getNameRole() == null || user.getRole().getNameRole().isBlank()) {
+            throw new RuntimeException("El usuario no tiene un rol configurado");
+        }
+
+        String nameRole = user.getRole().getNameRole();
         String token = jwtService.generateToken(user.getId(), user.getEmail(), nameRole);
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail(), nameRole);
         return new AuthResponseDTO(token, refreshToken);
