@@ -39,5 +39,5 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET:alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=}
-    tokenExpiration: ${JWT_EXPIRATION:1200000}
-    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:1200000}
+    tokenExpiration: ${JWT_EXPIRATION:600000}
+    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:600000}
