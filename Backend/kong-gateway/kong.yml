@@ -114,7 +114,7 @@ services:
                   end
 
   - name: auth-users-service
-    url: https://myaccess-auth-pzen.onrender.com/authService
+    url: https://myaccess-1.onrender.com/authService
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
@@ -134,7 +134,7 @@ services:
             config: *claims_headers_config
 
   - name: auth-role-service
-    url: https://myaccess-auth-pzen.onrender.com/role
+    url: https://myaccess-1.onrender.com/role
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
@@ -154,7 +154,7 @@ services:
             config: *claims_headers_config
 
   - name: auth-audit-service
-    url: https://myaccess-auth-pzen.onrender.com/register/audit
+    url: https://myaccess-1.onrender.com/register/audit
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
@@ -174,7 +174,7 @@ services:
             config: *claims_headers_config
 
   - name: auth-permissions-service
-    url: https://myaccess-auth-pzen.onrender.com/register/permissions
+    url: https://myaccess-1.onrender.com/register/permissions
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
@@ -194,7 +194,7 @@ services:
             config: *claims_headers_config
 
   - name: card-service
-    url: https://myaccess-card-a4e6.onrender.com/cardService
+    url: https://myaccess-card-4tuh.onrender.com/cardService
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
@@ -214,7 +214,7 @@ services:
             config: *claims_headers_config
 
   - name: news-service
-    url: https://myaccess-news-poqo.onrender.com/newsService
+    url: https://myaccess-news-ft80.onrender.com/newsService
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
@@ -234,7 +234,7 @@ services:
             config: *claims_headers_config
 
   - name: notifications-service
-    url: https://myaccess-notification-mjsk.onrender.com/notificationsService
+    url: https://myaccess-notification-1cxp.onrender.com/notificationsService
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
