@@ -1,8 +1,25 @@
 import { Platform } from 'react-native';
 
 const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
+const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
+
+function resolveGatewayUrl() {
+  const normalizedEnvUrl = String(ENV_GATEWAY_URL || '').trim();
+
+  if (!normalizedEnvUrl) {
+    return DEFAULT_GATEWAY_URL;
+  }
+
+  // Ignore the deprecated Render gateway if it is still configured in Vercel.
+  if (normalizedEnvUrl.includes('myaccess-8dfq.onrender.com')) {
+    return DEFAULT_GATEWAY_URL;
+  }
+
+  return normalizedEnvUrl;
+}
+
 const API_GATEWAY_URL =
-  process.env.EXPO_PUBLIC_API_GATEWAY_URL ||
+  resolveGatewayUrl() ||
   Platform.select({
     android: DEFAULT_GATEWAY_URL,
     web: DEFAULT_GATEWAY_URL,
