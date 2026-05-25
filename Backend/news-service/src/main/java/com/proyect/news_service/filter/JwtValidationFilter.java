@@ -2,6 +2,7 @@ package com.proyect.news_service.filter;
 
 import java.io.IOException;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -13,7 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component("newsJwtValidationFilter")
+@RequiredArgsConstructor
 public class JwtValidationFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -30,7 +33,16 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String email  = request.getHeader("X-User-Email");
         String role   = request.getHeader("X-User-role");
 
-        if (userId == null || role == null) {
+        if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
+            String token = extractBearerToken(request);
+            if (token != null && jwtService.isTokenValid(token)) {
+                userId = String.valueOf(jwtService.extractUserId(token));
+                email = jwtService.extractEmailId(token);
+                role = jwtService.extractRole(token);
+            }
+        }
+
+        if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
             sendError(response, "Missing gateway headers");
             return;
         }
@@ -46,5 +58,14 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"" + message + "\"}");
+    }
+
+    private String extractBearerToken(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            return null;
+        }
+        String token = authorization.substring(7).trim();
+        return token.isEmpty() ? null : token;
     }
 }
