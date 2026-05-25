@@ -57,6 +57,9 @@ public class UserRegisterProfileController {
     @GetMapping("/profile/me")
     public ResponseEntity<UserRegisterProfileResponseDTO> getMyProfile(HttpServletRequest request) {
         String email = (String) request.getAttribute("emailId");
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return userService.getByEmail(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
