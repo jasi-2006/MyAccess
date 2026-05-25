@@ -43,7 +43,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String email  = request.getHeader("X-User-Email");
         String role   = request.getHeader("X-User-role");
 
-        if (userId == null || role == null) {
+        if (userId == null || email == null || email.isBlank() || role == null) {
             sendError(response, "Missing gateway headers");
             return;
         }
