@@ -39,9 +39,9 @@ spring:
       mail:
         smtp:
           auth: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
+          connectiontimeout: 15000
+          timeout: 15000
+          writetimeout: 15000
           starttls:
             enable: true
   servlet:
@@ -53,5 +53,5 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET:alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=}
-    tokenExpiration: ${JWT_EXPIRATION:600000}
-    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:600000}
+    tokenExpiration: ${JWT_EXPIRATION:1200000}
+    refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:1200000}

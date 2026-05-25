@@ -15,9 +15,9 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: JWT_EXPIRATION
-        value: 600000
+        value: 1200000
       - key: JWT_REFRESH_EXPIRATION
-        value: 600000
+        value: 1200000
       - key: MAIL_USERNAME
         sync: false
       - key: MAIL_PASSWORD
