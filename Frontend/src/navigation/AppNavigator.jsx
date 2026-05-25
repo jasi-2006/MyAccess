@@ -56,7 +56,17 @@ function ProtectedScreen({ component: Component, routeName, navigation, route })
           setChecking(false);
         }
       } catch {
-        navigation.replace('Login');
+        const role = normalizeRole(getRoleFromToken(token));
+
+        if (!role || !canAccessRoute(role, routeName)) {
+          navigation.replace('Login');
+          return;
+        }
+
+        if (mounted) {
+          setAllowed(true);
+          setChecking(false);
+        }
       }
     }
 
