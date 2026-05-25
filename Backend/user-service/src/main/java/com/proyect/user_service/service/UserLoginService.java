@@ -4,6 +4,7 @@ import com.proyect.auth_service.entity.UserAuth;
 import com.proyect.auth_service.repository.UserAuthRepository;
 import com.proyect.user_service.dto.AuthResponseDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
+import com.proyect.user_service.repository.UserRegisterProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserLoginService {
 
     private final UserAuthRepository userAuthRepository;
+    private final UserRegisterProfileRepository userRegisterProfileRepository;
     private final JwtService jwtService;
 
     /**
@@ -54,11 +56,11 @@ public class UserLoginService {
     }
 
     private AuthResponseDTO generateAuthResponse(UserAuth user) {
-        if (user.getRole() == null || user.getRole().getNameRole() == null || user.getRole().getNameRole().isBlank()) {
-            throw new RuntimeException("El usuario no tiene un rol configurado");
-        }
+        String nameRole = userRegisterProfileRepository.findByEmail(user.getEmail())
+                .map(profile -> profile.getNameRole())
+                .filter(role -> role != null && !role.isBlank())
+                .orElseThrow(() -> new RuntimeException("El usuario no tiene un rol configurado en su perfil"));
 
-        String nameRole = user.getRole().getNameRole();
         String token = jwtService.generateToken(user.getId(), user.getEmail(), nameRole);
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail(), nameRole);
         return new AuthResponseDTO(token, refreshToken);
