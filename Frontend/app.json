@@ -14,6 +14,10 @@
     "android": {
       "package": "com.edu.myaccess"
     },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
     "extra": {
       "eas": {
         "projectId": "d5686a5c-8254-489c-ba26-b1731f97333d"
