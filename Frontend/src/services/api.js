@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-const DEFAULT_GATEWAY_URL = 'https://myaccess-8dfq.onrender.com';
+const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
 const API_GATEWAY_URL =
   process.env.EXPO_PUBLIC_API_GATEWAY_URL ||
   Platform.select({
