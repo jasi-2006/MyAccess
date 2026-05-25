@@ -40,7 +40,9 @@ export async function apiRequest(path, options = {}) {
   const token = getToken();
   const isFormData = options.body instanceof FormData;
   const { skipAuth = false, headers, ...fetchOptions } = options;
-  const response = await fetch(`${API_GATEWAY_URL}${path}`, {
+  const url = `${API_GATEWAY_URL}${path}`;
+  const method = fetchOptions.method || 'GET';
+  const response = await fetch(url, {
     headers: {
       ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
       ...(!skipAuth && token ? { Authorization: `Bearer ${token}` } : {}),
@@ -52,6 +54,12 @@ export async function apiRequest(path, options = {}) {
   const payload = await parsePayload(response);
 
   if (!response.ok) {
+    console.error('[apiRequest]', {
+      method,
+      url,
+      status: response.status,
+      payload,
+    });
     if (response.status === 401) {
       clearToken();
     }
