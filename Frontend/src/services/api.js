@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 // URLs alineadas con render.yaml (name -> https://<name>.onrender.com)
 const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
 const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
-const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-1cxp.onrender.com';
-const DEFAULT_CARD_SERVICE_URL = 'https://myaccess-card-4tuh.onrender.com';
-const DEFAULT_NEWS_SERVICE_URL = 'https://myaccess-news-ft80.onrender.com';
+const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-ichc.onrender.com';
+const DEFAULT_CARD_SERVICE_URL = 'https://myaccess-card-7jc2.onrender.com';
+const DEFAULT_NEWS_SERVICE_URL = 'https://myaccess-news-9h3h.onrender.com';
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
 const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
 const ENV_NOTIFICATIONS_SERVICE_URL = process.env.EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL;
