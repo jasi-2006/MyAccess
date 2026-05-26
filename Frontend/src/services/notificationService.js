@@ -1,39 +1,39 @@
-import { apiRequest } from './api';
+import { notificationsServiceRequest } from './api';
 
-const NOTIFICATIONS_PATH = '/api/v1/notificationsService/notifications';
+const NOTIFICATIONS_PATH = '/notificationsService/notifications';
 
 export async function getNotifications(filter = '') {
   const query = String(filter || '').trim();
   const path = query
     ? `${NOTIFICATIONS_PATH}?filter=${encodeURIComponent(query)}`
     : NOTIFICATIONS_PATH;
-  return apiRequest(path);
+  return notificationsServiceRequest(path);
 }
 
 export async function getNotificationsByUser(idUser) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/user/${encodeURIComponent(idUser)}`);
+  return notificationsServiceRequest(`${NOTIFICATIONS_PATH}/user/${encodeURIComponent(idUser)}`);
 }
 
 export async function getNotificationsByState(statedSend) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/state/${encodeURIComponent(statedSend)}`);
+  return notificationsServiceRequest(`${NOTIFICATIONS_PATH}/state/${encodeURIComponent(statedSend)}`);
 }
 
 export async function createNotification(payload) {
-  return apiRequest(NOTIFICATIONS_PATH, {
+  return notificationsServiceRequest(NOTIFICATIONS_PATH, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 }
 
 export async function updateNotification(idNotification, payload) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/${encodeURIComponent(idNotification)}`, {
+  return notificationsServiceRequest(`${NOTIFICATIONS_PATH}/${encodeURIComponent(idNotification)}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   });
 }
 
 export async function markNotificationAsRead(idNotification) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/${encodeURIComponent(idNotification)}/read`, {
+  return notificationsServiceRequest(`${NOTIFICATIONS_PATH}/${encodeURIComponent(idNotification)}/read`, {
     method: 'PUT',
   });
 }

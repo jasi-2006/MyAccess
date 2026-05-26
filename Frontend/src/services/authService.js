@@ -20,11 +20,11 @@ export async function logoutUser() {
 
 export async function getUserProfile() {
   if (!getToken()) return null;
-  return apiRequest('/api/v1/register/profile/me');
+  return userServiceRequest('/register/profile/me');
 }
 
 export async function getAllUserProfiles() {
-  return apiRequest('/api/v1/register');
+  return userServiceRequest('/register');
 }
 
 export async function registerUser(payload) {
@@ -70,7 +70,7 @@ export async function requestPasswordResetCode(email) {
 }
 
 export async function updateUserProfile(document, dto) {
-  return apiRequest(`/api/v1/register/users/document/${encodeURIComponent(document)}`, {
+  return userServiceRequest(`/register/users/document/${encodeURIComponent(document)}`, {
     method: 'PUT',
     body: JSON.stringify(dto),
   });

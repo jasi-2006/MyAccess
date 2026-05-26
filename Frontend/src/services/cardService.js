@@ -1,15 +1,15 @@
-import { apiRequest } from './api';
+import { cardServiceRequest } from './api';
 
 export async function getCardsByUser(idUser) {
-  return apiRequest(`/api/v1/cardService/cards/user/${encodeURIComponent(idUser)}`);
+  return cardServiceRequest(`/cardService/cards/user/${encodeURIComponent(idUser)}`);
 }
 
 export async function getAllCards() {
-  return apiRequest('/api/v1/cardService/cards');
+  return cardServiceRequest('/cardService/cards');
 }
 
 export async function createCard(payload) {
-  return apiRequest('/api/v1/cardService/cards', {
+  return cardServiceRequest('/cardService/cards', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
@@ -19,7 +19,7 @@ export async function updateCardActiveState(idCard, active) {
   const activeValue = active ? 'true' : 'false';
 
   try {
-    return await apiRequest(`/api/v1/cardService/cards/${encodeURIComponent(idCard)}/active?active=${activeValue}`, {
+    return await cardServiceRequest(`/cardService/cards/${encodeURIComponent(idCard)}/active?active=${activeValue}`, {
       method: 'PATCH',
     });
   } catch (error) {
@@ -35,7 +35,7 @@ export async function updateCardActiveState(idCard, active) {
 }
 
 export async function updateCard(idCard, payload) {
-  return apiRequest(`/api/v1/cardService/cards/${encodeURIComponent(idCard)}`, {
+  return cardServiceRequest(`/cardService/cards/${encodeURIComponent(idCard)}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   });

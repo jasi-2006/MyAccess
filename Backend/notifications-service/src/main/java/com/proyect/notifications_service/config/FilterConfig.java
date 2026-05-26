@@ -3,6 +3,10 @@ package com.proyect.notifications_service.config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.proyect.notifications_service.filter.JwtValidationFilter;
 
@@ -10,11 +14,25 @@ import com.proyect.notifications_service.filter.JwtValidationFilter;
 public class FilterConfig {
 
     @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOriginPattern("*");
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.setAllowCredentials(false);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
+
+    @Bean
     FilterRegistrationBean<JwtValidationFilter> notificationsJwtFilter(JwtValidationFilter jwtValidationFilter) {
         FilterRegistrationBean<JwtValidationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtValidationFilter);
         registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(1);
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         return registrationBean;
     }
 }
