@@ -1,4 +1,4 @@
-import { userServiceRequest, saveToken, getToken, clearToken } from './api';
+import { apiRequest, userServiceRequest, saveToken, getToken, clearToken } from './api';
 
 export function getAuthToken() {
   return getToken();
@@ -22,11 +22,11 @@ export async function logoutUser() {
 
 export async function getUserProfile() {
   if (!getToken()) return null;
-  return userServiceRequest('/register/profile/me');
+  return apiRequest('/api/v1/register/profile/me');
 }
 
 export async function getAllUserProfiles() {
-  return userServiceRequest('/register');
+  return apiRequest('/api/v1/register');
 }
 
 export async function registerUser(payload) {
@@ -72,7 +72,7 @@ export async function requestPasswordResetCode(email) {
 }
 
 export async function updateUserProfile(document, dto) {
-  return userServiceRequest(`/register/users/document/${encodeURIComponent(document)}`, {
+  return apiRequest(`/api/v1/register/users/document/${encodeURIComponent(document)}`, {
     method: 'PUT',
     body: JSON.stringify(dto),
   });
