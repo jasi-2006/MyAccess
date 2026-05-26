@@ -13,22 +13,17 @@ import java.net.http.HttpResponse;
 @Service
 @Slf4j
 public class EmailService {
-    private static final String RESEND_URL = "https://api.resend.com/emails";
+    private static final String MAILERSEND_URL = "https://api.mailersend.com/v1/email";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    @Value("${RESEND_API_KEY:}")
+    @Value("${MAILERSEND_API_KEY:mlsn.5d98292071ed0860d6a170ca5089c5a347765e84a9b69f6d5da3fee5cfc8f818}")
     private String apiKey;
 
-    @Value("${EMAIL_FROM:}")
+    @Value("${EMAIL_FROM:MS_F19U7O@test-r83ql3p3z8xgzw1j.mlsender.net}")
     private String from;
 
     public void sendVerificationCode(String to, String code) {
-        if (!isConfigured()) {
-            log.warn("Resend is not configured. Verification code for {} was not sent.", to);
-            return;
-        }
-
         String subject = "MyAccess - Confirma tu correo";
         String text = "Estamos muy emocionados de tenerte con nosotros. Para empezar a usar MyAccess, solo necesitamos confirmar que esta direccion de correo te pertenece.\n\n"
                 + "Introduce el siguiente codigo en la aplicacion para activar tu cuenta:\n\n"
@@ -43,11 +38,6 @@ public class EmailService {
     }
 
     public void sendPasswordResetCode(String to, String code) {
-        if (!isConfigured()) {
-            log.warn("Resend is not configured. Password reset code for {} was not sent.", to);
-            return;
-        }
-
         String subject = "MyAccess - Restablecer contrasena";
         String text = "Recibimos una solicitud para restablecer tu contrasena.\n\n"
                 + "Usa el siguiente codigo para continuar:\n\n"
@@ -59,15 +49,18 @@ public class EmailService {
         sendEmail(to, subject, text);
     }
 
-    private boolean isConfigured() {
-        return apiKey != null && !apiKey.isBlank() && from != null && !from.isBlank();
-    }
-
     private void sendEmail(String to, String subject, String text) {
         String payload = """
                 {
-                  "from": "%s",
-                  "to": ["%s"],
+                  "from": {
+                    "email": "%s",
+                    "name": "MyAccess"
+                  },
+                  "to": [
+                    {
+                      "email": "%s"
+                    }
+                  ],
                   "subject": "%s",
                   "text": "%s"
                 }
@@ -79,7 +72,7 @@ public class EmailService {
         );
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(RESEND_URL))
+                .uri(URI.create(MAILERSEND_URL))
                 .header("Authorization", "Bearer " + apiKey)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(payload))
@@ -88,10 +81,11 @@ public class EmailService {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new IllegalStateException("Resend API returned status " + response.statusCode() + ": " + response.body());
+                throw new IllegalStateException("MailerSend API returned status " + response.statusCode() + ": " + response.body());
             }
+            log.info("Email successfully sent through MailerSend REST API to {}", to);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to send email through Resend", e);
+            throw new IllegalStateException("Failed to send email through MailerSend", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Email sending was interrupted", e);
