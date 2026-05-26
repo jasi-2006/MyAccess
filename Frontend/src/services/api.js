@@ -59,9 +59,10 @@ export async function apiRequest(path, options = {}) {
   const { skipAuth = false, headers, ...fetchOptions } = options;
   const url = `${API_GATEWAY_URL}${path}`;
   const method = fetchOptions.method || 'GET';
+  const hasBody = fetchOptions.body !== undefined && fetchOptions.body !== null;
   const response = await fetch(url, {
     headers: {
-      ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
+      ...(hasBody && !isFormData ? { 'Content-Type': 'application/json' } : {}),
       ...(!skipAuth && token ? { Authorization: `Bearer ${token}` } : {}),
       ...(headers || {}),
     },
