@@ -1,8 +1,11 @@
 package com.proyect.user_service.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,6 +21,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtValidationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
+    @Value("${app.cors.allowed-origins:https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
+    private String allowedOrigins;
+
     private boolean isPublicPath(HttpServletRequest request) {
         String path = request.getServletPath();
         return path.startsWith("/auth/")
@@ -27,8 +33,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                 || request.getMethod().equalsIgnoreCase("OPTIONS");
     }
 
-    private void addCorsHeaders(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
+    private void addCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
+        String origin = request.getHeader("Origin");
+        if (origin != null && parseAllowedOrigins().contains(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+            response.setHeader("Vary", "Origin");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+        }
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD");
         response.setHeader("Access-Control-Allow-Headers", "*");
     }
@@ -51,7 +62,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         if (userId == null || email == null || email.isBlank() || (!profileMeRequest && (role == null || role.isBlank()))) {
             String token = extractBearerToken(request);
             if (token == null) {
-                sendError(response, "Missing Authorization token");
+                sendError(request, response, "Missing Authorization token");
                 return;
             }
             if (jwtService.isTokenValid(token)) {
@@ -59,13 +70,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                 email = jwtService.extractEmailId(token);
                 role = jwtService.extractRole(token);
             } else {
-                sendError(response, "Invalid Authorization token");
+                sendError(request, response, "Invalid Authorization token");
                 return;
             }
         }
 
         if (userId == null || email == null || email.isBlank() || (!profileMeRequest && (role == null || role.isBlank()))) {
-            sendError(response, "Missing token claims");
+            sendError(request, response, "Missing token claims");
             return;
         }
 
@@ -76,8 +87,8 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void sendError(HttpServletResponse response, String message) throws IOException {
-        addCorsHeaders(response);
+    private void sendError(HttpServletRequest request, HttpServletResponse response, String message) throws IOException {
+        addCorsHeaders(request, response);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"" + message + "\"}");
@@ -100,5 +111,12 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             }
         }
         return null;
+    }
+
+    private List<String> parseAllowedOrigins() {
+        return Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .toList();
     }
 }
