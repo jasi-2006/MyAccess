@@ -11,7 +11,8 @@ export async function loginUser(credentials) {
     skipAuth: true,
   });
   const token = response?.token || response?.accessToken || response?.data?.token || response?.data?.accessToken;
-  if (token) saveToken(token);
+  const refreshToken = response?.refreshToken || response?.data?.refreshToken;
+  if (token) saveToken(token, refreshToken);
   return response;
 }
 
