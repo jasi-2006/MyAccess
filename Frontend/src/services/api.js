@@ -135,7 +135,7 @@ async function refreshAuthToken() {
 }
 
 export async function apiRequest(path, options = {}) {
-  return baseRequest(API_GATEWAY_URL, path, options);
+  return baseRequest(...resolveRequestTarget(path), options);
 }
 
 export async function userServiceRequest(path, options = {}) {
@@ -212,6 +212,15 @@ async function baseRequest(baseUrl, path, options = {}) {
   }
 
   return payload;
+}
+
+function resolveRequestTarget(path) {
+  // The register/profile flows already have their own CORS and JWT handling in user-service.
+  if (path === '/api/v1/register' || path.startsWith('/api/v1/register/')) {
+    return [USER_SERVICE_URL, path.replace(/^\/api\/v1/, '')];
+  }
+
+  return [API_GATEWAY_URL, path];
 }
 
 export {
