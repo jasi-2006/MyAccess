@@ -59,11 +59,18 @@ const NOTIFICATIONS_SERVICE_URL = resolveNotificationsServiceUrl();
 const CARD_SERVICE_URL = resolveCardServiceUrl();
 const NEWS_SERVICE_URL = resolveNewsServiceUrl();
 let authTokenCache = null;
+let refreshTokenCache = null;
 
 // Manejo del token aquí para evitar importación circular
-export function saveToken(token) {
+export function saveToken(token, refreshToken) {
   authTokenCache = token || null;
+  if (refreshToken !== undefined) {
+    refreshTokenCache = refreshToken || null;
+  }
   try { localStorage.setItem('authToken', token); } catch {}
+  if (refreshToken !== undefined) {
+    try { localStorage.setItem('refreshToken', refreshToken); } catch {}
+  }
 }
 
 export function getToken() {
@@ -76,7 +83,17 @@ export function getToken() {
 
 export function clearToken() {
   authTokenCache = null;
+  refreshTokenCache = null;
   try { localStorage.removeItem('authToken'); } catch {}
+  try { localStorage.removeItem('refreshToken'); } catch {}
+}
+
+export function getRefreshToken() {
+  if (refreshTokenCache) return refreshTokenCache;
+  try {
+    refreshTokenCache = localStorage.getItem('refreshToken');
+    return refreshTokenCache;
+  } catch { return null; }
 }
 
 async function parsePayload(response) {
@@ -91,6 +108,30 @@ function getErrorMessage(payload) {
   if (typeof payload.message === 'string' && payload.message.trim()) return payload.message;
   if (typeof payload.error === 'string' && payload.error.trim()) return payload.error;
   return 'No fue posible completar la solicitud.';
+}
+
+async function refreshAuthToken() {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return null;
+
+  const response = await fetch(`${USER_SERVICE_URL}/auth/refresh-token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  const payload = await parsePayload(response);
+  if (!response.ok) {
+    clearToken();
+    return null;
+  }
+
+  const token = payload?.token || payload?.accessToken || payload?.data?.token || payload?.data?.accessToken;
+  const nextRefreshToken = payload?.refreshToken || payload?.data?.refreshToken || refreshToken;
+  if (!token) return null;
+
+  saveToken(token, nextRefreshToken);
+  return token;
 }
 
 export async function apiRequest(path, options = {}) {
@@ -130,14 +171,29 @@ async function baseRequest(baseUrl, path, options = {}) {
     });
   }
 
-  const response = await fetch(url, {
-    headers: {
-      ...(hasBody && !isFormData ? { 'Content-Type': 'application/json' } : {}),
-      ...(!skipAuth && token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(headers || {}),
-    },
+  const requestHeaders = {
+    ...(hasBody && !isFormData ? { 'Content-Type': 'application/json' } : {}),
+    ...(!skipAuth && token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(headers || {}),
+  };
+
+  let response = await fetch(url, {
+    headers: requestHeaders,
     ...fetchOptions,
   });
+
+  if (response.status === 401 && !skipAuth && path !== '/auth/refresh-token') {
+    const nextToken = await refreshAuthToken();
+    if (nextToken) {
+      response = await fetch(url, {
+        headers: {
+          ...requestHeaders,
+          Authorization: `Bearer ${nextToken}`,
+        },
+        ...fetchOptions,
+      });
+    }
+  }
 
   const payload = await parsePayload(response);
 
