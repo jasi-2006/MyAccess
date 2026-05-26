@@ -1,7 +1,9 @@
 import { Platform } from 'react-native';
 
 const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
+const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
+const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
 
 function resolveGatewayUrl() {
   const normalizedEnvUrl = String(ENV_GATEWAY_URL || '').trim();
@@ -18,6 +20,11 @@ function resolveGatewayUrl() {
   return normalizedEnvUrl;
 }
 
+function resolveUserServiceUrl() {
+  const normalizedEnvUrl = String(ENV_USER_SERVICE_URL || '').trim();
+  return normalizedEnvUrl || DEFAULT_USER_SERVICE_URL;
+}
+
 const API_GATEWAY_URL =
   resolveGatewayUrl() ||
   Platform.select({
@@ -25,6 +32,8 @@ const API_GATEWAY_URL =
     web: DEFAULT_GATEWAY_URL,
     default: DEFAULT_GATEWAY_URL,
   });
+
+const USER_SERVICE_URL = resolveUserServiceUrl();
 
 // Manejo del token aquí para evitar importación circular
 export function saveToken(token) {
@@ -54,10 +63,18 @@ function getErrorMessage(payload) {
 }
 
 export async function apiRequest(path, options = {}) {
+  return baseRequest(API_GATEWAY_URL, path, options);
+}
+
+export async function userServiceRequest(path, options = {}) {
+  return baseRequest(USER_SERVICE_URL, path, options);
+}
+
+async function baseRequest(baseUrl, path, options = {}) {
   const token = getToken();
   const isFormData = options.body instanceof FormData;
   const { skipAuth = false, headers, ...fetchOptions } = options;
-  const url = `${API_GATEWAY_URL}${path}`;
+  const url = `${baseUrl}${path}`;
   const method = fetchOptions.method || 'GET';
   const hasBody = fetchOptions.body !== undefined && fetchOptions.body !== null;
   const response = await fetch(url, {
@@ -90,4 +107,4 @@ export async function apiRequest(path, options = {}) {
   return payload;
 }
 
-export { API_GATEWAY_URL };
+export { API_GATEWAY_URL, USER_SERVICE_URL };
