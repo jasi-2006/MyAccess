@@ -58,17 +58,24 @@ const USER_SERVICE_URL = resolveUserServiceUrl();
 const NOTIFICATIONS_SERVICE_URL = resolveNotificationsServiceUrl();
 const CARD_SERVICE_URL = resolveCardServiceUrl();
 const NEWS_SERVICE_URL = resolveNewsServiceUrl();
+let authTokenCache = null;
 
 // Manejo del token aquí para evitar importación circular
 export function saveToken(token) {
+  authTokenCache = token || null;
   try { localStorage.setItem('authToken', token); } catch {}
 }
 
 export function getToken() {
-  try { return localStorage.getItem('authToken'); } catch { return null; }
+  if (authTokenCache) return authTokenCache;
+  try {
+    authTokenCache = localStorage.getItem('authToken');
+    return authTokenCache;
+  } catch { return null; }
 }
 
 export function clearToken() {
+  authTokenCache = null;
   try { localStorage.removeItem('authToken'); } catch {}
 }
 
@@ -113,6 +120,16 @@ async function baseRequest(baseUrl, path, options = {}) {
   const url = `${baseUrl}${path}`;
   const method = fetchOptions.method || 'GET';
   const hasBody = fetchOptions.body !== undefined && fetchOptions.body !== null;
+  const hasToken = Boolean(token);
+
+  if (!skipAuth && !hasToken) {
+    console.warn('[apiRequest:auth]', {
+      method,
+      url,
+      hasToken,
+    });
+  }
+
   const response = await fetch(url, {
     headers: {
       ...(hasBody && !isFormData ? { 'Content-Type': 'application/json' } : {}),
@@ -129,6 +146,7 @@ async function baseRequest(baseUrl, path, options = {}) {
       method,
       url,
       status: response.status,
+      hasToken,
       payload,
     });
     const error = new Error(getErrorMessage(payload));

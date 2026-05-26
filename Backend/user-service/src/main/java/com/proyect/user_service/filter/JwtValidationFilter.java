@@ -42,21 +42,28 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String userId = request.getHeader("x-User-id");
-        String email  = request.getHeader("X-User-Email");
-        String role   = request.getHeader("X-User-role");
+        String userId = firstHeader(request, "x-User-id", "X-User-Id", "X-User-ID", "x-user-id");
+        String email  = firstHeader(request, "X-User-Email", "x-user-email");
+        String role   = firstHeader(request, "X-User-role", "X-User-Role", "x-user-role");
 
         if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
             String token = extractBearerToken(request);
-            if (token != null && jwtService.isTokenValid(token)) {
+            if (token == null) {
+                sendError(response, "Missing Authorization token");
+                return;
+            }
+            if (jwtService.isTokenValid(token)) {
                 userId = String.valueOf(jwtService.extractUserId(token));
                 email = jwtService.extractEmailId(token);
                 role = jwtService.extractRole(token);
+            } else {
+                sendError(response, "Invalid Authorization token");
+                return;
             }
         }
 
         if (userId == null || email == null || email.isBlank() || role == null) {
-            sendError(response, "Missing gateway headers");
+            sendError(response, "Missing token claims");
             return;
         }
 
@@ -75,11 +82,21 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     }
 
     private String extractBearerToken(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
+        String authorization = firstHeader(request, "Authorization", "authorization");
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             return null;
         }
         String token = authorization.substring(7).trim();
         return token.isEmpty() ? null : token;
+    }
+
+    private String firstHeader(HttpServletRequest request, String... names) {
+        for (String name : names) {
+            String value = request.getHeader(name);
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
     }
 }
