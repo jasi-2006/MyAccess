@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${app.cors.allowed-origins:https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
+    @Value("${app.cors.allowed-origins:https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
     private String allowedOrigins;
 
     @Override
