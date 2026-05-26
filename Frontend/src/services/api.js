@@ -131,9 +131,6 @@ async function baseRequest(baseUrl, path, options = {}) {
       status: response.status,
       payload,
     });
-    if (response.status === 401) {
-      clearToken();
-    }
     const error = new Error(getErrorMessage(payload));
     error.status = response.status;
     error.payload = payload;
