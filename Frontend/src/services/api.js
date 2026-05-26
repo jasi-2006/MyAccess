@@ -2,8 +2,14 @@ import { Platform } from 'react-native';
 
 const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
 const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
+const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-1cxp.onrender.com';
+const DEFAULT_CARD_SERVICE_URL = 'https://myaccess-card-4tuh.onrender.com';
+const DEFAULT_NEWS_SERVICE_URL = 'https://myaccess-news-ft80.onrender.com';
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
 const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
+const ENV_NOTIFICATIONS_SERVICE_URL = process.env.EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL;
+const ENV_CARD_SERVICE_URL = process.env.EXPO_PUBLIC_CARD_SERVICE_URL;
+const ENV_NEWS_SERVICE_URL = process.env.EXPO_PUBLIC_NEWS_SERVICE_URL;
 
 function resolveGatewayUrl() {
   const normalizedEnvUrl = String(ENV_GATEWAY_URL || '').trim();
@@ -25,6 +31,21 @@ function resolveUserServiceUrl() {
   return normalizedEnvUrl || DEFAULT_USER_SERVICE_URL;
 }
 
+function resolveNotificationsServiceUrl() {
+  const normalizedEnvUrl = String(ENV_NOTIFICATIONS_SERVICE_URL || '').trim();
+  return normalizedEnvUrl || DEFAULT_NOTIFICATIONS_SERVICE_URL;
+}
+
+function resolveCardServiceUrl() {
+  const normalizedEnvUrl = String(ENV_CARD_SERVICE_URL || '').trim();
+  return normalizedEnvUrl || DEFAULT_CARD_SERVICE_URL;
+}
+
+function resolveNewsServiceUrl() {
+  const normalizedEnvUrl = String(ENV_NEWS_SERVICE_URL || '').trim();
+  return normalizedEnvUrl || DEFAULT_NEWS_SERVICE_URL;
+}
+
 const API_GATEWAY_URL =
   resolveGatewayUrl() ||
   Platform.select({
@@ -34,6 +55,9 @@ const API_GATEWAY_URL =
   });
 
 const USER_SERVICE_URL = resolveUserServiceUrl();
+const NOTIFICATIONS_SERVICE_URL = resolveNotificationsServiceUrl();
+const CARD_SERVICE_URL = resolveCardServiceUrl();
+const NEWS_SERVICE_URL = resolveNewsServiceUrl();
 
 // Manejo del token aquí para evitar importación circular
 export function saveToken(token) {
@@ -68,6 +92,18 @@ export async function apiRequest(path, options = {}) {
 
 export async function userServiceRequest(path, options = {}) {
   return baseRequest(USER_SERVICE_URL, path, options);
+}
+
+export async function notificationsServiceRequest(path, options = {}) {
+  return baseRequest(NOTIFICATIONS_SERVICE_URL, path, options);
+}
+
+export async function cardServiceRequest(path, options = {}) {
+  return baseRequest(CARD_SERVICE_URL, path, options);
+}
+
+export async function newsServiceRequest(path, options = {}) {
+  return baseRequest(NEWS_SERVICE_URL, path, options);
 }
 
 async function baseRequest(baseUrl, path, options = {}) {
@@ -107,4 +143,10 @@ async function baseRequest(baseUrl, path, options = {}) {
   return payload;
 }
 
-export { API_GATEWAY_URL, USER_SERVICE_URL };
+export {
+  API_GATEWAY_URL,
+  USER_SERVICE_URL,
+  NOTIFICATIONS_SERVICE_URL,
+  CARD_SERVICE_URL,
+  NEWS_SERVICE_URL,
+};
