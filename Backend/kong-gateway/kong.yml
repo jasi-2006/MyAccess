@@ -257,7 +257,9 @@ plugins:
   - name: cors
     config:
       origins:
-        - "*"
+        - "https://my-access-omega.vercel.app"
+        - "http://localhost:3000"
+        - "http://localhost:5173"
       methods:
         - GET
         - POST
@@ -267,10 +269,19 @@ plugins:
         - PATCH
         - HEAD
       headers:
-        - "*"
+        - Accept
+        - Accept-Version
+        - Authorization
+        - Content-Length
+        - Content-MD5
+        - Content-Type
+        - Date
+        - Origin
+        - X-Auth-Token
+        - X-Requested-With
       exposed_headers:
         - "*"
-      credentials: false
+      credentials: true
       max_age: 3600
       preflight_continue: false
 
