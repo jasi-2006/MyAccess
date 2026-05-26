@@ -17,13 +17,13 @@ import com.proyect.user_service.filter.JwtValidationFilter;
 @Configuration("userFilterConfig")
 public class FilterConfig {
 
-    @Value("${app.cors.allowed-origins:https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
+    @Value("${app.cors.allowed-origins:https://my-access-three.vercel.app,https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
     private String allowedOrigins;
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(parseAllowedOrigins());
+        config.setAllowedOriginPatterns(buildAllowedOriginPatterns());
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setExposedHeaders(List.of("*"));
@@ -50,5 +50,13 @@ public class FilterConfig {
                 .map(String::trim)
                 .filter(origin -> !origin.isEmpty())
                 .toList();
+    }
+
+    private List<String> buildAllowedOriginPatterns() {
+        List<String> patterns = new java.util.ArrayList<>(parseAllowedOrigins());
+        if (!patterns.contains("https://*.vercel.app")) {
+            patterns.add("https://*.vercel.app");
+        }
+        return patterns;
     }
 }

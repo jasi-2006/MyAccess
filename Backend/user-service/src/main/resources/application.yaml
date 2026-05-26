@@ -55,4 +55,4 @@ security:
 
 app:
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://my-access-three.vercel.app,https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}
