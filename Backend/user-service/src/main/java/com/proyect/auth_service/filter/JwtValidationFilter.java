@@ -21,7 +21,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        if (path.startsWith("/auth/") || request.getMethod().equalsIgnoreCase("OPTIONS")) {
+        // /auth/* and /register/* are called directly from the web app with Bearer JWT.
+        // Kong-style headers (x-User-id, X-User-Email, X-User-role) apply only to other routes.
+        if (path.startsWith("/auth/")
+                || path.startsWith("/register/")
+                || path.startsWith("/uploads/")
+                || path.equals("/error")
+                || request.getMethod().equalsIgnoreCase("OPTIONS")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -30,7 +36,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String email  = request.getHeader("X-User-Email");
         String role   = request.getHeader("X-User-role");
 
-        if (userId == null || role == null) {
+        if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
             sendError(response, "Missing gateway headers");
             return;
         }
