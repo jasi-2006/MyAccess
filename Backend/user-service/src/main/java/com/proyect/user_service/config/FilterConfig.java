@@ -17,7 +17,7 @@ import com.proyect.user_service.filter.JwtValidationFilter;
 @Configuration("userFilterConfig")
 public class FilterConfig {
 
-    @Value("${app.cors.allowed-origins:https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
+    @Value("${app.cors.allowed-origins:https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173}")
     private String allowedOrigins;
 
     @Bean
