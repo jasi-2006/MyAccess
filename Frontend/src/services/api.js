@@ -146,6 +146,7 @@ async function baseRequest(baseUrl, path, options = {}) {
       method,
       url,
       status: response.status,
+      hasToken,
       payload,
     });
     const error = new Error(getErrorMessage(payload));

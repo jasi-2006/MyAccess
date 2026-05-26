@@ -65,7 +65,8 @@ public class JwtService {
     }
 
     public String extractEmailId(String token) {
-        return getClaims(token).get("emailId", String.class);
+        String email = getClaims(token).get("emailId", String.class);
+        return email != null && !email.isBlank() ? email : getClaims(token).getSubject();
     }
 
     public String extractRole(String token) {return getClaims(token).get("role", String.class);
