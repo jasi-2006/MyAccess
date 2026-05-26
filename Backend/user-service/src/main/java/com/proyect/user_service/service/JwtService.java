@@ -56,6 +56,14 @@ public class JwtService {
         }
     }
 
+    public boolean isAccessToken(String token) {
+        try {
+            return "access".equals(getClaims(token).get("tokenType", String.class));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public String extractName(String token) {
         return getClaims(token).getSubject();
     }

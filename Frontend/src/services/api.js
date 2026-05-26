@@ -34,17 +34,44 @@ function resolveUserServiceUrl() {
 
 function resolveNotificationsServiceUrl() {
   const normalizedEnvUrl = String(ENV_NOTIFICATIONS_SERVICE_URL || '').trim();
-  return normalizedEnvUrl || DEFAULT_NOTIFICATIONS_SERVICE_URL;
+
+  if (!normalizedEnvUrl) {
+    return DEFAULT_NOTIFICATIONS_SERVICE_URL;
+  }
+
+  // Ignore deprecated Render hostnames still configured in Vercel.
+  if (
+    normalizedEnvUrl.includes('myaccess-notification-1cxp.onrender.com') ||
+    normalizedEnvUrl.includes('myaccess-notification.onrender.com')
+  ) {
+    return DEFAULT_NOTIFICATIONS_SERVICE_URL;
+  }
+
+  return normalizedEnvUrl;
 }
 
 function resolveCardServiceUrl() {
   const normalizedEnvUrl = String(ENV_CARD_SERVICE_URL || '').trim();
-  return normalizedEnvUrl || DEFAULT_CARD_SERVICE_URL;
+  if (!normalizedEnvUrl) return DEFAULT_CARD_SERVICE_URL;
+  if (
+    normalizedEnvUrl.includes('myaccess-card-4tuh.onrender.com') ||
+    normalizedEnvUrl.includes('myaccess-card.onrender.com')
+  ) {
+    return DEFAULT_CARD_SERVICE_URL;
+  }
+  return normalizedEnvUrl;
 }
 
 function resolveNewsServiceUrl() {
   const normalizedEnvUrl = String(ENV_NEWS_SERVICE_URL || '').trim();
-  return normalizedEnvUrl || DEFAULT_NEWS_SERVICE_URL;
+  if (!normalizedEnvUrl) return DEFAULT_NEWS_SERVICE_URL;
+  if (
+    normalizedEnvUrl.includes('myaccess-news-ft80.onrender.com') ||
+    normalizedEnvUrl.includes('myaccess-news.onrender.com')
+  ) {
+    return DEFAULT_NEWS_SERVICE_URL;
+  }
+  return normalizedEnvUrl;
 }
 
 const API_GATEWAY_URL =

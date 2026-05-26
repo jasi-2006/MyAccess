@@ -22,7 +22,7 @@ export async function logoutUser() {
 
 export async function getUserProfile() {
   if (!getToken()) return null;
-  return apiRequest('/api/v1/register/profile/me');
+  return userServiceRequest('/register/profile/me');
 }
 
 export async function getAllUserProfiles() {
