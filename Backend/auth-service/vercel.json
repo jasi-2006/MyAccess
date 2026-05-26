@@ -1,5 +1,0 @@
-{
-  "buildCommand": "mvn -B -DskipTests package",
-  "outputDirectory": "target",
-  "framework": null
-}

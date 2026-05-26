@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 
+// URLs alineadas con render.yaml (name -> https://<name>.onrender.com)
 const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
 const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
 const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-1cxp.onrender.com';
