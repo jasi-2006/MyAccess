@@ -48,15 +48,22 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
             String token = extractBearerToken(request);
-            if (token != null && jwtService.isTokenValid(token)) {
+            if (token == null) {
+                sendError(response, "Missing Authorization token");
+                return;
+            }
+            if (jwtService.isTokenValid(token)) {
                 userId = String.valueOf(jwtService.extractUserId(token));
                 email = jwtService.extractEmailId(token);
                 role = jwtService.extractRole(token);
+            } else {
+                sendError(response, "Invalid Authorization token");
+                return;
             }
         }
 
         if (userId == null || email == null || email.isBlank() || role == null) {
-            sendError(response, "Missing gateway headers");
+            sendError(response, "Missing token claims");
             return;
         }
 

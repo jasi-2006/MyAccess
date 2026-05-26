@@ -1,4 +1,4 @@
-import { apiRequest, userServiceRequest, saveToken, getToken, clearToken } from './api';
+import { userServiceRequest, saveToken, getToken, clearToken } from './api';
 
 export function getAuthToken() {
   return getToken();
@@ -10,7 +10,8 @@ export async function loginUser(credentials) {
     body: JSON.stringify(credentials),
     skipAuth: true,
   });
-  if (response?.token) saveToken(response.token);
+  const token = response?.token || response?.accessToken || response?.data?.token || response?.data?.accessToken;
+  if (token) saveToken(token);
   return response;
 }
 
