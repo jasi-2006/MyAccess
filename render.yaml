@@ -21,7 +21,7 @@ services:
       - key: JWT_EXPIRATION
         value: 1200000
       - key: JWT_REFRESH_EXPIRATION
-        value: 1200000
+        value: 604800000
       - key: RESEND_API_KEY
         sync: false
       - key: EMAIL_FROM
