@@ -42,11 +42,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return;
         }
 
+        String path = request.getServletPath();
+        boolean profileMeRequest = path.equals("/register/profile/me");
         String userId = firstHeader(request, "x-User-id", "X-User-Id", "X-User-ID", "x-user-id");
         String email  = firstHeader(request, "X-User-Email", "x-user-email");
         String role   = firstHeader(request, "X-User-role", "X-User-Role", "x-user-role");
 
-        if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
+        if (userId == null || email == null || email.isBlank() || (!profileMeRequest && (role == null || role.isBlank()))) {
             String token = extractBearerToken(request);
             if (token == null) {
                 sendError(response, "Missing Authorization token");
@@ -62,7 +64,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             }
         }
 
-        if (userId == null || email == null || email.isBlank() || role == null) {
+        if (userId == null || email == null || email.isBlank() || (!profileMeRequest && (role == null || role.isBlank()))) {
             sendError(response, "Missing token claims");
             return;
         }
