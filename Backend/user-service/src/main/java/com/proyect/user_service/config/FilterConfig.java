@@ -23,7 +23,7 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(parseAllowedOrigins());
+        config.setAllowedOriginPatterns(List.of("*"));
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setExposedHeaders(List.of("*"));

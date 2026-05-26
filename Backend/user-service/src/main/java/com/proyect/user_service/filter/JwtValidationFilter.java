@@ -35,7 +35,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     private void addCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
         String origin = request.getHeader("Origin");
-        if (origin != null && parseAllowedOrigins().contains(origin)) {
+        if (origin != null) {
             response.setHeader("Access-Control-Allow-Origin", origin);
             response.setHeader("Vary", "Origin");
             response.setHeader("Access-Control-Allow-Credentials", "true");
