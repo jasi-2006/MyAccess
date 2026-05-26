@@ -257,6 +257,7 @@ plugins:
   - name: cors
     config:
       origins:
+        - "https://my-access-ashy.vercel.app"
         - "https://my-access-omega.vercel.app"
         - "http://localhost:3000"
         - "http://localhost:5173"
