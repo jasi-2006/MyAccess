@@ -1,118 +1,135 @@
+# MyAccess — Render Blueprint
+# Tras el deploy, las URLs quedan así:
+#   user:          https://myaccess-user.onrender.com
+#   auth:          https://myaccess-1.onrender.com
+#   card:          https://myaccess-card-4tuh.onrender.com
+#   news:          https://myaccess-news-ft80.onrender.com
+#   notifications: https://myaccess-notification-1cxp.onrender.com
+#   gateway:       https://myaccess-kong.onrender.com
+#
+# En Render Dashboard, configura manualmente (sync: false):
+#   DB_USERNAME, DB_PASSWORD, JWT_SECRET
+#   USER_DB_URL, AUTH_DB_URL, CARD_DB_URL, NEWS_DB_URL, NOTIFICATIONS_DB_URL
+#   SMTP_USERNAME, SMTP_PASSWORD, EMAIL_FROM (solo user-service)
+#
+# En Vercel (Frontend), variables recomendadas:
+#   EXPO_PUBLIC_API_GATEWAY_URL=https://myaccess-kong.onrender.com
+#   EXPO_PUBLIC_USER_SERVICE_URL=https://myaccess-user.onrender.com
+#   EXPO_PUBLIC_CARD_SERVICE_URL=https://myaccess-card-4tuh.onrender.com
+#   EXPO_PUBLIC_NEWS_SERVICE_URL=https://myaccess-news-ft80.onrender.com
+#   EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL=https://myaccess-notification-1cxp.onrender.com
+
+envVarGroups:
+  - name: myaccess-shared
+    envVars:
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173
+
 services:
 
   - type: web
     name: myaccess-user
     runtime: docker
+    plan: free
+    region: oregon
     dockerfilePath: ./Backend/user-service/Dockerfile
     dockerContext: ./Backend/user-service
     envVars:
+      - fromGroup: myaccess-shared
       - key: PORT
         value: 10000
       - key: USER_DB_URL
         sync: false
       - key: AUTH_DB_URL
         sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: JWT_SECRET
-        sync: false
       - key: JWT_EXPIRATION
         value: 1200000
       - key: JWT_REFRESH_EXPIRATION
         value: 604800000
-      - key: CORS_ALLOWED_ORIGINS
-        value: https://my-access-ashy.vercel.app,https://my-access-omega.vercel.app,http://localhost:3000,http://localhost:5173
       - key: SMTP_HOST
         value: smtp.mailersend.net
       - key: SMTP_PORT
         value: 587
       - key: SMTP_USERNAME
-        value: MS_F19U7O@test-r83ql3p3z8xgzw1j.mlsender.net
+        sync: false
       - key: SMTP_PASSWORD
-        value: mssp.rrDPVQj.o65qngkyzwolwr12.ITSrsEV
+        sync: false
       - key: EMAIL_FROM
-        value: MS_F19U7O@test-r83ql3p3z8xgzw1j.mlsender.net
-
-  - type: web
-    name: myaccess-card-4tuh
-    runtime: docker
-    dockerfilePath: ./Backend/card-service/Dockerfile
-    dockerContext: ./Backend/card-service
-    envVars:
-      - key: PORT
-        value: 10000
-      - key: CARD_DB_URL
-        sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: JWT_SECRET
-        sync: false
-
-  - type: web
-    name: myaccess-news-ft80
-    runtime: docker
-    dockerfilePath: ./Backend/news-service/Dockerfile
-    dockerContext: ./Backend/news-service
-    envVars:
-      - key: PORT
-        value: 10000
-      - key: NEWS_DB_URL
-        sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: JWT_SECRET
-        sync: false
-
-  - type: web
-    name: myaccess-notification-1cxp
-    runtime: docker
-    dockerfilePath: ./Backend/notifications-service/Dockerfile
-    dockerContext: ./Backend/notifications-service
-    envVars:
-      - key: PORT
-        value: 10000
-      - key: NOTIFICATIONS_DB_URL
-        sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: JWT_SECRET
         sync: false
 
   - type: web
     name: myaccess-1
     runtime: docker
+    plan: free
+    region: oregon
     dockerfilePath: ./Backend/auth-service/Dockerfile
     dockerContext: ./Backend/auth-service
     envVars:
+      - fromGroup: myaccess-shared
       - key: PORT
         value: 10000
       - key: AUTH_DB_URL
-        sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: JWT_SECRET
         sync: false
       - key: JWT_EXPIRATION
         value: 1200000
 
   - type: web
+    name: myaccess-card-4tuh
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Backend/card-service/Dockerfile
+    dockerContext: ./Backend/card-service
+    envVars:
+      - fromGroup: myaccess-shared
+      - key: PORT
+        value: 10000
+      - key: CARD_DB_URL
+        sync: false
+
+  - type: web
+    name: myaccess-news-ft80
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Backend/news-service/Dockerfile
+    dockerContext: ./Backend/news-service
+    envVars:
+      - fromGroup: myaccess-shared
+      - key: PORT
+        value: 10000
+      - key: NEWS_DB_URL
+        sync: false
+
+  - type: web
+    name: myaccess-notification-1cxp
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Backend/notifications-service/Dockerfile
+    dockerContext: ./Backend/notifications-service
+    envVars:
+      - fromGroup: myaccess-shared
+      - key: PORT
+        value: 10000
+      - key: NOTIFICATIONS_DB_URL
+        sync: false
+
+  - type: web
     name: myaccess-kong
     runtime: docker
+    plan: free
+    region: oregon
     dockerfilePath: ./Backend/kong-gateway/Dockerfile
     dockerContext: ./Backend/kong-gateway
     envVars:
-      - key: JWT_SECRET
-        sync: false
+      - fromGroup: myaccess-shared
       - key: KONG_PROXY_LISTEN
         value: 0.0.0.0:10000
       - key: KONG_STATUS_LISTEN
