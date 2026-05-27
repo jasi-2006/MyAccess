@@ -10,7 +10,7 @@ COPY start-kong.sh /start-kong.sh
 RUN chmod +x /start-kong.sh
 
 ENV KONG_DATABASE=off \
-    KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml \
+    KONG_DECLARATIVE_CONFIG=/tmp/kong-declarative.yml \
     KONG_PROXY_ACCESS_LOG=/dev/stdout \
     KONG_ADMIN_ACCESS_LOG=/dev/stdout \
     KONG_PROXY_ERROR_LOG=/dev/stderr \
