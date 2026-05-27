@@ -17,7 +17,7 @@ public class EmailService {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    @Value("${MAILERSEND_API_KEY:mlsn.5d98292071ed0860d6a170ca5089c5a347765e84a9b69f6d5da3fee5cfc8f818}")
+    @Value("${MAILERSEND_API_KEY:mlsn.7316b05544b03b95db9dcc3cfa482517f2397b448f2227ec61692816978db7e6}")
     private String apiKey;
 
     @Value("${EMAIL_FROM:MS_F19U7O@test-r83ql3p3z8xgzw1j.mlsender.net}")
