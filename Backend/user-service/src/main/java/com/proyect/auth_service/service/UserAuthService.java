@@ -40,7 +40,7 @@ public class UserAuthService {
             role = roleRepository.findById(dto.getIdRole())
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         } else {
-            role = roleRepository.findByNameRole("APRENDIZ")
+            role = roleRepository.findByNameRoleIgnoreCase("APRENDIZ")
                     .orElseThrow(() -> new RuntimeException("Rol APRENDIZ no configurado"));
         }
 
