@@ -57,7 +57,7 @@ public class AuthController {
         request.setEmail(email);
         userRegisterProfileService.validateRegistrationAvailable(email, request.getDocument());
         String registrationRole = resolvePublicRegistrationRole(request.getNameRole());
-        Role authRole = roleRepository.findByNameRole(registrationRole)
+        Role authRole = roleRepository.findByNameRoleIgnoreCase(registrationRole)
                 .orElseThrow(() -> new RuntimeException("Rol " + registrationRole + " no configurado en el sistema"));
 
         UserAuthRequestDTO authDTO = new UserAuthRequestDTO();
