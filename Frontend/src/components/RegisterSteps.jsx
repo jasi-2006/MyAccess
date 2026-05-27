@@ -6,6 +6,7 @@ import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
 const DOCUMENT_TYPES = ['CC', 'TI', 'PPT'];
+export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
@@ -40,7 +41,6 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
     [
       inp('👤', 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
       inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, keyboardType: 'numeric' }),
-      inp('🩸', 'Tipo de sangre',      bloodType,     o('bloodType'),    { error: errors.bloodType, autoCapitalize: 'characters' }),
     ],
     [
       inp('📄', 'Regional',             regional,        o('regional'),        {}),
@@ -75,6 +75,28 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
               );
             })}
           </View>
+        </View>
+      )}
+      {step === 0 && (
+        <View style={styles.roleBlock}>
+          <Text style={styles.roleLabel}>Tipo de sangre</Text>
+          <View style={styles.bloodTypeRow}>
+            {BLOOD_TYPES.map((type) => {
+              const active = bloodType === type;
+              return (
+                <TouchableOpacity
+                  key={type}
+                  style={[styles.bloodTypeChip, active && styles.roleChipActive]}
+                  onPress={() => onChange('bloodType', type)}
+                >
+                  <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
+                    {type}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          {errors.bloodType ? <Text style={styles.roleError}>{errors.bloodType}</Text> : null}
         </View>
       )}
       {step === 1 && (
@@ -176,6 +198,21 @@ const styles = StyleSheet.create({
   roleRow: {
     flexDirection: 'row',
     gap: 8,
+  },
+  bloodTypeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  bloodTypeChip: {
+    minWidth: 52,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
   },
   roleChip: {
     flex: 1,
