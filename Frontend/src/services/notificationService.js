@@ -1,41 +1,66 @@
-import { apiRequest } from './api';
+import { apiRequest, notificationsServiceRequest } from './api';
 
-const NOTIFICATIONS_PATH = '/api/v1/notificationsService/notifications';
+const NOTIFICATIONS_KONG_PATH = '/api/v1/notificationsService/notifications';
+
+async function requestNotifications(path, options = {}) {
+  try {
+    return await apiRequest(path, options);
+  } catch (error) {
+    if (error?.status !== 500) {
+      throw error;
+    }
+    const directPath = path.replace(
+      '/api/v1/notificationsService',
+      '/notificationsService',
+    );
+    return notificationsServiceRequest(directPath, options);
+  }
+}
 
 export async function getNotifications(filter = '') {
   const query = String(filter || '').trim();
   const path = query
-    ? `${NOTIFICATIONS_PATH}?filter=${encodeURIComponent(query)}`
-    : NOTIFICATIONS_PATH;
-  return apiRequest(path);
+    ? `${NOTIFICATIONS_KONG_PATH}?filter=${encodeURIComponent(query)}`
+    : NOTIFICATIONS_KONG_PATH;
+  return requestNotifications(path);
 }
 
 export async function getNotificationsByUser(idUser) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/user/${encodeURIComponent(idUser)}`);
+  return requestNotifications(
+    `${NOTIFICATIONS_KONG_PATH}/user/${encodeURIComponent(idUser)}`,
+  );
 }
 
 export async function getNotificationsByState(statedSend) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/state/${encodeURIComponent(statedSend)}`);
+  return requestNotifications(
+    `${NOTIFICATIONS_KONG_PATH}/state/${encodeURIComponent(statedSend)}`,
+  );
 }
 
 export async function createNotification(payload) {
-  return apiRequest(NOTIFICATIONS_PATH, {
+  return requestNotifications(NOTIFICATIONS_KONG_PATH, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 }
 
 export async function updateNotification(idNotification, payload) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/${encodeURIComponent(idNotification)}`, {
-    method: 'PUT',
-    body: JSON.stringify(payload),
-  });
+  return requestNotifications(
+    `${NOTIFICATIONS_KONG_PATH}/${encodeURIComponent(idNotification)}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    },
+  );
 }
 
 export async function markNotificationAsRead(idNotification) {
-  return apiRequest(`${NOTIFICATIONS_PATH}/${encodeURIComponent(idNotification)}/read`, {
-    method: 'PUT',
-  });
+  return requestNotifications(
+    `${NOTIFICATIONS_KONG_PATH}/${encodeURIComponent(idNotification)}/read`,
+    {
+      method: 'PUT',
+    },
+  );
 }
 
 export function countUnreadNotifications(notifications) {

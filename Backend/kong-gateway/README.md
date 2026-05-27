@@ -5,6 +5,7 @@ Este contenedor reemplaza el `api-gateway` de Spring Cloud Gateway para el despl
 ## Variables necesarias
 
 - `JWT_SECRET`: el mismo valor Base64 usado por `user-service` para firmar tokens.
+  Kong lo lee con `{vault://env/JWT_SECRET}` (no uses `jwt-secret`).
 - `KONG_PROXY_LISTEN`: en Render debe quedar como `0.0.0.0:10000`.
 
 El Admin API de Kong queda desactivado con `KONG_ADMIN_LISTEN=off`. Para Render
@@ -21,12 +22,8 @@ no se necesita exponerlo porque el gateway se configura en modo declarativo con
 - `/api/v1/newsService/**` -> `news-service` con JWT.
 - `/api/v1/notificationsService/**` -> `notifications-service` con JWT.
 
-Kong valida tokens `HS256` con el plugin `jwt` usando el claim `tokenType=access`.
-Despues, el plugin `pre-function` copia los claims `userId`, `emailId` y `role`
-a los headers que ya esperan los microservicios:
-
-- `x-User-id`
-- `X-User-Email`
-- `X-User-role`
+Kong valida tokens `HS256` con el plugin `jwt` usando el claim `tokenType=access`
+y reenvia el header `Authorization` al microservicio. Cada servicio valida el
+Bearer y obtiene `userId`, `emailId` y `role` del JWT.
 
 Tambien hay `rate-limiting` global de 100 peticiones por minuto.

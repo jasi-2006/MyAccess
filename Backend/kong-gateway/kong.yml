@@ -6,7 +6,7 @@ consumers:
     jwt_secrets:
       - key: access
         algorithm: HS256
-        secret: "{vault://env/jwt-secret}"
+        secret: "{vault://env/JWT_SECRET}"
 
 services:
   - name: user-auth-service
@@ -61,57 +61,6 @@ services:
                 - exp
               secret_is_base64: true
               run_on_preflight: false
-          - name: pre-function
-            config: &claims_headers_config
-              access:
-                - |
-                  local authorization = kong.request.get_header("authorization")
-                  if not authorization then
-                    return
-                  end
-
-                  local payload = authorization:match("^[Bb]earer%s+[^%.]+%.([^%.]+)%.")
-                  if not payload then
-                    return
-                  end
-
-                  local function decode_base64url(value)
-                    value = value:gsub("-", "+"):gsub("_", "/")
-                    local remainder = #value % 4
-                    if remainder == 2 then
-                      value = value .. "=="
-                    elseif remainder == 3 then
-                      value = value .. "="
-                    elseif remainder ~= 0 then
-                      return nil
-                    end
-                    return ngx.decode_base64(value)
-                  end
-
-                  local decoded = decode_base64url(payload)
-                  if not decoded then
-                    return
-                  end
-
-                  local cjson = require "cjson.safe"
-                  local claims = cjson.decode(decoded)
-                  if type(claims) ~= "table" then
-                    return
-                  end
-
-                  kong.service.request.clear_header("x-User-id")
-                  kong.service.request.clear_header("X-User-Email")
-                  kong.service.request.clear_header("X-User-role")
-
-                  if claims.userId ~= nil then
-                    kong.service.request.set_header("x-User-id", tostring(claims.userId))
-                  end
-                  if claims.emailId ~= nil then
-                    kong.service.request.set_header("X-User-Email", tostring(claims.emailId))
-                  end
-                  if claims.role ~= nil then
-                    kong.service.request.set_header("X-User-role", tostring(claims.role))
-                  end
 
   - name: auth-users-service
     url: https://myaccess-auth-3qr9.onrender.com/authService
@@ -130,8 +79,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
   - name: auth-role-service
     url: https://myaccess-auth-3qr9.onrender.com/role
@@ -150,8 +97,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
   - name: auth-audit-service
     url: https://myaccess-auth-3qr9.onrender.com/register/audit
@@ -170,8 +115,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
   - name: auth-permissions-service
     url: https://myaccess-auth-3qr9.onrender.com/register/permissions
@@ -190,8 +133,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
   - name: card-service
     url: https://myaccess-card-7jc2.onrender.com/cardService
@@ -210,8 +151,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
   - name: news-service
     url: https://myaccess-news-9h3h.onrender.com/newsService
@@ -230,8 +169,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
   - name: notifications-service
     url: https://myaccess-notification-ichc.onrender.com/notificationsService
@@ -250,8 +187,6 @@ services:
         plugins:
           - name: jwt
             config: *jwt_config
-          - name: pre-function
-            config: *claims_headers_config
 
 plugins:
   - name: cors
