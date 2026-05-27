@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { colors } from '../theme/colors.jsx';
+import { digitsOnly } from '../utils/inputFilters.js';
 
 export default function CustomInput({ 
   label,
@@ -14,8 +15,13 @@ export default function CustomInput({
   autoCapitalize = 'none',
   compact = false,
   dense = false,
+  digitsOnly: numericOnly = false,
 }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const handleChange = (text) => {
+    onChangeText(numericOnly ? digitsOnly(text) : text);
+  };
 
   return (
     <View style={[styles.container, compact && styles.containerCompact, dense && styles.containerDense]}>
@@ -27,9 +33,10 @@ export default function CustomInput({
           placeholder={placeholder}
           placeholderTextColor={colors.textSecondary}
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={handleChange}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
-          keyboardType={keyboardType}
+          keyboardType={numericOnly ? 'numeric' : keyboardType}
+          inputMode={numericOnly ? 'numeric' : undefined}
           autoCapitalize={autoCapitalize}
         />
         {secureTextEntry && (

@@ -6,6 +6,7 @@ import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import { colors } from '../theme/colors.jsx';
 import { isPublicRegistrationRole, ROLES } from '../utils/accessControl';
+import { isDigitsOnly } from '../utils/inputFilters.js';
 import { registerUser, uploadPhoto } from '../services/authService';
 
 const STEPS = ['Personal', 'Datos', 'Acceso'];
@@ -41,7 +42,13 @@ export default function RegisterGatewayScreen({ navigation }) {
     const e = {};
     if (s === 0) {
       if (!values.name || values.name.length < 3) e.name = 'Nombre requerido';
-      if (!values.document || values.document.length < 5) e.document = 'Documento requerido';
+      if (!values.document) {
+        e.document = 'Documento requerido';
+      } else if (!isDigitsOnly(values.document)) {
+        e.document = 'Solo se permiten numeros';
+      } else if (values.document.length < 5) {
+        e.document = 'Minimo 5 digitos';
+      }
       if (!BLOOD_TYPES.includes(values.bloodType)) {
         e.bloodType = 'Selecciona un tipo de sangre valido';
       }
@@ -51,7 +58,11 @@ export default function RegisterGatewayScreen({ navigation }) {
         e.nameRole = 'Selecciona Aprendiz o Instructor';
       }
       if (!values.trainingProgram) e.trainingProgram = 'Programa requerido';
-      if (!values.Ficha) e.Ficha = 'Numero de ficha requerido';
+      if (!values.Ficha) {
+        e.Ficha = 'Numero de ficha requerido';
+      } else if (!isDigitsOnly(values.Ficha)) {
+        e.Ficha = 'Solo se permiten numeros';
+      }
     }
     if (s === 2) {
       if (!values.email.includes('@')) e.email = 'Email invalido';
