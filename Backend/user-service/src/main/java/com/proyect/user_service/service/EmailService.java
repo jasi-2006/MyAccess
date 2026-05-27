@@ -17,10 +17,10 @@ public class EmailService {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    @Value("${MAILERSEND_API_KEY:mlsn.7316b05544b03b95db9dcc3cfa482517f2397b448f2227ec61692816978db7e6}")
+    @Value("${MAILERSEND_API_KEY:}")
     private String apiKey;
 
-    @Value("${EMAIL_FROM:MS_F19U7O@test-r83ql3p3z8xgzw1j.mlsender.net}")
+    @Value("${EMAIL_FROM:}")
     private String from;
 
     public void sendVerificationCode(String to, String code) {
@@ -50,6 +50,13 @@ public class EmailService {
     }
 
     private void sendEmail(String to, String subject, String text) {
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new IllegalStateException("MAILERSEND_API_KEY no configurada en el servidor");
+        }
+        if (from == null || from.isBlank()) {
+            throw new IllegalStateException("EMAIL_FROM no configurado en el servidor");
+        }
+
         String payload = """
                 {
                   "from": {
@@ -81,7 +88,9 @@ public class EmailService {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new IllegalStateException("MailerSend API returned status " + response.statusCode() + ": " + response.body());
+                log.error("MailerSend error status={} body={}", response.statusCode(), response.body());
+                throw new IllegalStateException(
+                        "MailerSend API returned status " + response.statusCode() + ": " + response.body());
             }
             log.info("Email successfully sent through MailerSend REST API to {}", to);
         } catch (IOException e) {
