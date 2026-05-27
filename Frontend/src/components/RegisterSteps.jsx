@@ -5,6 +5,7 @@ import CustomInput from './CustomInput.jsx';
 import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
+const DOCUMENT_TYPES = ['CC', 'TI', 'PPT'];
 
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
@@ -38,7 +39,6 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
   const stepFields = [
     [
       inp('👤', 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
-      inp('🪪', 'Tipo de documento',   typeDocument,  o('typeDocument'), {}),
       inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, keyboardType: 'numeric' }),
       inp('🩸', 'Tipo de sangre',      bloodType,     o('bloodType'),    { error: errors.bloodType, autoCapitalize: 'characters' }),
     ],
@@ -56,6 +56,27 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   return (
     <View style={[styles.container, isCarnetStep && styles.containerDense]}>
+      {step === 0 && (
+        <View style={styles.roleBlock}>
+          <Text style={styles.roleLabel}>Tipo de documento</Text>
+          <View style={styles.roleRow}>
+            {DOCUMENT_TYPES.map((documentType) => {
+              const active = typeDocument === documentType;
+              return (
+                <TouchableOpacity
+                  key={documentType}
+                  style={[styles.roleChip, active && styles.roleChipActive]}
+                  onPress={() => onChange('typeDocument', documentType)}
+                >
+                  <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
+                    {documentType}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      )}
       {step === 1 && (
         <View style={styles.roleBlock}>
           <Text style={styles.roleLabel}>Tipo de usuario</Text>
