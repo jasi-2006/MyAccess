@@ -5,7 +5,7 @@ Este contenedor reemplaza el `api-gateway` de Spring Cloud Gateway para el despl
 ## Variables necesarias
 
 - `JWT_SECRET`: el mismo valor Base64 usado por `user-service` para firmar tokens.
-  Kong lo lee con `{vault://env/JWT_SECRET}` (no uses `jwt-secret`).
+  Kong lo inyecta al arrancar desde `kong.yml.template` con `envsubst` (no uses `{vault://...}` en consumers JWT).
 - `KONG_PROXY_LISTEN`: en Render debe quedar como `0.0.0.0:10000`.
 
 El Admin API de Kong queda desactivado con `KONG_ADMIN_LISTEN=off`. Para Render
