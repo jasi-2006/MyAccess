@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
-import { API_GATEWAY_URL } from '../services/api.js';
+import { API_GATEWAY_URL, USER_SERVICE_URL } from '../services/api.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 function resolveImageUrl(url) {
@@ -18,6 +18,10 @@ function resolveImageUrl(url) {
 
   const value = String(url).trim();
   if (!value) return null;
+
+  if (value.startsWith('/uploads/')) {
+    return `${USER_SERVICE_URL}${value}`;
+  }
 
   if (value.startsWith('/')) {
     return `${API_GATEWAY_URL}${value}`;
@@ -29,9 +33,11 @@ function resolveImageUrl(url) {
       const gatewayUrl = new URL(API_GATEWAY_URL);
 
       if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
-        parsedUrl.protocol = gatewayUrl.protocol;
-        parsedUrl.hostname = gatewayUrl.hostname;
-        parsedUrl.port = gatewayUrl.port;
+        const userServiceUrl = new URL(USER_SERVICE_URL);
+        const targetBase = parsedUrl.pathname.startsWith('/uploads/') ? userServiceUrl : gatewayUrl;
+        parsedUrl.protocol = targetBase.protocol;
+        parsedUrl.hostname = targetBase.hostname;
+        parsedUrl.port = targetBase.port;
       }
 
       return parsedUrl.toString();
