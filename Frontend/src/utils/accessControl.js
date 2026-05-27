@@ -4,6 +4,13 @@ export const ROLES = {
   APRENDIZ: 'APRENDIZ',
 };
 
+/** Roles que el usuario puede elegir en el registro público (no incluye ADMIN) */
+export const PUBLIC_REGISTRATION_ROLES = [ROLES.APRENDIZ, ROLES.INSTRUCTOR];
+
+export function isPublicRegistrationRole(role) {
+  return PUBLIC_REGISTRATION_ROLES.includes(normalizeRole(role));
+}
+
 export const PUBLIC_ROUTES = [
   'Onboarding',
   'Login',
@@ -26,7 +33,6 @@ const ROLE_ROUTE_ACCESS = {
     'Fichas',
     'Solicitudes',
     'Historial',
-    'Imprimir',
   ],
   [ROLES.APRENDIZ]: [
     'Home',
