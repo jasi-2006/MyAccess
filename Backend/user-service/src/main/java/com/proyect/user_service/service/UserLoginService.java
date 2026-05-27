@@ -4,6 +4,7 @@ import com.proyect.auth_service.entity.UserAuth;
 import com.proyect.auth_service.repository.UserAuthRepository;
 import com.proyect.user_service.dto.AuthResponseDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
+import com.proyect.user_service.entity.UserRegisterProfile;
 import com.proyect.user_service.repository.UserRegisterProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
@@ -44,25 +45,36 @@ public class UserLoginService {
             throw new RuntimeException("El token enviado no es refresh token");
         }
 
-        Long userId = jwtService.extractUserId(refreshToken);
-        UserAuth user = userAuthRepository.findById(userId)
+        Long profileId = jwtService.extractUserId(refreshToken);
+        UserRegisterProfile profile = userRegisterProfileRepository.findById(profileId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        UserAuth user = userAuthRepository.findByEmail(profile.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (!user.getVerifiedEmail()) {
             throw new RuntimeException("cuenta no verificada. revisa tu correo");
         }
 
-        return generateAuthResponse(user);
+        return generateAuthResponse(user, profile);
     }
 
     private AuthResponseDTO generateAuthResponse(UserAuth user) {
-        String nameRole = userRegisterProfileRepository.findByEmail(user.getEmail())
-                .map(profile -> profile.getNameRole())
-                .filter(role -> role != null && !role.isBlank())
-                .orElseThrow(() -> new RuntimeException("El usuario no tiene un rol configurado en su perfil"));
+        UserRegisterProfile profile = userRegisterProfileRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("El usuario no tiene perfil configurado"));
+        return generateAuthResponse(user, profile);
+    }
 
-        String token = jwtService.generateToken(user.getId(), user.getEmail(), nameRole);
-        String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail(), nameRole);
+    private AuthResponseDTO generateAuthResponse(UserAuth user, UserRegisterProfile profile) {
+        String nameRole = profile.getNameRole();
+        if (nameRole == null || nameRole.isBlank()) {
+            throw new RuntimeException("El usuario no tiene un rol configurado en su perfil");
+        }
+
+        // userId del JWT = id del perfil (user_profile), usado por card/notifications.
+        Long profileId = profile.getId();
+        String token = jwtService.generateToken(profileId, user.getEmail(), nameRole);
+        String refreshToken = jwtService.generateRefreshToken(profileId, user.getEmail(), nameRole);
         return new AuthResponseDTO(token, refreshToken);
     }
 }
