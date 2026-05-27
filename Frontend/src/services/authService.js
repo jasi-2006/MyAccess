@@ -26,7 +26,8 @@ export async function getUserProfile() {
 }
 
 export async function getAllUserProfiles() {
-  return apiRequest('/api/v1/register');
+  // Use trailing slash to match current backend filter in production.
+  return userServiceRequest('/register/');
 }
 
 export async function registerUser(payload) {
