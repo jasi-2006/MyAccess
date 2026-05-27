@@ -34,6 +34,11 @@ public class GlobalExceptionHandler {
                 || lowerMessage.contains("cuenta no verificada")) {
             return build(HttpStatus.UNAUTHORIZED, message);
         }
+        if (lowerMessage.contains("mailersend")
+                || lowerMessage.contains("failed to send email")
+                || lowerMessage.contains("interrupted")) {
+            return build(HttpStatus.BAD_GATEWAY, "No fue posible enviar el correo de verificacion. Intenta nuevamente.");
+        }
 
         return build(HttpStatus.BAD_REQUEST, message);
     }

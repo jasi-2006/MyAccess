@@ -113,7 +113,8 @@ public class AuthController {
 
     @PostMapping("/resend")
     public ResponseEntity<String> resend(@RequestParam String email) {
-        verificationService.sendCode(email);
+        String normalizedEmail = email == null ? null : email.trim().toLowerCase();
+        verificationService.sendCode(normalizedEmail);
         return ResponseEntity.ok("codigo reenviado al correo");
     }
 
