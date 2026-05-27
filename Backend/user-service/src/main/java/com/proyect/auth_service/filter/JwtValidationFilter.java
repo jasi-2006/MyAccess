@@ -24,7 +24,9 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         // /auth/* and /register/* are called directly from the web app with Bearer JWT.
         // Kong-style headers (x-User-id, X-User-Email, X-User-role) apply only to other routes.
         if (path.startsWith("/auth/")
+                || path.equals("/register")
                 || path.startsWith("/register/")
+                || path.equals("/uploads")
                 || path.startsWith("/uploads/")
                 || path.equals("/error")
                 || request.getMethod().equalsIgnoreCase("OPTIONS")) {
