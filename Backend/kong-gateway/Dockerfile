@@ -1,6 +1,13 @@
 FROM kong:3.9
 
-COPY kong.yml /kong/declarative/kong.yml
+USER root
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends gettext-base \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY kong.yml.template /kong/declarative/kong.yml.template
+COPY start-kong.sh /start-kong.sh
+RUN chmod +x /start-kong.sh
 
 ENV KONG_DATABASE=off \
     KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml \
@@ -16,4 +23,8 @@ ENV KONG_DATABASE=off \
     KONG_LOG_LEVEL=notice \
     KONG_ANONYMOUS_REPORTS=off
 
+USER kong
+
 EXPOSE 8000 8443
+
+CMD ["/start-kong.sh"]
