@@ -22,39 +22,46 @@ public class VerificationService {
     private final Map<String, LocalDateTime> expirations = new ConcurrentHashMap<>();
 
     public void sendCode(String email) {
+        String normalizedEmail = normalizeEmail(email);
+        userAuthRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new RuntimeException("email no registrado"));
+
         String code = String.valueOf(new Random().nextInt(900000) + 100000);
-        codes.put(email, code);
-        expirations.put(email, LocalDateTime.now().plusMinutes(10));
-        emailService.sendVerificationCode(email, code);
+        codes.put(normalizedEmail, code);
+        expirations.put(normalizedEmail, LocalDateTime.now().plusMinutes(10));
+        emailService.sendVerificationCode(normalizedEmail, code);
     }
 
     public void VerifiCode(String email, String code) {
-        validateCode(email, code);
-        UserAuth user = userAuthRepository.findByEmail(email)
+        String normalizedEmail = normalizeEmail(email);
+        validateCode(normalizedEmail, code);
+        UserAuth user = userAuthRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("email no encontrado"));
         user.setVerifiedEmail(true);
         userAuthRepository.save(user);
-        codes.remove(email);
-        expirations.remove(email);
+        codes.remove(normalizedEmail);
+        expirations.remove(normalizedEmail);
     }
 
     public void sendPasswordResetCode(String email) {
-        userAuthRepository.findByEmail(email)
+        String normalizedEmail = normalizeEmail(email);
+        userAuthRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("email no registrado"));
         String code = String.valueOf(new Random().nextInt(900000) + 100000);
-        codes.put(email, code);
-        expirations.put(email, LocalDateTime.now().plusMinutes(10));
-        emailService.sendPasswordResetCode(email, code);
+        codes.put(normalizedEmail, code);
+        expirations.put(normalizedEmail, LocalDateTime.now().plusMinutes(10));
+        emailService.sendPasswordResetCode(normalizedEmail, code);
     }
 
     public void resetPassword(String email, String code, String newPassword) {
-        validateCode(email, code);
-        UserAuth user = userAuthRepository.findByEmail(email)
+        String normalizedEmail = normalizeEmail(email);
+        validateCode(normalizedEmail, code);
+        UserAuth user = userAuthRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new RuntimeException("email no encontrado"));
         user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
         userAuthRepository.save(user);
-        codes.remove(email);
-        expirations.remove(email);
+        codes.remove(normalizedEmail);
+        expirations.remove(normalizedEmail);
     }
 
     private void validateCode(String email, String code) {
@@ -65,5 +72,13 @@ public class VerificationService {
         if (!code.equals(codes.get(email))) {
             throw new RuntimeException("el codigo es incorrecto");
         }
+    }
+
+    private String normalizeEmail(String email) {
+        String normalized = email == null ? "" : email.trim().toLowerCase();
+        if (normalized.isBlank()) {
+            throw new RuntimeException("email no registrado");
+        }
+        return normalized;
     }
 }
