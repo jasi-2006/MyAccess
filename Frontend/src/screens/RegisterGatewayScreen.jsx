@@ -5,6 +5,7 @@ import RegisterSteps from '../components/RegisterSteps.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import { colors } from '../theme/colors.jsx';
+import { isPublicRegistrationRole, ROLES } from '../utils/accessControl';
 import { registerUser, uploadPhoto } from '../services/authService';
 
 const STEPS = ['Personal', 'Datos', 'Acceso'];
@@ -30,7 +31,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [values, setValues] = useState({
     name: '', typeDocument: 'CC', document: '', bloodType: '',
     regional: 'quindio', trainingCenter: 'centro comercio y turismo',
-    nameRole: 'APRENDIZ', trainingProgram: '', Ficha: '',
+    nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
   });
 
@@ -44,6 +45,9 @@ export default function RegisterGatewayScreen({ navigation }) {
       if (!values.bloodType) e.bloodType = 'Tipo de sangre requerido';
     }
     if (s === 1) {
+      if (!isPublicRegistrationRole(values.nameRole)) {
+        e.nameRole = 'Selecciona Aprendiz o Instructor';
+      }
       if (!values.trainingProgram) e.trainingProgram = 'Programa requerido';
       if (!values.Ficha) e.Ficha = 'Numero de ficha requerido';
     }
@@ -92,7 +96,9 @@ export default function RegisterGatewayScreen({ navigation }) {
         fullName: values.name, typeDocument: values.typeDocument,
         document: values.document, trainingProgram: values.trainingProgram,
         trainingCenter: values.trainingCenter, regional: values.regional.toLowerCase(),
-        bloodType: values.bloodType, nameRole: values.nameRole, ficha: values.Ficha,
+        bloodType: values.bloodType,
+        nameRole: values.nameRole,
+        ficha: values.Ficha,
       });
 
       if (photo) {

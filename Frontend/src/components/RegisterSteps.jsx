@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import CustomInput from './CustomInput.jsx';
+import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
 
@@ -44,7 +45,6 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
     [
       inp('📄', 'Regional',             regional,        o('regional'),        {}),
       inp('🏢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
-      inp('👤', 'Rol',                  nameRole,        o('nameRole'),        {}),
       inp('⚙️', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
       inp('🔢', 'N° Ficha',             Ficha,           o('Ficha'),           { error: errors.Ficha, keyboardType: 'numeric' }),
     ],
@@ -56,6 +56,28 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   return (
     <View style={[styles.container, isCarnetStep && styles.containerDense]}>
+      {step === 1 && (
+        <View style={styles.roleBlock}>
+          <Text style={styles.roleLabel}>Tipo de usuario</Text>
+          <View style={styles.roleRow}>
+            {PUBLIC_REGISTRATION_ROLES.map((role) => {
+              const active = nameRole === role;
+              return (
+                <TouchableOpacity
+                  key={role}
+                  style={[styles.roleChip, active && styles.roleChipActive]}
+                  onPress={() => onChange('nameRole', role)}
+                >
+                  <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
+                    {role === 'APRENDIZ' ? 'Aprendiz' : 'Instructor'}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          {errors.nameRole ? <Text style={styles.roleError}>{errors.nameRole}</Text> : null}
+        </View>
+      )}
       {stepFields[step].map((f) => (
         <CustomInput
           key={f.placeholder}
@@ -118,5 +140,47 @@ const styles = StyleSheet.create({
     color: '#24C565',
     fontWeight: '700',
     fontSize: 13,
+  },
+  roleBlock: {
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  roleLabel: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#6B7280',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
+  roleRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  roleChip: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  roleChipActive: {
+    borderColor: '#24C565',
+    backgroundColor: '#E8FFF5',
+  },
+  roleChipText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#6B7280',
+  },
+  roleChipTextActive: {
+    color: '#118449',
+  },
+  roleError: {
+    color: '#EF4444',
+    fontSize: 12,
+    marginTop: 6,
+    marginLeft: 4,
   },
 });

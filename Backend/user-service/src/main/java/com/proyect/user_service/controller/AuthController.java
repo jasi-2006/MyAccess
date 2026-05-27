@@ -1,7 +1,8 @@
 package com.proyect.user_service.controller;
 
 import com.proyect.auth_service.dto.UserAuthRequestDTO;
-import com.proyect.auth_service.dto.UserAuthResponseDTO;
+import com.proyect.auth_service.entity.Role;
+import com.proyect.auth_service.repository.RoleRepository;
 import com.proyect.auth_service.service.UserAuthService;
 import com.proyect.user_service.dto.AuthResponseDTO;
 import com.proyect.user_service.dto.RefreshTokenRequestDTO;
@@ -36,6 +37,7 @@ public class AuthController {
     private final UserLoginService userLoginService;
     private final UserRegisterProfileService userRegisterProfileService;
     private final UserAuthService userAuthService;
+    private final RoleRepository roleRepository;
     private final VerificationService verificationService;
     
 
@@ -54,10 +56,14 @@ public class AuthController {
         String email = request.getEmail() == null ? null : request.getEmail().trim().toLowerCase();
         request.setEmail(email);
         userRegisterProfileService.validateRegistrationAvailable(email, request.getDocument());
+        String registrationRole = resolvePublicRegistrationRole(request.getNameRole());
+        Role authRole = roleRepository.findByNameRole(registrationRole)
+                .orElseThrow(() -> new RuntimeException("Rol " + registrationRole + " no configurado en el sistema"));
 
         UserAuthRequestDTO authDTO = new UserAuthRequestDTO();
         authDTO.setEmail(email);
         authDTO.setPassword(request.getPassword());
+        authDTO.setIdRole(authRole.getId());
         userAuthService.create(authDTO);
 
         UserRegisterProfileRequestDTO profileDTO = new UserRegisterProfileRequestDTO();
@@ -68,7 +74,7 @@ public class AuthController {
         profileDTO.setTrainingCenter(request.getTrainingCenter());
         profileDTO.setRegional(request.getRegional());
         profileDTO.setBloodType(request.getBloodType());
-        profileDTO.setNameRole(request.getNameRole());
+        profileDTO.setNameRole(registrationRole);
         profileDTO.setFicha(request.getFicha());
         profileDTO.setEmail(email);
         UserRegisterProfileResponseDTO profileResponse = userRegisterProfileService.userCreated(profileDTO);
@@ -80,6 +86,29 @@ public class AuthController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse);
+    }
+
+    private String resolvePublicRegistrationRole(String requestedRole) {
+        String normalized = normalizeRoleName(requestedRole);
+        if ("ADMIN".equals(normalized)) {
+            throw new RuntimeException(
+                    "No puedes registrarte como administrador. Selecciona Aprendiz o Instructor.");
+        }
+        if (!"APRENDIZ".equals(normalized) && !"INSTRUCTOR".equals(normalized)) {
+            throw new RuntimeException("Rol no permitido. Selecciona Aprendiz o Instructor.");
+        }
+        return normalized;
+    }
+
+    private String normalizeRoleName(String role) {
+        if (role == null || role.isBlank()) {
+            return "APRENDIZ";
+        }
+        String normalized = role.trim().toUpperCase();
+        if ("ADMINISTRADOR".equals(normalized)) {
+            return "ADMIN";
+        }
+        return normalized;
     }
 
     @PostMapping("/resend")
