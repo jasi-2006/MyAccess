@@ -10,7 +10,7 @@
 # En Render Dashboard, configura manualmente (sync: false):
 #   DB_USERNAME, DB_PASSWORD, JWT_SECRET
 #   USER_DB_URL, AUTH_DB_URL, CARD_DB_URL, NEWS_DB_URL, NOTIFICATIONS_DB_URL
-#   SMTP_USERNAME, SMTP_PASSWORD, EMAIL_FROM (solo user-service)
+#   MAILERSEND_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME, SMTP_USERNAME, SMTP_PASSWORD (user-service)
 #
 # En Vercel (Frontend), variables recomendadas:
 #   EXPO_PUBLIC_API_GATEWAY_URL=https://myaccess-kong.onrender.com
@@ -62,6 +62,8 @@ services:
         sync: false
       - key: EMAIL_FROM
         sync: false
+      - key: EMAIL_FROM_NAME
+        value: MyAccess
       - key: MAILERSEND_API_KEY
         sync: false
 
