@@ -49,6 +49,9 @@ public class NotificationController {
         String role = (String) request.getAttribute("role");
         Long userId = (Long) request.getAttribute("userId");
         if ("APRENDIZ".equalsIgnoreCase(role)) {
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             return ResponseEntity.ok(notificationService.searchByUser(userId.intValue(), filter));
         }
         return ResponseEntity.ok(notificationService.search(filter));
