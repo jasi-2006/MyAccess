@@ -30,9 +30,9 @@ export default function UserProfile({ navigation }) {
   const fields = [
     { label: 'Nombre completo',  value: profile?.fullName,        key: 'fullName' },
     { label: 'Tipo documento',   value: profile?.typeDocument,    key: 'typeDocument' },
-    { label: 'Documento',        value: profile?.document,        key: 'document' },
+    { label: 'Documento',        value: profile?.document,        key: 'document', numeric: true },
     { label: 'Tipo de sangre',   value: profile?.bloodType,       key: 'bloodType' },
-    { label: 'Ficha',            value: profile?.ficha,           key: 'ficha' },
+    { label: 'Ficha',            value: profile?.ficha,           key: 'ficha', numeric: true },
     { label: 'Programa',         value: profile?.trainingProgram, key: 'trainingProgram' },
     { label: 'Centro',           value: profile?.trainingCenter,  key: 'trainingCenter' },
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
