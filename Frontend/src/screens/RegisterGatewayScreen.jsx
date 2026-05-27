@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, Platform, ScrollView, Modal, Image } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.jsx';
-import RegisterSteps from '../components/RegisterSteps.jsx';
+import RegisterSteps, { BLOOD_TYPES } from '../components/RegisterSteps.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import { colors } from '../theme/colors.jsx';
@@ -29,7 +29,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [showReview, setShowReview] = useState(false);
 
   const [values, setValues] = useState({
-    name: '', typeDocument: 'CC', document: '', bloodType: '',
+    name: '', typeDocument: 'CC', document: '', bloodType: 'O+',
     regional: 'quindio', trainingCenter: 'centro comercio y turismo',
     nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
@@ -42,7 +42,9 @@ export default function RegisterGatewayScreen({ navigation }) {
     if (s === 0) {
       if (!values.name || values.name.length < 3) e.name = 'Nombre requerido';
       if (!values.document || values.document.length < 5) e.document = 'Documento requerido';
-      if (!values.bloodType) e.bloodType = 'Tipo de sangre requerido';
+      if (!BLOOD_TYPES.includes(values.bloodType)) {
+        e.bloodType = 'Selecciona un tipo de sangre valido';
+      }
     }
     if (s === 1) {
       if (!isPublicRegistrationRole(values.nameRole)) {
@@ -62,6 +64,11 @@ export default function RegisterGatewayScreen({ navigation }) {
   const goToStep = (s) => {
     if (s < step) { setStep(s); setErrors({}); return; }
     if (s === step + 1 && validate(step)) { setStep(s); setErrors({}); }
+  };
+
+  const closeReview = () => {
+    setShowReview(false);
+    setSubmitError('');
   };
 
   const handleContinue = () => {
@@ -177,11 +184,23 @@ export default function RegisterGatewayScreen({ navigation }) {
         </View>
       </AuthSplitLayout>
 
-      <Modal visible={showReview} transparent animationType="fade" onRequestClose={() => setShowReview(false)}>
+      <Modal visible={showReview} transparent animationType="fade" onRequestClose={closeReview}>
         <View style={styles.reviewOverlay}>
           <View style={styles.reviewPanel}>
-            <Text style={styles.reviewTitle}>Revisa tu información</Text>
-            <Text style={styles.reviewSubtitle}>Verifica que todo esté correcto antes de registrarte.</Text>
+            <View style={styles.reviewHeader}>
+              <View style={styles.reviewHeaderText}>
+                <Text style={styles.reviewTitle}>Revisa tu información</Text>
+                <Text style={styles.reviewSubtitle}>Verifica que todo esté correcto antes de registrarte.</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.reviewCloseBtn}
+                onPress={closeReview}
+                accessibilityLabel="Cerrar"
+                accessibilityRole="button"
+              >
+                <Text style={styles.reviewCloseIcon}>✕</Text>
+              </TouchableOpacity>
+            </View>
 
             <ScrollView style={styles.reviewScroll} showsVerticalScrollIndicator={false}>
               {photo?.uri && (
@@ -217,7 +236,7 @@ export default function RegisterGatewayScreen({ navigation }) {
             <View style={styles.reviewActions}>
               <TouchableOpacity
                 style={styles.reviewEditBtn}
-                onPress={() => { setShowReview(false); setSubmitError(''); }}
+                onPress={closeReview}
               >
                 <Text style={styles.reviewEditText}>Editar datos</Text>
               </TouchableOpacity>
@@ -259,8 +278,30 @@ const styles = StyleSheet.create({
   link: { fontSize: 12, color: '#0F9F76', fontWeight: '800' },
   reviewOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 20 },
   reviewPanel: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, width: '100%', maxWidth: 420, maxHeight: '85%' },
+  reviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+    gap: 12,
+  },
+  reviewHeaderText: { flex: 1 },
+  reviewCloseBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F3F4F6',
+  },
+  reviewCloseIcon: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#6B7280',
+    lineHeight: 18,
+  },
   reviewTitle: { fontSize: 18, fontWeight: '800', color: '#1F2937', marginBottom: 4 },
-  reviewSubtitle: { fontSize: 12, color: '#6B7280', marginBottom: 14 },
+  reviewSubtitle: { fontSize: 12, color: '#6B7280' },
   reviewScroll: { maxHeight: 340, marginBottom: 12 },
   reviewPhotoRow: { alignItems: 'center', marginBottom: 12 },
   reviewPhoto: { width: 72, height: 72, borderRadius: 36, borderWidth: 2, borderColor: '#24C565' },
