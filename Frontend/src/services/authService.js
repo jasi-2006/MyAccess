@@ -26,8 +26,8 @@ export async function getUserProfile() {
 }
 
 export async function getAllUserProfiles() {
-  // Use trailing slash to match current backend filter in production.
-  return userServiceRequest('/register/');
+  // Backend expone GET /register (UserRegisterProfileController.getAll).
+  return userServiceRequest('/register');
 }
 
 export async function registerUser(payload) {
