@@ -3,6 +3,7 @@ import {
   Modal, View, Text, StyleSheet, ScrollView,
   TextInput, TouchableOpacity, ActivityIndicator, useWindowDimensions,
 } from 'react-native';
+import { digitsOnly } from '../utils/inputFilters.js';
 
 export default function ProfileEditModal({ visible, fields, form, onChange, onSave, onCancel, saving }) {
   const { width } = useWindowDimensions();
@@ -20,9 +21,11 @@ export default function ProfileEditModal({ visible, fields, form, onChange, onSa
                 <TextInput
                   style={styles.input}
                   value={form[f.key] || ''}
-                  onChangeText={(v) => onChange(f.key, v)}
+                  onChangeText={(v) => onChange(f.key, f.numeric ? digitsOnly(v) : v)}
                   placeholder={f.label}
                   placeholderTextColor="#94A3B8"
+                  keyboardType={f.numeric ? 'numeric' : 'default'}
+                  inputMode={f.numeric ? 'numeric' : 'text'}
                 />
               </View>
             ))}
