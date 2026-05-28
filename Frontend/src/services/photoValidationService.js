@@ -14,9 +14,10 @@ export async function validateCarnetPhoto(file) {
   const base64 = await fileToBase64(file);
 
   const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde SOLO con un JSON con esta estructura exacta:
+  
 {
-  "valid": true,
-  "errors": []
+  "valid": boolean,
+  "errors": ["error1", "error2", ...]
 }
 Criterios que DEBEN cumplirse para que sea valida:
 1. Fondo blanco 

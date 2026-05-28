@@ -28,7 +28,7 @@ export default function OnboardingScreen({ navigation }) {
     ? Math.min(Math.max(height * 0.42, 270), 340)
     : isSmallDevice
       ? 280
-      : 550;
+      : 510;
   const contentPaddingBottom = isDesktop ? 6 : isSmallDevice ? 20 : 24;
   const contentPaddingTop = isDesktop ? -14 : isSmallDevice ? 12 : 8;
 
@@ -70,22 +70,24 @@ export default function OnboardingScreen({ navigation }) {
         <View style={styles.curve} />
 
         <View style={styles.content}>
-          <Image
-            source={require('../assets/LogoMyAccess.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <View style={styles.contentInner}>
+            <Image
+              source={require('../assets/LogoMyAccess.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
 
-          <Text style={styles.subtitle}>
-            Bienvenido a MyAccess!
-            Innovamos la identificación con carnets digitales seguros y personalizados.
-          </Text>
+            <Text style={styles.subtitle}>
+              Bienvenido a MyAccess!
+              Innovamos la identificación con carnets digitales seguros y personalizados.
+            </Text>
 
-          <PrimaryButton
-            title="Comenzar"
-            onPress={() => navigation.navigate('Login')}
-            style={styles.button}
-          />
+            <PrimaryButton
+              title="Comenzar"
+              onPress={() => navigation.navigate('Login')}
+              style={styles.button}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -119,7 +121,7 @@ function createStyles({
     width: '100%',
     alignItems: 'center',
     backgroundColor: colors.primary,
-    paddingTop: isDesktop ? 70 : 60,
+    paddingTop: isDesktop ? 100 : 40,
     shadowColor: '#000',
     shadowOffset: {
      width: 0,
@@ -158,22 +160,21 @@ function createStyles({
   },
 
   personasImage: {
-  width: imageWidth + 150,
-  height: imageHeight + 150,
-  top: 60,
-  marginBottom: isDesktop ? 18 : isSmallDevice ? 12 : 28,
+  width: imageWidth + 100,
+  height: imageHeight + 190,
+  top: 120,
+  marginBottom: isDesktop ? 18 : isSmallDevice ? 10 : 29,
   zIndex: 1,
 
   },
 
   bottomSection: {
-    flex: 1,
     marginTop: isDesktop ? -25 : -22,
     alignItems: 'center',
   },
 
   curve: {
-  width: 580,
+  width: 350,
   height: 300,
   backgroundColor: colors.background,
   transform: [{ translateY: -78 }],
@@ -184,20 +185,23 @@ function createStyles({
 
   content: {
     width: containerWidth,
-    flex: 1,
     backgroundColor: colors.background,
     alignItems: 'center',
     paddingTop: contentPaddingTop + 10,
     paddingHorizontal: contentPaddingHorizontal + 8,
-    paddingBottom: contentPaddingBottom + 20,
+    paddingBottom: isDesktop ? contentPaddingBottom : 12,
+  },
+
+  contentInner: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: isDesktop ? -300 : -300,
   },
 
   logo: {
     width: logoWidth,
     height: logoHeight,
     marginBottom: isDesktop ? 24 : 18,
-    transform: [{ translateY: -300 }],
-
   },
 
   subtitle: {
@@ -207,15 +211,12 @@ function createStyles({
     color: colors.textSecondary,
     marginBottom: isDesktop ? 32 : 28,
     textAlign: 'center',
-    transform: [{ translateY: -300 }],
-
   },
 
   button: {
     width: isDesktop ? 190 : '100%',
     maxWidth: 340,
     alignSelf: 'center',
-    transform: [{ translateY: -300 }],
   },
   });
 }
