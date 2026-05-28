@@ -198,14 +198,14 @@ export default function ImprimirScreen({ navigation }) {
 
   const buildCarnetPairHtml = (learner, card) => {
     const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
-    const role = learner?.nameRole || 'APRENDIZ';
+    const role = learner?.nameRole || '';
     const docType = learner?.typeDocument || 'CC';
-    const docNum = learner?.document || 'NA';
+    const docNum = learner?.document || '';
     const blood = learner?.bloodType || '';
     const regional = learner?.regional || 'Regional Quindio';
     const center = learner?.trainingCenter || 'centro comercio y turismo';
     const program = learner?.trainingProgram || 'NA';
-    const ficha = learner?.ficha || learner?.files || 'NA';
+    const ficha = learner?.ficha || learner?.files || '';
 
     const photoHtml = photoUrl
       ? `<img src="${photoUrl}" style="width:122px;height:152px;border-radius:10px;object-fit:cover;" />`
