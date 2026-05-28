@@ -99,15 +99,20 @@ public class UserRegisterProfileController {
             @RequestBody UserRegisterProfileRequestDTO dto,
             HttpServletRequest request) {
         String role = (String) request.getAttribute("role");
-        Long userId = (Long) request.getAttribute("userId");
+        String email = (String) request.getAttribute("emailId");
         if ("APRENDIZ".equalsIgnoreCase(role)) {
             List<UserRegisterProfileResponseDTO> user = userService.getForDocument(document);
-            if (user.isEmpty() || !user.get(0).getId().equals(userId)) {
+            if (user.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            String profileEmail = user.get(0).getEmail();
+            if (profileEmail == null || email == null
+                    || !profileEmail.equalsIgnoreCase(email.trim())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         }
         return userService.updateUserForDocument(document, dto)
-                .map(r -> ResponseEntity.status(HttpStatus.ACCEPTED).body(r))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
