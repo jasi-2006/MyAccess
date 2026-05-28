@@ -118,7 +118,16 @@ public class UserRegisterProfileController {
     @PostMapping(value = "/users/photo/{document}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserRegisterProfileResponseDTO> uploadPhoto(
             @PathVariable String document,
-            @RequestParam("photo") MultipartFile photo) {
+            @RequestParam("photo") MultipartFile photo,
+            HttpServletRequest request) {
+        String role = (String) request.getAttribute("role");
+        Long userId = (Long) request.getAttribute("userId");
+        if ("APRENDIZ".equalsIgnoreCase(role)) {
+            List<UserRegisterProfileResponseDTO> user = userService.getForDocument(document);
+            if (user.isEmpty() || !user.get(0).getId().equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
         try {
             return userService.uploadPhoto(document, photo)
                     .map(r -> ResponseEntity.status(HttpStatus.OK).body(r))
