@@ -1,21 +1,11 @@
-const GEMINI_API_KEY = String(process.env.EXPO_PUBLIC_GEMINI_API_KEY || '').trim();
-const GEMINI_MODEL = String(process.env.EXPO_PUBLIC_GEMINI_MODEL || 'gemini-2.5-flash').trim();
-
-function getGeminiUrl() {
-  if (!GEMINI_API_KEY) {
-    throw new Error(
-      'Falta EXPO_PUBLIC_GEMINI_API_KEY. Agrégala en Frontend/.env o en Vercel → Environment Variables.',
-    );
-  }
-  return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-}
+const GEMINI_API_KEY = 'AIzaSyCTKkV3_xSJMisxp9k-GHGuweKVkuWRMVM';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
-
     reader.readAsDataURL(file);
   });
 }
@@ -33,7 +23,7 @@ Criterios que DEBEN cumplirse para que sea valida:
 1. Fondo blanco 
 `;
 
-  const response = await fetch(getGeminiUrl(), {
+  const response = await fetch(GEMINI_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
