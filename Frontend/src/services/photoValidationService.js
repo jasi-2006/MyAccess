@@ -1,4 +1,4 @@
-const GEMINI_API_KEY = 'AQ.Ab8RN6Jlj5gf9hb1G7g7Wcv7GiCg-mVJe1ldXbxjweeithEc_A';
+const GEMINI_API_KEY = 'AQ.Ab8RN6LnbWYgiAx6EnU7Fg0FWSqTY3VjchJZFemunPvdPo-l4A';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 function fileToBase64(file) {
@@ -6,7 +6,7 @@ function fileToBase64(file) {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
-    
+
     reader.readAsDataURL(file);
   });
 }
