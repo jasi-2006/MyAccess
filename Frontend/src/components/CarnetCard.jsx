@@ -10,44 +10,8 @@ import {
   Image,
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
-import { API_GATEWAY_URL, USER_SERVICE_URL } from '../services/api.js';
+import { resolveImageUrl } from '../services/api.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
-
-function resolveImageUrl(url) {
-  if (!url) return null;
-
-  const value = String(url).trim();
-  if (!value) return null;
-
-  if (value.startsWith('/uploads/')) {
-    return `${USER_SERVICE_URL}${value}`;
-  }
-
-  if (value.startsWith('/')) {
-    return `${API_GATEWAY_URL}${value}`;
-  }
-
-  if (/^https?:\/\//i.test(value)) {
-    try {
-      const parsedUrl = new URL(value);
-      const gatewayUrl = new URL(API_GATEWAY_URL);
-
-      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
-        const userServiceUrl = new URL(USER_SERVICE_URL);
-        const targetBase = parsedUrl.pathname.startsWith('/uploads/') ? userServiceUrl : gatewayUrl;
-        parsedUrl.protocol = targetBase.protocol;
-        parsedUrl.hostname = targetBase.hostname;
-        parsedUrl.port = targetBase.port;
-      }
-
-      return parsedUrl.toString();
-    } catch {
-      return value;
-    }
-  }
-
-  return `${API_GATEWAY_URL}/${value.replace(/^\/+/, '')}`;
-}
 
 const QR_PATTERN = [
   '11111110001001111111',

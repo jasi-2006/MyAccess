@@ -9,7 +9,7 @@ import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import { getUserProfile, getAllUserProfiles } from '../services/authService';
 import { getAllCards, updateCard } from '../services/cardService';
 import { getAllRequestCards, updateRequestCard } from '../services/requestCardService';
-import { API_GATEWAY_URL } from '../services/api';
+import { resolveImageUrl } from '../services/api.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const ALL_FICHAS = '__all__';
@@ -38,35 +38,6 @@ function compareLearners(a, b) {
   return compareText(a?.document || a?.id, b?.document || b?.id);
 }
 
-function resolveImageUrl(url) {
-  if (!url) return null;
-
-  const value = String(url).trim();
-  if (!value) return null;
-
-  if (value.startsWith('/')) {
-    return `${API_GATEWAY_URL}${value}`;
-  }
-
-  if (/^https?:\/\//i.test(value)) {
-    try {
-      const parsedUrl = new URL(value);
-      const gatewayUrl = new URL(API_GATEWAY_URL);
-
-      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
-        parsedUrl.protocol = gatewayUrl.protocol;
-        parsedUrl.hostname = gatewayUrl.hostname;
-        parsedUrl.port = gatewayUrl.port;
-      }
-
-      return parsedUrl.toString();
-    } catch {
-      return value;
-    }
-  }
-
-  return `${API_GATEWAY_URL}/${value.replace(/^\/+/, '')}`;
-}
 
 export default function ImprimirScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
