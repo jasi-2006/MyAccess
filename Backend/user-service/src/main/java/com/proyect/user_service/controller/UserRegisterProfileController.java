@@ -5,6 +5,7 @@ import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.service.UserRegisterProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
  * Expone endpoints para consultar, actualizar y eliminar perfiles.
  * Los APRENDIZ solo pueden actualizar su propio perfil.
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/register")
@@ -121,10 +123,15 @@ public class UserRegisterProfileController {
             @RequestParam("photo") MultipartFile photo,
             HttpServletRequest request) {
         String role = (String) request.getAttribute("role");
-        Long userId = (Long) request.getAttribute("userId");
+        String email = (String) request.getAttribute("emailId");
         if ("APRENDIZ".equalsIgnoreCase(role)) {
             List<UserRegisterProfileResponseDTO> user = userService.getForDocument(document);
-            if (user.isEmpty() || !user.get(0).getId().equals(userId)) {
+            if (user.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            String profileEmail = user.get(0).getEmail();
+            if (profileEmail == null || email == null
+                    || !profileEmail.equalsIgnoreCase(email.trim())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         }
@@ -132,8 +139,11 @@ public class UserRegisterProfileController {
             return userService.uploadPhoto(document, photo)
                     .map(r -> ResponseEntity.status(HttpStatus.OK).body(r))
                     .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            log.error("Error al subir foto para documento {}", document, e);
+            throw e;
         }
     }
 

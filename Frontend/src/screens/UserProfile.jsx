@@ -83,7 +83,8 @@ export default function UserProfile({ navigation }) {
       setPhoto(null);
       setModalVisible(false);
     } catch (err) {
-      Alert.alert('Error', err?.message || 'No se pudo actualizar el perfil.');
+      const apiMessage = err?.payload?.message || err?.message;
+      Alert.alert('Error', apiMessage || 'No se pudo actualizar el perfil.');
     } finally {
       setSaving(false);
     }
