@@ -43,4 +43,11 @@ public class UserRegisterProfile {
 
     @Column(name = "photo_url")
     private String photoUrl;
+
+    @Lob
+    @Column(name = "photo_data")
+    private byte[] photoData;
+
+    @Column(name = "photo_content_type")
+    private String photoContentType;
 }

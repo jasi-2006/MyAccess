@@ -15,7 +15,7 @@ const ENV_NEWS_SERVICE_URL = process.env.EXPO_PUBLIC_NEWS_SERVICE_URL;
 function resolveGatewayUrl() {
   const normalizedEnvUrl = String(ENV_GATEWAY_URL || '').trim();
 
-  if (!normalizedEnvUrl) {
+  if (!normalizedEnvUrl || isFrontendHost(normalizedEnvUrl)) {
     return DEFAULT_GATEWAY_URL;
   }
 
@@ -27,9 +27,26 @@ function resolveGatewayUrl() {
   return normalizedEnvUrl;
 }
 
+function isFrontendHost(url) {
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    return (
+      hostname.endsWith('.vercel.app')
+      || hostname === 'vercel.app'
+      || hostname === 'localhost'
+      || hostname === '127.0.0.1'
+    );
+  } catch {
+    return false;
+  }
+}
+
 function resolveUserServiceUrl() {
   const normalizedEnvUrl = String(ENV_USER_SERVICE_URL || '').trim();
-  return normalizedEnvUrl || DEFAULT_USER_SERVICE_URL;
+  if (!normalizedEnvUrl || isFrontendHost(normalizedEnvUrl)) {
+    return DEFAULT_USER_SERVICE_URL;
+  }
+  return normalizedEnvUrl;
 }
 
 function resolveNotificationsServiceUrl() {
@@ -249,6 +266,58 @@ function resolveRequestTarget(path) {
   }
 
   return [API_GATEWAY_URL, path];
+}
+
+/** Rutas /uploads/* viven en user-service (también expuestas vía Kong). */
+export function resolveImageUrl(url) {
+  if (!url) return null;
+
+  const value = String(url).trim();
+  if (!value) return null;
+
+  const uploadsBase = USER_SERVICE_URL.replace(/\/+$/, '');
+  const gatewayBase = API_GATEWAY_URL.replace(/\/+$/, '');
+
+  const toUploadsUrl = (pathname, search = '') => {
+    const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
+    return `${uploadsBase}${path}${search}`;
+  };
+
+  if (value.startsWith('/uploads/')) {
+    return toUploadsUrl(value);
+  }
+
+  if (/^https?:\/\//i.test(value)) {
+    try {
+      const parsedUrl = new URL(value);
+
+      if (parsedUrl.pathname.startsWith('/uploads/')) {
+        return toUploadsUrl(parsedUrl.pathname, parsedUrl.search);
+      }
+
+      if (isFrontendHost(parsedUrl.toString())) {
+        return null;
+      }
+
+      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
+        const targetBase = parsedUrl.pathname.startsWith('/uploads/') ? uploadsBase : gatewayBase;
+        parsedUrl.protocol = new URL(targetBase).protocol;
+        parsedUrl.hostname = new URL(targetBase).hostname;
+        parsedUrl.port = new URL(targetBase).port;
+        return parsedUrl.toString();
+      }
+
+      return parsedUrl.toString();
+    } catch {
+      return value;
+    }
+  }
+
+  if (value.startsWith('/')) {
+    return `${gatewayBase}${value}`;
+  }
+
+  return `${gatewayBase}/${value.replace(/^\/+/, '')}`;
 }
 
 export {

@@ -113,11 +113,63 @@ public class UserRegisterProfileService {
         if (users.isEmpty()) return Optional.empty();
         UserRegisterProfile user = users.get(0);
         String filename = UUID.randomUUID() + getImageExtension(photo);
+        byte[] bytes = photo.getBytes();
         Path uploadDir = Paths.get("uploads");
         Files.createDirectories(uploadDir);
-        Files.write(uploadDir.resolve(filename), photo.getBytes());
+        Files.write(uploadDir.resolve(filename), bytes);
         user.setPhotoUrl("/uploads/" + filename);
+        user.setPhotoData(bytes);
+        user.setPhotoContentType(resolveContentType(photo, filename));
         return Optional.of(toResponse(userRepository.save(user)));
+    }
+
+    public Optional<byte[]> loadPhotoBytes(String filename) throws IOException {
+        if (filename == null || filename.isBlank() || filename.contains("..") || filename.contains("/")) {
+            return Optional.empty();
+        }
+
+        String photoUrl = "/uploads/" + filename;
+        Optional<UserRegisterProfile> fromDb = userRepository.findByPhotoUrl(photoUrl);
+        if (fromDb.isPresent() && fromDb.get().getPhotoData() != null && fromDb.get().getPhotoData().length > 0) {
+            return Optional.of(fromDb.get().getPhotoData());
+        }
+
+        Path filePath = Paths.get("uploads").resolve(filename);
+        if (Files.exists(filePath)) {
+            return Optional.of(Files.readAllBytes(filePath));
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<String> loadPhotoContentType(String filename) {
+        if (filename == null || filename.isBlank() || filename.contains("..") || filename.contains("/")) {
+            return Optional.empty();
+        }
+
+        String photoUrl = "/uploads/" + filename;
+        Optional<UserRegisterProfile> fromDb = userRepository.findByPhotoUrl(photoUrl);
+        if (fromDb.isPresent() && fromDb.get().getPhotoContentType() != null && !fromDb.get().getPhotoContentType().isBlank()) {
+            return Optional.of(fromDb.get().getPhotoContentType());
+        }
+
+        return Optional.of(guessContentTypeFromFilename(filename));
+    }
+
+    private String resolveContentType(MultipartFile photo, String filename) {
+        String contentType = photo.getContentType();
+        if (contentType != null && !contentType.isBlank()) {
+            return contentType;
+        }
+        return guessContentTypeFromFilename(filename);
+    }
+
+    private String guessContentTypeFromFilename(String filename) {
+        String lowerName = filename.toLowerCase();
+        if (lowerName.endsWith(".png")) return "image/png";
+        if (lowerName.endsWith(".webp")) return "image/webp";
+        if (lowerName.endsWith(".gif")) return "image/gif";
+        return "image/jpeg";
     }
 
     private String getImageExtension(MultipartFile photo) {
