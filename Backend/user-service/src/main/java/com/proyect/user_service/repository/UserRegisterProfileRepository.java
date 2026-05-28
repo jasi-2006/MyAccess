@@ -12,4 +12,5 @@ public interface UserRegisterProfileRepository extends JpaRepository<UserRegiste
     boolean existsByDocument(String document);
     boolean existsByEmail(String email);
     Optional<UserRegisterProfile> findByEmail(String email);
+    Optional<UserRegisterProfile> findByPhotoUrl(String photoUrl);
 }

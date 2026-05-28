@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { resolveImageUrl } from '../services/api.js';
 
 export default function ProfileInfoCard({ profile, loading, fields, onEdit, px }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 910;
-  const photoUrl = profile?.photoUrl || null;
+  const photoUrl = resolveImageUrl(profile?.photoUrl);
 
   return (
     <View style={[styles.section, { paddingHorizontal: px }]}>
