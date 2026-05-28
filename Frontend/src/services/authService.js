@@ -81,7 +81,7 @@ export async function requestPasswordResetCode(email) {
 }
 
 export async function updateUserProfile(document, dto) {
-  return apiRequest(`/api/v1/register/users/document/${encodeURIComponent(document)}`, {
+  return userServiceRequest(`/register/users/document/${encodeURIComponent(document)}`, {
     method: 'PUT',
     body: JSON.stringify(dto),
   });
