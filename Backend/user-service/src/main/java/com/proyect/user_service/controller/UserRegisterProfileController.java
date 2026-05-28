@@ -5,13 +5,13 @@ import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.service.UserRegisterProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /*
@@ -19,7 +19,6 @@ import java.util.List;
  * Expone endpoints para consultar, actualizar y eliminar perfiles.
  * Los APRENDIZ solo pueden actualizar su propio perfil.
  */
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/register")
@@ -121,7 +120,7 @@ public class UserRegisterProfileController {
     public ResponseEntity<UserRegisterProfileResponseDTO> uploadPhoto(
             @PathVariable String document,
             @RequestParam("photo") MultipartFile photo,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws IOException {
         String role = (String) request.getAttribute("role");
         String email = (String) request.getAttribute("emailId");
         if ("APRENDIZ".equalsIgnoreCase(role)) {
@@ -135,16 +134,9 @@ public class UserRegisterProfileController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         }
-        try {
-            return userService.uploadPhoto(document, photo)
-                    .map(r -> ResponseEntity.status(HttpStatus.OK).body(r))
-                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (Exception e) {
-            log.error("Error al subir foto para documento {}", document, e);
-            throw e;
-        }
+        return userService.uploadPhoto(document, photo)
+                .map(r -> ResponseEntity.status(HttpStatus.OK).body(r))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @DeleteMapping("/users/delete/{document}")
