@@ -47,6 +47,14 @@ export async function uploadPhoto(document, formData) {
   });
 }
 
+/** Actualizar foto con sesión iniciada (perfil / edición). */
+export async function uploadProfilePhoto(document, formData) {
+  return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
+    method: 'POST',
+    body: formData,
+  });
+}
+
 export async function verifyUser(email, code) {
   const query = `email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`;
   return userServiceRequest(`/auth/verify?${query}`, { method: 'POST', skipAuth: true });
