@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, ScrollView, Alert, useWindowDimensions } from 'react-native';
-import { getUserProfile, updateUserProfile } from '../services/authService';
+import { View, StyleSheet, ScrollView, Alert, useWindowDimensions, Platform } from 'react-native';
+import { getUserProfile, updateUserProfile, uploadProfilePhoto } from '../services/authService';
+import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import ProfileInfoCard from '../components/ProfileInfoCard.jsx';
@@ -18,6 +19,7 @@ export default function UserProfile({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm] = useState({});
+  const [photo, setPhoto] = useState(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -42,6 +44,7 @@ export default function UserProfile({ navigation }) {
 
   const openEdit = () => {
     setForm(Object.fromEntries(fields.map((f) => [f.key, profile?.[f.key] || ''])));
+    setPhoto(null);
     setModalVisible(true);
   };
 
@@ -49,14 +52,38 @@ export default function UserProfile({ navigation }) {
     if (!profile?.document) return;
     setSaving(true);
     try {
-      const updated = await updateUserProfile(profile.document, {
+      if (photo && Platform.OS === 'web' && photo.file) {
+        const validation = await validateCarnetPhoto(photo.file);
+        if (!validation.valid) {
+          Alert.alert('Foto no válida', validation.errors.join('\n'));
+          return;
+        }
+      }
+
+      let updated = await updateUserProfile(profile.document, {
         ...form,
         nameRole: form.nameRole || profile?.nameRole,
       });
+
+      if (photo) {
+        const formData = new FormData();
+        if (Platform.OS === 'web' && photo.file) {
+          formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
+        } else {
+          formData.append('photo', {
+            uri: photo.uri,
+            name: 'profile.jpg',
+            type: 'image/jpeg',
+          });
+        }
+        updated = await uploadProfilePhoto(profile.document, formData);
+      }
+
       setProfile(updated);
+      setPhoto(null);
       setModalVisible(false);
-    } catch {
-      Alert.alert('Error', 'No se pudo actualizar el perfil.');
+    } catch (err) {
+      Alert.alert('Error', err?.message || 'No se pudo actualizar el perfil.');
     } finally {
       setSaving(false);
     }
@@ -89,8 +116,14 @@ export default function UserProfile({ navigation }) {
           form={form}
           onChange={(key, value) => setForm((prev) => ({ ...prev, [key]: value }))}
           onSave={handleSave}
-          onCancel={() => setModalVisible(false)}
+          onCancel={() => {
+            setPhoto(null);
+            setModalVisible(false);
+          }}
           saving={saving}
+          currentPhotoUrl={profile?.photoUrl}
+          photo={photo}
+          onPhotoChange={setPhoto}
         />
       </View>
     </WebFrame>
