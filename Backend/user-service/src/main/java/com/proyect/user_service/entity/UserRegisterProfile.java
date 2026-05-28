@@ -45,7 +45,7 @@ public class UserRegisterProfile {
     private String photoUrl;
 
     @Lob
-    @Column(name = "photo_data")
+    @Column(name = "photo_data", columnDefinition = "LONGBLOB")
     private byte[] photoData;
 
     @Column(name = "photo_content_type")

@@ -6,6 +6,7 @@ import com.proyect.user_service.entity.UserRegisterProfile;
 import com.proyect.user_service.repository.UserRegisterProfileRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -109,14 +111,28 @@ public class UserRegisterProfileService {
     }
 
     public Optional<UserRegisterProfileResponseDTO> uploadPhoto(String document, MultipartFile photo) throws IOException {
+        if (photo == null || photo.isEmpty()) {
+            throw new IllegalArgumentException("No se recibio ninguna imagen.");
+        }
+
         List<UserRegisterProfile> users = userRepository.findByDocument(document);
         if (users.isEmpty()) return Optional.empty();
+
         UserRegisterProfile user = users.get(0);
         String filename = UUID.randomUUID() + getImageExtension(photo);
         byte[] bytes = photo.getBytes();
-        Path uploadDir = Paths.get("uploads");
-        Files.createDirectories(uploadDir);
-        Files.write(uploadDir.resolve(filename), bytes);
+        if (bytes == null || bytes.length == 0) {
+            throw new IllegalArgumentException("La imagen esta vacia.");
+        }
+
+        try {
+            Path uploadDir = Paths.get("uploads");
+            Files.createDirectories(uploadDir);
+            Files.write(uploadDir.resolve(filename), bytes);
+        } catch (IOException diskError) {
+            log.warn("Foto no guardada en disco local (se persiste en BD): {}", diskError.getMessage());
+        }
+
         user.setPhotoUrl("/uploads/" + filename);
         user.setPhotoData(bytes);
         user.setPhotoContentType(resolveContentType(photo, filename));
