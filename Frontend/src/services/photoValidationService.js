@@ -44,7 +44,6 @@ Criterios que DEBEN cumplirse para que sea valida:
   const data = await response.json();
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-  // Gemini a veces envuelve el JSON en ```json ... ```
   const clean = text.replace(/```json|```/g, '').trim();
   const match = clean.match(/\{[\s\S]*\}/);
   if (!match) throw new Error(`Respuesta inesperada de Gemini: ${text.slice(0, 200)}`);
