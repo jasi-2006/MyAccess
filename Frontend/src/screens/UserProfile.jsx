@@ -48,9 +48,23 @@ export default function UserProfile({ navigation }) {
     setModalVisible(true);
   };
 
+  const buildUpdatePayload = () => ({
+    fullName: form.fullName?.trim() || profile?.fullName,
+    typeDocument: form.typeDocument?.trim() || profile?.typeDocument,
+    bloodType: form.bloodType?.trim() || profile?.bloodType,
+    ficha: form.ficha?.trim() || profile?.ficha,
+    trainingProgram: form.trainingProgram?.trim() || profile?.trainingProgram,
+    trainingCenter: form.trainingCenter?.trim() || profile?.trainingCenter,
+    regional: form.regional?.trim() || profile?.regional,
+    email: form.email?.trim() || profile?.email,
+    nameRole: profile?.nameRole,
+  });
+
   const handleSave = async () => {
     if (!profile?.document) return;
     setSaving(true);
+    let photoError = null;
+
     try {
       if (photo && Platform.OS === 'web' && photo.file) {
         const validation = await validateCarnetPhoto(photo.file);
@@ -60,30 +74,43 @@ export default function UserProfile({ navigation }) {
         }
       }
 
-      let updated = await updateUserProfile(profile.document, {
-        ...form,
-        nameRole: form.nameRole || profile?.nameRole,
-      });
+      await updateUserProfile(profile.document, buildUpdatePayload());
 
       if (photo) {
-        const formData = new FormData();
-        if (Platform.OS === 'web' && photo.file) {
-          formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
-        } else {
-          formData.append('photo', {
-            uri: photo.uri,
-            name: 'profile.jpg',
-            type: 'image/jpeg',
-          });
+        try {
+          const formData = new FormData();
+          if (Platform.OS === 'web' && photo.file) {
+            formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
+          } else {
+            formData.append('photo', {
+              uri: photo.uri,
+              name: 'profile.jpg',
+              type: 'image/jpeg',
+            });
+          }
+          await uploadProfilePhoto(profile.document, formData);
+        } catch (photoErr) {
+          photoError = photoErr?.payload?.message || photoErr?.message || 'No se pudo subir la foto.';
         }
-        updated = await uploadProfilePhoto(profile.document, formData);
       }
 
-      setProfile(updated);
+      const freshProfile = await getUserProfile();
+      setProfile(freshProfile);
       setPhoto(null);
       setModalVisible(false);
+
+      if (photoError) {
+        Alert.alert(
+          'Datos guardados',
+          `Tu información se actualizó, pero la foto falló: ${photoError}`,
+        );
+      }
     } catch (err) {
       const apiMessage = err?.payload?.message || err?.message;
+      if (err?.status === 403) {
+        Alert.alert('Error', 'No tienes permiso para actualizar este perfil.');
+        return;
+      }
       Alert.alert('Error', apiMessage || 'No se pudo actualizar el perfil.');
     } finally {
       setSaving(false);
