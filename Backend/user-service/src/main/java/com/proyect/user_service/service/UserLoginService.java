@@ -6,6 +6,7 @@ import com.proyect.user_service.dto.AuthResponseDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
 import com.proyect.user_service.entity.UserRegisterProfile;
 import com.proyect.user_service.repository.UserRegisterProfileRepository;
+import com.proyect.user_service.util.RoleNameNormalizer;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class UserLoginService {
     }
 
     private AuthResponseDTO generateAuthResponse(UserAuth user, UserRegisterProfile profile) {
-        String nameRole = profile.getNameRole();
+        String nameRole = RoleNameNormalizer.normalize(profile.getNameRole());
         if (nameRole == null || nameRole.isBlank()) {
             throw new RuntimeException("El usuario no tiene un rol configurado en su perfil");
         }
