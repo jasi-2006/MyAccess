@@ -30,6 +30,9 @@ export default function VerificationGatewayScreen({ navigation, route }) {
   const gap = isDesktop ? 7 : isTablet ? 10 : isSmallDevice ? 6 : 8;
   const buttonHeight = isDesktop ? 50 : isTablet ? 46 : isSmallDevice ? 40 : 44;
 
+  const email = (route?.params?.email ?? '').trim().toLowerCase();
+  const initialEmailWarning = route?.params?.emailWarning ?? '';
+
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -37,8 +40,6 @@ export default function VerificationGatewayScreen({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const inputs = useRef([]);
-  const email = (route?.params?.email ?? '').trim().toLowerCase();
-  const initialEmailWarning = route?.params?.emailWarning ?? '';
 
   const handleChange = (text, index) => {
     const sanitizedText = text.replace(/[^0-9]/g, '');
