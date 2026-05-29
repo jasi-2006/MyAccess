@@ -1,3 +1,5 @@
+import { getToken } from '../services/api.js';
+
 export const ROLES = {
   ADMIN: 'ADMIN',
   INSTRUCTOR: 'INSTRUCTOR',
@@ -57,6 +59,22 @@ export function normalizeRole(role) {
   if (value === 'INSTRUCTOR' || value === 'INSTRUCTORA') return ROLES.INSTRUCTOR;
   if (value === 'APRENDIZ' || value === 'ESTUDIANTE' || value === 'STUDENT') return ROLES.APRENDIZ;
   return value;
+}
+
+/** Rol efectivo: perfil en BD primero, luego JWT (por si la sesión quedó desactualizada). */
+export function resolveUserRole(profile) {
+  const fromProfile = profile?.nameRole ?? profile?.name_role ?? profile?.role;
+  const fromToken = getRoleFromToken(getToken());
+  return normalizeRole(fromProfile || fromToken);
+}
+
+/** Texto visible en carnet y pantallas. */
+export function getRoleDisplayName(role) {
+  const normalized = normalizeRole(role);
+  if (normalized === ROLES.ADMIN) return 'Administrador';
+  if (normalized === ROLES.INSTRUCTOR) return 'Instructor';
+  if (normalized === ROLES.APRENDIZ) return 'Aprendiz';
+  return normalized || 'Usuario';
 }
 
 export function canAccessRoute(role, routeName) {
