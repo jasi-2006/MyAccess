@@ -10,7 +10,7 @@ import { getUserProfile, getAllUserProfiles } from '../services/authService';
 import { getAllCards, updateCard } from '../services/cardService';
 import { getAllRequestCards, updateRequestCard } from '../services/requestCardService';
 import { resolveImageUrl } from '../services/api.js';
-import { normalizeRole, ROLES } from '../utils/accessControl';
+import { normalizeRole, getRoleDisplayName, ROLES } from '../utils/accessControl';
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
@@ -540,7 +540,7 @@ function QrBlock() {
 
 function IndividualCarnet({ learner, card, name }) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
-  const role = learner?.nameRole || 'APRENDIZ';
+  const roleLabel = getRoleDisplayName(learner?.nameRole || learner?.name_role);
   const documentType = learner?.typeDocument || 'CC';
   const documentNumber = learner?.document || 'NA';
   const bloodType = learner?.bloodType || '';
@@ -583,7 +583,7 @@ function IndividualCarnet({ learner, card, name }) {
               </View>
             </View>
             <View style={styles.verticalBody}>
-              <Text style={styles.verticalRole}>{role}</Text>
+              <Text style={styles.verticalRole}>{roleLabel}</Text>
               <View style={styles.verticalGreenRule} />
               <Text style={styles.verticalBrand}>MyAccess</Text>
               <Text style={styles.verticalIdentity}>
@@ -663,7 +663,7 @@ function CarnetPreview({ learner, card, name, onPress }) {
         <View style={styles.carnetData}>
           <Text style={styles.carnetName} numberOfLines={2}>{name}</Text>
           <View style={styles.roleBadge}>
-            <Text style={styles.roleBadgeText}>APRENDIZ</Text>
+            <Text style={styles.roleBadgeText}>{roleLabel}</Text>
           </View>
           <CarnetField label="Doc"      value={`${learner.typeDocument || ''} ${learner.document || '—'}`} />
           <CarnetField label="Programa" value={learner.trainingProgram || '—'} />
