@@ -45,6 +45,10 @@ public class EmailService {
     @Value("${spring.mail.password:}")
     private String smtpPassword;
 
+    /** En Render el puerto 587 suele estar bloqueado; dejar false y usar BREVO_API_KEY. */
+    @Value("${app.mail.smtp-enabled:false}")
+    private boolean smtpEnabled;
+
     public void sendVerificationCode(String to, String code) {
         String subject = "MyAccess - Confirma tu correo";
         String text = """
@@ -97,10 +101,16 @@ public class EmailService {
                 throw ex;
             } catch (Exception ex) {
                 log.warn("Brevo API fallo: {}", ex.getMessage());
-                if (!isSmtpConfigured()) {
+                if (!smtpEnabled || !isSmtpConfigured()) {
                     throw mapToEmailDeliveryException(ex);
                 }
             }
+        }
+
+        if (!smtpEnabled) {
+            throw new EmailDeliveryException(
+                    "Falta BREVO_API_KEY en el servidor. En Render no uses SMTP (puerto 587 bloqueado). "
+                            + "Crea una clave API en Brevo (xkeysib-...) y configurala como BREVO_API_KEY junto con EMAIL_FROM.");
         }
 
         if (isSmtpConfigured()) {
@@ -110,15 +120,13 @@ public class EmailService {
             } catch (Exception ex) {
                 log.error("Brevo SMTP fallo: {}", ex.getMessage());
                 throw new EmailDeliveryException(
-                        "No fue posible enviar el correo por SMTP. En Render usa BREVO_API_KEY (API). Detalle: "
-                                + ex.getMessage(),
+                        "No fue posible enviar el correo por SMTP. En Render configura BREVO_API_KEY (la clave xsmtpsib no sirve como API).",
                         ex);
             }
         }
 
         throw new EmailDeliveryException(
-                "Correo no configurado. En Render define BREVO_API_KEY y EMAIL_FROM. "
-                        + "Opcional: SMTP_USERNAME y SMTP_PASSWORD para SMTP.");
+                "Correo no configurado. Define BREVO_API_KEY y EMAIL_FROM en Render.");
     }
 
     private boolean isSmtpConfigured() {

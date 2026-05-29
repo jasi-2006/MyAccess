@@ -65,3 +65,5 @@ app:
   mail:
     from-email: ${EMAIL_FROM:}
     from-name: ${EMAIL_FROM_NAME:MyAccess}
+    # Solo true en desarrollo local; Render bloquea smtp-relay.brevo.com:587
+    smtp-enabled: ${MAIL_SMTP_ENABLED:false}
