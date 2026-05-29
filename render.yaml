@@ -10,7 +10,8 @@
 # En Render Dashboard, configura manualmente (sync: false):
 #   DB_USERNAME, DB_PASSWORD, JWT_SECRET
 #   USER_DB_URL, AUTH_DB_URL, CARD_DB_URL, NEWS_DB_URL, NOTIFICATIONS_DB_URL
-#   MAILERSEND_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME, SMTP_USERNAME, SMTP_PASSWORD (user-service)
+#   BREVO_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME (user-service; recomendado API en Render)
+#   SMTP_USERNAME, SMTP_PASSWORD (opcional; SMTP puerto 587 puede fallar en Render)
 #
 # En Vercel (Frontend), variables recomendadas:
 #   EXPO_PUBLIC_API_GATEWAY_URL=https://myaccess-kong.onrender.com
@@ -53,19 +54,19 @@ services:
       - key: JWT_REFRESH_EXPIRATION
         value: 604800000
       - key: SMTP_HOST
-        value: smtp.mailersend.net
+        value: smtp-relay.brevo.com
       - key: SMTP_PORT
         value: 587
       - key: SMTP_USERNAME
         sync: false
       - key: SMTP_PASSWORD
         sync: false
+      - key: BREVO_API_KEY
+        sync: false
       - key: EMAIL_FROM
         sync: false
       - key: EMAIL_FROM_NAME
         value: MyAccess
-      - key: MAILERSEND_API_KEY
-        sync: false
 
   - type: web
     name: myaccess-1
