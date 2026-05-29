@@ -52,10 +52,10 @@ const ROLE_HOME_ROUTE = {
 
 export function normalizeRole(role) {
   const value = String(role || '').trim().toUpperCase();
-  if (value === 'ADMINISTRADOR') return ROLES.ADMIN;
-  if (value === 'ADMIN') return ROLES.ADMIN;
-  if (value === 'INSTRUCTOR') return ROLES.INSTRUCTOR;
-  if (value === 'APRENDIZ') return ROLES.APRENDIZ;
+  if (value === 'ADMINISTRADOR' || value === 'ADMINISTRATOR') return ROLES.ADMIN;
+  if (value === 'ADMIN' || value === 'ANDIM' || value === 'ADMIM') return ROLES.ADMIN;
+  if (value === 'INSTRUCTOR' || value === 'INSTRUCTORA') return ROLES.INSTRUCTOR;
+  if (value === 'APRENDIZ' || value === 'ESTUDIANTE' || value === 'STUDENT') return ROLES.APRENDIZ;
   return value;
 }
 

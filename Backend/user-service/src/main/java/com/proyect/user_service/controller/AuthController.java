@@ -14,6 +14,7 @@ import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.service.UserLoginService;
 import com.proyect.user_service.service.UserRegisterProfileService;
 import com.proyect.user_service.service.VerificationService;
+import com.proyect.user_service.util.RoleNameNormalizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -101,14 +102,7 @@ public class AuthController {
     }
 
     private String normalizeRoleName(String role) {
-        if (role == null || role.isBlank()) {
-            return "APRENDIZ";
-        }
-        String normalized = role.trim().toUpperCase();
-        if ("ADMINISTRADOR".equals(normalized)) {
-            return "ADMIN";
-        }
-        return normalized;
+        return RoleNameNormalizer.normalize(role);
     }
 
     @PostMapping("/resend")
