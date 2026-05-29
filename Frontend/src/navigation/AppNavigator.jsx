@@ -22,7 +22,7 @@ import GestionFichas from '../screens/GestionFichas.jsx';
 import ImprimirScreen from '../screens/Imprimir.jsx';
 import ProcessingStatus from '../screens/Processingstatus.jsx';
 import { getAuthToken, getUserProfile } from '../services/authService';
-import { canAccessRoute, getHomeRouteForRole, getRoleFromToken, normalizeRole } from '../utils/accessControl';
+import { canAccessRoute, getHomeRouteForRole, getRoleFromToken, normalizeRole, resolveUserRole } from '../utils/accessControl';
 
 
 const Stack = createStackNavigator();
@@ -44,7 +44,7 @@ function ProtectedScreen({ component: Component, routeName, navigation, route })
 
       try {
         const profile = await getUserProfile();
-        const role = normalizeRole(profile?.nameRole || getRoleFromToken(token));
+        const role = resolveUserRole(profile);
 
         if (!canAccessRoute(role, routeName)) {
           navigation.replace(getHomeRouteForRole(role));

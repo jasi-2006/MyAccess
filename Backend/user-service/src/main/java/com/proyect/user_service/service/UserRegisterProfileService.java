@@ -4,6 +4,7 @@ import com.proyect.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.entity.UserRegisterProfile;
 import com.proyect.user_service.repository.UserRegisterProfileRepository;
+import com.proyect.user_service.util.RoleNameNormalizer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -218,7 +219,7 @@ public class UserRegisterProfileService {
         r.setTrainingCenter(user.getTrainingCenter());
         r.setRegional(user.getRegional());
         r.setBloodType(user.getBloodType());
-        r.setNameRole(user.getNameRole());
+        r.setNameRole(RoleNameNormalizer.normalize(user.getNameRole()));
         r.setFicha(user.getFicha());
         r.setEmail(user.getEmail());
         r.setPhotoUrl(user.getPhotoUrl());
