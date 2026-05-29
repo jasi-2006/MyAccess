@@ -1,6 +1,8 @@
 package com.proyect.user_service.service;
 
+import com.proyect.auth_service.entity.Role;
 import com.proyect.auth_service.entity.UserAuth;
+import com.proyect.auth_service.repository.RoleRepository;
 import com.proyect.auth_service.repository.UserAuthRepository;
 import com.proyect.user_service.dto.AuthResponseDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
@@ -8,23 +10,23 @@ import com.proyect.user_service.entity.UserRegisterProfile;
 import com.proyect.user_service.repository.UserRegisterProfileRepository;
 import com.proyect.user_service.util.RoleNameNormalizer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserLoginService {
 
     private final UserAuthRepository userAuthRepository;
     private final UserRegisterProfileRepository userRegisterProfileRepository;
+    private final RoleRepository roleRepository;
     private final JwtService jwtService;
 
-    /**
-     * metodo para la el inicio de sesion del usuario con verificacionde la identidad del usuario
-     * @param request  recibe los datos del usuario
-     * */
     public AuthResponseDTO login(UserLoginRequestDTO request) {
-        UserAuth user = userAuthRepository.findByEmail(request.getEmail())
+        String email = normalizeEmail(request.getEmail());
+        UserAuth user = userAuthRepository.findByEmailWithRole(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (!BCrypt.checkpw(request.getPassword(), user.getPassword())) {
@@ -50,7 +52,7 @@ public class UserLoginService {
         UserRegisterProfile profile = userRegisterProfileRepository.findById(profileId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        UserAuth user = userAuthRepository.findByEmail(profile.getEmail())
+        UserAuth user = userAuthRepository.findByEmailWithRole(normalizeEmail(profile.getEmail()))
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (!user.getVerifiedEmail()) {
@@ -61,21 +63,69 @@ public class UserLoginService {
     }
 
     private AuthResponseDTO generateAuthResponse(UserAuth user) {
-        UserRegisterProfile profile = userRegisterProfileRepository.findByEmail(user.getEmail())
+        UserRegisterProfile profile = userRegisterProfileRepository.findByEmailIgnoreCase(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("El usuario no tiene perfil configurado"));
         return generateAuthResponse(user, profile);
     }
 
     private AuthResponseDTO generateAuthResponse(UserAuth user, UserRegisterProfile profile) {
-        String nameRole = RoleNameNormalizer.normalize(profile.getNameRole());
-        if (nameRole == null || nameRole.isBlank()) {
-            throw new RuntimeException("El usuario no tiene un rol configurado en su perfil");
+        String effectiveRole = resolveEffectiveRole(user, profile);
+        syncRoleAcrossTables(user, profile, effectiveRole);
+
+        Long profileId = profile.getId();
+        String email = normalizeEmail(user.getEmail());
+        String token = jwtService.generateToken(profileId, email, effectiveRole);
+        String refreshToken = jwtService.generateRefreshToken(profileId, email, effectiveRole);
+
+        log.info("Login JWT role={} profileId={} email={}", effectiveRole, profileId, email);
+        return new AuthResponseDTO(token, refreshToken, effectiveRole);
+    }
+
+    /**
+     * Prioridad: ADMIN desde perfil o auth; luego perfil; luego auth; fallback APRENDIZ.
+     */
+    private String resolveEffectiveRole(UserAuth user, UserRegisterProfile profile) {
+        String profileRaw = profile.getNameRole();
+        if (profileRaw == null || profileRaw.isBlank()) {
+            profileRaw = userRegisterProfileRepository.findNameRoleColumnByEmail(profile.getEmail()).orElse(null);
         }
 
-        // userId del JWT = id del perfil (user_profile), usado por card/notifications.
-        Long profileId = profile.getId();
-        String token = jwtService.generateToken(profileId, user.getEmail(), nameRole);
-        String refreshToken = jwtService.generateRefreshToken(profileId, user.getEmail(), nameRole);
-        return new AuthResponseDTO(token, refreshToken);
+        String authRaw = user.getRole() != null ? user.getRole().getNameRole() : null;
+
+        String profileNorm = hasText(profileRaw) ? RoleNameNormalizer.normalize(profileRaw) : null;
+        String authNorm = hasText(authRaw) ? RoleNameNormalizer.normalize(authRaw) : null;
+
+        if ("ADMIN".equals(profileNorm) || "ADMIN".equals(authNorm)) {
+            return "ADMIN";
+        }
+        if (profileNorm != null) {
+            return profileNorm;
+        }
+        if (authNorm != null) {
+            return authNorm;
+        }
+        return "APRENDIZ";
+    }
+
+    private void syncRoleAcrossTables(UserAuth user, UserRegisterProfile profile, String effectiveRole) {
+        if (!effectiveRole.equals(profile.getNameRole())) {
+            profile.setNameRole(effectiveRole);
+            userRegisterProfileRepository.save(profile);
+        }
+
+        roleRepository.findByNameRoleIgnoreCase(effectiveRole).ifPresent(roleEntity -> {
+            if (user.getRole() == null || !roleEntity.getId().equals(user.getRole().getId())) {
+                user.setRole(roleEntity);
+                userAuthRepository.save(user);
+            }
+        });
+    }
+
+    private static String normalizeEmail(String email) {
+        return email == null ? null : email.trim().toLowerCase();
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 }

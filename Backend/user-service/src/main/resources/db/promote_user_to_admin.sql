@@ -22,8 +22,19 @@ UPDATE user_profile
 SET nameRole = 'ADMIN'
 WHERE UPPER(TRIM(nameRole)) IN ('ANDIM', 'ADMIM', 'ADMINISTRADOR');
 
--- Verificar:
-SELECT id, document, full_name, email, nameRole FROM user_profile WHERE nameRole = 'ADMIN';
+-- También sincronizar auth_service (el JWT puede leer id_role si el perfil falla):
+USE auth_service;
+UPDATE user_auth ua
+INNER JOIN roles r ON UPPER(r.name_role) = 'ADMIN'
+SET ua.id_role = r.id
+WHERE LOWER(ua.email) = LOWER('correo@ejemplo.com');
 
--- IMPORTANTE: el usuario debe CERRAR SESIÓN y volver a entrar
--- para que el JWT traiga role=ADMIN.
+-- Verificar perfil + auth:
+USE user_service;
+SELECT p.id, p.email, p.nameRole, ua.id AS auth_id, r.name_role AS auth_role
+FROM user_profile p
+LEFT JOIN auth_service.user_auth ua ON LOWER(ua.email) = LOWER(p.email)
+LEFT JOIN auth_service.roles r ON r.id = ua.id_role
+WHERE LOWER(p.email) = LOWER('correo@ejemplo.com');
+
+-- IMPORTANTE: cerrar sesión y volver a entrar para generar un JWT nuevo con role=ADMIN.
