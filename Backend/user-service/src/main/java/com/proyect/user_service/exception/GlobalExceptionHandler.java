@@ -30,6 +30,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(EmailDeliveryException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailDelivery(EmailDeliveryException ex) {
+        return build(HttpStatus.BAD_GATEWAY, ex.getMessage());
+    }
+
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Map<String, Object>> handleIOException(IOException ex) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo procesar la imagen.");
@@ -61,7 +66,8 @@ public class GlobalExceptionHandler {
                 || lowerMessage.contains("cuenta no verificada")) {
             return build(HttpStatus.UNAUTHORIZED, message);
         }
-        if (lowerMessage.contains("mailersend")
+        if (lowerMessage.contains("brevo")
+                || lowerMessage.contains("mailersend")
                 || lowerMessage.contains("failed to send email")
                 || lowerMessage.contains("interrupted")) {
             return build(HttpStatus.BAD_GATEWAY, "No fue posible enviar el correo de verificacion. Intenta nuevamente.");

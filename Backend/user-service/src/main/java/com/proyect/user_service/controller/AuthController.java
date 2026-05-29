@@ -11,6 +11,7 @@ import com.proyect.user_service.dto.RegisterRequestDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
+import com.proyect.user_service.exception.EmailDeliveryException;
 import com.proyect.user_service.service.UserLoginService;
 import com.proyect.user_service.service.UserRegisterProfileService;
 import com.proyect.user_service.service.VerificationService;
@@ -82,8 +83,16 @@ public class AuthController {
 
         try {
             verificationService.sendCode(email);
+            profileResponse.setVerificationEmailSent(true);
+        } catch (EmailDeliveryException ex) {
+            log.error("Failed to send verification code for {}: {}", email, ex.getMessage());
+            profileResponse.setVerificationEmailSent(false);
+            profileResponse.setVerificationEmailMessage(ex.getMessage());
         } catch (Exception ex) {
             log.error("Failed to send verification code for {}", email, ex);
+            profileResponse.setVerificationEmailSent(false);
+            profileResponse.setVerificationEmailMessage(
+                    "No fue posible enviar el correo de verificacion. Usa Reenviar codigo.");
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse);

@@ -109,7 +109,7 @@ export default function RegisterGatewayScreen({ navigation }) {
         }
       }
 
-      await registerUser({
+      const registerResponse = await registerUser({
         email: values.email, password: values.password,
         fullName: values.name, typeDocument: values.typeDocument,
         document: values.document, trainingProgram: values.trainingProgram,
@@ -129,7 +129,13 @@ export default function RegisterGatewayScreen({ navigation }) {
         await uploadPhoto(values.document, formData);
       }
 
-      navigation.navigate('Verification', { email: values.email });
+      navigation.navigate('Verification', {
+        email: values.email,
+        emailWarning: registerResponse?.verificationEmailSent === false
+          ? (registerResponse?.verificationEmailMessage
+            || 'No pudimos enviar el correo. Usa Reenviar codigo o contacta al administrador.')
+          : '',
+      });
     } catch (error) {
       setSubmitError(error.message || 'No fue posible crear la cuenta.');
     } finally {
