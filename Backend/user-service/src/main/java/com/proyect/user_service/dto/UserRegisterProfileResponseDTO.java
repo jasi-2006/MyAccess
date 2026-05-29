@@ -16,4 +16,7 @@ public class UserRegisterProfileResponseDTO {
     private String ficha;
     private String email;
     private String photoUrl;
+    /** false si el registro se creo pero fallo el envio del codigo por correo */
+    private Boolean verificationEmailSent;
+    private String verificationEmailMessage;
 }

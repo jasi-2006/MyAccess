@@ -1,5 +1,6 @@
 package com.proyect.user_service.service;
 
+import com.proyect.user_service.exception.EmailDeliveryException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,28 +16,34 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
- * Envio de correos via MailerSend.
- * 1) API REST (token mlsn...)
- * 2) SMTP MailerSend como respaldo (usuario/contraseña SMTP)
+ * Envio de correos via Brevo (Sendinblue).
+ * 1) API REST (recomendado en Render) — BREVO_API_KEY
+ * 2) SMTP relay — SMTP_USERNAME / SMTP_PASSWORD
  */
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class EmailService {
 
-    private static final String MAILERSEND_API_URL = "https://api.mailersend.com/v1/email";
+    private static final String BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
     private final JavaMailSender mailSender;
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    @Value("${app.mailersend.api-key:}")
-    private String apiKey;
+    @Value("${app.brevo.api-key:}")
+    private String brevoApiKey;
 
-    @Value("${app.mailersend.from-email:}")
+    @Value("${app.mail.from-email:}")
     private String fromEmail;
 
-    @Value("${app.mailersend.from-name:MyAccess}")
+    @Value("${app.mail.from-name:MyAccess}")
     private String fromName;
+
+    @Value("${spring.mail.username:}")
+    private String smtpUsername;
+
+    @Value("${spring.mail.password:}")
+    private String smtpPassword;
 
     public void sendVerificationCode(String to, String code) {
         String subject = "MyAccess - Confirma tu correo";
@@ -82,46 +89,67 @@ public class EmailService {
     private void sendEmail(String to, String subject, String text) {
         validateFromEmail();
 
-        Exception apiError = null;
-        if (apiKey != null && !apiKey.isBlank()) {
+        if (brevoApiKey != null && !brevoApiKey.isBlank()) {
             try {
-                sendViaMailerSendApi(to, subject, text);
+                sendViaBrevoApi(to, subject, text);
                 return;
+            } catch (EmailDeliveryException ex) {
+                throw ex;
             } catch (Exception ex) {
-                apiError = ex;
-                log.warn("MailerSend API fallo, intentando SMTP: {}", ex.getMessage());
+                log.warn("Brevo API fallo: {}", ex.getMessage());
+                if (!isSmtpConfigured()) {
+                    throw mapToEmailDeliveryException(ex);
+                }
             }
-        } else {
-            log.warn("MAILERSEND_API_KEY no configurada, usando solo SMTP");
         }
 
-        try {
-            sendViaSmtp(to, subject, text);
-        } catch (Exception smtpError) {
-            if (apiError != null) {
-                throw new IllegalStateException(
-                        "No fue posible enviar correo (API y SMTP fallaron). API: "
-                                + apiError.getMessage()
-                                + " | SMTP: "
-                                + smtpError.getMessage(),
-                        smtpError);
+        if (isSmtpConfigured()) {
+            try {
+                sendViaSmtp(to, subject, text);
+                return;
+            } catch (Exception ex) {
+                log.error("Brevo SMTP fallo: {}", ex.getMessage());
+                throw new EmailDeliveryException(
+                        "No fue posible enviar el correo por SMTP. En Render usa BREVO_API_KEY (API). Detalle: "
+                                + ex.getMessage(),
+                        ex);
             }
-            throw new IllegalStateException("No fue posible enviar correo por SMTP: " + smtpError.getMessage(), smtpError);
         }
+
+        throw new EmailDeliveryException(
+                "Correo no configurado. En Render define BREVO_API_KEY y EMAIL_FROM. "
+                        + "Opcional: SMTP_USERNAME y SMTP_PASSWORD para SMTP.");
+    }
+
+    private boolean isSmtpConfigured() {
+        return smtpUsername != null && !smtpUsername.isBlank()
+                && smtpPassword != null && !smtpPassword.isBlank();
     }
 
     private void validateFromEmail() {
         if (fromEmail == null || fromEmail.isBlank()) {
-            throw new IllegalStateException("EMAIL_FROM no configurado (remitente MailerSend verificado)");
+            throw new EmailDeliveryException(
+                    "EMAIL_FROM no configurado. Usa un remitente verificado en Brevo (Senders).");
         }
     }
 
-    private void sendViaMailerSendApi(String to, String subject, String text) throws IOException, InterruptedException {
+    private EmailDeliveryException mapToEmailDeliveryException(Exception ex) {
+        String raw = ex.getMessage() == null ? "" : ex.getMessage();
+        if (raw.contains("status 401") || raw.contains("status 403")) {
+            return new EmailDeliveryException(
+                    "Clave o remitente de Brevo invalidos. Revisa BREVO_API_KEY y EMAIL_FROM en Render.", ex);
+        }
+        return new EmailDeliveryException(
+                "No fue posible enviar el correo en este momento. Intenta reenviar el codigo en unos minutos.",
+                ex);
+    }
+
+    private void sendViaBrevoApi(String to, String subject, String text) throws IOException, InterruptedException {
         String payload = """
                 {
-                  "from": {
-                    "email": "%s",
-                    "name": "%s"
+                  "sender": {
+                    "name": "%s",
+                    "email": "%s"
                   },
                   "to": [
                     {
@@ -129,29 +157,30 @@ public class EmailService {
                     }
                   ],
                   "subject": "%s",
-                  "text": "%s"
+                  "textContent": "%s"
                 }
                 """.formatted(
-                escapeJson(fromEmail),
                 escapeJson(fromName),
+                escapeJson(fromEmail),
                 escapeJson(to),
                 escapeJson(subject),
                 escapeJson(text));
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(MAILERSEND_API_URL))
-                .header("Authorization", "Bearer " + apiKey.trim())
+                .uri(URI.create(BREVO_API_URL))
+                .header("api-key", brevoApiKey.trim())
                 .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(payload))
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            log.error("MailerSend API status={} body={}", response.statusCode(), response.body());
-            throw new IllegalStateException(
-                    "MailerSend API status " + response.statusCode() + ": " + response.body());
+            String body = response.body() == null ? "" : response.body();
+            log.error("Brevo API status={} body={}", response.statusCode(), body);
+            throw new IllegalStateException("Brevo API status " + response.statusCode() + ": " + body);
         }
-        log.info("Correo enviado via MailerSend API a {}", to);
+        log.info("Correo enviado via Brevo API a {}", to);
     }
 
     private void sendViaSmtp(String to, String subject, String text) throws Exception {
@@ -162,7 +191,7 @@ public class EmailService {
         helper.setSubject(subject);
         helper.setText(text, false);
         mailSender.send(message);
-        log.info("Correo enviado via MailerSend SMTP a {}", to);
+        log.info("Correo enviado via Brevo SMTP a {}", to);
     }
 
     private String escapeJson(String value) {
