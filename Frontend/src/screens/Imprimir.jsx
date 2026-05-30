@@ -184,16 +184,16 @@ export default function ImprimirScreen({ navigation }) {
 
     /* ---- Foto ---- */
     const photoHtml = photoUrl
-      ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:200px;height:245px;border-radius:12px;object-fit:cover;border:2px solid #C8E6C9;display:block;" />`
-      : `<div style="width:200px;height:245px;border-radius:12px;background:linear-gradient(135deg,#E8F5E9,#A5D6A7);display:flex;align-items:center;justify-content:center;"><span style="font-size:80px;font-weight:900;color:#2E7D32;font-family:Arial,sans-serif;">${initial}</span></div>`;
+      ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:108px;height:140px;border-radius:10px;object-fit:cover;border:2px solid #C8E6C9;" />`
+      : `<div style="width:108px;height:140px;border-radius:10px;background:linear-gradient(135deg,#E8F5E9,#A5D6A7);display:flex;align-items:center;justify-content:center;"><span style="font-size:42px;font-weight:900;color:#2E7D32;">${initial}</span></div>`;
 
     /* ---- Código de barras ---- */
     const bars = [2,1,3,1,1,2,4,1,2,1,3,2,1,1,4,2,1,3,1,2,2,1,3,1];
-    const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:56px;">${
-      bars.map((w, i) => `<div style="width:${w * 2.5}px;height:46px;background:#222;${i < bars.length - 1 ? 'margin-right:2px;' : ''}"></div>`).join('')
+    const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:32px;margin-bottom:8px;">${
+      bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#222;${i < bars.length-1 ? 'margin-right:1px;' : ''}"></div>`).join('')
     }</div>`;
 
-    /* ---- QR grande ---- */
+    /* ---- QR (proporcional al carnet) ---- */
     const QR_ROWS = [
       '11111110001001111111','10000010110010100001','10111010101110101101','10111010010000101101',
       '10111010111110101101','10000010001000100001','11111110101010111111','00000000110110000000',
@@ -201,72 +201,66 @@ export default function ImprimirScreen({ navigation }) {
       '10101110111110001011','00000000101000100000','11111110110101111111','10000010001100100001',
       '10111010111010101101','10111010010100101101','10000010101110100001','11111110011000111111',
     ];
-    const qrHtml = `<div style="padding:14px;background:#fff;border:2px solid #111;display:inline-block;">${
+    const qrHtml = `<div style="padding:5px;background:#fff;border:1px solid #111;display:inline-block;">${
       QR_ROWS.map(row =>
         `<div style="display:flex;">${row.split('').map(c =>
-          `<div style="width:10px;height:10px;background:${c === '1' ? '#111' : '#fff'};"></div>`
+          `<div style="width:3.5px;height:3.5px;background:${c==='1'?'#111':'#fff'};"></div>`
         ).join('')}</div>`
       ).join('')
     }</div>`;
 
     /* ---- Logo SENA ---- */
-    const logoHtml = `<img src="${logoOrigin}/static/media/logoSena.png" style="width:130px;height:130px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:130px;height:130px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:30px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
+    const logoHtml = `<img src="${logoOrigin}/static/media/logoSena.png" style="width:70px;height:70px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:70px;height:70px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:15px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
 
-    /* ================================================================
-       FRENTE — ocupa la hoja completa en impresión
-    ================================================================ */
+    /* ---- FRENTE ---- */
     const front = `
-      <div style="width:100%;min-height:100vh;background:#fff;display:flex;flex-direction:column;padding:44px 52px 36px;font-family:'Inter',Arial,sans-serif;box-sizing:border-box;">
-        <!-- ENCABEZADO: logo izquierda, foto derecha -->
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px 14px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
+        <!-- HEADER: logo + foto -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
             ${logoHtml}
-            <span style="font-size:16px;font-weight:900;color:#0A8A4A;letter-spacing:3px;">SENA</span>
+            <span style="font-size:7px;font-weight:900;color:#0A8A4A;letter-spacing:1.5px;">SENA</span>
           </div>
           ${photoHtml}
         </div>
         <!-- ROL -->
-        <div style="font-size:20px;color:#555;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;font-weight:600;">${roleDisplay}</div>
+        <div style="font-size:11px;color:#2F2F2F;letter-spacing:0.8px;text-transform:uppercase;">${roleDisplay}</div>
         <!-- SEPARADOR VERDE -->
-        <div style="height:4px;background:linear-gradient(90deg,#0A8A4A,#24C565,#80E9B4);border-radius:2px;margin-bottom:22px;"></div>
+        <div style="height:3px;background:linear-gradient(90deg,#0A8A4A,#24C565,#80E9B4);border-radius:2px;"></div>
         <!-- NOMBRE -->
-        <div style="font-size:32px;font-weight:900;color:#111;margin-bottom:18px;line-height:1.2;">${fullName}</div>
-        <!-- DOCUMENTO -->
-        <div style="font-size:18px;color:#374151;font-weight:700;margin-bottom:8px;">${docType} ${docNum}${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
-        ${email ? `<div style="font-size:15px;color:#6B7280;margin-bottom:26px;">&#9993; ${email}</div>` : `<div style="margin-bottom:26px;"></div>`}
+        <div style="font-size:13px;font-weight:900;color:#111;letter-spacing:0.3px;line-height:1.3;">${fullName}</div>
+        <!-- DOCUMENTO + SANGRE -->
+        <div style="font-size:9.5px;font-weight:700;color:#374151;">${docType} ${docNum}${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
+        ${email ? `<div style="font-size:8.5px;color:#6B7280;">&#9993; ${email}</div>` : ''}
         <!-- BARCODE -->
         ${barcodeHtml}
         <!-- FOOTER -->
-        <div style="margin-top:auto;border-top:2px solid #D1FAE5;padding-top:22px;">
-          <div style="font-size:20px;font-weight:900;color:#374151;text-transform:uppercase;letter-spacing:0.6px;">${regional}</div>
-          <div style="font-size:17px;color:#118449;font-weight:800;margin-top:5px;">${center}</div>
-          <div style="font-size:15px;color:#6B7280;margin-top:4px;">${program}</div>
-          ${ficha ? `<div style="font-size:15px;color:#6B7280;margin-top:3px;">Grupo No <b>${ficha}</b></div>` : ''}
+        <div style="border-top:1px solid #D1FAE5;padding-top:6px;margin-top:auto;">
+          <div style="color:#374151;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.5px;">${regional}</div>
+          <div style="color:#118449;font-size:8.5px;font-weight:800;margin-top:1px;">${center}</div>
+          <div style="color:#6B7280;font-size:8px;margin-top:1px;">${program}</div>
+          ${ficha ? `<div style="color:#6B7280;font-size:8px;">Grupo No <b>${ficha}</b></div>` : ''}
         </div>
       </div>`;
 
-    /* ================================================================
-       REVERSO — ocupa la hoja completa en impresión
-    ================================================================ */
+    /* ---- REVERSO ---- */
     const back = `
-      <div style="width:100%;min-height:100vh;background:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:44px 52px 36px;font-family:'Inter',Arial,sans-serif;box-sizing:border-box;">
+      <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
         <!-- AVISO LEGAL -->
-        <div style="font-size:16px;color:#374151;line-height:26px;">
-          Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus funciones y para la
-          obtención de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/><br/>
-          Se solicita a las autoridades civiles y militares prestarle toda la colaboración para su desempeño.
+        <div style="font-size:8.5px;color:#374151;line-height:13px;">
+          Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus funciones y para la obtención de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboración para su desempeño.
         </div>
         <!-- QR -->
-        <div style="text-align:center;margin:36px 0;">${qrHtml}</div>
+        <div style="text-align:center;margin:10px 0;">${qrHtml}</div>
         <!-- CORREO -->
-        ${email ? `<div style="text-align:center;font-size:15px;color:#6B7280;margin-bottom:14px;">&#9993; ${email}</div>` : ''}
+        ${email ? `<div style="text-align:center;font-size:8px;color:#6B7280;margin-bottom:4px;">&#9993; ${email}</div>` : ''}
         <!-- FIRMA -->
-        <div style="text-align:center;padding:18px 0;border-top:2px solid #D1FAE5;border-bottom:2px solid #D1FAE5;">
-          <div style="font-size:17px;color:#2B2B2B;font-weight:700;">cesar augusto ospina p</div>
-          <div style="font-size:19px;color:#118449;font-weight:600;margin-top:5px;">Firma de autoría</div>
+        <div style="text-align:center;padding:8px 0;border-top:1px solid #D1FAE5;border-bottom:1px solid #D1FAE5;">
+          <div style="font-size:9px;color:#2B2B2B;font-weight:700;">cesar augusto ospina p</div>
+          <div style="font-size:10px;color:#118449;font-weight:600;">Firma de autoría</div>
         </div>
         <!-- EXTRAVÍO -->
-        <div style="font-size:16px;color:#374151;line-height:26px;margin-top:22px;">
+        <div style="font-size:8.5px;color:#374151;line-height:13px;margin-top:8px;">
           Si por algún motivo este carné es extraviado, por favor diríjase a la Dirección Regional Quindío — Avenida Centenario #44 Norte-15.
         </div>
       </div>`;
@@ -341,17 +335,33 @@ export default function ImprimirScreen({ navigation }) {
           @media print {
             body { background: #fff; padding: 0; margin: 0; }
             .print-btn, h1, .subtitle { display: none !important; }
-            /* cada cara ocupa su propia hoja a tamaño completo */
             .grid { display: block; }
             .carnet-pair { display: block; margin: 0; }
+            /* cada cara en su propia hoja, centrada */
             .carnet-front,
             .carnet-back {
               page-break-after: always;
               break-after: page;
-              margin: 0;
-              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              box-sizing: border-box;
             }
-            /* última cara: no añadir hoja en blanco al final */
+            /* escalar el carnet al tamaño adecuado para papel */
+            .carnet-front > div,
+            .carnet-back > div {
+              zoom: 1.8;
+            }
+            @supports not (zoom: 1) {
+              .carnet-front > div,
+              .carnet-back > div {
+                transform: scale(1.8);
+                transform-origin: center center;
+                margin: 200px auto;
+              }
+            }
+            /* última cara: no añadir hoja en blanco */
             .carnet-pair:last-child .carnet-back {
               page-break-after: avoid;
               break-after: avoid;
@@ -408,14 +418,30 @@ export default function ImprimirScreen({ navigation }) {
           @media print {
             body { background: #fff; padding: 0; margin: 0; display: block; }
             .print-btn, h1, .subtitle { display: none !important; }
-            /* frente en hoja 1, reverso (QR) en hoja 2, a tamaño completo */
+            /* frente en hoja 1, reverso (QR) en hoja 2, centrado */
             .carnet-pair { display: block; }
             .carnet-front,
             .carnet-back {
               page-break-after: always;
               break-after: page;
-              margin: 0;
-              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              box-sizing: border-box;
+            }
+            /* escalar el carnet al tamaño adecuado para papel */
+            .carnet-front > div,
+            .carnet-back > div {
+              zoom: 1.8;
+            }
+            @supports not (zoom: 1) {
+              .carnet-front > div,
+              .carnet-back > div {
+                transform: scale(1.8);
+                transform-origin: center center;
+                margin: 200px auto;
+              }
             }
             .carnet-back {
               page-break-after: avoid;
