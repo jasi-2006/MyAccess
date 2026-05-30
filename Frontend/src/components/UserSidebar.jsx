@@ -81,13 +81,14 @@ export default function UserSidebar({ navigation, activeKey, role }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 400, backgroundColor: '#FFFFFF',
+    width: 200, backgroundColor: '#FFFFFF',
     borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
   sidebarItem: {
     paddingHorizontal: 8, paddingVertical: 12, gap: 4,
     marginHorizontal: 9, borderRadius: 10, left: 10,
+    width:190
   },
   sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
   mobileMenu: {
