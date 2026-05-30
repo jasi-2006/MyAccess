@@ -85,27 +85,29 @@ const styles = StyleSheet.create({
   },
   sidebarList: { gap: 4 },
   sidebarItem: {
-    paddingHorizontal: 8, paddingVertical: 12, gap: 4,
-    marginHorizontal: 9, borderRadius: 10, left: 10,
+    paddingHorizontal: 5, paddingVertical: 6, gap: 4,
+    marginHorizontal: 2, borderRadius: 10, left: 8,
   },
   sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
+
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
   mobileMenuItem: {
-    flex: 1, minHeight: 52, backgroundColor: '#FFFFFF',
+    flex: 1, minHeight: 48, backgroundColor: '#FFFFFF',
     borderWidth: 1, borderColor: '#D8EBDD', borderRadius: 16,
-    paddingHorizontal: 3, paddingVertical: 6,
+    paddingHorizontal: 3, paddingVertical: 5,
     justifyContent: 'center', alignItems: 'center', gap: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
   mobileMenuLabel: { fontSize: 9, color: '#28323C', textAlign: 'center', lineHeight: 11 },
+
   menuItemActive: {
     backgroundColor: '#2FD16A',
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
-  menuLabelActive: { color: '#00ff6a', fontWeight: '600' },
-  menuIcon: { fontSize: 18, color: '#079B72' },
+  menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
+  menuIcon: { fontSize: 16 },
 });
