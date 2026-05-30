@@ -4,15 +4,15 @@ import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio'      },
-  { key: 'Carnet',      label: 'Mi carnet', managementOnly: true},
-  { key: 'User',        label: 'Mi perfil'},
-  { key: 'Notifications', label: 'Notificaciones'},
+  { key: 'Card',        label: 'Mi carnet', managementOnly: true },  // ← 'Card', no 'Carnet'
+  { key: 'User',        label: 'Mi perfil'   },
+  { key: 'Notifications', label: 'Notificaciones' },
   { key: 'status',      label: 'Estado tramite', managementOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas', managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas',    managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
-  { key: 'Historial',   label: 'Historial', managementOnly: true },
-  { key: 'Imprimir',    label: 'Imprimir', managementOnly: true },
+  { key: 'Historial',   label: 'Historial',   managementOnly: true },
+  { key: 'Imprimir',    label: 'Imprimir',    managementOnly: true },
 ];
 
 export default function CarnetSidebar({ navigation, role, activeKey }) {
