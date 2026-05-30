@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
-  // sidebarItem: {
-  //   paddingHorizontal: 14, paddingVertical: 8, gap: 4,
-  //   marginHorizontal: 10, borderRadius: 26,
-  // },
-  sidebarLabel: { fontSize: 90, color: '#232323', lineHeight: 11, },
+  sidebarItem: {
+    paddingHorizontal: 4, paddingVertical: 8, gap: 4,
+    marginHorizontal: 3, borderRadius: 16, alignItems: 'center',
+  },
+  sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
@@ -106,6 +106,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
-  menuLabelActive: { color: '#f10e0e', fontWeight: '600' },
+  menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
   menuIcon: { fontSize: 18, color: '#079B72' },
 });
