@@ -3,16 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'r
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
-  { key: 'home',        label: 'Inicio',             icon: '🏠' },
-  { key: 'Carnet',      label: 'Mi carnet',           icon: '🪪', management: true},
-  { key: 'User',        label: 'Mi perfil',           icon: '👤' },
-  { key: 'Notifications', label: 'Notificaciones',   icon: '🔔' },
-  { key: 'status',      label: 'Estado tramite',      icon: '🔀', aprendizOnly: true },
-  { key: 'Instructor',  label: 'Dashboard',           icon: '📊', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
-  { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
-  { key: 'Imprimir',    label: 'Imprimir',            icon: 'P', managementOnly: true },
+  { key: 'home',        label: 'Inicio'      },
+  { key: 'Carnet',      label: 'Mi carnet', management: true},
+  { key: 'User',        label: 'Mi perfil'},
+  { key: 'Notifications', label: 'Notificaciones'},
+  { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
+  { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas', managementOnly: true },
+  { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
+  { key: 'Historial',   label: 'Historial', managementOnly: true },
+  { key: 'Imprimir',    label: 'Imprimir', managementOnly: true },
 ];
 
 export default function CarnetSidebar({ navigation, role, activeKey }) {
