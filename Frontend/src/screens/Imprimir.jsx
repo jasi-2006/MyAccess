@@ -168,100 +168,122 @@ export default function ImprimirScreen({ navigation }) {
   const fichasToPrint = isPrintingAll ? fichas : selectedFicha ? [selectedFicha] : [];
 
   const buildCarnetPairHtml = (learner, card) => {
-    const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
-    const fullName = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
+    const photoUrl   = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
+    const fullName   = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
     const roleDisplay = getRoleDisplayName(learner?.nameRole || learner?.name_role);
-    const docType = learner?.typeDocument || 'CC';
-    const docNum = learner?.document || '';
-    const blood = learner?.bloodType || '';
-    const email = learner?.email || '';
-    const regional = (learner?.regional || 'Regional Quindío').trim();
-    const center = (learner?.trainingCenter || 'Centro Comercio y Turismo').trim();
-    const program = learner?.trainingProgram || 'NA';
-    const ficha = learner?.ficha || learner?.files || '';
-    const initial = fullName.charAt(0).toUpperCase();
+    const docType    = learner?.typeDocument || 'CC';
+    const docNum     = learner?.document || '';
+    const blood      = learner?.bloodType || '';
+    const regional   = (learner?.regional || 'Regional Quindío').trim();
+    const center     = (learner?.trainingCenter || 'Centro de Comercio y Turismo').trim();
+    const program    = learner?.trainingProgram || 'NA';
+    const ficha      = learner?.ficha || learner?.files || '';
+    const initial    = fullName.charAt(0).toUpperCase();
     const logoOrigin = window.location.origin;
+
+    /* Formato documento: CC → C,C  |  1099682331 → 1.099.682.331  |  O+ → RH O+ */
+    const fmtDocType = (t) => String(t || '').split('').join(',');
+    const fmtDocNum  = (n) => String(n || '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const docLine    = `${fmtDocType(docType)} ${fmtDocNum(docNum)}${blood ? ` RH ${blood}` : ''}`;
 
     /* ---- Foto ---- */
     const photoHtml = photoUrl
-      ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:108px;height:140px;border-radius:10px;object-fit:cover;border:2px solid #C8E6C9;" />`
-      : `<div style="width:108px;height:140px;border-radius:10px;background:linear-gradient(135deg,#E8F5E9,#A5D6A7);display:flex;align-items:center;justify-content:center;"><span style="font-size:42px;font-weight:900;color:#2E7D32;">${initial}</span></div>`;
+      ? `<img src="${photoUrl}" crossorigin="anonymous"
+             style="width:130px;height:160px;object-fit:cover;border-radius:4px;display:block;" />`
+      : `<div style="width:130px;height:160px;border-radius:4px;
+                    background:linear-gradient(135deg,#E8F5E9,#A5D6A7);
+                    display:flex;align-items:center;justify-content:center;">
+           <span style="font-size:56px;font-weight:900;color:#2E7D32;font-family:Arial,sans-serif;">${initial}</span>
+         </div>`;
 
-    /* ---- Código de barras ---- */
-    const bars = [2,1,3,1,1,2,4,1,2,1,3,2,1,1,4,2,1,3,1,2,2,1,3,1];
-    const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:32px;margin-bottom:8px;">${
-      bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#222;${i < bars.length-1 ? 'margin-right:1px;' : ''}"></div>`).join('')
-    }</div>`;
-
-    /* ---- QR (proporcional al carnet) ---- */
-    const QR_ROWS = [
-      '11111110001001111111','10000010110010100001','10111010101110101101','10111010010000101101',
-      '10111010111110101101','10000010001000100001','11111110101010111111','00000000110110000000',
-      '10110111100011101011','00101100111001011001','11100011101011100011','00111001010100101110',
-      '10101110111110001011','00000000101000100000','11111110110101111111','10000010001100100001',
-      '10111010111010101101','10111010010100101101','10000010101110100001','11111110011000111111',
-    ];
-    const qrHtml = `<div style="padding:5px;background:#fff;border:1px solid #111;display:inline-block;">${
-      QR_ROWS.map(row =>
-        `<div style="display:flex;">${row.split('').map(c =>
-          `<div style="width:3.5px;height:3.5px;background:${c==='1'?'#111':'#fff'};"></div>`
-        ).join('')}</div>`
+    /* ---- Barcode (ancho completo del carnet) ---- */
+    const bars = [2,1,3,1,1,2,4,1,2,1,3,2,1,1,4,2,1,3,1,2,2,1,3,1,1,2,3,1,2,1,1,3,2,1,2,1];
+    const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:38px;">${
+      bars.map((w, i) =>
+        `<div style="width:${w}px;height:${i % 2 === 0 ? 34 : 28}px;background:#111;
+                    ${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`
       ).join('')
     }</div>`;
 
     /* ---- Logo SENA ---- */
-    const logoHtml = `<img src="${logoOrigin}/static/media/logoSena.png" style="width:70px;height:70px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:70px;height:70px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:15px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
+    const logoHtml = `<img src="${logoOrigin}/static/media/logoSena.png"
+        style="width:80px;height:80px;object-fit:contain;"
+        onerror="this.outerHTML='<div style=&quot;width:80px;height:80px;background:#0A8A4A;
+          display:flex;align-items:center;justify-content:center;
+          border-radius:6px;&quot;>
+          <span style=&quot;color:#fff;font-weight:900;font-size:16px;font-family:Arial,sans-serif;&quot;>SENA</span>
+        </div>'" />`;
 
-    /* ---- FRENTE ---- */
+    /* ==============================================================
+       FRENTE — igual al carnet físico
+    ============================================================== */
     const front = `
-      <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px 14px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
-        <!-- HEADER: logo + foto -->
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            ${logoHtml}
-            <span style="font-size:7px;font-weight:900;color:#0A8A4A;letter-spacing:1.5px;">SENA</span>
-          </div>
+      <div style="width:265px;min-height:420px;border-radius:12px;background:#fff;
+                  padding:14px 12px 12px;box-sizing:border-box;
+                  display:flex;flex-direction:column;
+                  font-family:Arial,sans-serif;
+                  box-shadow:0 2px 14px rgba(0,0,0,0.18);">
+        <!-- Logo izquierda + Foto derecha -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          ${logoHtml}
           ${photoHtml}
         </div>
-        <!-- ROL -->
-        <div style="font-size:11px;color:#2F2F2F;letter-spacing:0.8px;text-transform:uppercase;">${roleDisplay}</div>
-        <!-- SEPARADOR VERDE -->
-        <div style="height:3px;background:linear-gradient(90deg,#0A8A4A,#24C565,#80E9B4);border-radius:2px;"></div>
-        <!-- NOMBRE -->
-        <div style="font-size:13px;font-weight:900;color:#111;letter-spacing:0.3px;line-height:1.3;">${fullName}</div>
-        <!-- DOCUMENTO + SANGRE -->
-        <div style="font-size:9.5px;font-weight:700;color:#374151;">${docType} ${docNum}${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
-        ${email ? `<div style="font-size:8.5px;color:#6B7280;">&#9993; ${email}</div>` : ''}
-        <!-- BARCODE -->
+        <!-- Rol -->
+        <div style="font-size:11px;color:#555;letter-spacing:0.6px;
+                    text-transform:uppercase;margin-bottom:5px;">${roleDisplay}</div>
+        <!-- Línea verde sólida -->
+        <div style="height:3px;background:#0A8A4A;margin-bottom:9px;"></div>
+        <!-- Nombre -->
+        <div style="font-size:16px;font-weight:700;color:#111;line-height:1.25;
+                    margin-bottom:6px;">${fullName}</div>
+        <!-- Documento -->
+        <div style="font-size:11px;color:#222;margin-bottom:10px;">${docLine}</div>
+        <!-- Barcode -->
         ${barcodeHtml}
-        <!-- FOOTER -->
-        <div style="border-top:1px solid #D1FAE5;padding-top:6px;margin-top:auto;">
-          <div style="color:#374151;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.5px;">${regional}</div>
-          <div style="color:#118449;font-size:8.5px;font-weight:800;margin-top:1px;">${center}</div>
-          <div style="color:#6B7280;font-size:8px;margin-top:1px;">${program}</div>
-          ${ficha ? `<div style="color:#6B7280;font-size:8px;">Grupo No <b>${ficha}</b></div>` : ''}
+        <!-- Espacio flexible -->
+        <div style="flex:1;"></div>
+        <!-- Footer -->
+        <div style="margin-top:10px;">
+          <div style="font-size:12px;font-weight:700;color:#333;">${regional}</div>
+          <div style="font-size:11px;color:#0A8A4A;font-weight:600;margin-top:2px;">${center}</div>
+          <div style="font-size:10px;color:#666;margin-top:2px;">${program}</div>
+          ${ficha ? `<div style="font-size:10px;color:#666;">Grupo No ${ficha}</div>` : ''}
         </div>
       </div>`;
 
-    /* ---- REVERSO ---- */
+    /* ==============================================================
+       REVERSO — igual al carnet físico (sin QR, con firma cursiva)
+    ============================================================== */
     const back = `
-      <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
-        <!-- AVISO LEGAL -->
-        <div style="font-size:8.5px;color:#374151;line-height:13px;">
-          Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus funciones y para la obtención de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboración para su desempeño.
+      <div style="width:265px;min-height:420px;border-radius:12px;background:#fff;
+                  padding:18px 14px;box-sizing:border-box;
+                  display:flex;flex-direction:column;justify-content:space-between;
+                  font-family:Arial,sans-serif;
+                  box-shadow:0 2px 14px rgba(0,0,0,0.18);">
+        <!-- Texto legal -->
+        <div style="font-size:10.5px;color:#333;line-height:16px;text-align:justify;">
+          Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus
+          funciones y para la obtención de los servicios que el SENA presta a sus
+          funcionarios y/o contratistas.<br/><br/>
+          Se solicita a las autoridades civiles y militares prestarle toda la colaboración
+          para su desempeño.
         </div>
-        <!-- QR -->
-        <div style="text-align:center;margin:10px 0;">${qrHtml}</div>
-        <!-- CORREO -->
-        ${email ? `<div style="text-align:center;font-size:8px;color:#6B7280;margin-bottom:4px;">&#9993; ${email}</div>` : ''}
-        <!-- FIRMA -->
-        <div style="text-align:center;padding:8px 0;border-top:1px solid #D1FAE5;border-bottom:1px solid #D1FAE5;">
-          <div style="font-size:9px;color:#2B2B2B;font-weight:700;">cesar augusto ospina p</div>
-          <div style="font-size:10px;color:#118449;font-weight:600;">Firma de autoría</div>
+        <!-- Firma -->
+        <div style="text-align:center;margin:18px 0 6px;">
+          <div style="font-size:20px;color:#111;
+                      font-family:'Brush Script MT',cursive,Georgia,serif;
+                      font-style:italic;margin-bottom:6px;">
+            César Augusto Ospina P.
+          </div>
+          <div style="font-size:10.5px;font-weight:700;color:#111;
+                      text-transform:uppercase;letter-spacing:0.8px;">
+            FIRMA AUTORIZADA
+          </div>
         </div>
-        <!-- EXTRAVÍO -->
-        <div style="font-size:8.5px;color:#374151;line-height:13px;margin-top:8px;">
-          Si por algún motivo este carné es extraviado, por favor diríjase a la Dirección Regional Quindío — Avenida Centenario #44 Norte-15.
+        <!-- Extravío -->
+        <div style="font-size:10.5px;color:#333;line-height:16px;text-align:justify;">
+          Si por algún motivo este carné es extraviado, por favor diríjase a la
+          Dirección Regional Quindio - Avenida Centenario # 44 Norte - 15
         </div>
       </div>`;
 
@@ -271,6 +293,7 @@ export default function ImprimirScreen({ navigation }) {
         <div class="carnet-back">${back}</div>
       </div>`;
   };
+
 
   const markAsPrinted = async (learnersList) => {
     const [allCards, allRequests] = await Promise.all([
@@ -305,7 +328,7 @@ export default function ImprimirScreen({ navigation }) {
       return buildCarnetPairHtml(learner, card);
     }).join('');
 
-    const printWin = window.open('', '_blank', 'width=1000,height=750');
+    const printWin = window.open('', '_blank', 'width=900,height=700');
     if (!printWin) { alert('Permite ventanas emergentes para imprimir.'); return; }
     printWin.document.write(`
       <!DOCTYPE html>
@@ -313,46 +336,30 @@ export default function ImprimirScreen({ navigation }) {
       <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <title>Carnets MyAccess — Imprimir</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+        <title>Carnets MyAccess</title>
         <style>
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; padding: 24px; }
-          h1 { font-size: 22px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
-          .subtitle { font-size: 13px; color: #6B7280; margin-bottom: 20px; }
-          .grid { display: flex; flex-wrap: wrap; gap: 20px; }
-          /* pantalla: par frente+reverso en fila */
-          .carnet-pair { display: flex; gap: 16px; margin-bottom: 28px; }
-          .print-btn {
-            position: fixed; top: 16px; right: 16px;
-            background: #0A8A4A; color: #fff; font-weight: 800;
-            font-size: 14px; border: none; border-radius: 10px;
-            padding: 10px 22px; cursor: pointer; box-shadow: 0 4px 14px rgba(10,138,74,0.4);
-            font-family: 'Inter', Arial, sans-serif;
+          body { background: #fff; }
+          .carnet-pair { display: block; }
+          /* pantalla: centrar cada cara */
+          .carnet-front,
+          .carnet-back {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
           }
-          .print-btn:hover { background: #087C4A; }
+          /* escalar al imprimir */
           @media print {
-            body { background: #fff; padding: 0; margin: 0; }
-            .print-btn, h1, .subtitle { display: none !important; }
-            .grid { display: block; }
-            .carnet-pair { display: block; margin: 0; }
-            /* cada cara en su propia hoja, centrada */
             .carnet-front,
             .carnet-back {
               page-break-after: always;
               break-after: page;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              min-height: 100vh;
-              box-sizing: border-box;
+              padding: 0;
             }
-            /* escalar el carnet al tamaño adecuado para papel */
             .carnet-front > div,
-            .carnet-back > div {
-              zoom: 1.8;
-            }
+            .carnet-back > div { zoom: 1.8; }
             @supports not (zoom: 1) {
               .carnet-front > div,
               .carnet-back > div {
@@ -361,7 +368,6 @@ export default function ImprimirScreen({ navigation }) {
                 margin: 200px auto;
               }
             }
-            /* última cara: no añadir hoja en blanco */
             .carnet-pair:last-child .carnet-back {
               page-break-after: avoid;
               break-after: avoid;
@@ -370,10 +376,8 @@ export default function ImprimirScreen({ navigation }) {
         </style>
       </head>
       <body>
-        <button class="print-btn" onclick="window.print()">&#128438; Imprimir</button>
-        <h1>Carnets MyAccess</h1>
-        <p class="subtitle">Vista previa — haz clic en "Imprimir" para enviar a la impresora.</p>
-        <div class="grid">${pairsHtml}</div>
+        <div>${pairsHtml}</div>
+        <script>window.onload = function(){ window.print(); }<\/script>
       </body>
       </html>
     `);
@@ -397,44 +401,30 @@ export default function ImprimirScreen({ navigation }) {
       <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <title>Carnet MyAccess — ${selectedCarnet?.name || ''}</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+        <title>Carnet MyAccess</title>
         <style>
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px; }
-          h1 { font-size: 18px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
-          .subtitle { font-size: 12px; color: #6B7280; margin-bottom: 20px; }
-          /* pantalla: frente y reverso en fila */
-          .carnet-pair { display: flex; gap: 16px; }
-          .print-btn {
-            position: fixed; top: 16px; right: 16px;
-            background: #0A8A4A; color: #fff; font-weight: 800;
-            font-size: 14px; border: none; border-radius: 10px;
-            padding: 10px 22px; cursor: pointer; box-shadow: 0 4px 14px rgba(10,138,74,0.4);
-            font-family: 'Inter', Arial, sans-serif;
+          body { background: #fff; }
+          .carnet-pair { display: block; }
+          /* pantalla: centrar cada cara */
+          .carnet-front,
+          .carnet-back {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
           }
-          .print-btn:hover { background: #087C4A; }
+          /* escalar al imprimir */
           @media print {
-            body { background: #fff; padding: 0; margin: 0; display: block; }
-            .print-btn, h1, .subtitle { display: none !important; }
-            /* frente en hoja 1, reverso (QR) en hoja 2, centrado */
-            .carnet-pair { display: block; }
             .carnet-front,
             .carnet-back {
               page-break-after: always;
               break-after: page;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              min-height: 100vh;
-              box-sizing: border-box;
+              padding: 0;
             }
-            /* escalar el carnet al tamaño adecuado para papel */
             .carnet-front > div,
-            .carnet-back > div {
-              zoom: 1.8;
-            }
+            .carnet-back > div { zoom: 1.8; }
             @supports not (zoom: 1) {
               .carnet-front > div,
               .carnet-back > div {
@@ -451,10 +441,8 @@ export default function ImprimirScreen({ navigation }) {
         </style>
       </head>
       <body>
-        <button class="print-btn" onclick="window.print()">&#128438; Imprimir</button>
-        <h1>Carnet MyAccess</h1>
-        <p class="subtitle">Vista previa — haz clic en "Imprimir" para enviar a la impresora.</p>
         ${pairHtml}
+        <script>window.onload = function(){ window.print(); }<\/script>
       </body>
       </html>
     `);
