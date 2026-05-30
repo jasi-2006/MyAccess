@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   sidebarList: { gap: 4 },
   sidebarItem: {
     paddingHorizontal: 4, paddingVertical: 8, gap: 4,
-    marginHorizontal: 3, borderRadius: 16, alignItems: 'center',
+    marginHorizontal: 3, borderRadius: 16
   },
   sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
   mobileMenu: {
