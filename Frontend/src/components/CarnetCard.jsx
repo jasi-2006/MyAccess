@@ -127,14 +127,16 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   const canManageCard = [ROLES.ADMIN, ROLES.INSTRUCTOR].includes(normalizedRole);
   const isActive = card?.active ?? true;
   const hasCardRecord = Boolean(card?.idCard);
-  const regional = profile?.regional || 'Regional Quindio';
+  const regional = profile?.regional || 'Regional Quindío';
   const trainingCenter = profile?.trainingCenter || 'Centro de Comercio y Turismo';
   const trainingProgram = profile?.trainingProgram || 'ADSO';
-  const ficha = profile?.ficha || profile?.Ficha || '0000000';
+  const ficha = profile?.ficha || profile?.Ficha || '';
   const photoUrl = resolveImageUrl(profile?.photoUrl || card?.photoUrl);
 
-  const accessHashTop = `${documentType}${documentNumber}${studentName}`.replace(/\s+/g, '').toUpperCase();
-  const accessHashBottom = `${regional}${trainingCenter}${ficha}`.replace(/\s+/g, '').toUpperCase();
+  const fmtDocType = (t) => String(t || '').replace(/[.,]/g, '').split('').join(',');
+  const fmtDocNum  = (n) => String(n || '').replace(/[.,]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const cleanBlood = (b) => String(b || '').replace(/^RH\s+/i, '').trim();
+  const formattedDocLine = `${fmtDocType(documentType)} ${fmtDocNum(documentNumber)}${bloodType ? ` RH ${cleanBlood(bloodType)}` : ''}`;
 
   return (
     <View style={styles.cardStage}>
@@ -175,7 +177,10 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
             ) : (
               <>
                 <View style={styles.frontTop}>
-                  <SenaLogo />
+                  <View style={styles.frontLeftCol}>
+                    <SenaLogo />
+                    <Text style={styles.roleLabel}>{roleLabel}</Text>
+                  </View>
                   <View style={styles.photoFrame}>
                     {photoUrl ? (
                       <Image source={{ uri: photoUrl }} style={styles.photoImage} resizeMode="cover" />
@@ -185,11 +190,11 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                   </View>
                 </View>
 
+                <View style={styles.greenRule} />
+
                 <View style={styles.frontBody}>
-                  <Text style={styles.roleLabel}>{roleLabel}</Text>
-                  <View style={styles.greenRule} />
                   <Text style={styles.studentNameFront}>{studentName}</Text>
-                  <Text style={styles.identityText}>{`${documentType} ${documentNumber} ${bloodType}`}</Text>
+                  <Text style={styles.identityText}>{formattedDocLine}</Text>
                   <BarcodeBlock />
                 </View>
 
@@ -199,10 +204,10 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                       <Text style={styles.inactiveBadgeText}>CARNET INACTIVO</Text>
                     </View>
                   )}
-                  <Text style={styles.footerPrimary}>Regional {regional}</Text>
+                  <Text style={styles.footerPrimary}>{regional}</Text>
                   <Text style={styles.footerSecondary}>{trainingCenter}</Text>
                   <Text style={styles.footerTertiary}>{trainingProgram}</Text>
-                  <Text style={styles.footerTertiary}>{`Grupo No ${ficha}`}</Text>
+                  {ficha ? <Text style={styles.footerTertiary}>{`Grupo No ${ficha}`}</Text> : null}
                 </View>
 
                 {!isActive && (
@@ -234,22 +239,17 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
             ) : (
               <>
                 <Text style={styles.hashTop}>
-                  Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas {'\n'}
-                  Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño 
-
+                  Este carnet pertenece a quien lo porta, únicamente para el cumplimiento de sus funciones y para la obtención de servicios que el SENA presta a sus funcionarios y/o contratistas.{"\n"}{"\n"}
+                  Se solicita a las autoridades civiles y militares prestarle toda la colaboración para su desempeño.
                 </Text>
               
-                <View style={styles.qrSection}>
-                  <QrBlock />
-                </View>
-
                 <View style={styles.signatureBlock}>
-                  <Text style={styles.signatureName}>cesar augusto ospina p</Text>
-                  <Text style={styles.signatureLabel}>Firma de autoria</Text>
+                  <Text style={styles.signatureText}>César Augusto Ospina P.</Text>
+                  <Text style={styles.signatureLabel}>FIRMA AUTORIZADA</Text>
                 </View>
 
                 <Text style={styles.hashBottom}>
-                  Si por algun motivo este carné es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
+                  Si por algún motivo este carné es extraviado, por favor diríjase a la Dirección Regional Quindío - Avenida Centenario #44 Norte -15
                 </Text>
 
                 {!isActive && (
@@ -323,12 +323,12 @@ const styles = StyleSheet.create({
   },
   cardBase: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: '#D7D7D7',
     overflow: 'hidden',
     paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingVertical: 14,
     justifyContent: 'space-between',
     shadowColor: '#000000',
     shadowOpacity: 0.08,
@@ -337,12 +337,13 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardFront: {
-    backgroundColor: '#FDFDFD',
+    backgroundColor: '#FFFFFF',
   },
   cardBack: {
     backgroundColor: '#FFFFFF',
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    justifyContent: 'space-between',
   },
   cardDisabled: {
     borderColor: '#B42318',
@@ -353,6 +354,13 @@ const styles = StyleSheet.create({
   frontTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    height: 160,
+  },
+  frontLeftCol: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: 160,
     alignItems: 'flex-start',
   },
   logoBlock: {
@@ -361,8 +369,8 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   logoSenaImg: {
-    width: 80,
-    height: 80,
+    width: 75,
+    height: 75,
   },
   logoText: {
     color: '#0A8A4A',
@@ -371,66 +379,9 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: 0.2,
   },
-  logoSymbol: {
-    width: 56,
-    height: 64,
-    marginTop: 2,
-    alignItems: 'center',
-  },
-  logoCircle: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#0A8A4A',
-    marginBottom: 3,
-  },
-  logoArms: {
-    width: 54,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 2,
-  },
-  logoArm: {
-    width: 22,
-    height: 6,
-    backgroundColor: '#0A8A4A',
-    borderRadius: 3,
-  },
-  logoArmLeft: {
-    transform: [{ rotate: '8deg' }],
-  },
-  logoArmRight: {
-    transform: [{ rotate: '-8deg' }],
-  },
-  logoStem: {
-    width: 7,
-    height: 16,
-    borderRadius: 3,
-    backgroundColor: '#0A8A4A',
-    marginBottom: 2,
-  },
-  logoLegs: {
-    width: 42,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  logoLeg: {
-    width: 8,
-    height: 28,
-    backgroundColor: '#0A8A4A',
-    borderRadius: 4,
-  },
-  logoLegLeft: {
-    transform: [{ rotate: '32deg' }],
-  },
-  logoLegRight: {
-    transform: [{ rotate: '-32deg' }],
-  },
   photoFrame: {
-    width: 122,
-    height: 152,
-    borderRadius: 10,
-    overflow: 'hidden',
+    width: 130,
+    height: 160,
     backgroundColor: '#E9E9E9',
   },
   photoImage: {
@@ -438,44 +389,46 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: 10,
+    flexDirection: 'column',
   },
   roleLabel: {
-    fontSize: 14,
-    color: '#2F2F2F',
-    letterSpacing: 0.8,
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: '#4A4A4A',
+    letterSpacing: 1,
     textTransform: 'uppercase',
-    marginBottom: 4,
   },
   greenRule: {
     height: 4,
     backgroundColor: '#0A8A4A',
-    borderRadius: 2,
-    marginBottom: 8,
+    marginTop: 8,
+    marginBottom: 10,
   },
   studentNameFront: {
-    fontSize: 17,
-    lineHeight: 21,
-    fontWeight: '900',
-    color: '#118449',
+    fontSize: 18,
+    lineHeight: 22,
+    fontWeight: '800',
+    color: '#0A8A4A',
     marginBottom: 6,
   },
   identityText: {
-    fontSize: 10,
-    color: '#3A3A3A',
-    marginBottom: 10,
+    fontSize: 12,
+    color: '#333333',
+    marginBottom: 12,
   },
   barcodeWrap: {
-    height: 34,
+    height: 38,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginBottom: 10,
+    justifyContent: 'center',
+    marginBottom: 12,
   },
   barcodeBar: {
     height: 28,
     backgroundColor: '#111111',
   },
   frontFooter: {
+    marginTop: 'auto',
     gap: 2,
   },
   inactiveBadge: {
@@ -511,68 +464,49 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   footerPrimary: {
-    fontSize: 13,
-    color: '#4A4A4A',
-    fontWeight: '700',
+    fontSize: 12,
+    color: '#333333',
+    fontWeight: '600',
   },
   footerSecondary: {
-    fontSize: 11,
-    color: '#5D9C7A',
-    fontWeight: '700',
+    fontSize: 12,
+    color: '#0A8A4A',
+    fontWeight: '600',
+    marginTop: 2,
   },
   footerTertiary: {
-    fontSize: 10,
-    color: '#4A4A4A',
+    fontSize: 11,
+    color: '#333333',
+    marginTop: 2,
   },
   hashTop: {
-    fontSize: 10,
-    color: '#2E2E2E',
-    lineHeight: 13,
-  },
-  qrSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 8,
-  },
-  qrOuter: {
-    padding: 6,
-    backgroundColor: '#FFFFFF',
-  },
-  qrGrid: {
-    borderWidth: 1,
-    borderColor: '#111111',
-  },
-  qrRow: {
-    flexDirection: 'row',
-  },
-  qrCell: {
-    width: 4,
-    height: 4,
-  },
-  qrCellDark: {
-    backgroundColor: '#111111',
-  },
-  qrCellLight: {
-    backgroundColor: '#FFFFFF',
+    fontSize: 10.5,
+    color: '#333333',
+    lineHeight: 16,
   },
   signatureBlock: {
     alignItems: 'center',
-    marginBottom: 10,
+    marginVertical: 18,
   },
-  signatureName: {
-    fontSize: 10,
-    color: '#2B2B2B',
-    marginBottom: 3,
+  signatureText: {
+    fontSize: 22,
+    color: '#111111',
+    fontFamily: Platform.OS === 'web' ? 'Brush Script MT, cursive' : 'Georgia',
+    fontStyle: 'italic',
+    marginBottom: 6,
     textAlign: 'center',
   },
   signatureLabel: {
-    fontSize: 11,
-    color: '#333333',
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#111111',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
     textAlign: 'center',
   },
   hashBottom: {
-    fontSize: 10,
-    color: '#2E2E2E',
-    lineHeight: 13,
+    fontSize: 10.5,
+    color: '#333333',
+    lineHeight: 16,
   },
 });
