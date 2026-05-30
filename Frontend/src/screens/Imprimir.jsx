@@ -332,7 +332,7 @@ export default function ImprimirScreen({ navigation }) {
           }
           .print-btn:hover { background: #087C4A; }
           @media print {
-            body { background: #fff; padding: 0; }
+            body { background: #fff; padding: 0; margin: 0; }
             .print-btn, h1, .subtitle { display: none !important; }
             /* cada cara ocupa su propia hoja */
             .grid { display: block; }
@@ -345,8 +345,23 @@ export default function ImprimirScreen({ navigation }) {
               justify-content: center;
               align-items: center;
               min-height: 100vh;
-              padding: 20px;
+              padding: 0;
               box-sizing: border-box;
+            }
+            /* escalar el carnet para llenar la hoja (Chrome/Edge) */
+            .carnet-front > div,
+            .carnet-back > div {
+              zoom: 2.4;
+            }
+            /* fallback Firefox: zoom no funciona, usar transform */
+            @supports not (zoom: 1) {
+              .carnet-front > div,
+              .carnet-back > div {
+                zoom: unset;
+                transform: scale(2.4);
+                transform-origin: center center;
+                margin: 260px auto;
+              }
             }
             /* última cara: no añadir hoja en blanco al final */
             .carnet-pair:last-child .carnet-back {
@@ -403,7 +418,7 @@ export default function ImprimirScreen({ navigation }) {
           }
           .print-btn:hover { background: #087C4A; }
           @media print {
-            body { background: #fff; padding: 0; display: block; }
+            body { background: #fff; padding: 0; margin: 0; display: block; }
             .print-btn, h1, .subtitle { display: none !important; }
             /* frente en hoja 1, reverso (QR) en hoja 2 */
             .carnet-pair { display: block; }
@@ -415,8 +430,23 @@ export default function ImprimirScreen({ navigation }) {
               justify-content: center;
               align-items: center;
               min-height: 100vh;
-              padding: 20px;
+              padding: 0;
               box-sizing: border-box;
+            }
+            /* escalar el carnet para llenar la hoja (Chrome/Edge) */
+            .carnet-front > div,
+            .carnet-back > div {
+              zoom: 2.4;
+            }
+            /* fallback Firefox: zoom no funciona, usar transform */
+            @supports not (zoom: 1) {
+              .carnet-front > div,
+              .carnet-back > div {
+                zoom: unset;
+                transform: scale(2.4);
+                transform-origin: center center;
+                margin: 260px auto;
+              }
             }
             .carnet-back {
               page-break-after: avoid;
