@@ -4,15 +4,15 @@ import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio'      },
-  { key: 'Card',        label: 'Mi carnet', managementOnly: true },  // ← 'Card', no 'Carnet'
-  { key: 'User',        label: 'Mi perfil'   },
-  { key: 'Notifications', label: 'Notificaciones' },
-  { key: 'status',      label: 'Estado tramite', managementOnly: true },
+  { key: 'Carnet',      label: 'Mi carnet', management: true},
+  { key: 'User',        label: 'Mi perfil'},
+  { key: 'Notifications', label: 'Notificaciones'},
+  { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',    managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',   managementOnly: true },
-  { key: 'Imprimir',    label: 'Imprimir',    managementOnly: true },
+  { key: 'Historial',   label: 'Historial', managementOnly: true },
+  { key: 'Imprimir',    label: 'Imprimir', managementOnly: true },
 ];
 
 export default function CarnetSidebar({ navigation, role, activeKey }) {
@@ -80,34 +80,32 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 220, backgroundColor: '#FFFFFF',
+    width: 190, backgroundColor: '#FFFFFF',
     borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
   sidebarItem: {
-    paddingHorizontal: 5, paddingVertical: 6, gap: 4,
-    marginHorizontal: 2, borderRadius: 10, left: 8,
+    paddingHorizontal: 8, paddingVertical: 12, gap: 4,
+    marginHorizontal: 9, borderRadius: 10, left: 10,
   },
   sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
-
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
   mobileMenuItem: {
-    flex: 1, minHeight: 48, backgroundColor: '#FFFFFF',
+    flex: 1, minHeight: 52, backgroundColor: '#FFFFFF',
     borderWidth: 1, borderColor: '#D8EBDD', borderRadius: 16,
-    paddingHorizontal: 3, paddingVertical: 5,
+    paddingHorizontal: 3, paddingVertical: 6,
     justifyContent: 'center', alignItems: 'center', gap: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
   mobileMenuLabel: { fontSize: 9, color: '#28323C', textAlign: 'center', lineHeight: 11 },
-
   menuItemActive: {
     backgroundColor: '#2FD16A',
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
   menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
-  menuIcon: { fontSize: 16 },
+  menuIcon: { fontSize: 18, color: '#079B72' },
 });

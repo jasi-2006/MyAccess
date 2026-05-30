@@ -81,34 +81,32 @@ export default function UserSidebar({ navigation, activeKey, role }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 220, backgroundColor: '#FFFFFF',
+    width: 190, backgroundColor: '#FFFFFF',
     borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
   sidebarItem: {
-    paddingHorizontal: 6, paddingVertical: 6, gap: 4,
-    marginHorizontal: 3, borderRadius: 10, left: 10,
+    paddingHorizontal: 8, paddingVertical: 12, gap: 4,
+    marginHorizontal: 9, borderRadius: 10, left: 10,
   },
   sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
-
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
   mobileMenuItem: {
-    flex: 1, minHeight: 48, backgroundColor: '#FFFFFF',
+    flex: 1, minHeight: 52, backgroundColor: '#FFFFFF',
     borderWidth: 1, borderColor: '#D8EBDD', borderRadius: 16,
-    paddingHorizontal: 3, paddingVertical: 5,
+    paddingHorizontal: 3, paddingVertical: 6,
     justifyContent: 'center', alignItems: 'center', gap: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
   mobileMenuLabel: { fontSize: 9, color: '#28323C', textAlign: 'center', lineHeight: 11 },
-
   menuItemActive: {
     backgroundColor: '#2FD16A',
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
   menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
-  menuIcon: { fontSize: 16 },
+  menuIcon: { fontSize: 18, color: '#079B72' },
 });
