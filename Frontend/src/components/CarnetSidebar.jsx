@@ -4,10 +4,10 @@ import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio'      },
-  { key: 'Carnet',      label: 'Mi carnet', management: true},
+  { key: 'Carnet',      label: 'Mi carnet', managementOnly: true},
   { key: 'User',        label: 'Mi perfil'},
   { key: 'Notifications', label: 'Notificaciones'},
-  { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
+  { key: 'status',      label: 'Estado tramite', managementOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
   { key: 'Fichas',      label: 'Fichas', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
@@ -80,7 +80,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 190, backgroundColor: '#FFFFFF',
+    width: 220, backgroundColor: '#FFFFFF',
     borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
@@ -106,6 +106,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
-  menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
+  menuLabelActive: { color: '#00ff6a', fontWeight: '600' },
   menuIcon: { fontSize: 18, color: '#079B72' },
 });
