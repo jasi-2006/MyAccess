@@ -137,6 +137,14 @@ export default function RegisterGatewayScreen({ navigation }) {
           : '',
       });
     } catch (error) {
+      if (error?.status === 409) {
+        setSubmitError('Este correo o documento ya esta registrado. Ve a la pantalla de verificacion y usa "Reenviar codigo", o inicia sesion.');
+        navigation.navigate('Verification', {
+          email: values.email.trim().toLowerCase(),
+          emailWarning: '',
+        });
+        return;
+      }
       setSubmitError(error.message || 'No fue posible crear la cuenta.');
     } finally {
       setLoading(false);
