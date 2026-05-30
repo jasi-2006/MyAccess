@@ -630,7 +630,6 @@ e solicita a las autoridades civiles y militares prestarle toda la colaboración
 /* Componente de vista previa de un carnet individual */
 function CarnetPreview({ learner, card, name, onPress }) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
-  const roleLabel = getRoleDisplayName(learner?.nameRole || learner?.name_role);
   const Container = onPress ? TouchableOpacity : View;
   const containerProps = onPress ? { onPress, activeOpacity: 0.88 } : {};
 
