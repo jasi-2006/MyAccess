@@ -80,7 +80,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 190, backgroundColor: '#FFFFFF',
+    width: 400, backgroundColor: '#FFFFFF',
     borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
