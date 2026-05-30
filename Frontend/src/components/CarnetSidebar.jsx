@@ -87,9 +87,9 @@ const styles = StyleSheet.create({
   sidebarItem: {
     paddingHorizontal: 8, paddingVertical: 12, gap: 4,
     marginHorizontal: 9, borderRadius: 10, left: 10,
-    width: 190
+  
   },
-  sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 },
+  sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11,   width: 190 },
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
