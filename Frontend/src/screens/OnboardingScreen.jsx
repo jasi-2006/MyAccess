@@ -81,11 +81,12 @@ export default function OnboardingScreen({ navigation }) {
             Innovamos la identificación con carnets digitales seguros y personalizados.
           </Text>
 
-          <PrimaryButton
-            title="Comenzar"
-            onPress={() => navigation.navigate('Login')}
-            style={styles.button}
-          />
+        <PrimaryButton
+  title="Comenzar"
+  onPress={() => navigation.navigate('Login')}
+  style={styles.button}
+  textStyle={styles.buttonText}
+/>
         </View>
       </View>
     </SafeAreaView>
@@ -209,13 +210,21 @@ function createStyles({
     textAlign: 'center',
     transform: [{ translateY: -300 }],
 
+
   },
 
   button: {
-    width: isDesktop ? 190 : '100%',
+    width: isDesktop ? 230 : '100%',
     maxWidth: 340,
     alignSelf: 'center',
+    fontWeight: '800',
     transform: [{ translateY: -300 }],
   },
+  buttonText: {
+  fontWeight: '400',
+   color: '#fff',
+  fontFamily: 'Sora'
+ 
+}
   });
 }
