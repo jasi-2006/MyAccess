@@ -3,16 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'r
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
-  { key: 'home',        label: 'Inicio',             icon: '🏠' },
-  { key: 'Carnet',      label: 'Mi carnet',           icon: '🪪', management: true},
-  { key: 'User',        label: 'Mi perfil',           icon: '👤' },
-  { key: 'Notifications', label: 'Notificaciones',   icon: '🔔' },
-  { key: 'status',      label: 'Estado tramite',      icon: '🔀', aprendizOnly: true },
-  { key: 'Instructor',  label: 'Dashboard',           icon: '📊', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
-  { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
-  { key: 'Imprimir',    label: 'Imprimir',            icon: 'P', managementOnly: true },
+  { key: 'home',        label: 'Inicio'      },
+  { key: 'Carnet',      label: 'Mi carnet', management: true},
+  { key: 'User',        label: 'Mi perfil'},
+  { key: 'Notifications', label: 'Notificaciones'},
+  { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
+  { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas', managementOnly: true },
+  { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
+  { key: 'Historial',   label: 'Historial', managementOnly: true },
+  { key: 'Imprimir',    label: 'Imprimir', managementOnly: true },
 ];
 
 export default function CarnetSidebar({ navigation, role, activeKey }) {
@@ -80,15 +80,16 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 80, backgroundColor: '#FFFFFF',
-    borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 10,
+    width: 200, backgroundColor: '#FFFFFF',
+    borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
   sidebarItem: {
-    paddingHorizontal: 4, paddingVertical: 8, gap: 4,
-    marginHorizontal: 3, borderRadius: 16, alignItems: 'center',
+    paddingHorizontal: 8, paddingVertical: 12, gap: 4,
+    marginHorizontal: 9, borderRadius: 10, left: 10,
+  
   },
-  sidebarLabel: { fontSize: 9, color: '#232323', lineHeight: 11, textAlign: 'center' },
+  sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11,   width: 190 },
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
