@@ -9,9 +9,10 @@ import {
   Text,
   View,
   useWindowDimensions,
-} from 'react-native';
-import { colors } from '../theme/colors';
+} 
 
+from 'react-native';
+import { colors } from '../theme/colors';
 const logo = require('../assets/LogoMyAccess.png');
 const students = require('../assets/students.png');
 
@@ -24,16 +25,14 @@ export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, c
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={styles.keyboard}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView
           contentContainerStyle={[
             styles.scroll,
             isSplit && { minHeight: panelHeight, flexDirection: 'row' },
           ]}
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
+          keyboardShouldPersistTaps="handled" >
           <View style={[styles.formPanel, isSplit ? styles.formPanelSplit : styles.formPanelMobile]}>
             <View style={[styles.formCard, compact && styles.formCardCompact]}>
               <Image source={logo} style={styles.logo} resizeMode="contain" />
@@ -65,6 +64,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+    curve: {
+    width: 580,
+    height: 300,
+    backgroundColor: colors.background,
+    transform: [{ translateY: -78 }],
+    borderTopLeftRadius: 400,
+    borderTopRightRadius: 400,
+    alignSelf: 'center',
+    },
   keyboard: {
     flex: 1,
   },
@@ -101,40 +109,45 @@ const styles = StyleSheet.create({
     height: 42,
     marginBottom: 22,
   },
-  brandPanel: {
+   brandPanel: {
     flex: 1,
-    backgroundColor: colors.primary,
+    backgroundColor: '#079B72',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 44,
-    paddingVertical: 54,
+    paddingVertical: 10, // Cambiado de 54 a 10 para evitar que quede volando
   },
   brandCopy: {
     alignItems: 'center',
     marginBottom: 54,
   },
   brandTitle: {
-    color: '#ffffff',
-    fontSize: 30,
+    color: '#FFFFFF',
+    fontSize: 37,
     fontWeight: '800',
     textAlign: 'center',
-    letterSpacing: -0.3,
+    position:'relative',
+    top: 60,
+  
   },
   brandSubtitle: {
     color: '#DFFCF1',
-    fontSize: 13,
+    fontSize:15,
     fontWeight: '600',
     lineHeight: 20,
-    marginTop: 16,
-    maxWidth: 450,
+    maxWidth: 560,
+   position:'relative',
+    top: 60,
     textAlign: 'center',
   },
   students: {
-    width: '72%',
-    maxWidth: 430,
-    height: 230,
+    width: '100%', // Cambia de '72%' a '90%' para que sea más grande
+    maxWidth: 700, // Cambia esto si necesitas un tamaño específico
+    height: 390, // Aumentado el alto de la imagen
+     position:'relative',
+    top: 9,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
-    height: 200,
+    height: 270,
   },
 });
