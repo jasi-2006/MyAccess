@@ -2,8 +2,11 @@ import React, { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import CustomInput from './CustomInput.jsx';
+import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
+const DOCUMENT_TYPES = ['CC', 'TI', 'PPT'];
+export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
@@ -37,16 +40,13 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
   const stepFields = [
     [
       inp('👤', 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
-      inp('🪪', 'Tipo de documento',   typeDocument,  o('typeDocument'), {}),
-      inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, keyboardType: 'numeric' }),
-      inp('🩸', 'Tipo de sangre',      bloodType,     o('bloodType'),    { error: errors.bloodType, autoCapitalize: 'characters' }),
+      inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
       inp('📄', 'Regional',             regional,        o('regional'),        {}),
       inp('🏢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
-      inp('👤', 'Rol',                  nameRole,        o('nameRole'),        {}),
       inp('⚙️', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      inp('🔢', 'N° Ficha',             Ficha,           o('Ficha'),           { error: errors.Ficha, keyboardType: 'numeric' }),
+      inp('🔢', 'N° Ficha',             Ficha,           o('Ficha'),           { error: errors.Ficha, digitsOnly: true }),
     ],
     [
       inp('📧', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
@@ -54,24 +54,95 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
     ],
   ];
 
+  const renderField = (f) => (
+    <CustomInput
+      key={f.placeholder}
+      label={showLabels ? f.placeholder : ''}
+      compact={!isMobile}
+      icon={showLabels ? '' : f.icon}
+      placeholder={showLabels ? '' : f.placeholder}
+      value={f.value}
+      onChangeText={f.onCT}
+      error={f.error}
+      keyboardType={f.keyboardType}
+      autoCapitalize={f.autoCapitalize}
+      secureTextEntry={f.secureTextEntry}
+      digitsOnly={f.digitsOnly}
+      dense={isCarnetStep && !isMobile}
+    />
+  );
+
   return (
     <View style={[styles.container, isCarnetStep && styles.containerDense]}>
-      {stepFields[step].map((f) => (
-        <CustomInput
-          key={f.placeholder}
-          label={showLabels ? f.placeholder : ''}
-          compact={!isMobile}
-          icon={showLabels ? '' : f.icon}
-          placeholder={showLabels ? '' : f.placeholder}
-          value={f.value}
-          onChangeText={f.onCT}
-          error={f.error}
-          keyboardType={f.keyboardType}
-          autoCapitalize={f.autoCapitalize}
-          secureTextEntry={f.secureTextEntry}
-          dense={isCarnetStep && !isMobile}
-        />
-      ))}
+      {step === 1 && (
+        <View style={styles.roleBlock}>
+          <Text style={styles.roleLabel}>Tipo de usuario</Text>
+          <View style={styles.roleRow}>
+            {PUBLIC_REGISTRATION_ROLES.map((role) => {
+              const active = nameRole === role;
+              return (
+                <TouchableOpacity
+                  key={role}
+                  style={[styles.roleChip, active && styles.roleChipActive]}
+                  onPress={() => onChange('nameRole', role)}
+                >
+                  <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
+                    {role === 'APRENDIZ' ? 'Aprendiz' : 'Instructor'}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          {errors.nameRole ? <Text style={styles.roleError}>{errors.nameRole}</Text> : null}
+        </View>
+      )}
+      {step === 0 ? (
+        <>
+          {renderField(stepFields[0][0])}
+          {renderField(stepFields[0][1])}
+          <View style={styles.roleBlock}>
+            <Text style={styles.roleLabel}>Tipo de documento</Text>
+            <View style={styles.roleRow}>
+              {DOCUMENT_TYPES.map((documentType) => {
+                const active = typeDocument === documentType;
+                return (
+                  <TouchableOpacity
+                    key={documentType}
+                    style={[styles.roleChip, active && styles.roleChipActive]}
+                    onPress={() => onChange('typeDocument', documentType)}
+                  >
+                    <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
+                      {documentType}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+          <View style={styles.roleBlock}>
+            <Text style={styles.roleLabel}>Tipo de sangre</Text>
+            <View style={styles.bloodTypeRow}>
+              {BLOOD_TYPES.map((type) => {
+                const active = bloodType === type;
+                return (
+                  <TouchableOpacity
+                    key={type}
+                    style={[styles.bloodTypeChip, active && styles.roleChipActive]}
+                    onPress={() => onChange('bloodType', type)}
+                  >
+                    <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
+                      {type}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            {errors.bloodType ? <Text style={styles.roleError}>{errors.bloodType}</Text> : null}
+          </View>
+        </>
+      ) : (
+        stepFields[step].map(renderField)
+      )}
       {step === 0 && (
         <>
           {Platform.OS === 'web' && (
@@ -118,5 +189,62 @@ const styles = StyleSheet.create({
     color: '#24C565',
     fontWeight: '700',
     fontSize: 13,
+  },
+  roleBlock: {
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  roleLabel: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#6B7280',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
+  roleRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  bloodTypeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  bloodTypeChip: {
+    minWidth: 52,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  roleChip: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  roleChipActive: {
+    borderColor: '#24C565',
+    backgroundColor: '#E8FFF5',
+  },
+  roleChipText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#6B7280',
+  },
+  roleChipTextActive: {
+    color: '#118449',
+  },
+  roleError: {
+    color: '#EF4444',
+    fontSize: 12,
+    marginTop: 6,
+    marginLeft: 4,
   },
 });

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, ScrollView, Alert, useWindowDimensions } from 'react-native';
-import { getUserProfile, updateUserProfile } from '../services/authService';
+import { View, StyleSheet, ScrollView, Alert, useWindowDimensions, Platform } from 'react-native';
+import { getUserProfile, updateUserProfile, uploadProfilePhoto } from '../services/authService';
+import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import ProfileInfoCard from '../components/ProfileInfoCard.jsx';
@@ -18,6 +19,7 @@ export default function UserProfile({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm] = useState({});
+  const [photo, setPhoto] = useState(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -30,33 +32,86 @@ export default function UserProfile({ navigation }) {
   const fields = [
     { label: 'Nombre completo',  value: profile?.fullName,        key: 'fullName' },
     { label: 'Tipo documento',   value: profile?.typeDocument,    key: 'typeDocument' },
-    { label: 'Documento',        value: profile?.document,        key: 'document' },
+    { label: 'Documento',        value: profile?.document,        key: 'document', numeric: true },
     { label: 'Tipo de sangre',   value: profile?.bloodType,       key: 'bloodType' },
-    { label: 'Ficha',            value: profile?.ficha,           key: 'ficha' },
+    { label: 'Ficha',            value: profile?.ficha,           key: 'ficha', numeric: true },
     { label: 'Programa',         value: profile?.trainingProgram, key: 'trainingProgram' },
     { label: 'Centro',           value: profile?.trainingCenter,  key: 'trainingCenter' },
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
-    { label: 'Rol',              value: profile?.nameRole,        key: 'nameRole' },
+    // { label: 'Role',              value: profile?.nameRole,        key: 'nameRole' },
     { label: 'email',            value: profile?.email,           key: 'email' },
   ];
 
   const openEdit = () => {
     setForm(Object.fromEntries(fields.map((f) => [f.key, profile?.[f.key] || ''])));
+    setPhoto(null);
     setModalVisible(true);
   };
+
+  const buildUpdatePayload = () => ({
+    fullName: form.fullName?.trim() || profile?.fullName,
+    typeDocument: form.typeDocument?.trim() || profile?.typeDocument,
+    bloodType: form.bloodType?.trim() || profile?.bloodType,
+    ficha: form.ficha?.trim() || profile?.ficha,
+    trainingProgram: form.trainingProgram?.trim() || profile?.trainingProgram,
+    trainingCenter: form.trainingCenter?.trim() || profile?.trainingCenter,
+    regional: form.regional?.trim() || profile?.regional,
+    email: form.email?.trim() || profile?.email,
+    nameRole: profile?.nameRole,
+  });
 
   const handleSave = async () => {
     if (!profile?.document) return;
     setSaving(true);
+    let photoError = null;
+
     try {
-      const updated = await updateUserProfile(profile.document, {
-        ...form,
-        nameRole: form.nameRole || profile?.nameRole,
-      });
-      setProfile(updated);
+      if (photo && Platform.OS === 'web' && photo.file) {
+        const validation = await validateCarnetPhoto(photo.file);
+        if (!validation.valid) {
+          Alert.alert('Foto no válida', validation.errors.join('\n'));
+          return;
+        }
+      }
+
+      await updateUserProfile(profile.document, buildUpdatePayload());
+
+      if (photo) {
+        try {
+          const formData = new FormData();
+          if (Platform.OS === 'web' && photo.file) {
+            formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
+          } else {
+            formData.append('photo', {
+              uri: photo.uri,
+              name: 'profile.jpg',
+              type: 'image/jpeg',
+            });
+          }
+          await uploadProfilePhoto(profile.document, formData);
+        } catch (photoErr) {
+          photoError = photoErr?.payload?.message || photoErr?.message || 'No se pudo subir la foto.';
+        }
+      }
+
+      const freshProfile = await getUserProfile();
+      setProfile(freshProfile);
+      setPhoto(null);
       setModalVisible(false);
-    } catch {
-      Alert.alert('Error', 'No se pudo actualizar el perfil.');
+
+      if (photoError) {
+        Alert.alert(
+          'Datos guardados',
+          `Tu información se actualizó, pero la foto falló: ${photoError}`,
+        );
+      }
+    } catch (err) {
+      const apiMessage = err?.payload?.message || err?.message;
+      if (err?.status === 403) {
+        Alert.alert('Error', 'No tienes permiso para actualizar este perfil.');
+        return;
+      }
+      Alert.alert('Error', apiMessage || 'No se pudo actualizar el perfil.');
     } finally {
       setSaving(false);
     }
@@ -89,8 +144,14 @@ export default function UserProfile({ navigation }) {
           form={form}
           onChange={(key, value) => setForm((prev) => ({ ...prev, [key]: value }))}
           onSave={handleSave}
-          onCancel={() => setModalVisible(false)}
+          onCancel={() => {
+            setPhoto(null);
+            setModalVisible(false);
+          }}
           saving={saving}
+          currentPhotoUrl={profile?.photoUrl}
+          photo={photo}
+          onPhotoChange={setPhoto}
         />
       </View>
     </WebFrame>

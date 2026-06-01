@@ -1,0 +1,27 @@
+server:
+  port: ${PORT:${SERVER_PORT:9093}}
+  address: 0.0.0.0
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: news-service
+  datasource:
+    news-service:
+      jdbc-url: ${NEWS_DB_URL:jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/news_service?sslMode=REQUIRED}
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        initialization-fail-timeout: 0
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    show-sql: false
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET:alht7XYKujQPw1ourB0c4rIRg4x6RNrqewufShlZoug=}

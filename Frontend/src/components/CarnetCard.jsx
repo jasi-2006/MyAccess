@@ -10,38 +10,8 @@ import {
   Image,
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
-import { API_GATEWAY_URL } from '../services/api.js';
-import { normalizeRole, ROLES } from '../utils/accessControl';
-
-function resolveImageUrl(url) {
-  if (!url) return null;
-
-  const value = String(url).trim();
-  if (!value) return null;
-
-  if (value.startsWith('/')) {
-    return `${API_GATEWAY_URL}${value}`;
-  }
-
-  if (/^https?:\/\//i.test(value)) {
-    try {
-      const parsedUrl = new URL(value);
-      const gatewayUrl = new URL(API_GATEWAY_URL);
-
-      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
-        parsedUrl.protocol = gatewayUrl.protocol;
-        parsedUrl.hostname = gatewayUrl.hostname;
-        parsedUrl.port = gatewayUrl.port;
-      }
-
-      return parsedUrl.toString();
-    } catch {
-      return value;
-    }
-  }
-
-  return `${API_GATEWAY_URL}/${value.replace(/^\/+/, '')}`;
-}
+import { resolveImageUrl } from '../services/api.js';
+import { resolveUserRole, getRoleDisplayName, ROLES } from '../utils/accessControl';
 
 const QR_PATTERN = [
   '11111110001001111111',
@@ -152,8 +122,8 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   const documentType = profile?.typeDocument || 'C.C';
   const documentNumber = profile?.document || '0.000.000.000';
   const bloodType = profile?.bloodType || 'RH O+';
-  const role = profile?.nameRole || 'APRENDIZ';
-  const normalizedRole = normalizeRole(role);
+  const normalizedRole = resolveUserRole(profile);
+  const roleLabel = getRoleDisplayName(normalizedRole);
   const canManageCard = [ROLES.ADMIN, ROLES.INSTRUCTOR].includes(normalizedRole);
   const isActive = card?.active ?? true;
   const hasCardRecord = Boolean(card?.idCard);
@@ -216,7 +186,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 </View>
 
                 <View style={styles.frontBody}>
-                  <Text style={styles.roleLabel}>{role}</Text>
+                  <Text style={styles.roleLabel}>{roleLabel}</Text>
                   <View style={styles.greenRule} />
                   <Text style={styles.studentNameFront}>{studentName}</Text>
                   <Text style={styles.identityText}>{`${documentType} ${documentNumber} ${bloodType}`}</Text>

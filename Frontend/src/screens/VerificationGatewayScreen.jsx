@@ -30,15 +30,16 @@ export default function VerificationGatewayScreen({ navigation, route }) {
   const gap = isDesktop ? 7 : isTablet ? 10 : isSmallDevice ? 6 : 8;
   const buttonHeight = isDesktop ? 50 : isTablet ? 46 : isSmallDevice ? 40 : 44;
 
+  const email = (route?.params?.email ?? '').trim().toLowerCase();
+  const initialEmailWarning = route?.params?.emailWarning ?? '';
+
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
-  const [resendMessage, setResendMessage] = useState('');
+  const [resendMessage, setResendMessage] = useState(initialEmailWarning);
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const inputs = useRef([]);
-  const email = (route?.params?.email ?? '').trim().toLowerCase();
-  const registerPayload = route?.params?.registerPayload ?? null;
 
   const handleChange = (text, index) => {
     const sanitizedText = text.replace(/[^0-9]/g, '');
@@ -118,7 +119,7 @@ export default function VerificationGatewayScreen({ navigation, route }) {
       setResendLoading(true);
       setSubmitError('');
       setResendMessage('');
-      await resendVerificationCode(email, registerPayload);
+      await resendVerificationCode(email);
       setCode(['', '', '', '', '', '']);
       setResendMessage('Te enviamos un nuevo codigo de verificacion.');
       inputs.current[0]?.focus();

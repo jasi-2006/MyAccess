@@ -1,0 +1,58 @@
+package com.proyect.auth_service.filter;
+
+import java.io.IOException;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.proyect.auth_service.service.JwtService;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@Component("authJwtValidationFilter")
+public class JwtValidationFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        // /auth/* and /register/* are called directly from the web app with Bearer JWT.
+        // Kong-style headers (x-User-id, X-User-Email, X-User-role) apply only to other routes.
+        if (path.startsWith("/auth/")
+                || path.equals("/register")
+                || path.startsWith("/register/")
+                || path.equals("/uploads")
+                || path.startsWith("/uploads/")
+                || path.equals("/error")
+                || request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String userId = request.getHeader("x-User-id");
+        String email  = request.getHeader("X-User-Email");
+        String role   = request.getHeader("X-User-role");
+
+        if (userId == null || email == null || email.isBlank() || role == null || role.isBlank()) {
+            sendError(response, "Missing gateway headers");
+            return;
+        }
+
+        request.setAttribute("userId", Long.parseLong(userId));
+        request.setAttribute("emailId", email);
+        request.setAttribute("role", role);
+
+        filterChain.doFilter(request, response);
+    }
+
+    private void sendError(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
+    }
+}

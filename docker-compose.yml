@@ -1,0 +1,51 @@
+services:
+
+  backend:
+    build:
+      context: ./Backend/MyAccess
+    container_name: myaccess-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      SERVER_PORT: 9090
+    expose:
+      - "9090"
+    networks:
+      - myaccess-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  gateway:
+    build:
+      context: ./Backend/kong-gateway
+    container_name: myaccess-gateway
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      KONG_PROXY_LISTEN: 0.0.0.0:8080
+      KONG_STATUS_LISTEN: "off"
+    ports:
+      - "8080:8080"
+    networks:
+      - myaccess-net
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: myaccess-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    networks:
+      - myaccess-net
+
+networks:
+  myaccess-net:
+    driver: bridge

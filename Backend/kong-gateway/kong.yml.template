@@ -1,0 +1,228 @@
+_format_version: "3.0"
+_transform: true
+
+consumers:
+  - username: myaccess-jwt
+    jwt_secrets:
+      - key: access
+        algorithm: HS256
+        secret: "${JWT_SECRET}"
+
+services:
+  - name: user-auth-service
+    url: https://myaccess-user.onrender.com/auth
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: auth-public-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/auth
+        strip_path: true
+        path_handling: v0
+
+  - name: user-uploads-service
+    url: https://myaccess-user.onrender.com
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: uploads-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /uploads
+        strip_path: false
+        path_handling: v0
+
+  - name: user-register-service
+    url: https://myaccess-user.onrender.com/register
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: user-register-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/register
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: &jwt_config
+              key_claim_name: tokenType
+              claims_to_verify:
+                - exp
+              secret_is_base64: true
+              run_on_preflight: false
+
+  - name: auth-users-service
+    url: https://myaccess-auth-3qr9.onrender.com/authService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: auth-service-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/authService
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+  - name: auth-role-service
+    url: https://myaccess-auth-3qr9.onrender.com/role
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: role-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/role
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+  - name: auth-audit-service
+    url: https://myaccess-auth-3qr9.onrender.com/register/audit
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: register-audit-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/register/audit
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+  - name: auth-permissions-service
+    url: https://myaccess-auth-3qr9.onrender.com/register/permissions
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: register-permissions-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/register/permissions
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+  - name: card-service
+    url: https://myaccess-card-7jc2.onrender.com/cardService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: card-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/cardService
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+  - name: news-service
+    url: https://myaccess-news-9h3h.onrender.com/newsService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: news-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/newsService
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+  - name: notifications-service
+    url: https://myaccess-notification-ichc.onrender.com/notificationsService
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    routes:
+      - name: notifications-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/notificationsService
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
+plugins:
+  - name: cors
+    config:
+      origins:
+        - "https://my-access-three.vercel.app"
+        - "https://my-access-ashy.vercel.app"
+        - "https://my-access-omega.vercel.app"
+        - "http://localhost:3000"
+        - "http://localhost:5173"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+        - PATCH
+        - HEAD
+      headers:
+        - Accept
+        - Accept-Version
+        - Authorization
+        - Content-Length
+        - Content-MD5
+        - Content-Type
+        - Date
+        - Origin
+        - X-Auth-Token
+        - X-Requested-With
+      exposed_headers:
+        - "*"
+      credentials: true
+      max_age: 3600
+      preflight_continue: false
+
+  - name: rate-limiting
+    config:
+      minute: 100
+      policy: local
