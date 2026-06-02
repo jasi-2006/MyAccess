@@ -189,7 +189,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                   <Text style={styles.roleLabel}>{roleLabel}</Text>
                   <View style={styles.greenRule} />
                   <Text style={styles.studentNameFront}>{studentName}</Text>
-                  <Text style={styles.identityText}>{`${documentType} ${documentNumber} ${bloodType}`}</Text>
+                  <Text style={styles.identityText}>{`${documentType} ${documentNumber} RH${bloodType}`}</Text>
                   <BarcodeBlock />
                 </View>
 
@@ -466,13 +466,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   barcodeWrap: {
-    height: 34,
+    height: 38,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   barcodeBar: {
-    height: 28,
+    height: 31,
     backgroundColor: '#111111',
   },
   frontFooter: {
