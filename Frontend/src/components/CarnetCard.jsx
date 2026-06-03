@@ -180,7 +180,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                     {photoUrl ? (
                       <Image source={{ uri: photoUrl }} style={styles.photoImage} resizeMode="cover" />
                     ) : (
-                      <Image source={require('../assets/person2.png')} style={styles.photoImage} resizeMode="cover" />
+                      <Image source={require('../assets/silueta.png')} style={styles.photoImage} resizeMode="cover" />
                     )}
                   </View>
                 </View>
