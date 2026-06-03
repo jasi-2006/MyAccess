@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "perf:test": "node scripts/loadtest.mjs"
+  },
   "dependencies": {
     "react-native-vector-icons": "^10.3.0"
   }
