@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-// URLs alineadas con render.yaml (name -> https://<name>.onrender.com)
+// URLs aligned with render.yaml (name -> https://<name>.onrender.com)
 const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
 const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
 const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-ichc.onrender.com';
@@ -103,42 +103,81 @@ const USER_SERVICE_URL = resolveUserServiceUrl();
 const NOTIFICATIONS_SERVICE_URL = resolveNotificationsServiceUrl();
 const CARD_SERVICE_URL = resolveCardServiceUrl();
 const NEWS_SERVICE_URL = resolveNewsServiceUrl();
+
 let authTokenCache = null;
 let refreshTokenCache = null;
 
-// Manejo del token aquí para evitar importación circular
+function getStorage() {
+  try {
+    return typeof globalThis !== 'undefined' ? globalThis.localStorage : null;
+  } catch {
+    return null;
+  }
+}
+
+function readStorage(key) {
+  const storage = getStorage();
+  if (!storage) return null;
+
+  try {
+    return storage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(key, value) {
+  const storage = getStorage();
+  if (!storage) return;
+
+  try {
+    if (value === null || value === undefined) {
+      storage.removeItem(key);
+      return;
+    }
+    storage.setItem(key, String(value));
+  } catch {}
+}
+
+function removeStorage(key) {
+  const storage = getStorage();
+  if (!storage) return;
+
+  try {
+    storage.removeItem(key);
+  } catch {}
+}
+
+// Token handling here to avoid circular imports.
 export function saveToken(token, refreshToken) {
   authTokenCache = token || null;
   if (refreshToken !== undefined) {
     refreshTokenCache = refreshToken || null;
   }
-  try { localStorage.setItem('authToken', token); } catch {}
+
+  writeStorage('authToken', token);
   if (refreshToken !== undefined) {
-    try { localStorage.setItem('refreshToken', refreshToken); } catch {}
+    writeStorage('refreshToken', refreshToken);
   }
 }
 
 export function getToken() {
   if (authTokenCache) return authTokenCache;
-  try {
-    authTokenCache = localStorage.getItem('authToken');
-    return authTokenCache;
-  } catch { return null; }
+  authTokenCache = readStorage('authToken');
+  return authTokenCache;
 }
 
 export function clearToken() {
   authTokenCache = null;
   refreshTokenCache = null;
-  try { localStorage.removeItem('authToken'); } catch {}
-  try { localStorage.removeItem('refreshToken'); } catch {}
+  removeStorage('authToken');
+  removeStorage('refreshToken');
 }
 
 export function getRefreshToken() {
   if (refreshTokenCache) return refreshTokenCache;
-  try {
-    refreshTokenCache = localStorage.getItem('refreshToken');
-    return refreshTokenCache;
-  } catch { return null; }
+  refreshTokenCache = readStorage('refreshToken');
+  return refreshTokenCache;
 }
 
 async function parsePayload(response) {
@@ -217,25 +256,25 @@ async function baseRequest(baseUrl, path, options = {}) {
   }
 
   const requestHeaders = {
+    ...(headers || {}),
     ...(hasBody && !isFormData ? { 'Content-Type': 'application/json' } : {}),
     ...(!skipAuth && token ? { Authorization: `Bearer ${token}` } : {}),
-    ...(headers || {}),
   };
 
   let response = await fetch(url, {
-    headers: requestHeaders,
     ...fetchOptions,
+    headers: requestHeaders,
   });
 
   if (response.status === 401 && !skipAuth && path !== '/auth/refresh-token') {
     const nextToken = await refreshAuthToken();
     if (nextToken) {
       response = await fetch(url, {
+        ...fetchOptions,
         headers: {
           ...requestHeaders,
           Authorization: `Bearer ${nextToken}`,
         },
-        ...fetchOptions,
       });
     }
   }
@@ -268,7 +307,7 @@ function resolveRequestTarget(path) {
   return [API_GATEWAY_URL, path];
 }
 
-/** Rutas /uploads/* viven en user-service (también expuestas vía Kong). */
+/** Routes /uploads/* live in user-service (also exposed via Kong). */
 export function resolveImageUrl(url) {
   if (!url) return null;
 

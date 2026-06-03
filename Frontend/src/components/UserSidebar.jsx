@@ -3,16 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'r
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
-  { key: 'home',        label: 'Inicio',             icon: '🏠' },
-  { key: 'Card',      label: 'Mi carnet',           icon: '🪪',},
-  { key: 'User',        label: 'Mi perfil',           icon: '👤' },
-  { key: 'Notifications', label: 'Notificaciones',   icon: '🔔' },
-  { key: 'status',      label: 'Estado tramite',      icon: '🔀', aprendizOnly: true },
-  { key: 'Instructor',  label: 'Dashboard',           icon: '📊', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',              icon: '🗂️', managementOnly: true },
-  { key: 'Solicitudes', label: 'Solicitudes',         icon: '📋', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',           icon: '📁', managementOnly: true },
-  {key: 'imprimir',     label: 'imprimir',            icon: 'P', managementOnly:true},
+  { key: 'home',        label: 'Inicio',           },
+  { key: 'Card',      label: 'Mi carnet',         },
+  { key: 'User',        label: 'Mi perfil',       },
+  { key: 'Notifications', label: 'Notificaciones' },
+  { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
+  { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas',    managementOnly: true },
+  { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
+  { key: 'Historial',   label: 'Historial',   managementOnly: true },
+  {key: 'imprimir',     label: 'imprimir',  managementOnly:true},
 ];
 
 export default function UserSidebar({ navigation, activeKey, role }) {
@@ -37,6 +37,7 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (key === 'Solicitudes')     navigation.navigate('Solicitudes');
     if (key === 'Historial')     navigation.navigate('Historial');
     if (key === 'status')        navigation.navigate('status');
+    if(key === 'tramite' )      navigation.navigate('Tramite');
     if (key === 'imprimir')      navigation.navigate('Imprimir');
   };
 
@@ -81,34 +82,33 @@ export default function UserSidebar({ navigation, activeKey, role }) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 72, backgroundColor: '#FFFFFF',
-    borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 10,
+    width: 200, backgroundColor: '#FFFFFF',
+    borderRightWidth: 1, borderRightColor: '#55D7AF', paddingVertical: 40,
   },
   sidebarList: { gap: 4 },
   sidebarItem: {
-    paddingHorizontal: 4, paddingVertical: 6, gap: 4,
-    marginHorizontal: 3, borderRadius: 16, alignItems: 'center',
-  },
-  sidebarLabel: { fontSize: 9, color: '#232323', lineHeight: 11, textAlign: 'center' },
+    paddingHorizontal: 8, paddingVertical: 12, gap: 4,
+    marginHorizontal: 9, borderRadius: 10, left: 10,
 
+  },
+  sidebarLabel: { fontSize: 14, color: '#232323', lineHeight: 11 ,  width:190 },
   mobileMenu: {
     flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 12,
   },
   mobileMenuItem: {
-    flex: 1, minHeight: 48, backgroundColor: '#FFFFFF',
+    flex: 1, minHeight: 52, backgroundColor: '#FFFFFF',
     borderWidth: 1, borderColor: '#D8EBDD', borderRadius: 16,
-    paddingHorizontal: 3, paddingVertical: 5,
+    paddingHorizontal: 3, paddingVertical: 6,
     justifyContent: 'center', alignItems: 'center', gap: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1, shadowRadius: 4, elevation: 3,
   },
   mobileMenuLabel: { fontSize: 9, color: '#28323C', textAlign: 'center', lineHeight: 11 },
-
   menuItemActive: {
     backgroundColor: '#2FD16A',
     shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
   },
   menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
-  menuIcon: { fontSize: 16 },
+  menuIcon: { fontSize: 18, color: '#079B72' },
 });

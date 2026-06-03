@@ -139,17 +139,58 @@ public class EmailService {
             throw new EmailDeliveryException(
                     "EMAIL_FROM no configurado. Usa un remitente verificado en Brevo (Senders).");
         }
+        String trimmed = fromEmail.trim();
+        if (!trimmed.contains("@") || trimmed.startsWith("@") || !trimmed.contains(".")) {
+            throw new EmailDeliveryException(
+                    "EMAIL_FROM debe ser un correo electronico (ej. tu@gmail.com), no un nombre como '"
+                            + trimmed
+                            + "'. Verificalo en Brevo > Remitentes y ponlo en Render.");
+        }
     }
 
     private EmailDeliveryException mapToEmailDeliveryException(Exception ex) {
         String raw = ex.getMessage() == null ? "" : ex.getMessage();
-        if (raw.contains("status 401") || raw.contains("status 403")) {
+        int status = extractHttpStatus(raw);
+        String lower = raw.toLowerCase();
+
+        if (status == 401 || lower.contains("unauthorized") || lower.contains("api key")) {
             return new EmailDeliveryException(
-                    "Clave o remitente de Brevo invalidos. Revisa BREVO_API_KEY y EMAIL_FROM en Render.", ex);
+                    "BREVO_API_KEY invalida o revocada. Genera una nueva clave xkeysib- en Brevo y actualiza Render.",
+                    ex);
+        }
+        if (status == 400 || lower.contains("sender") || lower.contains("from") || lower.contains("not valid")) {
+            return new EmailDeliveryException(
+                    "EMAIL_FROM no es un remitente verificado en Brevo. En Render pon el mismo correo que validaste en Brevo > Remitentes.",
+                    ex);
+        }
+        if (status == 403) {
+            return new EmailDeliveryException(
+                    "La clave API de Brevo no tiene permiso para enviar correos. Revisa permisos de la clave en Brevo.",
+                    ex);
         }
         return new EmailDeliveryException(
                 "No fue posible enviar el correo en este momento. Intenta reenviar el codigo en unos minutos.",
                 ex);
+    }
+
+    private int extractHttpStatus(String message) {
+        int idx = message.indexOf("status ");
+        if (idx < 0) {
+            return -1;
+        }
+        int start = idx + "status ".length();
+        int end = start;
+        while (end < message.length() && Character.isDigit(message.charAt(end))) {
+            end++;
+        }
+        if (end == start) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(message.substring(start, end));
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
     }
 
     private void sendViaBrevoApi(String to, String subject, String text) throws IOException, InterruptedException {
@@ -186,7 +227,7 @@ public class EmailService {
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
             String body = response.body() == null ? "" : response.body();
             log.error("Brevo API status={} body={}", response.statusCode(), body);
-            throw new IllegalStateException("Brevo API status " + response.statusCode() + ": " + body);
+            throw mapBrevoApiError(response.statusCode(), body);
         }
         log.info("Correo enviado via Brevo API a {}", to);
     }
@@ -200,6 +241,22 @@ public class EmailService {
         helper.setText(text, false);
         mailSender.send(message);
         log.info("Correo enviado via Brevo SMTP a {}", to);
+    }
+
+    private EmailDeliveryException mapBrevoApiError(int status, String body) {
+        String lower = body.toLowerCase();
+        if (status == 401) {
+            return new EmailDeliveryException(
+                    "BREVO_API_KEY invalida. Copia de nuevo la clave xkeysib- desde Brevo > Claves API.");
+        }
+        if (status == 400 || lower.contains("sender") || lower.contains("from")) {
+            return new EmailDeliveryException(
+                    "EMAIL_FROM invalido: debe ser el correo verificado en Brevo > Remitentes (no 'MyAccess' ni el login SMTP).");
+        }
+        if (status == 403) {
+            return new EmailDeliveryException("La clave API de Brevo no tiene permisos para enviar correos.");
+        }
+        return new EmailDeliveryException("Brevo respondio con error " + status + ". Revisa BREVO_API_KEY y EMAIL_FROM en Render.");
     }
 
     private String escapeJson(String value) {
