@@ -8,7 +8,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
-import { typography } from '../theme/typography.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 
 export default function OnboardingScreen({ navigation }) {
@@ -206,14 +205,13 @@ function createStyles({
   },
 
   subtitle: {
-  width: isDesktop ? 360 : Math.min(width * 0.84, 340),
-  fontFamily: typography.fontFamily,
-  fontSize: typography.sizes.medium,
-  lineHeight: 25,
-  color: colors.textSecondary,
-  marginBottom: isDesktop ? 32 : 28,
-  textAlign: 'center',
-},
+    width: isDesktop ? 360 : Math.min(width * 0.84, 340),
+    fontSize: 14,
+    lineHeight: 25,
+    color: colors.textSecondary,
+    marginBottom: isDesktop ? 32 : 28,
+    textAlign: 'center',
+  },
 
   button: {
     width: isDesktop ? 190 : '100%',
@@ -222,9 +220,9 @@ function createStyles({
   },
 
    buttonText: {
+    fontSize: 20,
     fontWeight: '600',
-   fontFamily: typography.fontFamily,
-  fontSize: typography.sizes.large, 
+
   },
   });
 }
