@@ -41,7 +41,7 @@ export default function CustomInput({
         />
         {secureTextEntry && (
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-            <Text style={[styles.eyeIcon, compact && styles.iconCompact]}>{isPasswordVisible ? '👁️' : '👁️'}</Text>
+            <Text style={[styles.eyeIcon, compact && styles.iconCompact]}>{isPasswordVisible ? '👁' : '👁'}</Text>
           </TouchableOpacity>
         )}
       </View>
