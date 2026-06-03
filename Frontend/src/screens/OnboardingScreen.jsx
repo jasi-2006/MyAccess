@@ -218,5 +218,18 @@ function createStyles({
     maxWidth: 340,
     alignSelf: 'center',
   },
+
+   buttonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    fontFamily: 'Poppins-SemiBold', // si usas fuentes personalizadas
+  },
+
+  buttonText: {
+  fontFamily: 'Modern Romance',
+  fontSize: 40,
+  fontWeight: 'bold',
+  color: '#FFF',
+}
   });
 }
