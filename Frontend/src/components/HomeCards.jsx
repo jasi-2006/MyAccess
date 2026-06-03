@@ -12,16 +12,15 @@ export default function HomeCards({ navigation, role }) {
   const items = [
     ...(isAdmin
       ? [{
-          icon: '🗂️',
           title: 'Area de gestion',
           desc: 'Administra fichas, solicitudes, carnets y notificaciones.',
           onPress: () => navigation.navigate('Instructor'),
           featured: true,
         }]
       : []),
-    { icon: '🪪', title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
-    { icon: '🔔', title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications') },
-    { icon: '🧑', title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User') },
+    {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
+    {title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications') },
+    {title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User') },
   ];
 
   return (
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 4,
     borderRightColor: '#24C565',
   },
-  cardIcon: { marginBottom: 8 },
+
   cardTitle: { fontWeight: '600', color: '#1F2937', marginBottom: 6 },
   cardDesc: { color: '#6B7280', lineHeight: 18 },
   managementIcon: { color: '#079B72', fontWeight: '900' },
