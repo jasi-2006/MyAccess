@@ -20,13 +20,24 @@ export default function LoginGatewayScreen({ navigation }) {
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const validate = () => {
-    const e = {};
-    if (!email.includes('@')) e.email = 'Email inválido';
-    if (password.length < 6)  e.password = 'Mínimo 6 caracteres';
-    setErrors(e);
-    return !Object.keys(e).length;
-  };
+const validate = () => {
+  const e = {};
+
+  if (!email.includes('@')) {
+    e.email = 'Email inválido';
+  }
+
+  const passwordRegex =
+    /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    e.password =
+      'Debe iniciar con mayúscula, tener 8 caracteres, un número y un carácter especial';
+  }
+
+  setErrors(e);
+  return !Object.keys(e).length;
+};
 
   const handleLogin = async () => {
     if (!validate()) return;

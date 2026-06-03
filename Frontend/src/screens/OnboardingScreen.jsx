@@ -221,7 +221,7 @@ function createStyles({
 
    buttonText: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '700',
 
   },
   });
