@@ -1,5 +1,5 @@
 export const typography = {
-  fontFamily: 'Varela-Regular',
+  fontFamily: 'Varelia',
 
   sizes: {
     small: 12,
