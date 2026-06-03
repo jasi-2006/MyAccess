@@ -37,6 +37,7 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (key === 'Solicitudes')     navigation.navigate('Solicitudes');
     if (key === 'Historial')     navigation.navigate('Historial');
     if (key === 'status')        navigation.navigate('status');
+    if(key === 'tramite' )      navigation.navigate('Tramite');
     if (key === 'imprimir')      navigation.navigate('Imprimir');
   };
 
