@@ -71,7 +71,6 @@ const validate = () => {
       panelSubtitle="Accede a tu portal unificado para el seguimiento de fichas, gestión de aprendices y reportes estadísticos en tiempo real."
     >
       <Text style={styles.title}>Bienvenido!</Text>
-      <Text style={styles.subtitle}>Gestión Institucional Centralizada</Text>
 
       <CustomInput
         label="Correo"
@@ -113,7 +112,7 @@ const validate = () => {
 
       <View style={styles.dividerRow}>
         <View style={styles.divider} />
-        <Text style={styles.dividerText}>O accede mediante</Text>
+        <Text style={styles.dividerText}>Accede mediante</Text>
         <View style={styles.divider} />
       </View>
 
