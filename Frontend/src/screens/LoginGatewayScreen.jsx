@@ -20,24 +20,13 @@ export default function LoginGatewayScreen({ navigation }) {
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
 
-const validate = () => {
-  const e = {};
-
-  if (!email.includes('@')) {
-    e.email = 'Email inválido';
-  }
-
-  const passwordRegex =
-    /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  if (!passwordRegex.test(password)) {
-    e.password =
-      'Debe iniciar con mayúscula, tener 8 caracteres, un número y un carácter especial';
-  }
-
-  setErrors(e);
-  return !Object.keys(e).length;
-};
+  const validate = () => {
+    const e = {};
+    if (!email.includes('@')) e.email = 'Email inválido';
+    if (password)  e.password = 'Mínimo 6 caracteres';
+    setErrors(e);
+    return !Object.keys(e).length;
+  };
 
   const handleLogin = async () => {
     if (!validate()) return;
@@ -71,6 +60,7 @@ const validate = () => {
       panelSubtitle="Accede a tu portal unificado para el seguimiento de fichas, gestión de aprendices y reportes estadísticos en tiempo real."
     >
       <Text style={styles.title}>Bienvenido!</Text>
+      <Text style={styles.subtitle}>Gestión Institucional Centralizada</Text>
 
       <CustomInput
         label="Correo"
@@ -112,7 +102,7 @@ const validate = () => {
 
       <View style={styles.dividerRow}>
         <View style={styles.divider} />
-        <Text style={styles.dividerText}>Accede mediante</Text>
+        <Text style={styles.dividerText}>O accede mediante</Text>
         <View style={styles.divider} />
       </View>
 

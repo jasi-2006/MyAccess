@@ -196,7 +196,7 @@ export default function RecoverPasswordScreen({ navigation }) {
                   />
 
                   <View style={styles.labelRow}>
-                    <Text style={styles.labelIcon}>🔐</Text>
+                    <Text style={styles.labelIcon}></Text>
                     <Text style={styles.labelText}>Confirmar contrasena:</Text>
                   </View>
 
