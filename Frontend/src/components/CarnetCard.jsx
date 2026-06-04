@@ -189,7 +189,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                   <Text style={styles.roleLabel}>{roleLabel}</Text>
                   <View style={styles.greenRule} />
                   <Text style={styles.studentNameFront}>{studentName}</Text>
-                  <Text style={styles.identityText}>{`${documentType} ${documentNumber} RH`` {bloodType}`}</Text>
+                  <Text style={styles.identityText}>{`${documentType} ${documentNumber} RH ${bloodType}`}</Text>
                   <BarcodeBlock />
                 </View>
 
