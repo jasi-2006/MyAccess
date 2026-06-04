@@ -13,7 +13,7 @@ import {
 
 from 'react-native';
 import { colors } from '../theme/colors';
-const logo = require('../assets/LogoMyAccess.png');
+const logo = require('');
 const students = require('../assets/students.png');
 
 export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, compact = false }) {

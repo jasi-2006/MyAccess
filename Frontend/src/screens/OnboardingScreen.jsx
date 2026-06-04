@@ -14,8 +14,6 @@ export default function OnboardingScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
   const isDesktop = width >= 980;
   const isSmallDevice = height < 700;
-
-  // Ancho unificado para hero y content
   const containerWidth = isDesktop ? Math.min(width * 0.68, 920) : width;
   const contentPaddingHorizontal = isDesktop ? 40 : Math.max(width * 0.08, 24);
   
@@ -116,7 +114,7 @@ function createStyles({
       backgroundColor: colors.background,
     },
 
-    // CONTENEDOR VERDE PRINCIPAL
+  
   heroWrapper: {
     width: '100%',
     alignItems: 'center',
@@ -160,7 +158,7 @@ function createStyles({
   },
 
   personasImage: {
-  width: imageWidth + 100,
+  width: imageWidth + 500,
   height: imageHeight + 190,
   top: 120,
   marginBottom: isDesktop ? 18 : isSmallDevice ? 10 : 29,
@@ -169,12 +167,13 @@ function createStyles({
   },
 
   bottomSection: {
-    marginTop: isDesktop ? -25 : -22,
-    alignItems: 'center',
-  },
+      marginTop: isDesktop ? -25 : -22,
+      alignItems: 'center',
+    },
+
 
   curve: {
-  width: 350,
+  width: 550,
   height: 300,
   backgroundColor: colors.background,
   transform: [{ translateY: -78 }],
@@ -214,15 +213,23 @@ function createStyles({
   },
 
   button: {
-    width: isDesktop ? 190 : '100%',
-    maxWidth: 340,
-    alignSelf: 'center',
-  },
+      width: isDesktop
+        ? 260       
+        : '100%',   
 
-   buttonText: {
-    fontSize: 20,
-    fontWeight: '700',
+      maxWidth: isDesktop ? 300 : 240,
 
-  },
+      height: isDesktop
+        ? 58        
+        : 52,     
+
+      alignSelf: 'center',
+    },
+
+
+    buttonText: {
+      fontSize: isDesktop ? 35 : 10, 
+      
+    },
   });
 }
