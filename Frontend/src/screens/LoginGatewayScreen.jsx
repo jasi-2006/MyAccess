@@ -23,7 +23,7 @@ export default function LoginGatewayScreen({ navigation }) {
   const validate = () => {
     const e = {};
     if (!email.includes('@')) e.email = 'Email inválido';
-    if (password)  e.password = 'Mínimo 6 caracteres';
+     if (password.length < 6)  e.password = 'Mínimo 6 caracteres';
     setErrors(e);
     return !Object.keys(e).length;
   };
