@@ -8,6 +8,8 @@ import SuccessModal from '../components/SuccessModal.jsx';
 import { resetPassword } from '../services/authService';
 import WebFrame from '../components/WebFrame.jsx';
 
+const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 export default function ResetPasswordScreen({ navigation, route }) {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -20,7 +22,9 @@ export default function ResetPasswordScreen({ navigation, route }) {
 
   const validate = () => {
     const newErrors = {};
-    if (password.length < 6) newErrors.password = 'Mínimo 6 caracteres';
+    if (!passwordRegex.test(password)) {
+      newErrors.password = 'Debe iniciar con mayúscula, tener 8 caracteres, un número y un carácter especial';
+    }
     if (password !== confirm) newErrors.confirm = 'Las contraseñas no coinciden';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -42,47 +46,47 @@ export default function ResetPasswordScreen({ navigation, route }) {
 
   return (
     <WebFrame>
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <HeaderCurved height={180} />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Nueva contraseña</Text>
-        <Text style={styles.subtitle}>Ingresa tu nueva contraseña</Text>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <HeaderCurved height={180} />
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.title}>Nueva contraseña</Text>
+          <Text style={styles.subtitle}>Ingresa tu nueva contraseña</Text>
 
-        <CustomInput
-          icon="🔒"
-          placeholder="Nueva contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          error={errors.password}
+          <CustomInput
+            icon="🔒"
+            placeholder="Nueva contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            error={errors.password}
+          />
+
+          <CustomInput
+            icon="🔒"
+            placeholder="Confirmar contraseña"
+            value={confirm}
+            onChangeText={setConfirm}
+            secureTextEntry
+            error={errors.confirm}
+          />
+
+          {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
+
+          <PrimaryButton title="Actualizar contraseña" onPress={handleReset} loading={loading} />
+        </ScrollView>
+
+        <SuccessModal
+          visible={showSuccess}
+          onClose={() => {
+            setShowSuccess(false);
+            navigation.navigate('Login');
+          }}
+          message="Contraseña actualizada correctamente"
         />
-
-        <CustomInput
-          icon="🔒"
-          placeholder="Confirmar contraseña"
-          value={confirm}
-          onChangeText={setConfirm}
-          secureTextEntry
-          error={errors.confirm}
-        />
-
-        {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
-
-        <PrimaryButton title="Actualizar contraseña" onPress={handleReset} loading={loading} />
-      </ScrollView>
-
-      <SuccessModal
-        visible={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          navigation.navigate('Login');
-        }}
-        message="Contraseña actualizada correctamente"
-      />
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
     </WebFrame>
   );
 }
