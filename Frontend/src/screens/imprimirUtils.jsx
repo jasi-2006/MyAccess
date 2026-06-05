@@ -92,7 +92,7 @@ export function buildCarnetPairHtml(learner, card) {
   const program = learner?.trainingProgram || 'NA';
   const ficha = learner?.ficha || learner?.files || '';
   const initial = fullName.charAt(0).toUpperCase();
-  const logoOrigin = senaLogoUri || `${window.location.origin}/static/media/logoSena.png`;
+  const logoSrc = senaLogoUri || `${window.location.origin}/static/media/logoSena.png`;
 
   const photoHtml = photoUrl
     ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:108px;height:140px;border-radius:10px;object-fit:cover;border:2px solid #C8E6C9;" />`
@@ -130,7 +130,7 @@ export function buildCarnetPairHtml(learner, card) {
     qrPattern.map((row) => `<div style="display:flex;">${row.split('').map((c) => `<div style="width:3.5px;height:3.5px;background:${c === '1' ? '#111' : '#fff'};"></div>`).join('')}</div>`).join('')
   }</div>`;
 
-  const logoHtml = `<img src="${logoOrigin}/static/media/logoSena.png" style="width:70px;height:70px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:70px;height:70px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:15px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
+  const logoHtml = `<img src="${logoSrc}" style="width:70px;height:70px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:70px;height:70px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:15px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
 
   const front = `
     <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px 14px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
