@@ -1,9 +1,10 @@
-import { Platform } from 'react-native';
+import { Image, Platform } from 'react-native';
 import { resolveImageUrl } from '../services/api.js';
 import { getRoleDisplayName } from '../utils/accessControl.js';
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
+const senaLogoUri = Image.resolveAssetSource(require('../assets/logoSena.png'))?.uri;
 
 export function getFichaValue(user) {
   return String(user?.ficha || user?.files || '').trim();
@@ -87,7 +88,7 @@ export function buildCarnetPairHtml(learner, card) {
   const program = learner?.trainingProgram || 'NA';
   const ficha = learner?.ficha || learner?.files || '';
   const initial = fullName.charAt(0).toUpperCase();
-  const logoOrigin = window.location.origin;
+  const logoOrigin = senaLogoUri || `${window.location.origin}/static/media/logoSena.png`;
 
   const photoHtml = photoUrl
     ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:108px;height:140px;border-radius:10px;object-fit:cover;border:2px solid #C8E6C9;" />`

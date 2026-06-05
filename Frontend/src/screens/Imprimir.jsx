@@ -106,7 +106,15 @@ export default function ImprimirScreen({ navigation }) {
 
         const request = allRequests.find((r) => r.idUser === learner.id);
         if (request?.idRequest) {
-          await updateRequestCard(request.idRequest, { ...request, state: 'impreso', printedBy }).catch(() => {});
+          const payload = {
+            idUser: request.idUser,
+            requestTipe: request.requestTipe,
+            cardTipe: request.cardTipe,
+            state: 'impreso',
+            approbedBy: request.approbedBy ?? null,
+            printedBy,
+          };
+          await updateRequestCard(request.idRequest, payload).catch(() => {});
         }
       })
     );
