@@ -40,11 +40,37 @@ function formatNotificationDate(value) {
   return date.toLocaleDateString();
 }
 
+function getNotificationRawId(item) {
+  return (
+    item?.idNotifications
+    ?? item?.idNotification
+    ?? item?.notificationId
+    ?? item?.id
+    ?? null
+  );
+}
+
+function buildNotificationKey(item) {
+  const rawId = getNotificationRawId(item);
+  if (rawId !== null && rawId !== undefined && String(rawId).trim() !== '') {
+    return String(rawId);
+  }
+
+  return [
+    item?.sendDate || item?.createdDate || '',
+    item?.affair || '',
+    item?.messaje || '',
+    item?.category || item?.tipe || '',
+    item?.idUser || '',
+  ].join('|');
+}
+
 function mapNotification(item) {
   const date = item.sendDate || item.createdDate;
+  const rawId = getNotificationRawId(item);
 
   return {
-    id: String(item.idNotifications),
+    id: rawId !== null && rawId !== undefined ? String(rawId) : buildNotificationKey(item),
     raw: item,
     type: item.category || item.tipe || 'Notificacion',
     title: item.affair || 'Notificacion',
@@ -115,8 +141,7 @@ export default function NotificationsScreen({ navigation }) {
       const userList = Array.isArray(userResponse) ? userResponse : [];
       const merged = new Map();
       [...globalList, ...userList].forEach((item) => {
-        if (!item?.idNotifications) return;
-        merged.set(String(item.idNotifications), item);
+        merged.set(buildNotificationKey(item), item);
       });
       const filtered = [...merged.values()]
         .filter((item) => matchesFilter(mapNotification(item), filter))
