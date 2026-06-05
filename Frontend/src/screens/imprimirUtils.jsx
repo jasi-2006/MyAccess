@@ -4,7 +4,11 @@ import { getRoleDisplayName } from '../utils/accessControl.js';
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
-const senaLogoUri = Image.resolveAssetSource(require('../assets/logoSena.png'))?.uri;
+const senaLogoAsset = require('../assets/logoSena.png');
+const senaLogoUri =
+  typeof Image.resolveAssetSource === 'function'
+    ? Image.resolveAssetSource(senaLogoAsset)?.uri
+    : senaLogoAsset?.uri || senaLogoAsset?.default || null;
 
 export function getFichaValue(user) {
   return String(user?.ficha || user?.files || '').trim();
