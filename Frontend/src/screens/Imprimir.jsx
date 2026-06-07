@@ -120,7 +120,7 @@ export default function ImprimirScreen({ navigation }) {
     );
   };
 
-  const openPrintWindow = (title, subtitle, bodyHtml) => {
+  const openPrintWindow = (title, subtitle, bodyHtml, singleCarnet = false) => {
     if (Platform.OS !== 'web' || typeof document === 'undefined') return;
 
     const iframe = document.createElement('iframe');
@@ -156,7 +156,7 @@ export default function ImprimirScreen({ navigation }) {
       }, 50);
     };
 
-    iframe.srcdoc = buildPrintHtml(title, subtitle, bodyHtml);
+    iframe.srcdoc = buildPrintHtml(title, subtitle, bodyHtml, singleCarnet);
     document.body.appendChild(iframe);
   };
 
@@ -177,8 +177,7 @@ export default function ImprimirScreen({ navigation }) {
       `Carnet MyAccess - ${selectedCarnet?.name || ''}`,
       'Vista previa - haz clic en "Imprimir" para enviar a la impresora.',
       pairHtml,
-      720,
-      620
+      true
     );
   };
 

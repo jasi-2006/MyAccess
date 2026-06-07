@@ -92,9 +92,9 @@ export default function ResetPasswordScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.primary },
   content: { padding: 20, paddingTop: 40 },
   title: { fontSize: 22, fontWeight: 'bold', color: colors.text, marginBottom: 6 },
-  subtitle: { fontSize: 14, color: colors.textSecondary, marginBottom: 22 },
+  subtitle: { fontSize: 14, color: colors.primary, marginBottom: 22 },
   submitError: { color: colors.error, marginBottom: 16, textAlign: 'center' },
 });

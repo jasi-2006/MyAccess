@@ -103,32 +103,6 @@ export function buildCarnetPairHtml(learner, card) {
     bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#222;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
   }</div>`;
 
-  const qrPattern = [
-    '11111110001001111111',
-    '10000010110010100001',
-    '10111010101110101101',
-    '10111010010000101101',
-    '10111010111110101101',
-    '10000010001000100001',
-    '11111110101010111111',
-    '00000000110110000000',
-    '10110111100011101011',
-    '00101100111001011001',
-    '11100011101011100011',
-    '00111001010100101110',
-    '10101110111110001011',
-    '00000000101000100000',
-    '11111110110101111111',
-    '10000010001100100001',
-    '10111010111010101101',
-    '10111010010100101101',
-    '10000010101110100001',
-    '11111110011000111111',
-  ];
-
-  const qrHtml = `<div style="padding:5px;background:#fff;border:1px solid #111;display:inline-block;">${
-    qrPattern.map((row) => `<div style="display:flex;">${row.split('').map((c) => `<div style="width:3.5px;height:3.5px;background:${c === '1' ? '#111' : '#fff'};"></div>`).join('')}</div>`).join('')
-  }</div>`;
 
   const logoHtml = `<img src="${logoSrc}" style="width:70px;height:70px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:70px;height:70px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:15px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
 
@@ -179,7 +153,7 @@ export function buildCarnetPairHtml(learner, card) {
   return `<div class="carnet-pair"><div class="carnet-front">${front}</div><div class="carnet-back">${back}</div></div>`;
 }
 
-export function buildPrintHtml(title, subtitle, bodyHtml) {
+export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) {
   return `
     <!DOCTYPE html>
     <html lang="es">
@@ -192,10 +166,13 @@ export function buildPrintHtml(title, subtitle, bodyHtml) {
       <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; padding: 24px; }
+        ${singleCarnet ? 'body { padding: 18px; background: #ffffff; }' : ''}
         h1 { font-size: 22px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
         .subtitle { font-size: 13px; color: #6B7280; margin-bottom: 20px; }
         .grid { display: flex; flex-wrap: wrap; gap: 20px; }
+        ${singleCarnet ? '.grid { display: flex; justify-content: center; }' : ''}
         .carnet-pair { display: flex; gap: 16px; margin-bottom: 28px; }
+        ${singleCarnet ? '.carnet-pair { display: flex; gap: 16px; margin-bottom: 0; }' : ''}
         .print-btn {
           position: fixed; top: 16px; right: 16px;
           background: #0A8A4A; color: #fff; font-weight: 800;
@@ -207,8 +184,8 @@ export function buildPrintHtml(title, subtitle, bodyHtml) {
         @media print {
           body { background: #fff; padding: 0; }
           .print-btn, h1, .subtitle { display: none !important; }
-          .grid { display: block; }
-          .carnet-pair { display: block; margin: 0; }
+          ${singleCarnet ? '.grid { display: flex; justify-content: center; }' : ''}
+          .carnet-pair { display: flex; gap: 16px; margin: 0; }
           .carnet-front,
           .carnet-back {
             page-break-after: always;
@@ -220,6 +197,7 @@ export function buildPrintHtml(title, subtitle, bodyHtml) {
             padding: 20px;
             box-sizing: border-box;
           }
+          ${singleCarnet ? '.carnet-front, .carnet-back { min-height: auto; padding: 18px; }' : ''}
           .carnet-pair:last-child .carnet-back {
             page-break-after: avoid;
             break-after: avoid;
@@ -228,9 +206,9 @@ export function buildPrintHtml(title, subtitle, bodyHtml) {
       </style>
     </head>
     <body>
-      <button class="print-btn" onclick="window.print()">&#128438; Imprimir</button>
-      <h1>${title}</h1>
-      <p class="subtitle">${subtitle}</p>
+      ${singleCarnet ? '' : '<button class="print-btn" onclick="window.print()">&#128438; Imprimir</button>'}
+      ${!singleCarnet ? `<h1>${title}</h1>
+      <p class="subtitle">${subtitle}</p>` : ''}
       ${bodyHtml}
     </body>
     </html>
