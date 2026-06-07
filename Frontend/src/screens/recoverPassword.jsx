@@ -251,7 +251,7 @@ export default function RecoverPasswordScreen({ navigation }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.primary,
   },
   scrollContent: {
     flexGrow: 1,
