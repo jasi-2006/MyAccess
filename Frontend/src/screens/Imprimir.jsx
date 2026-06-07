@@ -173,8 +173,13 @@ export default function ImprimirScreen({ navigation }) {
     if (Platform.OS !== 'web' || typeof window === 'undefined' || !selectedCarnet) return;
     markAsPrinted([selectedCarnet.learner]);
     const pairHtml = buildCarnetPairHtml(selectedCarnet.learner, selectedCarnet.card);
+    const selectedName =
+      selectedCarnet?.name ||
+      selectedCarnet?.learner?.fullName ||
+      selectedCarnet?.learner?.full_name ||
+      'Carnet individual';
     openPrintWindow(
-      `Carnet MyAccess - ${selectedCarnet?.name || ''}`,
+      selectedName,
       'Vista previa - haz clic en "Imprimir" para enviar a la impresora.',
       pairHtml,
       true
