@@ -3,15 +3,21 @@ import { View, Text, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { IndividualCarnet } from './ImprimirCarnetViews.jsx';
 
 export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, onPrint }) {
+  const displayName =
+    selectedCarnet?.name ||
+    selectedCarnet?.learner?.fullName ||
+    selectedCarnet?.learner?.full_name ||
+    'Carnet individual';
+
   return (
     <Modal visible={Boolean(selectedCarnet)} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalPanel}>
           <View style={styles.modalHeader}>
             <View style={styles.modalTitleBlock}>
-              <Text style={styles.modalTitle}>Carnet individual</Text>
+              <Text style={styles.modalTitle}>{displayName}</Text>
               <Text style={styles.modalSubtitle} numberOfLines={1}>
-                {selectedCarnet?.name || ''}
+                Carnet individual
               </Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
