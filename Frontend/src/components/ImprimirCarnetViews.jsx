@@ -136,7 +136,7 @@ export function CarnetPreview({ learner, card, name, onPress }) {
 export function IndividualCarnet({ learner, card }) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const roleLabel = getRoleDisplayName(learner?.nameRole || learner?.name_role);
-  const documentType = learner?.typeDocument || 'CC';
+  const documentType = learner?.typeDocument || 'C.C';
   const documentNumber = learner?.document || 'NA';
   const bloodType = learner?.bloodType || '';
   const regional = learner?.regional || 'Regional Quindio';
@@ -189,7 +189,7 @@ export function IndividualCarnet({ learner, card }) {
               <View style={styles.verticalGreenRule} />
               <Text style={styles.verticalBrand}>{fullName}</Text>
               <Text style={styles.verticalIdentity}>
-                {`${documentType} ${documentNumber}${bloodType ? ` ${bloodType}` : ''}`}
+                {`${documentType} ${documentNumber} RH ${bloodType}`}
               </Text>
               <BarcodeBlock />
             </View>
