@@ -116,11 +116,10 @@ export function buildCarnetPairHtml(learner, card) {
         ${photoHtml}
       </div>
       <div>
-        <div style="font-size:12px;font-weight:900;color:#111;letter-spacing:0.3px;margin-bottom:4px;line-height:1.3;">${fullName}</div>
-        <span style="display:inline-block;background:#E8FFF5;border:1px solid #6EE7B7;border-radius:20px;padding:2px 10px;font-size:8.5px;font-weight:800;color:#047857;">&#9679; ${roleDisplay.toUpperCase()}</span>
+        <div style="font-size:14px;color:#2F2F2F;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;font-weight:600;">${roleDisplay.toUpperCase()}</div>
       </div>
       <div style="height:3px;background:linear-gradient(90deg,#0A8A4A,#24C565,#80E9B4);border-radius:2px;"></div>
-      <div style="font-size:15px;font-weight:900;color:#118449;letter-spacing:0.5px;">MyAccess</div>
+      <div style="font-size:17px;font-weight:900;color:#118449;line-height:21px;margin-bottom:6px;letter-spacing:0.5px;">${fullName}</div>
       <div style="background:#F0FFF8;border-radius:8px;padding:6px 8px;">
         <div style="font-size:9.5px;font-weight:700;color:#374151;"><span style="color:#6B7280;font-weight:600;">Documento: </span>${docType} ${docNum}${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
         ${email ? `<div style="font-size:8.5px;color:#6B7280;margin-top:3px;">&#9993; ${email}</div>` : ''}

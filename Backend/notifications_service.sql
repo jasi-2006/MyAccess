@@ -37,6 +37,7 @@ CREATE TABLE templates_notification (
     FOREIGN KEY (id_notifications) REFERENCES notifications(id_notifications)
 );
 
+
 CREATE TABLE queue_notifications (
     id_queue         INT PRIMARY KEY AUTO_INCREMENT,
     id_notifications INT,
