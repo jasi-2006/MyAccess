@@ -31,7 +31,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [showReview, setShowReview] = useState(false);
 
   const [values, setValues] = useState({
-    name: '', typeDocument: 'CC', document: '', bloodType: 'O+',
+    name: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
     regional: 'quindio', trainingCenter: 'centro comercio y turismo',
     nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
