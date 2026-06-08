@@ -83,7 +83,7 @@ export function buildCarnetPairHtml(learner, card) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const fullName = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
   const roleDisplay = getRoleDisplayName(learner?.nameRole || learner?.name_role);
-  const docType = learner?.typeDocument || 'CC';
+  const docType = learner?.typeDocument || 'C.C';
   const docNum = learner?.document || '';
   const blood = learner?.bloodType || '';
   const email = learner?.email || '';
@@ -95,12 +95,12 @@ export function buildCarnetPairHtml(learner, card) {
   const logoSrc = senaLogoUri || `${window.location.origin}/static/media/logoSena.png`;
 
   const photoHtml = photoUrl
-    ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:108px;height:140px;border-radius:10px;object-fit:cover;border:2px solid #C8E6C9;" />`
-    : `<div style="width:108px;height:140px;border-radius:10px;background:linear-gradient(135deg,#E8F5E9,#A5D6A7);display:flex;align-items:center;justify-content:center;"><span style="font-size:42px;font-weight:900;color:#2E7D32;">${initial}</span></div>`;
+    ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:100%;height:100%;object-fit:cover;" />`
+    : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#E8F5E9,#A5D6A7);display:flex;align-items:center;justify-content:center;"><span style="font-size:36px;font-weight:900;color:#2E7D32;">${initial}</span></div>`;
 
   const bars = [2, 1, 3, 1, 1, 2, 4, 1, 2, 1, 3, 2, 1, 1, 4, 2, 1, 3, 1, 2, 2, 1, 3, 1];
-  const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:32px;margin-bottom:8px;">${
-    bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#222;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
+  const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:28px;width:100%;">${
+    bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
   }</div>`;
 
   const qrPattern = [
@@ -130,48 +130,64 @@ export function buildCarnetPairHtml(learner, card) {
     qrPattern.map((row) => `<div style="display:flex;">${row.split('').map((c) => `<div style="width:3.5px;height:3.5px;background:${c === '1' ? '#111' : '#fff'};"></div>`).join('')}</div>`).join('')
   }</div>`;
 
-
-  const logoHtml = `<img src="${logoSrc}" style="width:70px;height:70px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:70px;height:70px;background:#0A8A4A;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:15px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
+  const logoHtml = `<img src="${logoSrc}" style="width:72px;height:72px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:72px;height:72px;background:#39A900;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:14px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
 
   const front = `
-    <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px 14px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-          ${logoHtml}
-          <span style="font-size:7px;font-weight:900;color:#0A8A4A;letter-spacing:1.5px;">SENA</span>
+    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#EDF0EE;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;height:140px;padding:14px 14px 4px 14px;box-sizing:border-box;position:relative;z-index:2;">
+        <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            ${logoHtml}
+          </div>
+          <div style="font-size:12px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.5px;font-family:'Inter',Arial,sans-serif;line-height:1;margin-bottom:2px;">
+            ${roleDisplay}
+          </div>
         </div>
-        ${photoHtml}
+        <div style="width:108px;height:122px;border-radius:6px;overflow:hidden;background:#E5E7EB;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
+          ${photoHtml}
+        </div>
       </div>
-      <div>
-        <div style="font-size:14px;color:#2F2F2F;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;font-weight:600;">${roleDisplay.toUpperCase()}</div>
+
+      <div style="height:5px;background:#00A74F;width:100%;margin:0;padding:0;box-sizing:border-box;"></div>
+
+      <div style="padding:10px 14px 4px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-start;flex:1;position:relative;z-index:2;">
+        <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:1.2;font-family:'Inter',Arial,sans-serif;word-wrap:break-word;word-break:keep-all;min-height:44px;display:flex;align-items:center;">
+          ${fullName}
+        </div>
+        <div style="font-size:11.5px;font-weight:600;color:#374151;margin-top:2px;font-family:'Inter',Arial,sans-serif;letter-spacing:0.2px;">
+          ${docType} ${docNum} RH ${blood}
+        </div>
+        <div style="margin-top:10px;margin-bottom:6px;">
+          ${barcodeHtml}
+        </div>
       </div>
-      <div style="height:3px;background:linear-gradient(90deg,#0A8A4A,#24C565,#80E9B4);border-radius:2px;"></div>
-      <div style="font-size:17px;font-weight:900;color:#118449;line-height:21px;margin-bottom:6px;letter-spacing:0.5px;">${fullName}</div>
-      <div style="background:#F0FFF8;border-radius:8px;padding:6px 8px;">
-        <div style="font-size:9.5px;font-weight:700;color:#374151;"><span style="color:#6B7280;font-weight:600;">Documento: </span>${docType} ${docNum} RH  ${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
-        ${email ? `<div style="font-size:8.5px;color:#6B7280;margin-top:3px;">&#9993; ${email}</div>` : ''}
-      </div>
-      ${barcodeHtml}
-      <div style="border-top:1px solid #D1FAE5;padding-top:6px;">
-        <div style="color:#374151;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.5px;">${regional}</div>
-        <div style="color:#118449;font-size:8.5px;font-weight:800;margin-top:1px;">${center}</div>
-        <div style="color:#6B7280;font-size:8px;margin-top:1px;">${program}</div>
-        ${ficha ? `<div style="color:#6B7280;font-size:8px;">Grupo / Ficha: <b>${ficha}</b></div>` : ''}
+
+      <div style="padding:4px 14px 14px 14px;box-sizing:border-box;display:flex;flex-direction:column;gap:2px;font-family:'Inter',Arial,sans-serif;justify-content:flex-end;position:relative;z-index:2;">
+        <div style="color:#374151;font-size:11px;font-weight:700;">
+          ${regional}
+        </div>
+        <div style="color:#0B7F35;font-size:11px;font-weight:700;">
+          ${center}
+        </div>
+        <div style="color:#374151;font-size:11px;font-weight:700;text-transform:uppercase;">
+          ${program}
+        </div>
+        ${ficha ? `<div style="color:#374151;font-size:11px;font-weight:700;">Grupo No ${ficha}</div>` : ''}
       </div>
     </div>`;
 
   const back = `
-    <div style="width:265px;min-height:430px;border-radius:14px;border:1.5px solid #A5D6A7;background:#FAFFFE;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 18px rgba(10,138,74,0.12);">
-      <div style="font-size:8.5px;color:#374151;line-height:13px;">
-        Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno.
+    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#EDF0EE;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;position:relative;overflow:hidden;">
+      <div style="font-size:9.5px;color:#374151;line-height:1.4;font-weight:500;">
+        Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
       </div>
-      <div style="text-align:center;margin:10px 0;">${qrHtml}</div>
-      ${email ? `<div style="text-align:center;font-size:8px;color:#6B7280;margin-bottom:4px;">&#9993; ${email}</div>` : ''}
-      <div style="text-align:center;padding:8px 0;border-top:1px solid #D1FAE5;border-bottom:1px solid #D1FAE5;">
-        <div style="font-size:9px;color:#2B2B2B;font-weight:700;">cesar augusto ospina p</div>
-        <div style="font-size:10px;color:#118449;font-weight:600;">Firma de autoria</div>
+      <div style="text-align:center;margin:6px 0;">${qrHtml}</div>
+      ${email ? `<div style="text-align:center;font-size:9px;color:#374151;margin-bottom:2px;font-weight:500;">&#9993; ${email}</div>` : ''}
+      <div style="text-align:center;padding:6px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;">
+        <div style="font-size:10px;color:#2B2B2B;font-weight:700;text-transform:capitalize;">cesar augusto ospina p</div>
+        <div style="font-size:10px;color:#0B7F35;font-weight:600;">Firma de autoria</div>
       </div>
-      <div style="font-size:8.5px;color:#374151;line-height:13px;margin-top:8px;">
+      <div style="font-size:9px;color:#374151;line-height:1.4;margin-top:6px;font-weight:500;">
         Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte-15.
       </div>
     </div>`;
@@ -190,7 +206,13 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
       <link rel="preconnect" href="https://fonts.googleapis.com"/>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
       <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
         body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; padding: 24px; }
         ${singleCarnet ? 'body { padding: 18px; background: #ffffff; }' : ''}
         h1 { font-size: 22px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
