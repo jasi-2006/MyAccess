@@ -184,7 +184,7 @@ export function IndividualCarnet({ learner, card }) {
               </View>
             </View>
 
-            <View style={styles.verticalBody}>
+             <View style={styles.verticalBody}>
               <Text style={styles.verticalRole}>{roleLabel}</Text>
               <View style={styles.verticalGreenRule} />
               <Text style={styles.verticalBrand}>{fullName}</Text>
@@ -192,9 +192,7 @@ export function IndividualCarnet({ learner, card }) {
                 {`${documentType} ${documentNumber} RH ${bloodType}`}
               </Text>
               <BarcodeBlock />
-            </View>
 
-            <View style={styles.verticalFooter}>
               <Text style={styles.verticalRegional}>{regional}</Text>
               <Text style={styles.verticalCenter}>{trainingCenter}</Text>
               <Text style={styles.verticalMuted}>{trainingProgram}</Text>
@@ -219,10 +217,7 @@ export function IndividualCarnet({ learner, card }) {
               {'\n'}
               Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
             </Text>
-            <View style={{ alignItems: 'center', marginVertical: 8 }}>
-              <QrBlock />
-            </View>
-            <View style={{ alignItems: 'center', marginBottom: 10 }}>
+            <View style={{ alignItems: 'center', marginBottom: 10, marginTop: 15 }}>
               <Text style={styles.verticalSignatureName}>cesar augusto ospina p</Text>
               <Text style={styles.verticalSignatureLabel}>Firma de autoria</Text>
             </View>

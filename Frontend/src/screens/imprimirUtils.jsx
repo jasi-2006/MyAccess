@@ -133,7 +133,7 @@ export function buildCarnetPairHtml(learner, card) {
   const logoHtml = `<img src="${logoSrc}" style="width:72px;height:72px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:72px;height:72px;background:#39A900;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:14px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
 
   const front = `
-    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#EDF0EE;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;height:140px;padding:14px 14px 4px 14px;box-sizing:border-box;position:relative;z-index:2;">
         <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;align-items:flex-start;">
           <div style="display:flex;flex-direction:column;align-items:center;">
@@ -150,19 +150,16 @@ export function buildCarnetPairHtml(learner, card) {
 
       <div style="height:5px;background:#00A74F;width:100%;margin:0;padding:0;box-sizing:border-box;"></div>
 
-      <div style="padding:10px 14px 4px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-start;flex:1;position:relative;z-index:2;">
-        <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:1.2;font-family:'Inter',Arial,sans-serif;word-wrap:break-word;word-break:keep-all;min-height:44px;display:flex;align-items:center;">
+      <div style="padding:10px 14px 14px 14px;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;gap:2px;position:relative;z-index:2;">
+        <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:1.2;font-family:'Inter',Arial,sans-serif;word-wrap:break-word;word-break:keep-all;margin-bottom:2px;">
           ${fullName}
         </div>
-        <div style="font-size:11.5px;font-weight:600;color:#374151;margin-top:2px;font-family:'Inter',Arial,sans-serif;letter-spacing:0.2px;">
+        <div style="font-size:11.5px;font-weight:600;color:#374151;margin-bottom:6px;font-family:'Inter',Arial,sans-serif;letter-spacing:0.2px;">
           ${docType} ${docNum} RH ${blood}
         </div>
-        <div style="margin-top:10px;margin-bottom:6px;">
+        <div style="margin-bottom:12px;">
           ${barcodeHtml}
         </div>
-      </div>
-
-      <div style="padding:4px 14px 14px 14px;box-sizing:border-box;display:flex;flex-direction:column;gap:2px;font-family:'Inter',Arial,sans-serif;justify-content:flex-end;position:relative;z-index:2;">
         <div style="color:#374151;font-size:11px;font-weight:700;">
           ${regional}
         </div>
@@ -177,17 +174,19 @@ export function buildCarnetPairHtml(learner, card) {
     </div>`;
 
   const back = `
-    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#EDF0EE;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;position:relative;overflow:hidden;">
+    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;padding:20px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;position:relative;overflow:hidden;">
       <div style="font-size:9.5px;color:#374151;line-height:1.4;font-weight:500;">
         Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
       </div>
-      <div style="text-align:center;margin:6px 0;">${qrHtml}</div>
-      ${email ? `<div style="text-align:center;font-size:9px;color:#374151;margin-bottom:2px;font-weight:500;">&#9993; ${email}</div>` : ''}
-      <div style="text-align:center;padding:6px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;">
+      
+      ${email ? `<div style="text-align:center;font-size:9px;color:#374151;margin-bottom:12px;font-weight:500;">&#9993; ${email}</div>` : ''}
+      
+      <div style="text-align:center;padding:12px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;margin: 20px 0;">
         <div style="font-size:10px;color:#2B2B2B;font-weight:700;text-transform:capitalize;">cesar augusto ospina p</div>
         <div style="font-size:10px;color:#0B7F35;font-weight:600;">Firma de autoria</div>
       </div>
-      <div style="font-size:9px;color:#374151;line-height:1.4;margin-top:6px;font-weight:500;">
+      
+      <div style="font-size:9px;color:#374151;line-height:1.4;font-weight:500;">
         Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte-15.
       </div>
     </div>`;
@@ -232,23 +231,22 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
         @media print {
           body { background: #fff; padding: 0; }
           .print-btn, h1, .subtitle { display: none !important; }
-          ${singleCarnet ? '.grid { display: flex; justify-content: center; }' : ''}
-          .carnet-pair { display: flex; gap: 16px; margin: 0; }
+          .grid { display: block !important; }
+          .carnet-pair { display: block !important; margin: 0 !important; }
           .carnet-front,
           .carnet-back {
-            page-break-after: always;
-            break-after: page;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
+            page-break-after: always !important;
+            break-after: page !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            min-height: 100vh !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
           }
-          ${singleCarnet ? '.carnet-front, .carnet-back { min-height: auto; padding: 18px; }' : ''}
           .carnet-pair:last-child .carnet-back {
-            page-break-after: avoid;
-            break-after: avoid;
+            page-break-after: avoid !important;
+            break-after: avoid !important;
           }
         }
       </style>
