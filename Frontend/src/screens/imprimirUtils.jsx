@@ -148,7 +148,7 @@ export function buildCarnetPairHtml(learner, card) {
       <div style="height:3px;background:linear-gradient(90deg,#0A8A4A,#24C565,#80E9B4);border-radius:2px;"></div>
       <div style="font-size:17px;font-weight:900;color:#118449;line-height:21px;margin-bottom:6px;letter-spacing:0.5px;">${fullName}</div>
       <div style="background:#F0FFF8;border-radius:8px;padding:6px 8px;">
-        <div style="font-size:9.5px;font-weight:700;color:#374151;"><span style="color:#6B7280;font-weight:600;">Documento: </span>${docType} ${docNum}${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
+        <div style="font-size:9.5px;font-weight:700;color:#374151;"><span style="color:#6B7280;font-weight:600;">Documento: </span>${docType} ${docNum} RH  ${blood ? `&nbsp;&nbsp;<span style="color:#059669;">&#9632; ${blood}</span>` : ''}</div>
         ${email ? `<div style="font-size:8.5px;color:#6B7280;margin-top:3px;">&#9993; ${email}</div>` : ''}
       </div>
       ${barcodeHtml}
