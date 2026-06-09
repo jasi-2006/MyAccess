@@ -95,7 +95,7 @@ export const styles = StyleSheet.create({
   verticalMuted: { color: '#374151', fontSize: 11, fontWeight: '700' },
   verticalCarnetBack: { backgroundColor: '#FFFFFF', justifyContent: 'space-between' },
   verticalBackText: { fontSize: 9.5, color: '#374151', lineHeight: 14, fontWeight: '500' },
-  verticalSignatureName: { fontSize: 10, color: '#2B2B2B', marginBottom: 3, textAlign: 'center', fontWeight: '700', textTransform: 'capitalize' },
+  verticalSignatureImage: { width: 160, height: 50, marginBottom: 3 },
   verticalSignatureLabel: { fontSize: 10, color: '#0B7F35', textAlign: 'center', fontWeight: '600' },
   flipHint: { fontSize: 11, color: '#6B7280', fontWeight: '600' },
   qrOuter: { padding: 6, backgroundColor: '#FFFFFF' },

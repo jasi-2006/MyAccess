@@ -11,5 +11,6 @@ export const colors = {
   grayDark: '#CCCCCC',
   error: '#FF4444',
   overlay: 'rgba(0, 0, 0, 0.5)',
-  circle:'#2FB4A5'
+  circle:'#2FB4A5',
+
 };
