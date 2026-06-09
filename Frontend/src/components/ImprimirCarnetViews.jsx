@@ -218,7 +218,7 @@ export function IndividualCarnet({ learner, card }) {
               Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
             </Text>
             <View style={{ alignItems: 'center', marginBottom: 10, marginTop: 15 }}>
-              <Text style={styles.verticalSignatureName}>cesar augusto ospina p</Text>
+              <Image source={require('../assets/firma.png')} style={styles.verticalSignatureImage} />
               <Text style={styles.verticalSignatureLabel}>Firma de autoria</Text>
             </View>
             <Text style={styles.verticalBackText}>

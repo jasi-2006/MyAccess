@@ -103,33 +103,7 @@ export function buildCarnetPairHtml(learner, card) {
     bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
   }</div>`;
 
-  const qrPattern = [
-    '11111110001001111111',
-    '10000010110010100001',
-    '10111010101110101101',
-    '10111010010000101101',
-    '10111010111110101101',
-    '10000010001000100001',
-    '11111110101010111111',
-    '00000000110110000000',
-    '10110111100011101011',
-    '00101100111001011001',
-    '11100011101011100011',
-    '00111001010100101110',
-    '10101110111110001011',
-    '00000000101000100000',
-    '11111110110101111111',
-    '10000010001100100001',
-    '10111010111010101101',
-    '10111010010100101101',
-    '10000010101110100001',
-    '11111110011000111111',
-  ];
-
-  const qrHtml = `<div style="padding:5px;background:#fff;border:1px solid #111;display:inline-block;">${
-    qrPattern.map((row) => `<div style="display:flex;">${row.split('').map((c) => `<div style="width:3.5px;height:3.5px;background:${c === '1' ? '#111' : '#fff'};"></div>`).join('')}</div>`).join('')
-  }</div>`;
-
+ 
   const logoHtml = `<img src="${logoSrc}" style="width:72px;height:72px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:72px;height:72px;background:#39A900;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:14px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
 
   const front = `
@@ -183,7 +157,7 @@ export function buildCarnetPairHtml(learner, card) {
       
       <div style="text-align:center;padding:12px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;margin: 20px 0;">
         <div style="font-size:10px;color:#2B2B2B;font-weight:700;text-transform:capitalize;">cesar augusto ospina p</div>
-        <div style="font-size:10px;color:#0B7F35;font-weight:600;">Firma de autoria</div>
+        <b><div style="font-size:10px;font-weight:600;">Firma de autoria</div></b>
       </div>
       
       <div style="font-size:9px;color:#374151;line-height:1.4;font-weight:500;">

@@ -244,7 +244,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 </View>
 
                 <View style={styles.signatureBlock}>
-                  <Text style={styles.signatureName}>cesar augusto ospina p</Text>
+                  <Image source={require('../assets/firma.png')} style={styles.signatureImage} />
                   <Text style={styles.signatureLabel}>Firma de autoria</Text>
                 </View>
 
@@ -559,11 +559,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  signatureName: {
-    fontSize: 10,
-    color: '#2B2B2B',
+  signatureImage: {
+    width: 160,
+    height: 50,
     marginBottom: 3,
-    textAlign: 'center',
   },
   signatureLabel: {
     fontSize: 11,
