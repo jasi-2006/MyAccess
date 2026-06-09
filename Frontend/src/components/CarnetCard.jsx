@@ -560,9 +560,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   signatureImage: {
-    width: 160,
-    height: 50,
+    width: 200,
+    height: 70,
     marginBottom: 3,
+    resizeMode: 'contain',
   },
   signatureLabel: {
     fontSize: 11,
