@@ -1,7 +1,7 @@
 import React from 'react';
 import {  Image,KeyboardAvoidingView,Platform, SafeAreaView, ScrollView, StyleSheet, Text, View,useWindowDimensions,}from 'react-native';
 import { colors } from '../theme/colors';
-const logo = require('../assets/logoSena.png');
+const logo = require('../assets/LogoMyAccess.png');
 const students = require('../assets/students.png');
 
 export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, compact = false }) {
