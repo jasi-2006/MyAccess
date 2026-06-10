@@ -19,6 +19,7 @@ export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, c
             styles.scroll,
             isSplit && { minHeight: panelHeight, flexDirection: 'row' },
           ]}
+          
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled" >
           <View style={[styles.formPanel, isSplit ? styles.formPanelSplit : styles.formPanelMobile]}>
