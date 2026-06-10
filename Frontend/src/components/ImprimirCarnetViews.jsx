@@ -4,48 +4,6 @@ import { styles } from '../screens/Imprimir.styles.jsx';
 import { resolveImageUrl } from '../services/api.js';
 import { getRoleDisplayName } from '../utils/accessControl';
 
-const QR_PATTERN = [
-  '11111110001001111111',
-  '10000010110010100001',
-  '10111010101110101101',
-  '10111010010000101101',
-  '10111010111110101101',
-  '10000010001000100001',
-  '11111110101010111111',
-  '00000000110110000000',
-  '10110111100011101011',
-  '00101100111001011001',
-  '11100011101011100011',
-  '00111001010100101110',
-  '10101110111110001011',
-  '00000000101000100000',
-  '11111110110101111111',
-  '10000010001100100001',
-  '10111010111010101101',
-  '10111010010100101101',
-  '10000010101110100001',
-  '11111110011000111111',
-];
-
-function QrBlock() {
-  return (
-    <View style={styles.qrOuter}>
-      <View style={styles.qrGrid}>
-        {QR_PATTERN.map((row, rowIndex) => (
-          <View key={`row-${rowIndex}`} style={styles.qrRow}>
-            {row.split('').map((cell, columnIndex) => (
-              <View
-                key={`cell-${rowIndex}-${columnIndex}`}
-                style={[styles.qrCell, cell === '1' ? styles.qrCellDark : styles.qrCellLight]}
-              />
-            ))}
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
 function BarcodeBlock() {
   const bars = [2, 1, 3, 1, 1, 2, 4, 1, 2, 1, 3, 2, 1, 1, 4, 2, 1, 3, 1, 2, 2, 1, 3, 1];
   return (
