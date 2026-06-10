@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ActivityIndicator } from 'react-native';
 import { normalizeRole, ROLES } from '../utils/accessControl';
+import { getNotifications } from '../services/notificationService';
 
 export default function HomeCards({ navigation, role }) {
   const { width } = useWindowDimensions();
@@ -8,6 +9,23 @@ export default function HomeCards({ navigation, role }) {
   const isDesktop = width >= 900;
   const px = isDesktop ? 40 : isTablet ? 24 : 16;
   const isAdmin = normalizeRole(role) === ROLES.ADMIN;
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUnread = async () => {
+      try {
+        const notifications = await getNotifications();
+        const unread = notifications?.filter(n => !n.readingDate).length || 0;
+        setUnreadCount(unread);
+      } catch {
+        setUnreadCount(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUnread();
+  }, []);
 
   const items = [
     ...(isAdmin
@@ -19,8 +37,8 @@ export default function HomeCards({ navigation, role }) {
         }]
       : []),
     {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
-    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications') },
-    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User') },
+    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'), icon: '🔔' },
+    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'), icon: '👤' },
   ];
 
   return (
@@ -36,9 +54,16 @@ export default function HomeCards({ navigation, role }) {
           onPress={item.onPress}
           activeOpacity={0.85}
         >
-          <Text style={[styles.cardIcon, item.featured && styles.managementIcon, { fontSize: isDesktop ? 28 : 22 }]}>
-            {item.icon}
-          </Text>
+          <View style={styles.cardHeader}>
+            <Text style={[styles.cardIcon, item.featured && styles.managementIcon, { fontSize: isDesktop ? 28 : 22 }]}>
+              {item.icon}
+            </Text>
+            {item.title === 'Notificaciones' && !loading && unreadCount > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{unreadCount}</Text>
+              </View>
+            )}
+          </View>
           <Text style={[styles.cardTitle, item.featured && styles.managementTitle, { fontSize: isDesktop ? 16 : 14 }]}>
             {item.title}
           </Text>
@@ -100,4 +125,23 @@ const styles = StyleSheet.create({
     color: '#047857',
      fontWeight: '700'
      },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  badge: {
+    marginLeft: 8,
+    backgroundColor: '#24C565',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '900',
+  },
 });
