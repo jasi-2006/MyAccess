@@ -16,7 +16,7 @@ import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getUserProfile } from '../services/authService';
-import { getNotifications, markNotificationAsRead } from '../services/notificationService.js';
+import { getNotifications, getNotificationsByUser, markNotificationAsRead } from '../services/notificationService.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 function formatNotificationDate(value) {
@@ -40,11 +40,37 @@ function formatNotificationDate(value) {
   return date.toLocaleDateString();
 }
 
+function getNotificationRawId(item) {
+  return (
+    item?.idNotifications
+    ?? item?.idNotification
+    ?? item?.notificationId
+    ?? item?.id
+    ?? null
+  );
+}
+
+function buildNotificationKey(item) {
+  const rawId = getNotificationRawId(item);
+  if (rawId !== null && rawId !== undefined && String(rawId).trim() !== '') {
+    return String(rawId);
+  }
+
+  return [
+    item?.sendDate || item?.createdDate || '',
+    item?.affair || '',
+    item?.messaje || '',
+    item?.category || item?.tipe || '',
+    item?.idUser || '',
+  ].join('|');
+}
+
 function mapNotification(item) {
   const date = item.sendDate || item.createdDate;
+  const rawId = getNotificationRawId(item);
 
   return {
-    id: String(item.idNotifications),
+    id: rawId !== null && rawId !== undefined ? String(rawId) : buildNotificationKey(item),
     raw: item,
     type: item.category || item.tipe || 'Notificacion',
     title: item.affair || 'Notificacion',
@@ -58,6 +84,26 @@ function getNotificationDateValue(item) {
   const value = item.sendDate || item.createdDate;
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+}
+
+function matchesFilter(item, filter) {
+  const query = String(filter || '').trim().toLowerCase();
+  if (!query) return true;
+
+  return [
+    item.type,
+    item.title,
+    item.message,
+    item.time,
+    item.raw?.category,
+    item.raw?.tipe,
+    item.raw?.affair,
+    item.raw?.messaje,
+    item.raw?.statedSend,
+    item.raw?.idUser,
+  ]
+    .filter(Boolean)
+    .some((value) => String(value).toLowerCase().includes(query));
 }
 
 export default function NotificationsScreen({ navigation }) {
@@ -74,11 +120,12 @@ export default function NotificationsScreen({ navigation }) {
   const [selected, setSelected] = useState(null);
   const [notificationRefreshKey, setNotificationRefreshKey] = useState(0);
   const [profileRole, setProfileRole] = useState('');
+  const [profileId, setProfileId] = useState(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [filterText, setFilterText] = useState('');
   const canCreateNotifications = [ROLES.ADMIN, ROLES.INSTRUCTOR].includes(normalizeRole(profileRole));
 
-  const loadNotifications = useCallback(async ({ refresh = false, filter = filterText } = {}) => {
+  const loadNotifications = useCallback(async ({ refresh = false, filter = filterText, userId = profileId } = {}) => {
     try {
       if (refresh) {
         setRefreshing(true);
@@ -86,17 +133,27 @@ export default function NotificationsScreen({ navigation }) {
         setLoading(true);
       }
       setError('');
-      const response = await getNotifications(filter);
-      const list = Array.isArray(response) ? response : [];
-      const sortedList = [...list].sort((a, b) => getNotificationDateValue(b) - getNotificationDateValue(a));
-      setNotifications(sortedList.map(mapNotification));
+      const [globalResponse, userResponse] = await Promise.all([
+        getNotifications(),
+        userId ? getNotificationsByUser(userId).catch(() => []) : Promise.resolve([]),
+      ]);
+      const globalList = Array.isArray(globalResponse) ? globalResponse : [];
+      const userList = Array.isArray(userResponse) ? userResponse : [];
+      const merged = new Map();
+      [...globalList, ...userList].forEach((item) => {
+        merged.set(buildNotificationKey(item), item);
+      });
+      const filtered = [...merged.values()]
+        .filter((item) => matchesFilter(mapNotification(item), filter))
+        .sort((a, b) => getNotificationDateValue(b) - getNotificationDateValue(a));
+      setNotifications(filtered.map(mapNotification));
     } catch (err) {
       setError(err.message || 'No fue posible cargar las notificaciones.');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [filterText]);
+  }, [filterText, profileId]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -105,6 +162,11 @@ export default function NotificationsScreen({ navigation }) {
 
     return () => clearTimeout(timeout);
   }, [filterText, loadNotifications]);
+
+  useEffect(() => {
+    if (!profileId) return;
+    loadNotifications({ refresh: true, filter: filterText, userId: profileId });
+  }, [profileId, filterText, loadNotifications]);
 
   useFocusEffect(
     useCallback(() => {
@@ -117,10 +179,16 @@ export default function NotificationsScreen({ navigation }) {
 
     getUserProfile()
       .then((profile) => {
-        if (mounted) setProfileRole(profile?.nameRole || '');
+        if (mounted) {
+          setProfileRole(profile?.nameRole || '');
+          setProfileId(profile?.id || null);
+        }
       })
       .catch(() => {
-        if (mounted) setProfileRole('');
+        if (mounted) {
+          setProfileRole('');
+          setProfileId(null);
+        }
       });
 
     return () => {
