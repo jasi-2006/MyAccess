@@ -37,8 +37,8 @@ export default function HomeCards({ navigation, role }) {
         }]
       : []),
     {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
-    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'), icon: '🔔' },
-    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'), icon: '👤' },
+    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'),  },
+    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'),  },
   ];
 
   return (
