@@ -86,14 +86,12 @@ export function buildCarnetPairHtml(learner, card) {
   const docType = learner?.typeDocument || 'C.C';
   const docNum = learner?.document || '';
   const blood = learner?.bloodType || '';
-  const email = learner?.email || '';
   const regional = (learner?.regional || 'Regional Quindio').trim();
   const center = (learner?.trainingCenter || 'Centro Comercio y Turismo').trim();
   const program = learner?.trainingProgram || 'NA';
   const ficha = learner?.ficha || learner?.files || '';
   const initial = fullName.charAt(0).toUpperCase();
   const logoSrc = senaLogoUri || `${window.location.origin}/static/media/logoSena.png`;
-  const firma= `${windows.location.origin}/statict/media/firma.png`
 
   const photoHtml = photoUrl
     ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:100%;height:100%;object-fit:cover;" />`
@@ -118,7 +116,7 @@ export function buildCarnetPairHtml(learner, card) {
             ${roleDisplay}
           </div>
         </div>
-        <div style="width:128px;height:132x;overflow:hidden;background:#E5E7EB;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
+        <div style="width:108px;height:122px;border-radius:6px;overflow:hidden;background:#E5E7EB;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
           ${photoHtml}
         </div>
       </div>
@@ -129,7 +127,7 @@ export function buildCarnetPairHtml(learner, card) {
         <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:1.2;font-family:'Inter',Arial,sans-serif;word-wrap:break-word;word-break:keep-all;margin-bottom:2px;">
           ${fullName}
         </div>
-        <div style="font-size:11.5px;font-weight:600;color:#374151;margin-bottom:12px;font-family:'Inter',Arial,sans-serif;letter-spacing:0.2px;">
+        <div style="font-size:11.5px;font-weight:600;color:#374151;margin-bottom:6px;font-family:'Inter',Arial,sans-serif;letter-spacing:0.2px;">
           ${docType} ${docNum} RH ${blood}
         </div>
         <div style="margin-bottom:12px;">
@@ -150,17 +148,17 @@ export function buildCarnetPairHtml(learner, card) {
 
   const back = `
     <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;padding:20px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;position:relative;overflow:hidden;">
-      <div style="font-size:12px;color:#374151;line-height:1.4;font-weight:500;">
+      <div style="font-size:9.5px;color:#374151;line-height:1.4;font-weight:500;">
         Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
       </div>
-    
+      
       
       <div style="text-align:center;padding:12px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;margin: 20px 0;">
-        <img src="${firma}" style="width: 200, height: 70, marginBottom: 3, resizeMode: contain"/>
+        <div style="font-size:10px;color:#2B2B2B;font-weight:700;text-transform:capitalize;">cesar augusto ospina p</div>
         <b><div style="font-size:10px;font-weight:600;">Firma de autoria</div></b>
       </div>
       
-      <div style="font-size:12px;color:#374151;line-height:1.4;font-weight:500;">
+      <div style="font-size:9px;color:#374151;line-height:1.4;font-weight:500;">
         Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte-15.
       </div>
     </div>`;
