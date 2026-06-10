@@ -43,11 +43,12 @@ export const styles = StyleSheet.create({
   verticalTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     height: 140,
+    paddingTop: 4,
     paddingBottom: 4,
   },
-  verticalLogoBox: { width: 72, alignItems: 'center' },
+  verticalLogoBox: { width: 72, alignItems: 'flex-start' },
   verticalLogo: { width: 68, height: 68 },
   verticalPhotoFrame: {
     width: 108,

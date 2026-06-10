@@ -5,10 +5,15 @@ import { getRoleDisplayName } from '../utils/accessControl.js';
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
 const senaLogoAsset = require('../assets/logoSena.png');
+const firmaAsset = require('../assets/firma.png');
 const senaLogoUri =
   typeof Image.resolveAssetSource === 'function'
     ? Image.resolveAssetSource(senaLogoAsset)?.uri
     : senaLogoAsset?.uri || senaLogoAsset?.default || null;
+const firmaUri =
+  typeof Image.resolveAssetSource === 'function'
+    ? Image.resolveAssetSource(firmaAsset)?.uri
+    : firmaAsset?.uri || firmaAsset?.default || null;
 
 export function getFichaValue(user) {
   return String(user?.ficha || user?.files || '').trim();
@@ -107,12 +112,12 @@ export function buildCarnetPairHtml(learner, card) {
 
   const front = `
     <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;height:140px;padding:14px 14px 4px 14px;box-sizing:border-box;position:relative;z-index:2;">
-        <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;align-items:flex-start;">
-          <div style="display:flex;flex-direction:column;align-items:center;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;height:140px;padding:10px 14px 4px 14px;box-sizing:border-box;position:relative;z-index:2;">
+        <div style="display:flex;flex-direction:column;justify-content:flex-start;gap:6px;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;">
             ${logoHtml}
           </div>
-          <div style="font-size:12px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.5px;font-family:'Inter',Arial,sans-serif;line-height:1;margin-bottom:2px;">
+          <div style="font-size:12px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.5px;font-family:'Inter',Arial,sans-serif;line-height:1;">
             ${roleDisplay}
           </div>
         </div>
@@ -153,8 +158,13 @@ export function buildCarnetPairHtml(learner, card) {
       </div>
       
       
-      <div style="text-align:center;padding:12px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;margin: 20px 0;">
-        <div style="font-size:10px;color:#2B2B2B;font-weight:700;text-transform:capitalize;">cesar augusto ospina p</div>
+      <div style="text-align:center;padding:12px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;margin: 20px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <img
+          src="${firmaUri || ''}"
+          alt="Firma de autoria"
+          style="width:170px;max-width:100%;height:58px;object-fit:contain;display:block;"
+          onerror="this.outerHTML='<div style=&quot;width:170px;height:58px;display:flex;align-items:center;justify-content:center;color:#2B2B2B;font-size:10px;font-weight:700;&quot;>Firma de autoria</div>'"
+        />
         <b><div style="font-size:10px;font-weight:600;">Firma de autoria</div></b>
       </div>
       
