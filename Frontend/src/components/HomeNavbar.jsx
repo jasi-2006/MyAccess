@@ -94,20 +94,59 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
 
 const styles = StyleSheet.create({
   navbar: {
-    flexDirection: 'row', alignItems: 'center',
-    justifyContent: 'space-between', paddingVertical: 14,
-    backgroundColor: '#FFFFFF', elevation: 3,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08, shadowRadius: 4,
+    flexDirection: 'row',
+     alignItems: 'center',
+    justifyContent: 'space-between',
+     paddingVertical:8,
+    backgroundColor: '#FFFFFF', 
+    elevation: 3,
+    shadowColor: '#000', 
+    shadowOffset: { 
+      width: 0, 
+      height: 1 
+    },
+    shadowOpacity: 0.08, 
+    shadowRadius: 4,
   },
-  logo:          { width: 100, height: 34 },
-  navLinks:      { flexDirection: 'row', gap: 28 },
-  notificationLink: { position: 'relative' },
-  mobileActions: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  mobileBell:    { width: 34, height: 34, borderRadius: 17, backgroundColor: '#E8FFF5', alignItems: 'center', justifyContent: 'center', position: 'relative' },
-  mobileBellText:{ color: '#0F766E', fontSize: 16, fontWeight: '900' },
-  navLink:       { fontSize: 12, color: '#6B7280', fontWeight: '500' },
-  navLinkActive: { color: '#0F766E', fontWeight: '700' },
+  logo:          { 
+    width: 200, 
+    height: 100
+   },
+  navLinks:      { 
+    flexDirection: 'row', 
+    gap: 28
+   },
+  notificationLink: { 
+    position: 'relative' 
+  },
+  mobileActions: { 
+    flexDirection: 'row',
+     alignItems: 'center',
+      gap: 14 
+    },
+  mobileBell:    {
+     width: 34, 
+    height: 34, 
+    borderRadius: 17, 
+    backgroundColor: '#E8FFF5', 
+    alignItems: 'center', 
+    justifyContent: 'center',
+     position: 'relative'
+     },
+  mobileBellText:{ 
+    color: '#0F766E', 
+    fontSize: 16, 
+    fontWeight: '900'
+   },
+  navLink:       {
+     fontSize: 12, 
+     color: '#6B7280', 
+     fontWeight: '500' 
+    },
+  navLinkActive: {
+     color: '#0F766E', 
+     fontWeight: '700' 
+    },
   notificationBadge: {
     position: 'absolute',
     top: -10,
@@ -139,5 +178,9 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '900',
   },
-  logoutText:    { fontSize: 12, color: '#EF4444', fontWeight: '600' },
+  logoutText:    {
+     fontSize: 12, 
+     color: '#EF4444', 
+     fontWeight: '600'
+     },
 });

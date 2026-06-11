@@ -5,7 +5,7 @@ import CustomInput from './CustomInput.jsx';
 import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
-const DOCUMENT_TYPES = ['C.C', 'TI', 'PPT'];
+const DOCUMENT_TYPES = ['CC', 'TI', 'PPT'];
 export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
@@ -39,18 +39,18 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   const stepFields = [
     [
-      inp( 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
-      inp( 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
+      inp('👤', 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
+      inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
-      inp( 'Regional',             regional,        o('regional'),        {}),
-      inp( 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
-      inp( 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      inp( 'N° Ficha',             Ficha,           o('Ficha'),           { error: errors.Ficha, digitsOnly: true }),
+      inp('📄', 'Regional',             regional,        o('regional'),        {}),
+      inp('🏢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
+      inp('⚙️', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
+      inp('🔢', 'N° Ficha',             Ficha,           o('Ficha'),           { error: errors.Ficha, digitsOnly: true }),
     ],
     [
-      inp( 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
-      inp( 'Contraseña',         password, o('password'), { error: errors.password, secureTextEntry: true }),
+      inp('📧', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
+      inp('🔒', 'Contraseña',         password, o('password'), { error: errors.password, secureTextEntry: true }),
     ],
   ];
 

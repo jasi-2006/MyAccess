@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Alert, ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../theme/colors';
 import { resolveImageUrl } from '../services/api';
 import { createRequestCard, getRequestCardsByUser } from '../services/requestCardService';
@@ -14,13 +14,32 @@ export default function RequestCardButton({ profile }) {
   }
 
   const handlePress = async () => {
-    if (sent || loading || !profile?.id) return;
+    if (sent || loading) return;
 
-    const photoUrl = resolveImageUrl(profile?.photoUrl);
+    const profileId = Number(profile?.id ?? profile?.idUser ?? profile?.userId);
+    console.log('RequestCardButton:', { profileId, profile });
+    if (!profileId) {
+      Alert.alert(
+        'Perfil incompleto',
+        'No se pudo identificar tu usuario. Vuelve a iniciar sesion o recarga tu perfil.',
+      );
+      return;
+    }
+
+    const rawPhotoUrl =
+      profile?.photoUrl ??
+      profile?.photo ??
+      profile?.photoURL ??
+      profile?.photo_path ??
+      profile?.photoPath ??
+      null;
+
+    const photoUrl = resolveImageUrl(rawPhotoUrl);
+    console.log('Photo URL:', rawPhotoUrl, '->', photoUrl);
     if (!photoUrl) {
       Alert.alert(
         'Foto requerida',
-        'Debes cargar tu foto de perfil antes de solicitar la impresión del carnet.',
+        'Debes cargar tu foto de perfil antes de solicitar la impresion del carnet.',
       );
       return;
     }
@@ -28,29 +47,39 @@ export default function RequestCardButton({ profile }) {
     try {
       setLoading(true);
 
-      const existing = await getRequestCardsByUser(profile.id).catch(() => []);
+      const existing = await getRequestCardsByUser(profileId).catch((err) => {
+        console.error('Error getting requests:', err);
+        return [];
+      });
+      console.log('Existing requests:', existing);
       const hasPending = Array.isArray(existing) && existing.some(
-        (r) => r.state?.toLowerCase() === 'pendiente'
+        (r) => String(r?.state || '').trim().toLowerCase() === 'pendiente',
       );
 
       if (hasPending) {
-        Alert.alert('Solicitud existente', 'Ya tienes una solicitud de impresión pendiente.');
+        Alert.alert('Solicitud existente', 'Ya tienes una solicitud de impresion pendiente.');
         return;
       }
 
-      await createRequestCard({
-        idUser: Number(profile.id),
+      const payload = {
+        idUser: profileId,
         requestTipe: 'impresion',
         cardTipe: 'fisico',
         state: 'pendiente',
         approbedBy: null,
         printedBy: null,
-      });
+      };
+      console.log('Creating request with payload:', payload);
+      
+      const result = await createRequestCard(payload);
+      console.log('Request created:', result);
 
       setSent(true);
-      Alert.alert('Solicitud enviada', 'Tu solicitud de impresión fue enviada al administrador.');
+      Alert.alert('Solicitud enviada', 'Tu solicitud de impresion fue enviada al administrador.');
     } catch (e) {
-      Alert.alert('Error', 'No se pudo enviar la solicitud. Intenta de nuevo.');
+      console.error('Error creating request:', e);
+      const apiMessage = e?.payload?.message || e?.message || 'No se pudo enviar la solicitud. Intenta de nuevo.';
+      Alert.alert('Error', apiMessage);
     } finally {
       setLoading(false);
     }
@@ -64,10 +93,13 @@ export default function RequestCardButton({ profile }) {
         onPress={handlePress}
         disabled={loading || sent}
       >
-        {loading
-          ? <ActivityIndicator color="#FFFFFF" />
-          : <Text style={styles.buttonText}>{sent ? '✓ Solicitud enviada' : 'Solicitar impresión'}</Text>
-        }
+        {loading ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Text style={styles.buttonText}>
+            {sent ? 'Solicitud enviada' : 'Solicitar impresion'}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -92,6 +124,8 @@ const styles = StyleSheet.create({
   },
   buttonSent: {
     backgroundColor: '#059669',
+  },
+  buttonText: {
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '800',
