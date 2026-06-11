@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 
   aboutTitle: {
   fontWeight: 'bold',
-  color: '#0F766E', // verde corporativo
+  color: '#0F766E', 
   marginBottom: 16,
   textAlign: 'center',
   },
