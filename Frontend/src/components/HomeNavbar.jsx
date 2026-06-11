@@ -32,7 +32,7 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
     }, [loadNotificationCount])
   );
 
-  
+
   const badgeText = notificationCount > 99 ? '99+' : String(notificationCount);
   const handleLogout = async () => {
     await logoutUser();
@@ -55,6 +55,7 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
               </View>
             ) : null}
           </TouchableOpacity>
+          
           {canManage ? (
             <TouchableOpacity onPress={() => navigation.navigate('Instructor')}>
               <Text style={[styles.navLink, active === 'Instructor' && styles.navLinkActive]}>Gestion</Text>
