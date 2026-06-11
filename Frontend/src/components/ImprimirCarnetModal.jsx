@@ -26,7 +26,7 @@ export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, o
           </View>
 
           {selectedCarnet ? (
-            <ScrollView style={{ maxHeight: 620 }} showsVerticalScrollIndicator={false} contentContainerStyle={styles.singlePrintArea} nativeID="single-print-area">
+            <ScrollView style={{ maxHeight: 520 }} showsVerticalScrollIndicator={false} contentContainerStyle={styles.singlePrintArea} nativeID="single-print-area">
               <IndividualCarnet learner={selectedCarnet.learner} card={selectedCarnet.card} />
             </ScrollView>
           ) : null}
