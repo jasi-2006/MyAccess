@@ -95,17 +95,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
      alignItems: 'center',
     justifyContent: 'space-between',
-     paddingVertical: 14,
+     paddingVertical:8,
     backgroundColor: '#FFFFFF', 
     elevation: 3,
     shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { 
+      width: 0, 
+      height: 1 
+    },
     shadowOpacity: 0.08, 
     shadowRadius: 4,
   },
   logo:          { 
-    width: 190, 
-    height: 90
+    width: 200, 
+    height: 100
    },
   navLinks:      { 
     flexDirection: 'row', 
@@ -119,8 +122,10 @@ const styles = StyleSheet.create({
      alignItems: 'center',
       gap: 14 
     },
-  mobileBell:    { width: 34, 
-    height: 34, borderRadius: 17, 
+  mobileBell:    {
+     width: 34, 
+    height: 34, 
+    borderRadius: 17, 
     backgroundColor: '#E8FFF5', 
     alignItems: 'center', 
     justifyContent: 'center',
@@ -171,5 +176,9 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '900',
   },
-  logoutText:    { fontSize: 12, color: '#EF4444', fontWeight: '600' },
+  logoutText:    {
+     fontSize: 12, 
+     color: '#EF4444', 
+     fontWeight: '600'
+     },
 });
