@@ -13,7 +13,7 @@ export default function HomeAbout() {
     <View style={[styles.about, { paddingHorizontal: px }]}>
       <View style={[styles.aboutContent, isDesktop && { flexDirection: 'row', gap: 40 }]}>
         <Image
-          source={person2}
+          source={personImage}
           style={{ width: isDesktop ? 200 : isTablet ? 170 : width * 0.5, height: isDesktop ? 160 : isTablet ? 140 : width * 0.4 }}
           resizeMode="contain"
         />
