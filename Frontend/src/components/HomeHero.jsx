@@ -30,9 +30,26 @@ export default function HomeHero({ fullName }) {
 }
 
 const styles = StyleSheet.create({
-  hero:          { alignItems: 'center', paddingVertical: 28, backgroundColor: '#F0F9F6', gap: 16 },
-  heroText:      { alignItems: 'flex-start' },
-  heroTitle:     { fontWeight: '800', color: '#1F2937', lineHeight: 48, marginBottom: 12 },
-  heroHighlight: { color: '#0F766E' },
-  heroSubtitle:  { color: '#6B7280', lineHeight: 24, marginTop: 4 },
+  hero:          { 
+    alignItems: 'center',
+     paddingVertical: 28, 
+     backgroundColor: '#F0F9F6', gap: 16
+    },
+  heroText:      { 
+    alignItems: 'flex-start' 
+  },
+  heroTitle:     {
+     fontWeight: '800',
+      color: '#1F2937', 
+      lineHeight: 48,
+       marginBottom: 12 
+      },
+  heroHighlight: { 
+    color: '#0F766E'
+   },
+  heroSubtitle:  { 
+    color: '#6B7280', 
+    lineHeight: 24, 
+    marginTop: 4 
+  },
 });
