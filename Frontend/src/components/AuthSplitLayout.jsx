@@ -97,8 +97,9 @@ const styles = StyleSheet.create({
     width: 182,
     height: 72,
     marginBottom: 22,
+    paddingLeft: 7,
   },
-  
+
    brandPanel: {
     flex: 1,
     backgroundColor: '#079B72',
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     maxWidth: 700, // Cambia esto si necesitas un tamaño específico
     height: 390, // Aumentado el alto de la imagen
      position:'relative',
-    top: 350,// Agregar margen para dar espacio superior
+    top: 320,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,
