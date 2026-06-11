@@ -8,15 +8,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { colors } from '../theme/colors.jsx';
-import { typography } from '../theme/typography.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 
 export default function OnboardingScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
   const isDesktop = width >= 980;
   const isSmallDevice = height < 700;
-
-  // Ancho unificado para hero y content
   const containerWidth = isDesktop ? Math.min(width * 0.68, 920) : width;
   const contentPaddingHorizontal = isDesktop ? 40 : Math.max(width * 0.08, 24);
   
@@ -117,7 +114,7 @@ function createStyles({
       backgroundColor: colors.background,
     },
 
-    // CONTENEDOR VERDE PRINCIPAL
+  
   heroWrapper: {
     width: '100%',
     alignItems: 'center',
@@ -161,7 +158,7 @@ function createStyles({
   },
 
   personasImage: {
-  width: imageWidth + 100,
+  width: imageWidth + 500,
   height: imageHeight + 190,
   top: 120,
   marginBottom: isDesktop ? 18 : isSmallDevice ? 10 : 29,
@@ -170,12 +167,13 @@ function createStyles({
   },
 
   bottomSection: {
-    marginTop: isDesktop ? -25 : -22,
-    alignItems: 'center',
-  },
+      marginTop: isDesktop ? -25 : -22,
+      alignItems: 'center',
+    },
+
 
   curve: {
-  width: 350,
+  width: 550,
   height: 300,
   backgroundColor: colors.background,
   transform: [{ translateY: -78 }],
@@ -206,25 +204,32 @@ function createStyles({
   },
 
   subtitle: {
-  width: isDesktop ? 360 : Math.min(width * 0.84, 340),
-  fontFamily: typography.fontFamily,
-  fontSize: typography.sizes.medium,
-  lineHeight: 25,
-  color: colors.textSecondary,
-  marginBottom: isDesktop ? 32 : 28,
-  textAlign: 'center',
-},
+    width: isDesktop ? 360 : Math.min(width * 0.84, 340),
+    fontSize: 14,
+    lineHeight: 25,
+    color: colors.textSecondary,
+    marginBottom: isDesktop ? 32 : 28,
+    textAlign: 'center',
+  },
 
   button: {
-    width: isDesktop ? 190 : '100%',
-    maxWidth: 340,
-    alignSelf: 'center',
-  },
+      width: isDesktop
+        ? 260       
+        : '100%',   
 
-   buttonText: {
-    fontWeight: '600',
-   fontFamily: typography.fontFamily,
-  fontSize: typography.sizes.large, 
-  },
+      maxWidth: isDesktop ? 300 : 240,
+
+      height: isDesktop
+        ? 58        
+        : 52,     
+
+      alignSelf: 'center',
+    },
+
+
+    buttonText: {
+      fontSize: isDesktop ? 35 : 10, 
+      
+    },
   });
 }

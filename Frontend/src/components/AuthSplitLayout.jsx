@@ -1,19 +1,7 @@
 import React from 'react';
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} 
-
-from 'react-native';
+import {  Image,KeyboardAvoidingView,Platform, SafeAreaView, ScrollView, StyleSheet, Text, View,useWindowDimensions,}from 'react-native';
 import { colors } from '../theme/colors';
-const logo = require('../assets/LogoMyAccess.png');
+const logo = require('../assets/logoSena.png');
 const students = require('../assets/students.png');
 
 export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, compact = false }) {
@@ -31,6 +19,7 @@ export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, c
             styles.scroll,
             isSplit && { minHeight: panelHeight, flexDirection: 'row' },
           ]}
+          
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled" >
           <View style={[styles.formPanel, isSplit ? styles.formPanelSplit : styles.formPanelMobile]}>

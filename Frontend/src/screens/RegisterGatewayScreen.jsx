@@ -16,6 +16,7 @@ const SUBTITLES = [
   'Completa los datos de tu carnet.',
   'Crea tus credenciales de acceso.',
 ];
+const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 export default function RegisterGatewayScreen({ navigation }) {
   const { width } = useWindowDimensions();
@@ -30,7 +31,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [showReview, setShowReview] = useState(false);
 
   const [values, setValues] = useState({
-    name: '', typeDocument: 'CC', document: '', bloodType: 'O+',
+    name: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
     regional: 'quindio', trainingCenter: 'centro comercio y turismo',
     nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
@@ -66,7 +67,9 @@ export default function RegisterGatewayScreen({ navigation }) {
     }
     if (s === 2) {
       if (!values.email.includes('@')) e.email = 'Email invalido';
-      if (!values.password || values.password.length < 8) e.password = 'Minimo 8 caracteres';
+      if (!passwordRegex.test(values.password)) {
+        e.password = 'Debe iniciar con mayúscula, tener 8 caracteres, un número y un carácter especial';
+      }
     }
     setErrors(e);
     return !Object.keys(e).length;

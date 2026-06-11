@@ -56,8 +56,6 @@ export default function UserProfile({ navigation }) {
     trainingProgram: form.trainingProgram?.trim() || profile?.trainingProgram,
     trainingCenter: form.trainingCenter?.trim() || profile?.trainingCenter,
     regional: form.regional?.trim() || profile?.regional,
-    email: form.email?.trim() || profile?.email,
-    nameRole: profile?.nameRole,
   });
 
   const handleSave = async () => {
