@@ -20,7 +20,7 @@ export default function HomeAbout() {
           resizeMode="contain"
         />
         <View style={isDesktop && { flex: 1 }}>
-          <Text style={[styles.aboutTitle, { fontSize: isDesktop ? 22 : isTablet ? 18 : 16 }]}>
+          <Text style={[styles.aboutTitle, { fontSize: isDesktop ? 32 : isTablet ? 26 : 22 }]}>
             Sobre Nosotros
           </Text>
           <Text style={[styles.aboutText, { fontSize: isDesktop ? 13 : 12 }]}>
@@ -36,9 +36,31 @@ export default function HomeAbout() {
 }
 
 const styles = StyleSheet.create({
-  about:        { paddingVertical: 28 },
-  aboutContent: { flexDirection: 'column', alignItems: 'center', gap: 24 },
-  aboutTitle:   { fontWeight: '700', color: '#1F2937', marginBottom: 12 },
-  aboutText:    { color: '#6B7280', lineHeight: 26 },
-  highlight:    { color: '#0F766E' },
+  about: {
+    paddingVertical: 28,
+  },
+
+  aboutContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 24,
+    minHeight: 300, // más altura para poder bajar el texto
+  },
+
+  aboutTitle: {
+  fontWeight: 'bold',
+  color: '#0F766E', // verde corporativo
+  marginBottom: 16,
+  textAlign: 'center',
+  },
+
+  aboutText: {
+    color: '#6B7280',
+    lineHeight: 26,
+    textAlign: 'justify',
+  },
+
+  highlight: {
+    color: '#0F766E',
+  },
 });
