@@ -2,7 +2,7 @@
 # Tras el deploy, las URLs quedan así:
 #   user:          https://myaccess-user.onrender.com
 #   auth:          https://myaccess-1.onrender.com
-#   card:          https://myaccess-card-4tuh.onrender.com
+#   card:          https://myaccess-card-7jc2.onrender.com
 #   news:          https://myaccess-news-ft80.onrender.com
 #   notifications: https://myaccess-notification-1cxp.onrender.com
 #   gateway:       https://myaccess-kong.onrender.com
@@ -16,7 +16,7 @@
 # En Vercel (Frontend), variables recomendadas:
 #   EXPO_PUBLIC_API_GATEWAY_URL=https://myaccess-kong.onrender.com
 #   EXPO_PUBLIC_USER_SERVICE_URL=https://myaccess-user.onrender.com
-#   EXPO_PUBLIC_CARD_SERVICE_URL=https://myaccess-card-4tuh.onrender.com
+#   EXPO_PUBLIC_CARD_SERVICE_URL=https://myaccess-card-7jc2.onrender.com
 #   EXPO_PUBLIC_NEWS_SERVICE_URL=https://myaccess-news-ft80.onrender.com
 #   EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL=https://myaccess-notification-1cxp.onrender.com
 
