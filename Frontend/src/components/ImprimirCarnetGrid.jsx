@@ -31,7 +31,6 @@ export default function ImprimirCarnetGrid({
                       key={learner.id}
                       learner={learner}
                       card={card}
-                      name={name}
                       onPress={() => onSelectCarnet({ learner, card, name })}
                     />
                   );

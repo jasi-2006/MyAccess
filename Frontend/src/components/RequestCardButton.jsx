@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
 import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { colors } from '../theme/colors';
+import { resolveImageUrl } from '../services/api';
 import { createRequestCard, getRequestCardsByUser } from '../services/requestCardService';
+import { resolveUserRole, ROLES } from '../utils/accessControl';
 
 export default function RequestCardButton({ profile }) {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
+  if (resolveUserRole(profile) !== ROLES.APRENDIZ) {
+    return null;
+  }
+
   const handlePress = async () => {
     if (sent || loading || !profile?.id) return;
+
+    const photoUrl = resolveImageUrl(profile?.photoUrl);
+    if (!photoUrl) {
+      Alert.alert(
+        'Foto requerida',
+        'Debes cargar tu foto de perfil antes de solicitar la impresión del carnet.',
+      );
+      return;
+    }
 
     try {
       setLoading(true);
