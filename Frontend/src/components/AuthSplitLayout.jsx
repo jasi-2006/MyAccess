@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 44,
-    paddingVertical: 10, // Cambiado de 54 a 10 para evitar que quede volando
+    paddingVertical: 10, 
   },
   brandCopy: {
     alignItems: 'center',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     maxWidth: 700, // Cambia esto si necesitas un tamaño específico
     height: 390, // Aumentado el alto de la imagen
      position:'relative',
-    top: 9,// Agregar margen para dar espacio superior
+    top: 30,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,
