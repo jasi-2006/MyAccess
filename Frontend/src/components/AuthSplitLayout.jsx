@@ -1,7 +1,7 @@
 import React from 'react';
 import {  Image,KeyboardAvoidingView,Platform, SafeAreaView, ScrollView, StyleSheet, Text, View,useWindowDimensions,}from 'react-native';
 import { colors } from '../theme/colors';
-const logo = require('../assets/logoSena.png');
+const logo = require('../assets/logoM.png');
 const students = require('../assets/students.png');
 
 export default function AuthSplitLayout({ children, panelTitle, panelSubtitle, compact = false }) {
@@ -130,11 +130,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   students: {
-    width: '100%', // Cambia de '72%' a '90%' para que sea más grande
+    width: '150%',
     maxWidth: 700, // Cambia esto si necesitas un tamaño específico
     height: 390, // Aumentado el alto de la imagen
      position:'relative',
-    top: 30,// Agregar margen para dar espacio superior
+    top: 450,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,
