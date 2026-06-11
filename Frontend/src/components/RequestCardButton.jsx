@@ -17,6 +17,7 @@ export default function RequestCardButton({ profile }) {
     if (sent || loading) return;
 
     const profileId = Number(profile?.id ?? profile?.idUser ?? profile?.userId);
+    console.log('RequestCardButton:', { profileId, profile });
     if (!profileId) {
       Alert.alert(
         'Perfil incompleto',
@@ -34,6 +35,7 @@ export default function RequestCardButton({ profile }) {
       null;
 
     const photoUrl = resolveImageUrl(rawPhotoUrl);
+    console.log('Photo URL:', rawPhotoUrl, '->', photoUrl);
     if (!photoUrl) {
       Alert.alert(
         'Foto requerida',
@@ -45,7 +47,11 @@ export default function RequestCardButton({ profile }) {
     try {
       setLoading(true);
 
-      const existing = await getRequestCardsByUser(profileId).catch(() => []);
+      const existing = await getRequestCardsByUser(profileId).catch((err) => {
+        console.error('Error getting requests:', err);
+        return [];
+      });
+      console.log('Existing requests:', existing);
       const hasPending = Array.isArray(existing) && existing.some(
         (r) => String(r?.state || '').trim().toLowerCase() === 'pendiente',
       );
@@ -55,18 +61,23 @@ export default function RequestCardButton({ profile }) {
         return;
       }
 
-      await createRequestCard({
+      const payload = {
         idUser: profileId,
         requestTipe: 'impresion',
         cardTipe: 'fisico',
         state: 'pendiente',
         approbedBy: null,
         printedBy: null,
-      });
+      };
+      console.log('Creating request with payload:', payload);
+      
+      const result = await createRequestCard(payload);
+      console.log('Request created:', result);
 
       setSent(true);
       Alert.alert('Solicitud enviada', 'Tu solicitud de impresion fue enviada al administrador.');
     } catch (e) {
+      console.error('Error creating request:', e);
       const apiMessage = e?.payload?.message || e?.message || 'No se pudo enviar la solicitud. Intenta de nuevo.';
       Alert.alert('Error', apiMessage);
     } finally {
