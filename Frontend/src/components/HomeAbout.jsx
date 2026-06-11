@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
 
-const person2 = require('../assets/person.png');
+const person2 = require('../assets/person2.png');
 
 export default function HomeAbout() {
   const { width } = useWindowDimensions();
