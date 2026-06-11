@@ -104,8 +104,9 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
 
 const styles = StyleSheet.create({
   navbar: {
-  flexDirection: 'row',
+   flexDirection: 'row',
   alignItems: 'center',
+  justifyContent: 'space-between',
   paddingVertical: 16,
   backgroundColor: '#FFFFFF',
   elevation: 3,
@@ -115,8 +116,8 @@ const styles = StyleSheet.create({
   shadowRadius: 4,
 },
   logo:          { 
-    width: 160, 
-    height: 60
+    width: 170, 
+    height: 70
    },
 
   logoContainer: {
