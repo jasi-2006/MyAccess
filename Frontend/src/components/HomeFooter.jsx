@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F2937', paddingVertical: 32,
     alignItems: 'center', gap: 8, marginTop: 16,
   },
-  footerLogo: { width: 180, height: 60, marginBottom: 8 },
+  footerLogo: { width: 180, height: 70, marginBottom: 8 },
   footerText: { color: '#9CA3AF', textAlign: 'center' },
 });
