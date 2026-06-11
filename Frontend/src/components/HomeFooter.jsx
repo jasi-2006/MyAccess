@@ -24,7 +24,7 @@ export default function HomeFooter() {
 
 const styles = StyleSheet.create({
   footer: {
-    backgroundColor: '#24C565', paddingVertical: 22,
+    backgroundColor: '#0F766E', paddingVertical: 22,
     alignItems: 'center', gap: 7, marginTop: 16,
   },
   footerLogo: { width: 100, height: 40, marginBottom: 8 },
