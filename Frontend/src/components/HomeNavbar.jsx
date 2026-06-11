@@ -40,20 +40,10 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
   };
 
   return (
-   <View style={[styles.navbar, { paddingHorizontal: px }]}>
-
-  <View style={styles.logoContainer}>
-    <Image
-      source={logoM}
-      style={styles.logo}
-      resizeMode="contain"
-    />
-  </View>
-
-  {!isMobile && (
-    <View style={styles.menuContainer}>
-      <View style={styles.navLinks}/>
-
+    <View style={[styles.navbar, { paddingHorizontal: px }]}>
+      <Image source={logoM} style={styles.logo} resizeMode="contain" />
+      {!isMobile && (
+        <View style={styles.navLinks}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')}>
             <Text style={[styles.navLink, active === 'Home' && styles.navLinkActive]}>Inicio</Text>
           </TouchableOpacity>
@@ -104,39 +94,25 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
 
 const styles = StyleSheet.create({
   navbar: {
-   flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingVertical: 16,
-  backgroundColor: '#FFFFFF',
-  elevation: 3,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.08,
-  shadowRadius: 4,
-},
+    flexDirection: 'row',
+     alignItems: 'center',
+    justifyContent: 'space-between',
+     paddingVertical: 14,
+    backgroundColor: '#FFFFFF', 
+    elevation: 3,
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08, 
+    shadowRadius: 4,
+  },
   logo:          { 
-    width: 170, 
-    height: 70
+    width: 190, 
+    height: 90
    },
-
-  logoContainer: {
-  width: 180,
-  justifyContent: 'center',
-},
-
-menuContainer: {
-  flex: 1,
-  alignItems: 'center',
-},
-
-navLinks: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 40,
-},
- 
+  navLinks:      { 
+    flexDirection: 'row', 
+    gap: 28
+   },
   notificationLink: { 
     position: 'relative' 
   },
@@ -197,10 +173,5 @@ navLinks: {
     fontSize: 9,
     fontWeight: '900',
   },
-  logoutText:    { 
-    fontSize: 12, 
-    color: '#EF4444',
-     fontWeight: '600' 
-    },
-   
+  logoutText:    { fontSize: 12, color: '#EF4444', fontWeight: '600' },
 });
