@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     maxWidth: 620,
   },
   logo: {
-    width: 112,
-    height: 42,
+    width: 182,
+    height: 72,
     marginBottom: 22,
   },
    brandPanel: {
