@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     height: 72,
     marginBottom: 22,
   },
+  
    brandPanel: {
     flex: 1,
     backgroundColor: '#079B72',
