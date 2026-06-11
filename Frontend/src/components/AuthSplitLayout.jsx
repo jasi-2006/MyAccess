@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     maxWidth: 620,
   },
   logo: {
-    width: 112,
-    height: 42,
+    width: 182,
+    height: 72,
     marginBottom: 22,
   },
    brandPanel: {
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     maxWidth: 700, // Cambia esto si necesitas un tamaño específico
     height: 390, // Aumentado el alto de la imagen
      position:'relative',
-    top: 450,// Agregar margen para dar espacio superior
+    top: 350,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,
