@@ -20,7 +20,9 @@ export default function CustomInput({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleChange = (text) => {
-    onChangeText(numericOnly ? digitsOnly(text) : text);
+    if (typeof onChangeText === 'function') {
+      onChangeText(numericOnly ? digitsOnly(text) : text);
+    }
   };
 
   return (
@@ -32,7 +34,7 @@ export default function CustomInput({
           style={[styles.input, compact && styles.inputCompact, dense && styles.inputDense]}
           placeholder={placeholder}
           placeholderTextColor={colors.textSecondary}
-          value={value}
+          value={value ?? ''}
           onChangeText={handleChange}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
           keyboardType={numericOnly ? 'numeric' : keyboardType}
