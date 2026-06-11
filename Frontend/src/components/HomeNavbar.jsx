@@ -32,6 +32,7 @@ export default function HomeNavbar({ navigation, active = 'Home', role }) {
     }, [loadNotificationCount])
   );
 
+  
   const badgeText = notificationCount > 99 ? '99+' : String(notificationCount);
   const handleLogout = async () => {
     await logoutUser();
