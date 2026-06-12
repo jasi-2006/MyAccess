@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 
 // URLs aligned with render.yaml (name -> https://<name>.onrender.com)
-const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
-const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
-const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-ichc.onrender.com';
-const DEFAULT_CARD_SERVICE_URL = 'https://myaccess-card-7jc2.onrender.com';
-const DEFAULT_NEWS_SERVICE_URL = 'https://myaccess-news-9h3h.onrender.com';
+const DEFAULT_GATEWAY_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com';
+const DEFAULT_USER_SERVICE_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1';
+const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1';
+const DEFAULT_CARD_SERVICE_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1';
+const DEFAULT_NEWS_SERVICE_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1';
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
 const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
 const ENV_NOTIFICATIONS_SERVICE_URL = process.env.EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL;
@@ -314,7 +314,7 @@ export function resolveImageUrl(url) {
   const value = String(url).trim();
   if (!value) return null;
 
-  const uploadsBase = USER_SERVICE_URL.replace(/\/+$/, '');
+  const uploadsBase = USER_SERVICE_URL.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
   const gatewayBase = API_GATEWAY_URL.replace(/\/+$/, '');
 
   const toUploadsUrl = (pathname, search = '') => {

@@ -1,0 +1,73 @@
+{
+  "family": "myaccess-notifications-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::048124478038:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::048124478038:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "notifications-service",
+      "image": "048124478038.dkr.ecr.us-east-2.amazonaws.com/myaccess-notifications-service:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 9094,
+          "hostPort": 9094,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SERVER_PORT",
+          "value": "9094"
+        },
+        {
+          "name": "PORT",
+          "value": "9094"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "gateway01.us-east-1.prod.aws.tidbcloud.com"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "4000"
+        },
+        {
+          "name": "NOTIFICATIONS_DB_URL",
+          "value": "jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/notifications_service?sslMode=REQUIRED"
+        },
+        {
+          "name": "JWT_EXPIRATION",
+          "value": "600000"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:DB_USERNAME::"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:DB_PASSWORD::"
+        },
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:JWT_SECRET::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/myaccess-notifications-service",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
