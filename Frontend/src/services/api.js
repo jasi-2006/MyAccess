@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-// URLs aligned with render.yaml (name -> https://<name>.onrender.com)
+// URLs aligned with AWS ECS ALB
 const DEFAULT_GATEWAY_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com';
 const DEFAULT_USER_SERVICE_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1';
 const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1';
