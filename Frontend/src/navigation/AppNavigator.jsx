@@ -21,6 +21,7 @@ import HistorialScreen from '../screens/Historial.jsx';
 import GestionFichas from '../screens/GestionFichas.jsx';
 import ImprimirScreen from '../screens/Imprimir.jsx';
 import ProcessingStatus from '../screens/Processingstatus.jsx';
+import SofiaVerificationScreen from '../screens/SofiaVerificationScreen.jsx';
 import { getAuthToken, getUserProfile } from '../services/authService';
 import { canAccessRoute, getHomeRouteForRole, getRoleFromToken, normalizeRole, resolveUserRole } from '../utils/accessControl';
 
@@ -111,6 +112,8 @@ const ProtectedHistorial = protect('Historial', HistorialScreen);
 const ProtectedImprimir = protect('Imprimir', ImprimirScreen);
 const protectedGestion = protect ('Gestion', GestionFichas );
 const ProtectedProcessingStatus = protect('Tramite', ProcessingStatus);
+const ProtectedSofiaVerification = protect('SofiaVerification', SofiaVerificationScreen);
+
 
 export default function AppNavigator() {
   return (
@@ -147,6 +150,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Imprimir" component={ProtectedImprimir} />
         <Stack.Screen name="Gestion" component={protectedGestion}/>
         <Stack.Screen name="Tramite" component={ProtectedProcessingStatus} />
+        <Stack.Screen name="SofiaVerification" component={ProtectedSofiaVerification} />
 
       </Stack.Navigator>
     </NavigationContainer>

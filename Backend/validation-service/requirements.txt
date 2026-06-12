@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+selenium
+webdriver-manager
+pillow
+google-generativeai
+pydantic
+python-multipart
+python-dotenv
+requests

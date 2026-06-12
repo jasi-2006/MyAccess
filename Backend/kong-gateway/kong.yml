@@ -188,7 +188,26 @@ services:
           - name: jwt
             config: *jwt_config
 
+  - name: validation-service
+    url: http://validation-service.myaccess.local:5005
+    connect_timeout: 10000
+    read_timeout: 60000
+    write_timeout: 60000
+    routes:
+      - name: validation-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /api/v1/validationService
+        strip_path: true
+        path_handling: v0
+        plugins:
+          - name: jwt
+            config: *jwt_config
+
 plugins:
+
   - name: cors
     config:
       origins:

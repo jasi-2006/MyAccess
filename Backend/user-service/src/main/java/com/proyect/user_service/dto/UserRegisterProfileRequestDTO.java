@@ -15,4 +15,6 @@ public class UserRegisterProfileRequestDTO {
     private String ficha;
     private String email;
     private String photoUrl;
+    private Boolean sofiaVerified;
 }
+

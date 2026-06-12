@@ -45,7 +45,29 @@ services:
       - gateway
     networks:
       - myaccess-net
+    volumes:
+      - shared-uploads:/app/uploads
+
+  validation-service:
+    build:
+      context: ./Backend/validation-service
+    container_name: myaccess-validation
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    env_file:
+      - .env
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    networks:
+      - myaccess-net
+    volumes:
+      - shared-uploads:/app/uploads
 
 networks:
   myaccess-net:
     driver: bridge
+
+volumes:
+  shared-uploads:
+
