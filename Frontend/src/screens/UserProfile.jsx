@@ -40,7 +40,9 @@ export default function UserProfile({ navigation }) {
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
     // { label: 'Role',              value: profile?.nameRole,        key: 'nameRole' },
     { label: 'email',            value: profile?.email,           key: 'email' },
+    { label: 'Verificado Sofia Plus', value: profile?.sofiaVerified ? 'Verificado ✓' : 'Pendiente ✗', key: 'sofiaVerified' },
   ];
+
 
   const openEdit = () => {
     setForm(Object.fromEntries(fields.map((f) => [f.key, profile?.[f.key] || ''])));

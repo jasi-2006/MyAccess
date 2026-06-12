@@ -109,6 +109,7 @@ public class UserRegisterProfileService {
         if (dto.getFicha() != null)           user.setFicha(dto.getFicha());
         if (dto.getEmail() != null)           user.setEmail(dto.getEmail());
         if (dto.getPhotoUrl() != null)        user.setPhotoUrl(dto.getPhotoUrl());
+        if (dto.getSofiaVerified() != null)   user.setSofiaVerified(dto.getSofiaVerified());
     }
 
     public Optional<UserRegisterProfileResponseDTO> uploadPhoto(String document, MultipartFile photo) throws IOException {
@@ -223,6 +224,7 @@ public class UserRegisterProfileService {
         r.setFicha(user.getFicha());
         r.setEmail(user.getEmail());
         r.setPhotoUrl(user.getPhotoUrl());
+        r.setSofiaVerified(user.getSofiaVerified());
         return r;
     }
 }
