@@ -171,7 +171,7 @@ services:
             config: *jwt_config
 
   - name: notifications-service
-    url: http://notifications-service.myaccess.local:9094/notificationsService
+    url: http://notification-service.myaccess.local:9094/notificationsService
     connect_timeout: 5000
     read_timeout: 30000
     write_timeout: 30000
