@@ -1,0 +1,69 @@
+{
+  "family": "myaccess-card-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::048124478038:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::048124478038:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "card-service",
+      "image": "048124478038.dkr.ecr.us-east-2.amazonaws.com/myaccess-card-service:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 9092,
+          "hostPort": 9092,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SERVER_PORT",
+          "value": "9092"
+        },
+        {
+          "name": "PORT",
+          "value": "9092"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "gateway01.us-east-1.prod.aws.tidbcloud.com"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "4000"
+        },
+        {
+          "name": "CARD_DB_URL",
+          "value": "jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/card_service?sslMode=REQUIRED"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:DB_USERNAME::"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:DB_PASSWORD::"
+        },
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:JWT_SECRET::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/myaccess-card-service",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
