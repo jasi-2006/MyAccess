@@ -19,8 +19,8 @@ function resolveGatewayUrl() {
     return DEFAULT_GATEWAY_URL;
   }
 
-  // Ignore the deprecated Render gateway if it is still configured in Vercel.
-  if (normalizedEnvUrl.includes('myaccess-8dfq.onrender.com')) {
+  // Ignore any deprecated Render gateway
+  if (normalizedEnvUrl.toLowerCase().includes('.onrender.com')) {
     return DEFAULT_GATEWAY_URL;
   }
 
@@ -43,7 +43,7 @@ function isFrontendHost(url) {
 
 function resolveUserServiceUrl() {
   const normalizedEnvUrl = String(ENV_USER_SERVICE_URL || '').trim();
-  if (!normalizedEnvUrl || isFrontendHost(normalizedEnvUrl)) {
+  if (!normalizedEnvUrl || isFrontendHost(normalizedEnvUrl) || normalizedEnvUrl.toLowerCase().includes('.onrender.com')) {
     return DEFAULT_USER_SERVICE_URL;
   }
   return normalizedEnvUrl;
@@ -52,15 +52,7 @@ function resolveUserServiceUrl() {
 function resolveNotificationsServiceUrl() {
   const normalizedEnvUrl = String(ENV_NOTIFICATIONS_SERVICE_URL || '').trim();
 
-  if (!normalizedEnvUrl) {
-    return DEFAULT_NOTIFICATIONS_SERVICE_URL;
-  }
-
-  // Ignore deprecated Render hostnames still configured in Vercel.
-  if (
-    normalizedEnvUrl.includes('myaccess-notification-1cxp.onrender.com') ||
-    normalizedEnvUrl.includes('myaccess-notification.onrender.com')
-  ) {
+  if (!normalizedEnvUrl || normalizedEnvUrl.toLowerCase().includes('.onrender.com')) {
     return DEFAULT_NOTIFICATIONS_SERVICE_URL;
   }
 
@@ -69,11 +61,7 @@ function resolveNotificationsServiceUrl() {
 
 function resolveCardServiceUrl() {
   const normalizedEnvUrl = String(ENV_CARD_SERVICE_URL || '').trim();
-  if (!normalizedEnvUrl) return DEFAULT_CARD_SERVICE_URL;
-  if (
-    normalizedEnvUrl.includes('myaccess-card-4tuh.onrender.com') ||
-    normalizedEnvUrl.includes('myaccess-card.onrender.com')
-  ) {
+  if (!normalizedEnvUrl || normalizedEnvUrl.toLowerCase().includes('.onrender.com')) {
     return DEFAULT_CARD_SERVICE_URL;
   }
   return normalizedEnvUrl;
@@ -81,11 +69,7 @@ function resolveCardServiceUrl() {
 
 function resolveNewsServiceUrl() {
   const normalizedEnvUrl = String(ENV_NEWS_SERVICE_URL || '').trim();
-  if (!normalizedEnvUrl) return DEFAULT_NEWS_SERVICE_URL;
-  if (
-    normalizedEnvUrl.includes('myaccess-news-ft80.onrender.com') ||
-    normalizedEnvUrl.includes('myaccess-news.onrender.com')
-  ) {
+  if (!normalizedEnvUrl || normalizedEnvUrl.toLowerCase().includes('.onrender.com')) {
     return DEFAULT_NEWS_SERVICE_URL;
   }
   return normalizedEnvUrl;
