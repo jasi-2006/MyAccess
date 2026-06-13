@@ -7,7 +7,7 @@ def scrape_sofia_plus(doc_type: str, doc_num: str, password: str, use_mock: bool
     """
     Retorna datos mock para validación.
     Si use_mock es True o el documento empieza con '123', retorna datos mock.
-    \"\"\"
+    """
     # ── MOCK SYSTEM FOR VALIDATION ───────────────────────────────────────────
     if use_mock or str(doc_num).startswith("123"):
         logger.info(f"Using Mock Mode for document: {doc_num}")

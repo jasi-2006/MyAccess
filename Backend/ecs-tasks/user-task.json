@@ -51,7 +51,7 @@
         },
         {
           "name": "EMAIL_FROM",
-          "value": "MyAccess <onboarding@resend.dev>"
+          "value": "myaccesssena@gmail.com"
         },
         {
           "name": "APP_VALIDATION_SERVICE_URL",
@@ -70,6 +70,10 @@
         {
           "name": "JWT_SECRET",
           "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:JWT_SECRET::"
+        },
+        {
+          "name": "BREVO_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:BREVO_API_KEY::"
         }
       ],
       "logConfiguration": {
