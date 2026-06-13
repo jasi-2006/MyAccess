@@ -1,19 +1,53 @@
 import os
 import logging
 import unicodedata
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+import pymysql
+import pymysql.cursors
 
 from scraper import scrape_sofia_plus
-from card_generator import generate_feedback_card
 
 # Cargar variables de entorno
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def get_profile_from_db(document_number: str) -> dict:
+    """
+    Obtiene los datos del perfil del aprendiz directamente de la base de datos user_service.
+    """
+    host = os.getenv("DB_HOST", "localhost")
+    port = int(os.getenv("DB_PORT", "3306"))
+    user = os.getenv("DB_USERNAME")
+    password = os.getenv("DB_PASSWORD")
+    database = "user_service"
+
+    # Habilitar SSL para conexiones seguras en TiDB Cloud
+    ssl_config = {}
+    if host and "tidbcloud.com" in host.lower():
+        ssl_config = {"ssl": {}}
+
+    connection = pymysql.connect(
+        host=host,
+        port=port,
+        user=user,
+        password=password,
+        database=database,
+        ssl=ssl_config if ssl_config else None,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT full_name, ficha, trainingProgram, type_document, regional, trainingCenter FROM user_profile WHERE document = %s"
+            cursor.execute(sql, (document_number,))
+            return cursor.fetchone()
+    finally:
+        connection.close()
 
 app = FastAPI(
     title="MyAccess Sofia Plus Validation Service",
@@ -39,7 +73,7 @@ class ValidationRequest(BaseModel):
     documentNumber: str
     password: str
     useMock: bool = False
-    localProfile: LocalProfileModel
+    localProfile: Optional[LocalProfileModel] = None
 
 def normalize_text(text: str) -> str:
     """
@@ -102,9 +136,41 @@ def explain_with_ai(field: str, local_val: str, sofia_val: str) -> str:
 @app.post("/validate-sofia")
 def validate_sofia(req: ValidationRequest):
     try:
+        # Intentar obtener el perfil local de la base de datos
+        db_profile = None
+        db_error = None
+        try:
+            db_profile = get_profile_from_db(req.documentNumber)
+        except Exception as dbe:
+            logger.error(f"Error al conectar u obtener perfil de la base de datos: {str(dbe)}")
+            db_error = str(dbe)
+
+        # Si no se encuentra en base de datos y no fue enviado en el request, arrojar error
+        if not db_profile and not req.localProfile:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Perfil no encontrado en la base de datos para el documento '{req.documentNumber}' y no se proporcionó perfil local alternativo. Error DB: {db_error}"
+            )
+
+        # Mapear datos según el origen
+        if db_profile:
+            local_name = db_profile.get("full_name") or ""
+            local_ficha = db_profile.get("ficha") or ""
+            local_program = db_profile.get("trainingProgram") or ""
+            local_type_doc = db_profile.get("type_document") or req.documentType
+            local_regional = db_profile.get("regional") or "Regional Quindio"
+            local_center = db_profile.get("trainingCenter") or "Centro de Comercio y Turismo"
+        else:
+            local_name = req.localProfile.fullName
+            local_ficha = req.localProfile.ficha
+            local_program = req.localProfile.trainingProgram
+            local_type_doc = req.documentType
+            local_regional = "Regional Quindio"
+            local_center = "Centro de Comercio y Turismo"
+
         # 1. Ejecutar el Scraper para obtener datos oficiales
         scraped_data = scrape_sofia_plus(
-            doc_type=req.documentType,
+            doc_type=local_type_doc,
             doc_num=req.documentNumber,
             password=req.password,
             use_mock=req.useMock
@@ -114,7 +180,6 @@ def validate_sofia(req: ValidationRequest):
         mismatches = []
         
         # Comparación de Nombre
-        local_name = req.localProfile.fullName
         sofia_name = scraped_data.get("fullName", "")
         if normalize_text(local_name) != normalize_text(sofia_name):
             explanation = explain_with_ai("fullName", local_name, sofia_name)
@@ -126,7 +191,6 @@ def validate_sofia(req: ValidationRequest):
             })
             
         # Comparación de Ficha
-        local_ficha = req.localProfile.ficha
         sofia_ficha = scraped_data.get("ficha", "")
         if normalize_text(local_ficha) != normalize_text(sofia_ficha):
             explanation = explain_with_ai("ficha", local_ficha, sofia_ficha)
@@ -138,7 +202,6 @@ def validate_sofia(req: ValidationRequest):
             })
             
         # Comparación de Programa de Formación (Solo si no coinciden)
-        local_program = req.localProfile.trainingProgram
         sofia_program = scraped_data.get("trainingProgram", "")
         if normalize_text(local_program) not in normalize_text(sofia_program) and normalize_text(sofia_program) not in normalize_text(local_program):
             explanation = explain_with_ai("trainingProgram", local_program, sofia_program)
@@ -162,31 +225,22 @@ def validate_sofia(req: ValidationRequest):
 
         # 3. Determinar resultado final
         success = len(mismatches) == 0
-        feedback_image_url = None
         
+        # SOLO validar y retornar errores - NO generar carnet
         if not success:
-            # Generar la imagen con las zonas erróneas marcadas en rojo
-            mismatched_fields = [m["field"] for m in mismatches]
-            
-            # Pasar campos de perfil a dict para el Pillow
-            profile_dict = {
-                "fullName": local_name,
-                "typeDocument": req.documentType,
-                "document": req.documentNumber,
-                "ficha": local_ficha,
-                "trainingProgram": local_program,
-                "regional": scraped_data.get("regional", "Regional Quindio"),
-                "trainingCenter": scraped_data.get("trainingCenter", "Centro de Comercio y Turismo")
+            # Retornar solo los errores detectados, sin generar imagen
+            return {
+                "success": False,
+                "mismatches": mismatches,
+                "scrapedData": scraped_data,
+                "message": "La validación detectó discrepancias en los datos. Revisa los campos marcados."  
             }
-            
-            filename = generate_feedback_card(profile_dict, mismatched_fields)
-            feedback_image_url = f"/uploads/{filename}"
 
+        # Si todo coincide correctamente
         return {
-            "success": success,
-            "mismatches": mismatches,
-            "scrapedData": scraped_data,
-            "feedbackImageUrl": feedback_image_url
+            "success": True,
+            "message": "¡Validación exitosa! Todos los datos coinciden con Sofia Plus.",
+            "scrapedData": scraped_data
         }
 
     except Exception as e:

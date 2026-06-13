@@ -15,6 +15,7 @@ $SERVICES = @{
     "myaccess-notifications-service" = "notifications-service"
     "myaccess-user-service"          = "user-service"
     "myaccess-kong-gateway"          = "kong-gateway"
+    "myaccess-validation-service"    = "validation-service"
 }
 
 Write-Host "=========================================================" -ForegroundColor Cyan

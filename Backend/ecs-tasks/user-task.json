@@ -52,6 +52,10 @@
         {
           "name": "EMAIL_FROM",
           "value": "MyAccess <onboarding@resend.dev>"
+        },
+        {
+          "name": "APP_VALIDATION_SERVICE_URL",
+          "value": "http://validation-service.myaccess.local:5005"
         }
       ],
       "secrets": [
