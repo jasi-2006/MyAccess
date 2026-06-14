@@ -38,8 +38,8 @@ export default function RequestCardButton({ profile }) {
     console.log('Photo URL:', rawPhotoUrl, '->', photoUrl);
     if (!photoUrl) {
       Alert.alert(
-        'Foto requerida',
-        'Debes cargar tu foto de perfil antes de solicitar la impresion del carnet.',
+        '⚠️ Foto requerida',
+        'Para solicitar la impresión del carnet, primero debes cargar una foto de perfil válida.\n\nVe a "Mi Información" > "Editar" y selecciona una foto que cumpla con los requisitos (fondo blanco, rostro visible).',
       );
       return;
     }
