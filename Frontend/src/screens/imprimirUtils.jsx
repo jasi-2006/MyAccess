@@ -172,7 +172,7 @@ export function buildCarnetPairHtml(learner, card) {
         <div style="width:88px;display:flex;align-items:center;">
           ${logoHtml}
         </div>
-        <div style="width:202px;height:202px;overflow:hidden;background:#E9E9E9;">
+        <div style="width:190px;height:190px;overflow:hidden;background:#E9E9E9;">
           ${photoHtml}
         </div>
       </div>
