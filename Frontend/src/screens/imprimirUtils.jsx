@@ -138,14 +138,44 @@ function buildQrHtml() {
   return `<div style="padding:5px;background:#FFFFFF;display:inline-block;"><div style="border:1px solid #111111;">${rows}</div></div>`;
 }
 
+function formatCarnetNameHtml(fullName) {
+  const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) return parts[0] || 'Sin nombre';
+  return `${parts[0]}<br/>${parts.slice(1).join(' ')}`;
+}
+
+function formatDocTypeForCarnet(type) {
+  return String(type || 'C.C').replace(/\./g, ',');
+}
+
+function formatDocNumberForCarnet(document) {
+  const raw = String(document || '').trim();
+  if (!raw) return '0.000.000.000';
+  if (raw.includes('.')) return raw;
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length <= 3) return digits;
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function formatBloodForCarnet(bloodType) {
+  const blood = String(bloodType || 'O+').trim();
+  return /^rh\b/i.test(blood) ? blood : `RH ${blood}`;
+}
+
+function formatRegionalForCarnet(regional) {
+  const value = String(regional || 'Quindio').trim();
+  return /^regional\b/i.test(value) ? value : `Regional ${value}`;
+}
+
 export function buildCarnetPairHtml(learner, card) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const fullName = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
+  const nameHtml = formatCarnetNameHtml(fullName);
   const roleDisplay = getRoleDisplayName(learner?.nameRole || learner?.name_role);
-  const docType = learner?.typeDocument || 'C.C';
-  const docNum = learner?.document || '0.000.000.000';
-  const blood = learner?.bloodType || 'RH O+';
-  const regional = (learner?.regional || 'Regional Quindio').trim();
+  const docType = formatDocTypeForCarnet(learner?.typeDocument);
+  const docNum = formatDocNumberForCarnet(learner?.document);
+  const blood = formatBloodForCarnet(learner?.bloodType);
+  const regional = formatRegionalForCarnet(learner?.regional);
   const center = (learner?.trainingCenter || 'Centro de Comercio y Turismo').trim();
   const program = learner?.trainingProgram || 'ADSO';
   const ficha = learner?.ficha || learner?.files || '0000000';
@@ -159,42 +189,44 @@ export function buildCarnetPairHtml(learner, card) {
     : `<img src="${siluetaSrc || ''}" style="width:100%;height:100%;object-fit:cover;" />`;
 
   const bars = [2, 1, 3, 1, 1, 2, 4, 1, 2, 1, 3, 2, 1, 1, 4, 2, 1, 3, 1, 2, 2, 1, 3, 1];
-  const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:28px;width:100%;">${
-    bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
+  const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:28px;">${
+    bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
   }</div>`;
 
- 
-  const logoHtml = `<img src="${logoSrc}" style="width:80px;height:80px;object-fit:contain;" />`;
+  const logoHtml = `<img src="${logoSrc}" style="width:68px;height:68px;object-fit:contain;display:block;" />`;
 
   const front = `
-    <div style="width:265px;height:420px;border-radius:18px;border:1px solid #D7D7D7;background:#FDFDFD;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div style="width:88px;display:flex;align-items:center;">
-          ${logoHtml}
+    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="display:flex;justify-content:space-between;align-items:stretch;min-height:132px;padding-top:4px;padding-bottom:4px;">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding-right:8px;">
+          <div style="width:72px;">${logoHtml}</div>
+          <div style="font-size:12px;color:#374151;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;line-height:14px;">
+            ${roleDisplay}
+          </div>
         </div>
-        <div style="width:152px;height:172px;overflow:hidden;background:#E9E9E9;">
+        <div style="width:108px;height:122px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
           ${photoHtml}
         </div>
       </div>
 
-      <div style="margin-top:10px;">
-        <div style="font-size:14px;color:#2F2F2F;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
-          ${roleDisplay}
+      <div style="height:5px;background:#00A74F;margin-bottom:10px;"></div>
+
+      <div style="flex:1;display:flex;flex-direction:column;">
+        <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:21px;margin-bottom:4px;">
+          ${nameHtml}
         </div>
-        <div style="height:4px;background:#0A8A4A;border-radius:2px;margin-bottom:8px;"></div>
-        <div style="font-size:17px;font-weight:900;color:#118449;line-height:21px;margin-bottom:6px;">
-          ${fullName}
+        <div style="font-size:11.5px;color:#374151;font-weight:600;margin-bottom:10px;">
+          ${docType} ${docNum} ${blood}
         </div>
-        <div style="font-size:10px;color:#3A3A3A;margin-bottom:10px;">
-          ${docType} ${docNum} RH ${blood}
-        </div>
-        <div style="margin-bottom:12px;">
+        <div style="display:flex;justify-content:center;margin-top:10px;margin-bottom:6px;">
           ${barcodeHtml}
         </div>
-        <div style="font-size:13px;color:#4A4A4A;font-weight:700;">Regional ${regional}</div>
-        <div style="font-size:11px;color:#5D9C7A;font-weight:700;">${center}</div>
-        <div style="font-size:10px;color:#4A4A4A;">${program}</div>
-        <div style="font-size:10px;color:#4A4A4A;">Grupo No ${ficha}</div>
+        <div style="margin-top:auto;padding-bottom:2px;">
+          <div style="font-size:11px;color:#374151;font-weight:700;line-height:14px;">${regional}</div>
+          <div style="font-size:11px;color:#0B7F35;font-weight:700;line-height:14px;margin-top:2px;">${center}</div>
+          <div style="font-size:11px;color:#374151;font-weight:700;line-height:14px;margin-top:2px;">${program}</div>
+          <div style="font-size:11px;color:#374151;font-weight:700;line-height:14px;margin-top:2px;">Grupo No ${ficha}</div>
+        </div>
       </div>
     </div>`;
 
