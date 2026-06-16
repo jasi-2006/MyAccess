@@ -3,6 +3,11 @@ import { View, Text, TouchableOpacity, Animated, Image } from 'react-native';
 import { styles } from '../screens/Imprimir.styles.jsx';
 import { resolveImageUrl } from '../services/api.js';
 import { getRoleDisplayName } from '../utils/accessControl';
+import {
+  formatCarnetIdentityLine,
+  formatCarnetNameLines,
+  formatRegionalForCarnet,
+} from '../utils/carnetFormat';
 
 const QR_PATTERN = [
   '11111110001001111111',
@@ -151,14 +156,13 @@ export function CarnetPreview({ learner, card, name, onPress }) {
 export function IndividualCarnet({ learner, card }) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const roleLabel = getRoleDisplayName(learner?.nameRole || learner?.name_role);
-  const documentType = learner?.typeDocument || 'C.C';
-  const documentNumber = learner?.document || 'NA';
-  const bloodType = learner?.bloodType || '';
-  const regional = learner?.regional || 'Regional Quindio';
+  const regional = formatRegionalForCarnet(learner?.regional);
   const trainingCenter = learner?.trainingCenter || 'Centro de Comercio y Turismo';
-  const trainingProgram = learner?.trainingProgram || 'NA';
-  const ficha = learner?.ficha || learner?.files || 'NA';
+  const trainingProgram = learner?.trainingProgram || 'ADSO';
+  const ficha = learner?.ficha || learner?.files || '0000000';
   const fullName = learner?.fullName || learner?.full_name || 'Sin nombre';
+  const { firstLine, secondLine } = formatCarnetNameLines(fullName);
+  const identityLine = formatCarnetIdentityLine(learner);
 
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
@@ -205,15 +209,16 @@ export function IndividualCarnet({ learner, card }) {
             <View style={styles.verticalBody}>
               <Text style={styles.verticalRole}>{roleLabel}</Text>
               <View style={styles.verticalGreenRule} />
-              <Text style={styles.verticalBrand}>{fullName}</Text>
-              <Text style={styles.verticalIdentity}>
-                {`${documentType} ${documentNumber} RH ${bloodType}`}
+              <Text style={styles.verticalBrand}>
+                {firstLine}
+                {secondLine ? `\n${secondLine}` : ''}
               </Text>
+              <Text style={styles.verticalIdentity}>{identityLine}</Text>
               <BarcodeBlock />
               <Text style={styles.verticalRegional}>{regional}</Text>
               <Text style={styles.verticalCenter}>{trainingCenter}</Text>
               <Text style={styles.verticalMuted}>{trainingProgram}</Text>
-              <Text style={styles.verticalMuted}>{`Grupo No ${ficha}`}</Text>
+              <Text style={styles.verticalMutedLast}>{`Grupo No ${ficha}`}</Text>
             </View>
           </Animated.View>
 

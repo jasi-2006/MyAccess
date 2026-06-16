@@ -1,6 +1,13 @@
 import { Image, Platform } from 'react-native';
 import { resolveImageUrl } from '../services/api.js';
 import { getRoleDisplayName } from '../utils/accessControl.js';
+import {
+  formatBloodForCarnet,
+  formatCarnetNameHtml,
+  formatDocNumberForCarnet,
+  formatDocTypeForCarnet,
+  formatRegionalForCarnet,
+} from '../utils/carnetFormat.js';
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
@@ -138,35 +145,6 @@ function buildQrHtml() {
   return `<div style="padding:5px;background:#FFFFFF;display:inline-block;"><div style="border:1px solid #111111;">${rows}</div></div>`;
 }
 
-function formatCarnetNameHtml(fullName) {
-  const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
-  if (parts.length <= 1) return parts[0] || 'Sin nombre';
-  return `${parts[0]}<br/>${parts.slice(1).join(' ')}`;
-}
-
-function formatDocTypeForCarnet(type) {
-  return String(type || 'C.C').replace(/\./g, ',');
-}
-
-function formatDocNumberForCarnet(document) {
-  const raw = String(document || '').trim();
-  if (!raw) return '0.000.000.000';
-  if (raw.includes('.')) return raw;
-  const digits = raw.replace(/\D/g, '');
-  if (digits.length <= 3) return digits;
-  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-
-function formatBloodForCarnet(bloodType) {
-  const blood = String(bloodType || 'O+').trim();
-  return /^rh\b/i.test(blood) ? blood : `RH ${blood}`;
-}
-
-function formatRegionalForCarnet(regional) {
-  const value = String(regional || 'Quindio').trim();
-  return /^regional\b/i.test(value) ? value : `Regional ${value}`;
-}
-
 export function buildCarnetPairHtml(learner, card) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const fullName = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
@@ -193,41 +171,35 @@ export function buildCarnetPairHtml(learner, card) {
     bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
   }</div>`;
 
-  const logoHtml = `<img src="${logoSrc}" style="width:68px;height:68px;object-fit:contain;display:block;" />`;
+  const logoHtml = `<img src="${logoSrc}" style="width:70px;height:70px;object-fit:contain;display:block;" />`;
 
   const front = `
-    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="display:flex;justify-content:space-between;align-items:stretch;min-height:132px;padding-top:4px;padding-bottom:4px;">
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding-right:8px;">
-          <div style="width:72px;">${logoHtml}</div>
-          <div style="font-size:12px;color:#374151;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;line-height:14px;">
-            ${roleDisplay}
-          </div>
-        </div>
-        <div style="width:108px;height:122px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
+    <div style="width:265px;height:420px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;height:150px;">
+        <div style="width:72px;padding-top:2px;">${logoHtml}</div>
+        <div style="width:118px;height:148px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
           ${photoHtml}
         </div>
       </div>
 
-      <div style="height:5px;background:#00A74F;margin-bottom:10px;"></div>
-
-      <div style="flex:1;display:flex;flex-direction:column;">
-        <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:21px;margin-bottom:4px;">
-          ${nameHtml}
-        </div>
-        <div style="font-size:11.5px;color:#374151;font-weight:600;margin-bottom:10px;">
-          ${docType} ${docNum} ${blood}
-        </div>
-        <div style="display:flex;justify-content:center;margin-top:10px;margin-bottom:6px;">
-          ${barcodeHtml}
-        </div>
-        <div style="margin-top:auto;padding-bottom:2px;">
-          <div style="font-size:11px;color:#374151;font-weight:700;line-height:14px;">${regional}</div>
-          <div style="font-size:11px;color:#0B7F35;font-weight:700;line-height:14px;margin-top:2px;">${center}</div>
-          <div style="font-size:11px;color:#374151;font-weight:700;line-height:14px;margin-top:2px;">${program}</div>
-          <div style="font-size:11px;color:#374151;font-weight:700;line-height:14px;margin-top:2px;">Grupo No ${ficha}</div>
-        </div>
+      <div style="font-size:12px;color:#000000;text-transform:uppercase;letter-spacing:0.4px;font-weight:400;line-height:14px;margin-bottom:3px;">
+        ${roleDisplay}
       </div>
+      <div style="height:3px;background:#008542;margin-bottom:10px;"></div>
+
+      <div style="font-size:19px;font-weight:700;color:#008542;line-height:22px;margin-bottom:5px;">
+        ${nameHtml}
+      </div>
+      <div style="font-size:11px;color:#000000;font-weight:400;margin-bottom:8px;">
+        ${docType} ${docNum} ${blood}
+      </div>
+      <div style="margin-bottom:10px;">
+        ${barcodeHtml}
+      </div>
+      <div style="font-size:12px;color:#000000;font-weight:700;line-height:15px;">${regional}</div>
+      <div style="font-size:11px;color:#008542;font-weight:600;line-height:14px;margin-top:3px;">${center}</div>
+      <div style="font-size:10px;color:#000000;font-weight:400;line-height:13px;margin-top:3px;">${program}</div>
+      <div style="font-size:10px;color:#000000;font-weight:400;line-height:13px;margin-top:2px;">Grupo No ${ficha}</div>
     </div>`;
 
   const back = `
