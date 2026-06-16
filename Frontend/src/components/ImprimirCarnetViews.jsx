@@ -232,14 +232,14 @@ export function IndividualCarnet({ learner, card }) {
             <Text style={styles.verticalBackText}>
               Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
               {'\n'}
-              Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
+              Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno.
             </Text>
             <View style={{ alignItems: 'center', marginVertical: 8 }}>
               <QrBlock />
             </View>
             <View style={{ alignItems: 'center', marginBottom: 10 }}>
               <Image source={require('../assets/firma.png')} style={styles.verticalSignatureImage} />
-              <Text style={styles.verticalSignatureLabel}>Firma de autoria</Text>
+              <Text style={styles.verticalSignatureLabel}>FIRMA AUTORIZADA</Text>
             </View>
             <Text style={styles.verticalBackText}>
               Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15

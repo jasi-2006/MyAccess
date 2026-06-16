@@ -130,12 +130,12 @@ function buildQrHtml() {
   const rows = QR_PATTERN.map((row) => {
     const cells = row.split('').map((cell, index) => {
       const color = cell === '1' ? '#111111' : '#FFFFFF';
-      return `<div style="width:4px;height:4px;background:${color};${index < row.length - 1 ? '' : ''}"></div>`;
+      return `<div style="width:3px;height:3px;background:${color};"></div>`;
     }).join('');
     return `<div style="display:flex;">${cells}</div>`;
   }).join('');
 
-  return `<div style="padding:6px;background:#FFFFFF;"><div style="border:1px solid #111111;">${rows}</div></div>`;
+  return `<div style="padding:5px;background:#FFFFFF;display:inline-block;"><div style="border:1px solid #111111;">${rows}</div></div>`;
 }
 
 export function buildCarnetPairHtml(learner, card) {
@@ -200,8 +200,10 @@ export function buildCarnetPairHtml(learner, card) {
 
   const back = `
     <div style="width:265px;height:420px;border-radius:18px;border:1px solid #D7D7D7;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="font-size:10px;color:#2E2E2E;line-height:13px;">
-        Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
+      <div style="font-size:10px;color:#2E2E2E;line-height:13px;text-align:left;">
+        Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
+        <br/>
+        Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno.
       </div>
 
       <div style="display:flex;justify-content:center;margin:8px 0;">
@@ -214,7 +216,7 @@ export function buildCarnetPairHtml(learner, card) {
           alt="Firma de autoria"
           style="width:200px;max-width:100%;height:70px;object-fit:contain;display:block;margin:0 auto 3px;"
         />
-        <div style="font-size:11px;color:#333333;">Firma de autoria</div>
+        <div style="font-size:11px;color:#333333;font-weight:700;letter-spacing:0.4px;">FIRMA AUTORIZADA</div>
       </div>
 
       <div style="font-size:10px;color:#2E2E2E;line-height:13px;">
@@ -243,6 +245,7 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
         }
+        @page { margin: 0; }
         body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; padding: 24px; }
         ${singleCarnet ? 'body { padding: 18px; background: #ffffff; }' : ''}
         h1 { font-size: 22px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
