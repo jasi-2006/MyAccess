@@ -168,35 +168,58 @@ export function buildCarnetPairHtml(learner, card) {
 
   const front = `
     <div style="width:265px;height:420px;border-radius:18px;border:1px solid #D7D7D7;background:#FDFDFD;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div style="width:88px;display:flex;align-items:center;">
-          ${logoHtml}
-        </div>
-        <div style="width:190px;height:190px;overflow:hidden;background:#E9E9E9;">
-          ${photoHtml}
-        </div>
-      </div>
+  
+  <!-- Logo SENA arriba a la izquierda -->
+  <div style="display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:8px;">
+    <div style="width:88px;display:flex;align-items:center;">
+      ${logoHtml}
+    </div>
+  </div>
 
-      <div style="margin-top:10px;">
-        <div style="font-size:14px;color:#2F2F2F;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
-          ${roleDisplay}
-        </div>
-        <div style="height:4px;background:#0A8A4A;border-radius:2px;margin-bottom:8px;"></div>
-        <div style="font-size:17px;font-weight:900;color:#118449;line-height:21px;margin-bottom:6px;">
-          ${fullName}
-        </div>
-        <div style="font-size:10px;color:#3A3A3A;margin-bottom:10px;">
-          ${docType} ${docNum} RH ${blood}
-        </div>
-        <div style="margin-bottom:12px;">
-          ${barcodeHtml}
-        </div>
-        <div style="font-size:13px;color:#4A4A4A;font-weight:700;">Regional ${regional}</div>
-        <div style="font-size:11px;color:#5D9C7A;font-weight:700;">${center}</div>
-        <div style="font-size:10px;color:#4A4A4A;">${program}</div>
-        <div style="font-size:10px;color:#4A4A4A;">Grupo No ${ficha}</div>
-      </div>
-    </div>`;
+  <!-- Foto centrada debajo del logo -->
+  <div style="display:flex;justify-content:center;margin-bottom:12px;">
+    <div style="width:190px;height:190px;overflow:hidden;background:#E9E9E9;">
+      ${photoHtml}
+    </div>
+  </div>
+
+  <!-- Rol (APRENDIZ) -->
+  <div style="margin-top:2px;">
+    <div style="font-size:14px;color:#2F2F2F;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+      ${roleDisplay}
+    </div>
+    
+    <!-- Línea verde -->
+    <div style="height:4px;background:#0A8A4A;border-radius:2px;margin-bottom:8px;"></div>
+    
+    <!-- Nombre completo -->
+    <div style="font-size:17px;font-weight:900;color:#118449;line-height:21px;margin-bottom:6px;">
+      ${fullName}
+    </div>
+    
+    <!-- Documento y RH -->
+    <div style="font-size:10px;color:#3A3A3A;margin-bottom:10px;">
+      ${docType} ${docNum} RH ${blood}
+    </div>
+    
+    <!-- Código de barras -->
+    <div style="margin-bottom:12px;">
+      ${barcodeHtml}
+    </div>
+    
+    <!-- Regional -->
+    <div style="font-size:13px;color:#4A4A4A;font-weight:700;">Regional ${regional}</div>
+    
+    <!-- Centro -->
+    <div style="font-size:11px;color:#5D9C7A;font-weight:700;">${center}</div>
+    
+    <!-- Programa -->
+    <div style="font-size:10px;color:#4A4A4A;">${program}</div>
+    
+    <!-- Grupo -->
+    <div style="font-size:10px;color:#4A4A4A;">Grupo No ${ficha}</div>
+  </div>
+</div>`;
 
   const back = `
     <div style="width:265px;height:420px;border-radius:18px;border:1px solid #D7D7D7;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
