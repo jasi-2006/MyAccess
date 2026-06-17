@@ -181,7 +181,7 @@ export function IndividualCarnet({ learner, card }) {
   return (
     <View style={{ alignItems: 'center', gap: 10 }}>
       <TouchableOpacity onPress={flipCard} activeOpacity={1}>
-        <View style={{ width: 265, height: 420 }}>
+        <View style={{ width: 265, height: 390 }}>
           <Animated.View
             style={[
               styles.verticalCarnet,
