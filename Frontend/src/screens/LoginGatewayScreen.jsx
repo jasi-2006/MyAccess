@@ -57,8 +57,7 @@ export default function LoginGatewayScreen({ navigation }) {
   return (
     <AuthSplitLayout
       panelTitle="Excelencia en la Gestión Académica"
-      panelSubtitle="Accede a tu portal unificado para el seguimiento de fichas, gestión de aprendices y reportes estadísticos en tiempo real."
-    >
+      panelSubtitle="Accede a tu información académica de manera rápida y segura.">
       <Text style={styles.title}>Bienvenido!</Text>
       <Text style={styles.subtitle}>Gestión Institucional Centralizada</Text>
 
@@ -120,10 +119,10 @@ export default function LoginGatewayScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   title:     { 
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: '800',
     color: '#1F2937',
-    marginBottom: 4 },
+    marginBottom:10 },
 
   subtitle:  { 
     fontSize: 13, 
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
      { 
       alignSelf: 'flex-end', 
       marginBottom: 14, 
-      marginTop: -4 
+      marginTop: -4
     
   },
 
