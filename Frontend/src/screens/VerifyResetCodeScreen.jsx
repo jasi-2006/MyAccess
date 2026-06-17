@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   verifyButtonDisabled: {
-    backgroundColor: '#A7F3D0',
+    backgroundColor: '#0F9F76',
   },
   verifyButtonText: {
     fontWeight: '600',
