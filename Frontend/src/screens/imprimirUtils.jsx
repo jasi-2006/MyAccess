@@ -12,7 +12,7 @@ import {
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
 export const CARNET_WIDTH_PX = 265;
-export const CARNET_HEIGHT_PX = 420;
+export const CARNET_HEIGHT_PX = 400;
 const CARNET_WIDTH_MM = 70;
 const CARNET_HEIGHT_MM = 111;
 const senaLogoAsset = require('../assets/logoSena.png');
@@ -89,6 +89,7 @@ export function installPrintStyles() {
         gap: 12px !important;
         padding: 12px !important;
         background: #ffffff !important;
+        border-radius:15px
       }
       #print-area > div {
         break-inside: avoid;
