@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     maxWidth: 700, // Cambia esto si necesitas un tamaño específico
     height: 490, // Aumentado el alto de la imagen
     position:'relative',
-    top: 66,// Agregar margen para dar espacio superior
+    top: 55,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,
