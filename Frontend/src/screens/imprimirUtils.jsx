@@ -12,7 +12,7 @@ import {
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
 export const CARNET_WIDTH_PX = 265;
-export const CARNET_HEIGHT_PX = 420;
+export const CARNET_HEIGHT_PX = 400;
 const CARNET_WIDTH_MM = 70;
 const CARNET_HEIGHT_MM = 111;
 const senaLogoAsset = require('../assets/logoSena.png');
@@ -89,6 +89,7 @@ export function installPrintStyles() {
         gap: 12px !important;
         padding: 12px !important;
         background: #ffffff !important;
+        border-radius:15px
       }
       #print-area > div {
         break-inside: avoid;
@@ -194,16 +195,16 @@ export function buildCarnetPairHtml(learner, card) {
       <div style="font-size:19px;font-weight:700;color:#008542;line-height:22px;margin-bottom:5px;">
         ${nameHtml}
       </div>
-      <div style="font-size:11px;color:#000000;font-weight:400;margin-bottom:8px;">
+      <div style="font-size:14px;color:#000000;font-weight:400;margin-bottom:8px;">
         ${docType} ${docNum} ${blood}
       </div>
-      <div style="margin-bottom:10px;">
+      <div style="margin-bottom:12px;">
         ${barcodeHtml}
       </div>
-      <div style="font-size:12px;color:#000000;font-weight:700;line-height:15px;">${regional}</div>
-      <div style="font-size:11px;color:#008542;font-weight:600;line-height:14px;margin-top:3px;">${center}</div>
-      <div style="font-size:10px;color:#000000;font-weight:400;line-height:13px;margin-top:3px;">${program}</div>
-      <div style="font-size:10px;color:#000000;font-weight:400;line-height:13px;margin-top:2px;">Grupo No ${ficha}</div>
+      <div style="font-size:14px;color:#000000;font-weight:700;line-height:15px;">${regional}</div>
+      <div style="font-size:13px;color:#008542;font-weight:600;line-height:14px;margin-top:3px;">${center}</div>
+      <div style="font-size:13px;color:#000000;font-weight:400;line-height:13px;margin-top:3px;">${program}</div>
+      <div style="font-size:13px;color:#000000;font-weight:400;line-height:13px;margin-top:2px;">Grupo No ${ficha}</div>
     </div>`;
 
   const back = `
