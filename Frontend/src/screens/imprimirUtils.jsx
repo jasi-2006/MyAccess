@@ -12,7 +12,7 @@ import {
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
 export const CARNET_WIDTH_PX = 265;
-export const CARNET_HEIGHT_PX = 269;
+export const CARNET_HEIGHT_PX = 360;
 const CARNET_WIDTH_MM = 70;
 const CARNET_HEIGHT_MM = 95;
 const senaLogoAsset = require('../assets/logoSena.png');
