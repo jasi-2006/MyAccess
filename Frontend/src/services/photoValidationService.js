@@ -48,6 +48,8 @@ Si alguna de estas condiciones NO se cumple, marca la foto como inválida y desc
     throw new Error(`Gemini error ${response.status}: ${errBody?.error?.message || response.statusText}`);
   }
 
+  
+
   const data = await response.json();
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
