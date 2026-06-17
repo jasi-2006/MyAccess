@@ -68,6 +68,18 @@ export default function SolicitudesScreen({ navigation }) {
     }, [])
   );
 
+  // Periodically refresh the request list so new submissions appear without manual refresh
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getAllRequestCards()
+        .then((r) => {
+          if (Array.isArray(r)) setRequests(r);
+        })
+        .catch(() => {});
+    }, 30000); // 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   const count = (state) => requests.filter((r) => r.state?.toLowerCase() === state).length;
 
   const handleChangeState = async (request, newState) => {

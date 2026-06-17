@@ -26,7 +26,6 @@ Criterios que DEBEN cumplirse para que sea valida:
 4. Expresión neutral (sin sonreír)
 5. Iluminación adecuada (sin sombras fuertes)
 6. Imagen nítida y de buena calidad
-7. Foto reciente (menos de 6 meses)
 
 Si alguna de estas condiciones NO se cumple, marca la foto como inválida y describe el error en el array "errors".`;
 
@@ -48,6 +47,8 @@ Si alguna de estas condiciones NO se cumple, marca la foto como inválida y desc
     const errBody = await response.json().catch(() => ({}));
     throw new Error(`Gemini error ${response.status}: ${errBody?.error?.message || response.statusText}`);
   }
+
+  
 
   const data = await response.json();
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
