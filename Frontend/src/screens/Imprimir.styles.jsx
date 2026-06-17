@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   modalActions: { alignItems: 'flex-end' },
   verticalCarnet: {
     width: 265,
-    height: 420,
+    height: 390,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#D0D0D0',
