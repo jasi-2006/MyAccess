@@ -11,6 +11,10 @@ import {
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
+export const CARNET_WIDTH_PX = 265;
+export const CARNET_HEIGHT_PX = 420;
+const CARNET_WIDTH_MM = 70;
+const CARNET_HEIGHT_MM = 111;
 const senaLogoAsset = require('../assets/logoSena.png');
 const firmaAsset = require('../assets/firma.png');
 const senaLogoUri =
@@ -174,7 +178,7 @@ export function buildCarnetPairHtml(learner, card) {
   const logoHtml = `<img src="${logoSrc}" style="width:70px;height:70px;object-fit:contain;display:block;" />`;
 
   const front = `
-    <div style="width:265px;height:420px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;height:150px;">
         <div style="width:72px;padding-top:2px;">${logoHtml}</div>
         <div style="width:118px;height:148px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
@@ -203,7 +207,7 @@ export function buildCarnetPairHtml(learner, card) {
     </div>`;
 
   const back = `
-    <div style="width:265px;height:420px;border-radius:18px;border:1px solid #D7D7D7;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
       <div style="font-size:10px;color:#2E2E2E;line-height:13px;text-align:left;">
         Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
         <br/>
@@ -249,8 +253,20 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
         }
-        @page { margin: 0; }
-        body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; padding: 24px; }
+        @page {
+          size: ${CARNET_WIDTH_MM}mm ${CARNET_HEIGHT_MM}mm;
+          margin: 0;
+        }
+        html, body {
+          width: ${CARNET_WIDTH_PX}px;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          font-family: 'Inter', Arial, sans-serif;
+          background: #F0FFF8;
+          padding: 24px;
+        }
         ${singleCarnet ? 'body { padding: 18px; background: #ffffff; }' : ''}
         h1 { font-size: 22px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
         .subtitle { font-size: 13px; color: #6B7280; margin-bottom: 20px; }
@@ -267,24 +283,51 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
         }
         .print-btn:hover { background: #087C4A; }
         @media print {
-          body { background: #fff; padding: 0; }
+          @page {
+            size: ${CARNET_WIDTH_MM}mm ${CARNET_HEIGHT_MM}mm;
+            margin: 0;
+          }
+          html, body {
+            width: ${CARNET_WIDTH_MM}mm !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+          }
           .print-btn, h1, .subtitle { display: none !important; }
-          .grid { display: block !important; }
-          .carnet-pair { display: block !important; margin: 0 !important; }
+          .grid {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 0 !important;
+          }
+          .carnet-pair {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 0 !important;
+          }
           .carnet-front,
           .carnet-back {
+            width: ${CARNET_WIDTH_MM}mm !important;
+            height: ${CARNET_HEIGHT_MM}mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
             page-break-after: always !important;
             break-after: page !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            min-height: 100vh !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
+            display: block !important;
+            overflow: hidden !important;
           }
           .carnet-pair:last-child .carnet-back {
             page-break-after: avoid !important;
             break-after: avoid !important;
+          }
+          .carnet-card {
+            width: ${CARNET_WIDTH_MM}mm !important;
+            height: ${CARNET_HEIGHT_MM}mm !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            border-radius: 20px !important;
           }
         }
       </style>
