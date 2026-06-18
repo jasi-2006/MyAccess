@@ -96,19 +96,18 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
             <Text style={[styles.backArrow, { fontSize: isTablet ? 36 : 28 }]}>←</Text>
           </TouchableOpacity>
 
-
           <View style={[styles.content, { paddingTop: topPadding }]}>
             <View style={styles.titleContainer}>
-              <Text style={[styles.titleGreen, { fontSize: fontSizeTitle }]}>Verifica tu</Text>
-              <Text style={[styles.titleDark, { fontSize: fontSizeTitle }]}>correo!</Text>
+               <Text style={{ fontSize: fontSizeTitle, fontWeight: 'bold' }}>
+                <Text style={styles.titleGreen}>Verifica tu </Text>
+                <Text style={styles.titleDark}>correo!</Text>
+                 </Text>
             </View>
 
-            <View style={styles.titleContainer}>
-  <Text style={{ fontSize: fontSizeTitle, fontWeight: 'bold' }}>
-    <Text style={styles.titleGreen}>Verifica tu </Text>
-    <Text style={styles.titleDark}>correo!</Text>
-  </Text>
-</View>
+            <Text style={[styles.subtitle, { fontSize: fontSizeSubtitle }]}>
+              Ingresa el código enviado a{'\n'}
+              <Text style={{ color: colors.primary, fontWeight: '600' }}>{email}</Text>
+            </Text>
 
             <View style={[styles.codeContainer, { gap }]}>
               {code.map((digit, index) => (
@@ -233,7 +232,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
   },
   verifyButton: {
-    width: '66%',
+    width: '60%',
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
