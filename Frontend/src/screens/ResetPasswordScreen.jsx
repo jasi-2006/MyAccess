@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
       },
   subtitle: { 
     fontSize: 14, 
-    color: rgba(168, 173, 183, 0.86),
+    color:"#a8a8a8",
      marginBottom: 22
     },
   submitError: { 
