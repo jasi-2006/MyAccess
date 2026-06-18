@@ -98,3 +98,18 @@ export async function updatePasswordWithCode(email, code, newPassword) {
     skipAuth: true,
   });
 }
+
+export async function socialLogin({ email, provider }) {
+  const response = await userServiceRequest('/auth/social-login', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: String(email).trim().toLowerCase(),
+      provider
+    }),
+    skipAuth: true,
+  });
+  const token = response?.token || response?.accessToken || response?.data?.token || response?.data?.accessToken;
+  const refreshToken = response?.refreshToken || response?.data?.refreshToken;
+  if (token) saveToken(token, refreshToken);
+  return response;
+}
