@@ -56,7 +56,7 @@ export default function ResetPasswordScreen({ navigation, route }) {
           <Text style={styles.subtitle}>Ingresa tu nueva contraseña</Text>
 
           <CustomInput
-            icon="🔒"
+            icon=""
             placeholder="Nueva contraseña"
             value={password}
             onChangeText={setPassword}
@@ -65,7 +65,7 @@ export default function ResetPasswordScreen({ navigation, route }) {
           />
 
           <CustomInput
-            icon="🔒"
+            icon=""
             placeholder="Confirmar contraseña"
             value={confirm}
             onChangeText={setConfirm}
@@ -92,9 +92,29 @@ export default function ResetPasswordScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.primary },
-  content: { padding: 20, paddingTop: 40 },
-  title: { fontSize: 22, fontWeight: 'bold', color: colors.text, marginBottom: 6 },
-  subtitle: { fontSize: 14, color: colors.primary, marginBottom: 22 },
-  submitError: { color: colors.error, marginBottom: 16, textAlign: 'center' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#FFFFFF' 
+  },
+  content: {
+     padding: 160,
+      paddingTop: 30 
+    },
+  title: { 
+    fontSize: 22,
+     fontWeight: 'bold',
+     color: colors.primary,
+     textAlign: 'center',
+     marginBottom: 6 
+      },
+  subtitle: { 
+    fontSize: 14, 
+    color: rgba(168, 173, 183, 0.86),
+     marginBottom: 22
+    },
+  submitError: { 
+    color: colors.error,
+    marginBottom: 16,
+     textAlign: 'center'
+     },
 });
