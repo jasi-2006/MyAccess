@@ -92,7 +92,7 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
           <TouchableOpacity
             style={[styles.backButton, { top: isSmallDevice ? 10 : 20 }]}
             onPress={() => navigation.goBack()}
-          >
+          >git push origin ximena
             <Text style={[styles.backArrow, { fontSize: isTablet ? 36 : 28 }]}>←</Text>
           </TouchableOpacity>
 

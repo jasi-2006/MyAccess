@@ -8,6 +8,7 @@ const sidebarItems = [
   { key: 'User',        label: 'Mi perfil',       },
   { key: 'Notifications', label: 'Notificaciones' },
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
+  { key: 'SofiaVerification', label: 'Validar Sofia Plus', aprendizOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
   { key: 'Fichas',      label: 'Fichas',    managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
@@ -38,6 +39,7 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (key === 'Historial')     navigation.navigate('Historial');
     if (key === 'status')        navigation.navigate('Tramite');
     if (key === 'imprimir')      navigation.navigate('Imprimir');
+    if (key === 'SofiaVerification') navigation.navigate('SofiaVerification');
   };
 
   if (isMobile) {

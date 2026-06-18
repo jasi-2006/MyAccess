@@ -19,4 +19,6 @@ public class UserRegisterProfileResponseDTO {
     /** false si el registro se creo pero fallo el envio del codigo por correo */
     private Boolean verificationEmailSent;
     private String verificationEmailMessage;
+    private Boolean sofiaVerified;
 }
+

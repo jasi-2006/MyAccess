@@ -7,6 +7,7 @@ import CarnetCard from '../components/CarnetCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import RequestCardButton from '../components/RequestCardButton.jsx';
 import { getCardsByUser } from '../services/cardService';
+import { resolveUserRole, ROLES } from '../utils/accessControl';
 
 export default function CarnetGatewayScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
@@ -21,6 +22,7 @@ export default function CarnetGatewayScreen({ navigation }) {
 
   const studentName    = (profile?.fullName || profile?.full_name)?.trim() || 'Aprendiz';
   const studentInitial = studentName.charAt(0).toUpperCase();
+  const isAprendiz = resolveUserRole(profile) === ROLES.APRENDIZ;
 
   useEffect(() => {
     let mounted = true;
@@ -84,7 +86,7 @@ export default function CarnetGatewayScreen({ navigation }) {
               loading={loading}
               cardError={cardError}
             />
-            <RequestCardButton profile={profile} />
+            {isAprendiz ? <RequestCardButton profile={profile} /> : null}
 
           </ScrollView>
         </View>

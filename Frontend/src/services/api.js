@@ -1,26 +1,53 @@
 import { Platform } from 'react-native';
 
-// URLs aligned with render.yaml (name -> https://<name>.onrender.com)
-const DEFAULT_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
-const DEFAULT_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
-const DEFAULT_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-ichc.onrender.com';
-const DEFAULT_CARD_SERVICE_URL = 'https://myaccess-card-7jc2.onrender.com';
-const DEFAULT_NEWS_SERVICE_URL = 'https://myaccess-news-9h3h.onrender.com';
+const isWeb = Platform.OS === 'web';
+const isLocalWeb =
+  isWeb &&
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+// On production HTTPS web (Vercel), we must use relative URLs to trigger Vercel rewrites and avoid Mixed Content.
+// On local web (HTTP) or mobile platforms, we can request the HTTP ALB URL directly.
+const useRelative = isWeb && !isLocalWeb;
+
+const ALB_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com';
+
+const DEFAULT_GATEWAY_URL = useRelative ? '' : ALB_URL;
+const DEFAULT_USER_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
+const DEFAULT_NOTIFICATIONS_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
+const DEFAULT_CARD_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
+const DEFAULT_NEWS_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
+
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
 const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
 const ENV_NOTIFICATIONS_SERVICE_URL = process.env.EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL;
 const ENV_CARD_SERVICE_URL = process.env.EXPO_PUBLIC_CARD_SERVICE_URL;
 const ENV_NEWS_SERVICE_URL = process.env.EXPO_PUBLIC_NEWS_SERVICE_URL;
 
+function shouldIgnoreEnvUrl(url) {
+  if (!url) return true;
+  const normalized = String(url).trim().toLowerCase();
+
+  // Deprecated Render URLs are always ignored
+  if (normalized.includes('.onrender.com')) {
+    return true;
+  }
+
+  // If we are running on an HTTPS page, we MUST ignore any insecure HTTP URLs
+  // to prevent browser Mixed Content blocking.
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    if (normalized.startsWith('http://')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function resolveGatewayUrl() {
   const normalizedEnvUrl = String(ENV_GATEWAY_URL || '').trim();
 
-  if (!normalizedEnvUrl || isFrontendHost(normalizedEnvUrl)) {
-    return DEFAULT_GATEWAY_URL;
-  }
-
-  // Ignore the deprecated Render gateway if it is still configured in Vercel.
-  if (normalizedEnvUrl.includes('myaccess-8dfq.onrender.com')) {
+  if (shouldIgnoreEnvUrl(normalizedEnvUrl)) {
     return DEFAULT_GATEWAY_URL;
   }
 
@@ -43,7 +70,7 @@ function isFrontendHost(url) {
 
 function resolveUserServiceUrl() {
   const normalizedEnvUrl = String(ENV_USER_SERVICE_URL || '').trim();
-  if (!normalizedEnvUrl || isFrontendHost(normalizedEnvUrl)) {
+  if (shouldIgnoreEnvUrl(normalizedEnvUrl)) {
     return DEFAULT_USER_SERVICE_URL;
   }
   return normalizedEnvUrl;
@@ -51,29 +78,15 @@ function resolveUserServiceUrl() {
 
 function resolveNotificationsServiceUrl() {
   const normalizedEnvUrl = String(ENV_NOTIFICATIONS_SERVICE_URL || '').trim();
-
-  if (!normalizedEnvUrl) {
+  if (shouldIgnoreEnvUrl(normalizedEnvUrl)) {
     return DEFAULT_NOTIFICATIONS_SERVICE_URL;
   }
-
-  // Ignore deprecated Render hostnames still configured in Vercel.
-  if (
-    normalizedEnvUrl.includes('myaccess-notification-1cxp.onrender.com') ||
-    normalizedEnvUrl.includes('myaccess-notification.onrender.com')
-  ) {
-    return DEFAULT_NOTIFICATIONS_SERVICE_URL;
-  }
-
   return normalizedEnvUrl;
 }
 
 function resolveCardServiceUrl() {
   const normalizedEnvUrl = String(ENV_CARD_SERVICE_URL || '').trim();
-  if (!normalizedEnvUrl) return DEFAULT_CARD_SERVICE_URL;
-  if (
-    normalizedEnvUrl.includes('myaccess-card-4tuh.onrender.com') ||
-    normalizedEnvUrl.includes('myaccess-card.onrender.com')
-  ) {
+  if (shouldIgnoreEnvUrl(normalizedEnvUrl)) {
     return DEFAULT_CARD_SERVICE_URL;
   }
   return normalizedEnvUrl;
@@ -81,24 +94,13 @@ function resolveCardServiceUrl() {
 
 function resolveNewsServiceUrl() {
   const normalizedEnvUrl = String(ENV_NEWS_SERVICE_URL || '').trim();
-  if (!normalizedEnvUrl) return DEFAULT_NEWS_SERVICE_URL;
-  if (
-    normalizedEnvUrl.includes('myaccess-news-ft80.onrender.com') ||
-    normalizedEnvUrl.includes('myaccess-news.onrender.com')
-  ) {
+  if (shouldIgnoreEnvUrl(normalizedEnvUrl)) {
     return DEFAULT_NEWS_SERVICE_URL;
   }
   return normalizedEnvUrl;
 }
 
-const API_GATEWAY_URL =
-  resolveGatewayUrl() ||
-  Platform.select({
-    android: DEFAULT_GATEWAY_URL,
-    web: DEFAULT_GATEWAY_URL,
-    default: DEFAULT_GATEWAY_URL,
-  });
-
+const API_GATEWAY_URL = resolveGatewayUrl();
 const USER_SERVICE_URL = resolveUserServiceUrl();
 const NOTIFICATIONS_SERVICE_URL = resolveNotificationsServiceUrl();
 const CARD_SERVICE_URL = resolveCardServiceUrl();
@@ -314,7 +316,7 @@ export function resolveImageUrl(url) {
   const value = String(url).trim();
   if (!value) return null;
 
-  const uploadsBase = USER_SERVICE_URL.replace(/\/+$/, '');
+  const uploadsBase = USER_SERVICE_URL.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
   const gatewayBase = API_GATEWAY_URL.replace(/\/+$/, '');
 
   const toUploadsUrl = (pathname, search = '') => {

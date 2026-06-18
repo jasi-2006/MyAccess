@@ -235,7 +235,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
               <>
                 <Text style={styles.hashTop}>
                   Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas {'\n'}
-                  Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño 
+                  Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno
 
                 </Text>
               
@@ -245,7 +245,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
 
                 <View style={styles.signatureBlock}>
                   <Image source={require('../assets/firma.png')} style={styles.signatureImage} />
-                  <Text style={styles.signatureLabel}>Firma de autoria</Text>
+                  <Text style={styles.signatureLabel}>FIRMA AUTORIZADA</Text>
                 </View>
 
                 <Text style={styles.hashBottom}>
@@ -569,6 +569,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#333333',
     textAlign: 'center',
+    fontWeight: '800',
+    letterSpacing: 0.4,
   },
   hashBottom: {
     fontSize: 10,
