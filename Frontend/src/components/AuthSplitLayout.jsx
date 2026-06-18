@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   brandTitle: {
     color: '#FFFFFF',
-    fontSize: 40,
+    fontSize: 35,
     textAlign: 'center',
     fontWeight: '700',
     position:'relative',
@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   students: {
-    width: '150%',
-    maxWidth: 700, // Cambia esto si necesitas un tamaño específico
-    height: 490, // Aumentado el alto de la imagen
+    width: '140%',
+    maxWidth: 600, // Cambia esto si necesitas un tamaño específico
+    height: 440, // Aumentado el alto de la imagen
     position:'relative',
-    top: 66,// Agregar margen para dar espacio superior
+    top: 65,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,
