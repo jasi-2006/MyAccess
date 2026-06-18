@@ -13,21 +13,26 @@ function fileToBase64(file) {
 export async function validateCarnetPhoto(file) {
   const base64 = await fileToBase64(file);
 
-  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde SOLO con un JSON con esta estructura exacta:
-  
+  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta, sin texto adicional ni markdown:
+
 {
   "valid": boolean,
   "errors": ["error1", "error2", ...]
 }
-Criterios que DEBEN cumplirse para que sea valida:
-1. Fondo blanco
-2. Rostro visible y centrado
-3. Sin gafas oscuras o accesorios que oculten el rostro
-4. Expresión neutral (sin sonreír)
-5. Iluminación adecuada (sin sombras fuertes)
-6. Imagen nítida y de buena calidad
 
-Si alguna de estas condiciones NO se cumple, marca la foto como inválida y describe el error en el array "errors".`;
+CRITERIOS OBLIGATORIOS (todos deben cumplirse):
+1. Fondo blanco o de color claro uniforme
+2. Rostro visible, centrado y mirando a cámara
+3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro
+4. Expresión neutral (boca cerrada, sin sonreír)
+5. Iluminación uniforme (sin sombras fuertes en rostro ni fondo)
+6. Imagen nítida, sin desenfoque ni ruido excesivo
+7. Solo una persona visible en la foto
+
+REGLAS:
+- Si TODOS los criterios se cumplen: "valid": true, "errors": []
+- Si ALGÚN criterio NO se cumple: "valid": false, lista los errores específicos encontrados
+- No incluyas explicaciones, solo el JSON`;
 
   const response = await fetch(GEMINI_URL, {
     method: 'POST',
