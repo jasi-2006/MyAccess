@@ -92,7 +92,7 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
           <TouchableOpacity
             style={[styles.backButton, { top: isSmallDevice ? 10 : 20 }]}
             onPress={() => navigation.goBack()}
-          >git push origin ximena
+          >
             <Text style={[styles.backArrow, { fontSize: isTablet ? 36 : 28 }]}>←</Text>
           </TouchableOpacity>
 
@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
+     marginTop: 40,
     marginBottom: '4%',
   },
   titleGreen: {
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
   },
   verifyButton: {
-    width: '60%',
+    width: '56%',
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -244,7 +245,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   verifyButtonDisabled: {
-    backgroundColor: '#0F9F76',
+    backgroundColor: colors.primary,
+    opacity: 0.6,
   },
   verifyButtonText: {
     fontWeight: '600',
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   resendLink: {
-    color: '#000000',
+    color: '#f8efef',
     fontWeight: '600',
   },
 });
