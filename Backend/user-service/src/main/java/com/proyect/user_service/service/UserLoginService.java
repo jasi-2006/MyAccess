@@ -6,6 +6,7 @@ import com.proyect.auth_service.repository.RoleRepository;
 import com.proyect.auth_service.repository.UserAuthRepository;
 import com.proyect.user_service.dto.AuthResponseDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
+import com.proyect.user_service.dto.SocialLoginRequestDTO;
 import com.proyect.user_service.entity.UserRegisterProfile;
 import com.proyect.user_service.repository.UserRegisterProfileRepository;
 import com.proyect.user_service.util.RoleNameNormalizer;
@@ -34,6 +35,23 @@ public class UserLoginService {
         }
         if (!user.getVerifiedEmail()) {
             throw new RuntimeException("cuenta no verificada. revisa tu correo");
+        }
+
+        return generateAuthResponse(user);
+    }
+
+    public AuthResponseDTO socialLogin(SocialLoginRequestDTO request) {
+        String email = normalizeEmail(request.getEmail());
+        if (email == null || email.isBlank()) {
+            throw new RuntimeException("El correo es requerido");
+        }
+
+        UserAuth user = userAuthRepository.findByEmailWithRole(email)
+                .orElseThrow(() -> new RuntimeException("El correo '" + email + "' no está registrado en el sistema. Por favor, regístrate primero."));
+
+        if (!user.getVerifiedEmail()) {
+            user.setVerifiedEmail(true);
+            userAuthRepository.save(user);
         }
 
         return generateAuthResponse(user);
