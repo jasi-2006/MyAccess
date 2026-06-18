@@ -79,11 +79,11 @@ export const styles = StyleSheet.create({
   verticalIdentity: { fontSize: 11, fontWeight: '400', color: '#000000', marginBottom: 8 },
   verticalBarcodeWrap: {
     height: 28,
-    whidth: 4,
+    whidth: 6,
     flexDirection: 'row',
     alignItems: 'flex-end',
     marginBottom: 12,
-    marginRight:1,
+    marginRight:12,
   },
   verticalBarcodeBar: { height: 26, backgroundColor: '#000000' },
   verticalFooter: { gap: 0, paddingBottom: 2 },
