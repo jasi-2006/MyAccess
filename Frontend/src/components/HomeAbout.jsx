@@ -9,6 +9,8 @@ export default function HomeAbout() {
   const isDesktop = width >= 900;
   const px = isDesktop ? 40 : isTablet ? 24 : 16;
 
+
+
   return (
     <View style={[styles.about, { paddingHorizontal: px }]}>
       <View style={[styles.aboutContent, isDesktop && { flexDirection: 'row', gap: 40 }]}>

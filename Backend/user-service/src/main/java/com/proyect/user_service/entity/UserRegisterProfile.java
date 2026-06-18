@@ -50,4 +50,8 @@ public class UserRegisterProfile {
 
     @Column(name = "photo_content_type")
     private String photoContentType;
+
+    @Column(name = "sofia_verified")
+    private Boolean sofiaVerified = false;
 }
+

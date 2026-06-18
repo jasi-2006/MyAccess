@@ -1,0 +1,49 @@
+{
+  "family": "myaccess-kong-gateway",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::048124478038:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::048124478038:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "kong-gateway",
+      "image": "048124478038.dkr.ecr.us-east-2.amazonaws.com/myaccess-kong-gateway:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "KONG_PROXY_LISTEN",
+          "value": "0.0.0.0:8000"
+        },
+        {
+          "name": "KONG_STATUS_LISTEN",
+          "value": "off"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:048124478038:secret:myaccess/prod/secrets-U3LxGN:JWT_SECRET::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/myaccess-kong-gateway",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

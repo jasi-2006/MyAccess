@@ -1,9 +1,20 @@
 import { Image, Platform } from 'react-native';
 import { resolveImageUrl } from '../services/api.js';
 import { getRoleDisplayName } from '../utils/accessControl.js';
+import {
+  formatBloodForCarnet,
+  formatCarnetNameHtml,
+  formatDocNumberForCarnet,
+  formatDocTypeForCarnet,
+  formatRegionalForCarnet,
+} from '../utils/carnetFormat.js';
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
+export const CARNET_WIDTH_PX = 265;
+export const CARNET_HEIGHT_PX = 360;
+const CARNET_WIDTH_MM = 70;
+const CARNET_HEIGHT_MM = 95;
 const senaLogoAsset = require('../assets/logoSena.png');
 const firmaAsset = require('../assets/firma.png');
 const senaLogoUri =
@@ -17,6 +28,25 @@ const firmaUri =
 
 export function getFichaValue(user) {
   return String(user?.ficha || user?.files || '').trim();
+}
+
+export function learnerToProfile(learner) {
+  if (!learner) return null;
+
+  return {
+    id: learner.id,
+    fullName: learner.fullName || learner.full_name,
+    full_name: learner.full_name || learner.fullName,
+    typeDocument: learner.typeDocument,
+    document: learner.document,
+    bloodType: learner.bloodType,
+    nameRole: learner.nameRole || learner.name_role,
+    regional: learner.regional,
+    trainingCenter: learner.trainingCenter,
+    trainingProgram: learner.trainingProgram,
+    ficha: learner.ficha || learner.files,
+    photoUrl: learner.photoUrl,
+  };
 }
 
 export function compareText(a, b) {
@@ -59,6 +89,7 @@ export function installPrintStyles() {
         gap: 12px !important;
         padding: 12px !important;
         background: #ffffff !important;
+        border-radius:15px
       }
       #print-area > div {
         break-inside: avoid;
@@ -84,92 +115,121 @@ export function installPrintStyles() {
   return () => document.getElementById(PRINT_STYLE_ID)?.remove();
 }
 
+const QR_PATTERN = [
+  '11111110001001111111',
+  '10000010110010100001',
+  '10111010101110101101',
+  '10111010010000101101',
+  '10111010111110101101',
+  '10000010001000100001',
+  '11111110101010111111',
+  '00000000110110000000',
+  '10110111100011101011',
+  '00101100111001011001',
+  '11100011101011100011',
+  '00111001010100101110',
+  '10101110111110001011',
+  '00000000101000100000',
+  '11111110110101111111',
+  '10000010001100100001',
+  '10111010111010101101',
+  '10111010010100101101',
+  '10000010101110100001',
+  '11111110011000111111',
+];
+
+function buildQrHtml() {
+  const rows = QR_PATTERN.map((row) => {
+    const cells = row.split('').map((cell, index) => {
+      const color = cell === '1' ? '#111111' : '#FFFFFF';
+      return `<div style="width:3px;height:3px;background:${color};"></div>`;
+    }).join('');
+    return `<div style="display:flex;">${cells}</div>`;
+  }).join('');
+
+  return `<div style="padding:5px;background:#FFFFFF;display:inline-block;"><div style="border:1px solid #111111;">${rows}</div></div>`;
+}
+
 export function buildCarnetPairHtml(learner, card) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const fullName = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
+  const nameHtml = formatCarnetNameHtml(fullName);
   const roleDisplay = getRoleDisplayName(learner?.nameRole || learner?.name_role);
-  const docType = learner?.typeDocument || 'C.C';
-  const docNum = learner?.document || '';
-  const blood = learner?.bloodType || '';
-  const regional = (learner?.regional || 'Regional Quindio').trim();
-  const center = (learner?.trainingCenter || 'Centro Comercio y Turismo').trim();
-  const program = learner?.trainingProgram || 'NA';
-  const ficha = learner?.ficha || learner?.files || '';
-  const initial = fullName.charAt(0).toUpperCase();
+  const docType = formatDocTypeForCarnet(learner?.typeDocument);
+  const docNum = formatDocNumberForCarnet(learner?.document);
+  const blood = formatBloodForCarnet(learner?.bloodType);
+  const regional = formatRegionalForCarnet(learner?.regional);
+  const center = (learner?.trainingCenter || 'Centro de Comercio y Turismo').trim();
+  const program = learner?.trainingProgram || 'ADSO';
+  const ficha = learner?.ficha || learner?.files || '0000000';
   const logoSrc = senaLogoUri || `${window.location.origin}/static/media/logoSena.png`;
+  const siluetaSrc = typeof Image.resolveAssetSource === 'function'
+    ? Image.resolveAssetSource(require('../assets/silueta.png'))?.uri
+    : null;
 
   const photoHtml = photoUrl
     ? `<img src="${photoUrl}" crossorigin="anonymous" style="width:100%;height:100%;object-fit:cover;" />`
-    : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#E8F5E9,#A5D6A7);display:flex;align-items:center;justify-content:center;"><span style="font-size:36px;font-weight:900;color:#2E7D32;">${initial}</span></div>`;
+    : `<img src="${siluetaSrc || ''}" style="width:100%;height:100%;object-fit:cover;" />`;
 
   const bars = [2, 1, 3, 1, 1, 2, 4, 1, 2, 1, 3, 2, 1, 1, 4, 2, 1, 3, 1, 2, 2, 1, 3, 1];
-  const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:28px;width:100%;">${
-    bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
+  const barcodeHtml = `<div style="display:flex;align-items:flex-end;height:28px;">${
+    bars.map((w, i) => `<div style="width:${w}px;height:26px;background:#000000;${i < bars.length - 1 ? 'margin-right:1px;' : ''}"></div>`).join('')
   }</div>`;
 
- 
-  const logoHtml = `<img src="${logoSrc}" style="width:72px;height:72px;object-fit:contain;" onerror="this.outerHTML='<div style=&quot;width:72px;height:72px;background:#39A900;border-radius:50%;display:flex;align-items:center;justify-content:center;&quot;><span style=&quot;color:#fff;font-weight:900;font-size:14px;font-family:Arial,sans-serif;&quot;>SENA</span></div>'" />`;
+  const logoHtml = `<img src="${logoSrc}" style="width:70px;height:70px;object-fit:contain;display:block;" />`;
 
   const front = `
-    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;position:relative;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;height:140px;padding:10px 14px 4px 14px;box-sizing:border-box;position:relative;z-index:2;">
-        <div style="display:flex;flex-direction:column;justify-content:flex-start;gap:6px;align-items:flex-start;">
-          <div style="display:flex;flex-direction:column;align-items:flex-start;">
-            ${logoHtml}
-          </div>
-          <div style="font-size:12px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.5px;font-family:'Inter',Arial,sans-serif;line-height:1;">
-            ${roleDisplay}
-          </div>
-        </div>
-        <div style="width:108px;height:122px;border-radius:6px;overflow:hidden;background:#E5E7EB;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;height:150px;">
+        <div style="width:72px;padding-top:2px;">${logoHtml}</div>
+        <div style="width:118px;height:148px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
           ${photoHtml}
         </div>
       </div>
 
-      <div style="height:5px;background:#00A74F;width:100%;margin:0;padding:0;box-sizing:border-box;"></div>
-
-      <div style="padding:10px 14px 14px 14px;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',Arial,sans-serif;gap:2px;position:relative;z-index:2;">
-        <div style="font-size:18px;font-weight:800;color:#0B7F35;line-height:1.2;font-family:'Inter',Arial,sans-serif;word-wrap:break-word;word-break:keep-all;margin-bottom:2px;">
-          ${fullName}
-        </div>
-        <div style="font-size:11.5px;font-weight:600;color:#374151;margin-bottom:6px;font-family:'Inter',Arial,sans-serif;letter-spacing:0.2px;">
-          ${docType} ${docNum} RH ${blood}
-        </div>
-        <div style="margin-bottom:12px;">
-          ${barcodeHtml}
-        </div>
-        <div style="color:#374151;font-size:11px;font-weight:700;">
-          ${regional}
-        </div>
-        <div style="color:#0B7F35;font-size:11px;font-weight:700;">
-          ${center}
-        </div>
-        <div style="color:#374151;font-size:11px;font-weight:700;text-transform:uppercase;">
-          ${program}
-        </div>
-        ${ficha ? `<div style="color:#374151;font-size:11px;font-weight:700;">Grupo No ${ficha}</div>` : ''}
+      <div style="font-size:12px;color:#000000;text-transform:uppercase;letter-spacing:0.4px;font-weight:400;line-height:14px;margin-bottom:3px;">
+        ${roleDisplay}
       </div>
+      <div style="height:3px;background:#008542;margin-bottom:10px;"></div>
+
+      <div style="font-size:19px;font-weight:700;color:#008542;line-height:22px;margin-bottom:5px;">
+        ${nameHtml}
+      </div>
+      <div style="font-size:14px;color:#000000;font-weight:400;margin-bottom:8px;">
+        ${docType} ${docNum} ${blood}
+      </div>
+      <div style="margin-bottom:12px;">
+        ${barcodeHtml}
+      </div>
+      <div style="font-size:14px;color:#000000;font-weight:700;line-height:15px;">${regional}</div>
+      <div style="font-size:13px;color:#008542;font-weight:600;line-height:14px;margin-top:3px;">${center}</div>
+      <div style="font-size:13px;color:#000000;font-weight:400;line-height:13px;margin-top:3px;">${program}</div>
+      <div style="font-size:13px;color:#000000;font-weight:400;line-height:13px;margin-top:2px;">Grupo No ${ficha}</div>
     </div>`;
 
   const back = `
-    <div style="width:265px;height:420px;border-radius:24px;border:1px solid #C5C9C7;background:#FFFFFF;padding:20px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'Inter',Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;position:relative;overflow:hidden;">
-      <div style="font-size:9.5px;color:#374151;line-height:1.4;font-weight:500;">
-        Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.<br/>Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeño.
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="font-size:10px;color:#2E2E2E;line-height:13px;text-align:left;">
+        Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
+        <br/>
+        Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno.
       </div>
-      
-      
-      <div style="text-align:center;padding:12px 0;border-top:1px solid #C5C9C7;border-bottom:1px solid #C5C9C7;margin: 20px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+
+      <div style="display:flex;justify-content:center;margin:8px 0;">
+        ${buildQrHtml()}
+      </div>
+
+      <div style="text-align:center;margin-bottom:10px;">
         <img
           src="${firmaUri || ''}"
           alt="Firma de autoria"
-          style="width:170px;max-width:100%;height:58px;object-fit:contain;display:block;"
-          onerror="this.outerHTML='<div style=&quot;width:170px;height:58px;display:flex;align-items:center;justify-content:center;color:#2B2B2B;font-size:10px;font-weight:700;&quot;>Firma de autoria</div>'"
+          style="width:200px;max-width:100%;height:70px;object-fit:contain;display:block;margin:0 auto 3px;"
         />
-        <b><div style="font-size:10px;font-weight:600;">Firma de autoria</div></b>
+        <div style="font-size:11px;color:#333333;font-weight:700;letter-spacing:0.4px;">FIRMA AUTORIZADA</div>
       </div>
-      
-      <div style="font-size:9px;color:#374151;line-height:1.4;font-weight:500;">
-        Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte-15.
+
+      <div style="font-size:10px;color:#2E2E2E;line-height:13px;">
+        Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
       </div>
     </div>`;
 
@@ -194,7 +254,20 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
         }
-        body { font-family: 'Inter', Arial, sans-serif; background: #F0FFF8; padding: 24px; }
+        @page {
+          size: ${CARNET_WIDTH_MM}mm ${CARNET_HEIGHT_MM}mm;
+          margin: 0;
+        }
+        html, body {
+          width: ${CARNET_WIDTH_PX}px;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          font-family: 'Inter', Arial, sans-serif;
+          background: #F0FFF8;
+          padding: 24px;
+        }
         ${singleCarnet ? 'body { padding: 18px; background: #ffffff; }' : ''}
         h1 { font-size: 22px; font-weight: 900; color: #0A8A4A; margin-bottom: 4px; }
         .subtitle { font-size: 13px; color: #6B7280; margin-bottom: 20px; }
@@ -211,24 +284,51 @@ export function buildPrintHtml(title, subtitle, bodyHtml, singleCarnet = false) 
         }
         .print-btn:hover { background: #087C4A; }
         @media print {
-          body { background: #fff; padding: 0; }
+          @page {
+            size: ${CARNET_WIDTH_MM}mm ${CARNET_HEIGHT_MM}mm;
+            margin: 0;
+          }
+          html, body {
+            width: ${CARNET_WIDTH_MM}mm !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+          }
           .print-btn, h1, .subtitle { display: none !important; }
-          .grid { display: block !important; }
-          .carnet-pair { display: block !important; margin: 0 !important; }
+          .grid {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 0 !important;
+          }
+          .carnet-pair {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 0 !important;
+          }
           .carnet-front,
           .carnet-back {
+            width: ${CARNET_WIDTH_MM}mm !important;
+            height: ${CARNET_HEIGHT_MM}mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
             page-break-after: always !important;
             break-after: page !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            min-height: 100vh !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
+            display: block !important;
+            overflow: hidden !important;
           }
           .carnet-pair:last-child .carnet-back {
             page-break-after: avoid !important;
             break-after: avoid !important;
+          }
+          .carnet-card {
+            width: ${CARNET_WIDTH_MM}mm !important;
+            height: ${CARNET_HEIGHT_MM}mm !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            border-radius: 20px !important;
           }
         }
       </style>

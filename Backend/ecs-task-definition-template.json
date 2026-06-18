@@ -1,0 +1,81 @@
+{
+  "family": "myaccess-user-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "user-service",
+      "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/myaccess-user-service:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 9091,
+          "hostPort": 9091,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SERVER_PORT",
+          "value": "9091"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "gateway01.us-east-1.prod.aws.tidbcloud.com"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "4000"
+        },
+        {
+          "name": "USER_DB_URL",
+          "value": "jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/user_service?sslMode=REQUIRED"
+        },
+        {
+          "name": "AUTH_DB_URL",
+          "value": "jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/auth_service?sslMode=REQUIRED"
+        },
+        {
+          "name": "JWT_EXPIRATION",
+          "value": "1200000"
+        },
+        {
+          "name": "EMAIL_FROM",
+          "value": "MyAccess <onboarding@resend.dev>"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:123456789012:secret:myaccess-secrets-XXXXXX:DB_USERNAME::"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:123456789012:secret:myaccess-secrets-XXXXXX:DB_PASSWORD::"
+        },
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:123456789012:secret:myaccess-secrets-XXXXXX:JWT_SECRET::"
+        },
+        {
+          "name": "RESEND_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:123456789012:secret:myaccess-secrets-XXXXXX:RESEND_API_KEY::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/myaccess-user-service",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
