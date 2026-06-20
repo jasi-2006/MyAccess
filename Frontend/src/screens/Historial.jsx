@@ -4,7 +4,6 @@ import {
   TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 
-
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
