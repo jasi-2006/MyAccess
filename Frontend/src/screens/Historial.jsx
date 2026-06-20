@@ -3,6 +3,8 @@ import {
   View, Text, StyleSheet, ScrollView, useWindowDimensions,
   TouchableOpacity, ActivityIndicator,
 } from 'react-native';
+
+
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
@@ -224,22 +226,22 @@ const styles = StyleSheet.create({
   filterRow: { marginTop: 12, marginBottom: 4 },
   filterContent: { paddingRight: 4 },
   filterBtn: {
-    width: 75,                  // Fijado al tamaño promedio del botón "Todos"
-    height: 60,                 // Conserva tu altura original intacta
+    width: 75,                  
+    height: 60,                 
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     marginRight: 6,
     borderWidth: 1,
     borderColor: '#D1FAE5',
-    justifyContent: 'center',   // Centrado vertical del texto
-    alignItems: 'center',       // Centrado horizontal del texto
+    justifyContent: 'center',   
+    alignItems: 'center',       
   },
   filterBtnActive: { backgroundColor: '#079B72', borderColor: '#079B72' },
   filterText: { 
     fontSize: 11, 
     color: '#374151', 
     fontWeight: '600',
-    textAlign: 'center',        // Garantiza que la tipografía apunte al centro del botón
+    textAlign: 'center',        
   },
   filterTextActive: { color: '#FFFFFF' },
   tableCard: {
