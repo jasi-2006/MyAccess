@@ -182,7 +182,7 @@ export function buildCarnetPairHtml(learner, card) {
     <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;height:150px;">
         <div style="width:72px;padding-top:2px;">${logoHtml}</div>
-        <div style="width:118px;height:148px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
+        <div style="width:80px;height:100px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
           ${photoHtml}
         </div>
       </div>
