@@ -10,6 +10,24 @@ function fileToBase64(file) {
   });
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchWithRetry(url, options, retries = 3, backoff = 1000) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const response = await fetch(url, options);
+    if (response.ok) return response;
+    if (response.status === 429 && attempt < retries) {
+      const wait = backoff * Math.pow(2, attempt);
+      await sleep(wait);
+      continue;
+    }
+    const errBody = await response.json().catch(() => ({}));
+    throw new Error(`Gemini error ${response.status}: ${errBody?.error?.message || response.statusText}`);
+  }
+}
+
 /**
  * Removes background from an image using a flood‑fill algorithm.
  * Returns a new File (PNG) with the background removed, or the original file on failure.
@@ -122,7 +140,7 @@ export async function removeImageBackground(file) {
  */
 export async function validatePhoto(file) {
   const base64 = await fileToBase64(file);
-  const response = await fetch(GEMINI_URL, {
+  const response = await fetchWithRetry(GEMINI_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -147,7 +165,7 @@ export async function validateCarnetPhoto(file) {
   const base64 = await fileToBase64(file);
   const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco o de color claro uniforme\n2. Rostro visible, centrado y mirando a cámara\n3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro\n4. Expresión neutral (boca cerrada, sin sonreír)\n5. Iluminación uniforme (sin sombras fuertes en rostro ni fondo)`;
 
-  const response = await fetch(GEMINI_URL, {
+  const response = await fetchWithRetry(GEMINI_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
