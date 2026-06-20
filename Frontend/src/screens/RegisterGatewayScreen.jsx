@@ -106,6 +106,11 @@ export default function RegisterGatewayScreen({ navigation }) {
             setSubmitError('Foto no válida:\n• ' + validation.errors.join('\n• '));
             return;
           }
+          if (validation.file) {
+            photo.file = validation.file;
+            photo.uri = URL.createObjectURL(validation.file);
+            setPhoto({ ...photo });
+          }
         } catch (validationErr) {
           setSubmitError('No se pudo validar la foto: ' + (validationErr?.message || 'Error desconocido'));
           return;

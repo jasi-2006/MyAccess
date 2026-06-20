@@ -9,6 +9,7 @@ import com.proyect.user_service.dto.RefreshTokenRequestDTO;
 import com.proyect.user_service.dto.ResetPasswordRequestDTO;
 import com.proyect.user_service.dto.RegisterRequestDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
+import com.proyect.user_service.dto.SocialLoginRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.exception.EmailDeliveryException;
@@ -46,6 +47,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginRequestDTO request) {
         return ResponseEntity.ok(userLoginService.login(request));
+    }
+
+    @PostMapping("/social-login")
+    public ResponseEntity<AuthResponseDTO> socialLogin(@RequestBody SocialLoginRequestDTO request) {
+        return ResponseEntity.ok(userLoginService.socialLogin(request));
     }
 
     @PostMapping("/refresh-token")

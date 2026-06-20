@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text, useWindowDimensions } from 'react-native';
 
-export default function SocialButtons({ wide = false }) {
+export default function SocialButtons({ wide = false, onPressGoogle, onPressMicrosoft }) {
   const { width } = useWindowDimensions();
   const isTablet = width >= 500 && width < 1024;
   const isDesktop = width >= 600;
@@ -12,11 +12,11 @@ export default function SocialButtons({ wide = false }) {
   if (wide) {
     return (
       <View style={styles.wideContainer}>
-        <TouchableOpacity style={styles.wideBtn}>
+        <TouchableOpacity style={styles.wideBtn} onPress={onPressGoogle}>
           <Image source={require('../assets/google.png')} style={styles.wideIcon} />
           <Text style={styles.wideText}>Google</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.wideBtn}>
+        <TouchableOpacity style={styles.wideBtn} onPress={onPressMicrosoft}>
           <Image source={require('../assets/microsoftLogo.png')} style={styles.wideIcon} />
           <Text style={styles.wideText}>Microsoft</Text>
         </TouchableOpacity>
@@ -26,10 +26,10 @@ export default function SocialButtons({ wide = false }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[styles.btn, { width: btnSize, height: btnSize }]}>
+      <TouchableOpacity style={[styles.btn, { width: btnSize, height: btnSize }]} onPress={onPressMicrosoft}>
         <Image source={require('../assets/microsoftLogo.png')} style={{ width: iconSize, height: iconSize, resizeMode: 'contain' }} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.btn, { width: btnSize, height: btnSize }]}>
+      <TouchableOpacity style={[styles.btn, { width: btnSize, height: btnSize }]} onPress={onPressGoogle}>
         <Image source={require('../assets/google.png')} style={{ width: iconSize, height: iconSize, resizeMode: 'contain' }} />
       </TouchableOpacity>
     </View>
