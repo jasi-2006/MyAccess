@@ -57,11 +57,11 @@ export default function HistorialScreen({ navigation }) {
   }, []);
 
   const count = (state) =>
-    requests.filter((request) => request.state?.toLowerCase() === state).length;
+    requests.filter((request) => request.state?.toLowerCase() === state.toLowerCase()).length;
 
   const filtered = filter === 'Todos'
     ? requests
-    : requests.filter((request) => request.state?.toLowerCase() === filter);
+    : requests.filter((request) => request.state?.toLowerCase() === filter.toLowerCase());
 
   return (
     <WebFrame>
@@ -94,6 +94,7 @@ export default function HistorialScreen({ navigation }) {
               <StatCard title="Pendientes" value={String(count('Pendiente'))} />
               <StatCard title="Validados" value={String(count('Validado'))} />
               <StatCard title="Impresos" value={String(count('Impreso'))} />
+              <StatCard title="Rechazados" value={String(count('Rechazado'))} color="#DC2626" />
             </View>
 
             <ScrollView

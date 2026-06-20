@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Modal, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, Modal, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View, useWindowDimensions, Alert } from 'react-native';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getAllUserProfiles, getUserProfile } from '../services/authService';
 import { createCard, getAllCards, updateCard, updateCardActiveState } from '../services/cardService';
+import { createRequestCard, updateRequestCard, getAllRequestCards } from '../services/requestCardService';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
-export default function FichasScreen({ navigation }) {
+export default function FichasScreen({ navigation, route }) {
   const { width, height } = useWindowDimensions();
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1100;
@@ -71,7 +72,8 @@ export default function FichasScreen({ navigation }) {
         setProfile(currentProfile);
         setUsers(normalizedUsers);
         setCardsByUser(cardMap);
-        setSelectedFicha((current) => current || learnerFichas[0] || '');
+        const routeFicha = route?.params?.selectedFicha;
+        setSelectedFicha((current) => routeFicha || current || learnerFichas[0] || '');
       } catch {
         if (!mounted) return;
         setProfile(null);
@@ -222,6 +224,52 @@ export default function FichasScreen({ navigation }) {
     }
   };
 
+  const handleRequestPrintFicha = async () => {
+    if (bulkUpdating || !selectedLearners.length) return;
+    setBulkUpdating(true);
+    setError('');
+
+    const activeLearners = selectedLearners.filter(learner => {
+      const card = cardsByUser[learner.id];
+      return card?.active ?? true;
+    });
+
+    if (activeLearners.length === 0) {
+      setError('No hay aprendices activos en esta ficha para solicitar impresión.');
+      setBulkUpdating(false);
+      return;
+    }
+
+    try {
+      const allRequests = await getAllRequestCards().catch(() => []);
+
+      const promises = activeLearners.map(async (learner) => {
+        const existingRequest = allRequests.find(r => r.idUser === learner.id);
+        const payload = {
+          idUser: learner.id,
+          requestTipe: 'impresion_colectiva',
+          cardTipe: 'fisico',
+          state: 'pendiente',
+          approbedBy: null,
+          printedBy: null
+        };
+
+        if (existingRequest?.idRequest) {
+          return updateRequestCard(existingRequest.idRequest, { ...existingRequest, state: 'pendiente' });
+        } else {
+          return createRequestCard(payload);
+        }
+      });
+
+      await Promise.all(promises);
+      Alert.alert('Solicitud enviada', `Se ha generado la solicitud de impresión para ${activeLearners.length} aprendices activos de la ficha #${selectedFicha}.`);
+    } catch (err) {
+      setError('Ocurrió un error al generar las solicitudes de impresión.');
+    } finally {
+      setBulkUpdating(false);
+    }
+  };
+
   return (
     <WebFrame>
       <View style={styles.screen}>
@@ -307,22 +355,35 @@ export default function FichasScreen({ navigation }) {
                     </View>
 
                     <View style={styles.bulkActions}>
-                      <TouchableOpacity
-                        style={[styles.bulkButton, styles.activateButton, bulkUpdating && styles.disabledButton]}
-                        onPress={() => handleBulkUpdate(true)}
-                        disabled={bulkUpdating || !selectedLearners.length}
-                        activeOpacity={0.85}
-                      >
-                        <Text style={styles.bulkButtonText}>Activar todos</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={[styles.bulkButton, styles.deactivateButton, bulkUpdating && styles.disabledButton]}
-                        onPress={() => handleBulkUpdate(false)}
-                        disabled={bulkUpdating || !selectedLearners.length}
-                        activeOpacity={0.85}
-                      >
-                        <Text style={styles.bulkButtonText}>Desactivar todos</Text>
-                      </TouchableOpacity>
+                      {normalizeRole(profile?.nameRole) === ROLES.INSTRUCTOR ? (
+                        <TouchableOpacity
+                          style={[styles.bulkButton, styles.requestPrintButton, bulkUpdating && styles.disabledButton]}
+                          onPress={handleRequestPrintFicha}
+                          disabled={bulkUpdating || !selectedLearners.length}
+                          activeOpacity={0.85}
+                        >
+                          <Text style={styles.bulkButtonText}>Solicitar impresión de ficha</Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <>
+                          <TouchableOpacity
+                            style={[styles.bulkButton, styles.activateButton, bulkUpdating && styles.disabledButton]}
+                            onPress={() => handleBulkUpdate(true)}
+                            disabled={bulkUpdating || !selectedLearners.length}
+                            activeOpacity={0.85}
+                          >
+                            <Text style={styles.bulkButtonText}>Activar todos</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={[styles.bulkButton, styles.deactivateButton, bulkUpdating && styles.disabledButton]}
+                            onPress={() => handleBulkUpdate(false)}
+                            disabled={bulkUpdating || !selectedLearners.length}
+                            activeOpacity={0.85}
+                          >
+                            <Text style={styles.bulkButtonText}>Desactivar todos</Text>
+                          </TouchableOpacity>
+                        </>
+                      )}
                     </View>
                   </View>
 
@@ -526,6 +587,9 @@ const styles = StyleSheet.create({
   },
   activateButton: {
     backgroundColor: '#087C4A',
+  },
+  requestPrintButton: {
+    backgroundColor: '#079B72',
   },
   deactivateButton: {
     backgroundColor: '#B42318',

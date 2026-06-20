@@ -11,7 +11,7 @@ export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
   const isCarnetStep = step === 1;
-  const { name, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, email, password } = values;
+  const { nombres, apellidos, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, email, password } = values;
   const fileInputRef = useRef(null);
 
   const pickImage = async () => {
@@ -39,7 +39,8 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   const stepFields = [
     [
-      inp('👤', 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
+      inp('👤', 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
+      inp('👤', 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
       inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
@@ -100,6 +101,7 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
         <>
           {renderField(stepFields[0][0])}
           {renderField(stepFields[0][1])}
+          {renderField(stepFields[0][2])}
           <View style={styles.roleBlock}>
             <Text style={styles.roleLabel}>Tipo de documento</Text>
             <View style={styles.roleRow}>
