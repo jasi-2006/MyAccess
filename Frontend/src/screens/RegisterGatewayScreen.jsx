@@ -31,7 +31,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [showReview, setShowReview] = useState(false);
 
   const [values, setValues] = useState({
-    name: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
+    nombres: '', apellidos: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
     regional: 'Quindio', trainingCenter: 'Centro Comercio y Turismo',
     nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
@@ -39,10 +39,41 @@ export default function RegisterGatewayScreen({ navigation }) {
 
   const onChange = (key, val) => setValues((prev) => ({ ...prev, [key]: val }));
 
+  const validateCapitalization = (text) => {
+    if (!text) return false;
+    const words = text.trim().split(/\s+/);
+    if (words.length === 0 || (words.length === 1 && words[0] === '')) return false;
+    const wordRegex = /^[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]*$/;
+    return words.every(word => wordRegex.test(word));
+  };
+
+  const formatCapitalization = (text) => {
+    if (!text) return '';
+    return text
+      .trim()
+      .split(/\s+/)
+      .map(word => {
+        if (!word) return '';
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join(' ');
+  };
+
   const validate = (s) => {
     const e = {};
     if (s === 0) {
-      if (!values.name || values.name.length < 3) e.name = 'Nombre requerido';
+      if (!values.nombres || values.nombres.trim().length < 2) {
+        e.nombres = 'Nombres requeridos';
+      } else if (!validateCapitalization(values.nombres)) {
+        e.nombres = 'Cada nombre y apellido debe iniciar con mayúscula.';
+      }
+
+      if (!values.apellidos || values.apellidos.trim().length < 2) {
+        e.apellidos = 'Apellidos requeridos';
+      } else if (!validateCapitalization(values.apellidos)) {
+        e.apellidos = 'Cada nombre y apellido debe iniciar con mayúscula.';
+      }
+
       if (!values.document) {
         e.document = 'Documento requerido';
       } else if (!isDigitsOnly(values.document)) {
@@ -117,9 +148,16 @@ export default function RegisterGatewayScreen({ navigation }) {
         }
       }
 
+      const cleanNombres = formatCapitalization(values.nombres);
+      const cleanApellidos = formatCapitalization(values.apellidos);
+      const combinedFullName = `${cleanNombres} ${cleanApellidos}`;
+
       const registerResponse = await registerUser({
         email: values.email, password: values.password,
-        fullName: values.name, typeDocument: values.typeDocument,
+        nombres: cleanNombres,
+        apellidos: cleanApellidos,
+        fullName: combinedFullName,
+        typeDocument: values.typeDocument,
         document: values.document, trainingProgram: values.trainingProgram,
         trainingCenter: values.trainingCenter, regional: values.regional.toLowerCase(),
         bloodType: values.bloodType,
@@ -242,7 +280,8 @@ export default function RegisterGatewayScreen({ navigation }) {
                 </View>
               )}
               {[
-                ['Nombre',    values.name],
+                ['Nombres',   values.nombres],
+                ['Apellidos', values.apellidos],
                 ['Documento', `${values.typeDocument} ${values.document}`],
                 ['Sangre',    values.bloodType],
                 ['Regional',  values.regional],

@@ -25,7 +25,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
   const visibleItems = sidebarItems.filter((item) => {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
-    if (item.aprendizOnly && canManage) return false;
+    if ((item.key === 'Imprimir' || item.key === 'imprimir') && normalizedRole !== ROLES.ADMIN) return false;
     return true;
   });
 
