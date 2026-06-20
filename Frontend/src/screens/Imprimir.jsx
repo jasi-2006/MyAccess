@@ -35,6 +35,7 @@ export default function ImprimirScreen({ navigation }) {
   const [selectedFicha, setSelectedFicha] = useState('');
   const [loading, setLoading] = useState(true);
   const [selectedCarnet, setSelectedCarnet] = useState(null);
+  const [warningMessage, setWarningMessage] = useState('');
 
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
@@ -82,6 +83,14 @@ export default function ImprimirScreen({ navigation }) {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    setWarningMessage('');
+  }, [selectedFicha]);
+
+  useEffect(() => {
+    setWarningMessage('');
+  }, [selectedCarnet]);
 
   const isPrintingAll = selectedFicha === ALL_FICHAS;
   const fichaLearners = (isPrintingAll ? learners : learners.filter((u) => getFichaValue(u) === selectedFicha))
@@ -162,6 +171,23 @@ export default function ImprimirScreen({ navigation }) {
 
   const handlePrint = () => {
     if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+
+    // Check if any learner has no photo url
+    const learnersWithNoPhoto = fichaLearners.filter((learner) => {
+      const card = cardsByUser[learner.id];
+      return !Boolean(learner.photoUrl || card?.photoUrl);
+    });
+
+    if (learnersWithNoPhoto.length > 0) {
+      setWarningMessage(
+        learnersWithNoPhoto.length === 1
+          ? `Se necesita cargar la foto del aprendiz: ${learnersWithNoPhoto[0].fullName || learnersWithNoPhoto[0].full_name}`
+          : `Se necesita cargar la foto de ${learnersWithNoPhoto.length} aprendices para poder imprimir.`
+      );
+      return;
+    }
+
+    setWarningMessage('');
     markAsPrinted(fichaLearners);
     const pairsHtml = fichaLearners
       .map((learner) => buildCarnetPairHtml(learner, cardsByUser[learner.id]))
@@ -171,6 +197,14 @@ export default function ImprimirScreen({ navigation }) {
 
   const handlePrintSelected = () => {
     if (Platform.OS !== 'web' || typeof window === 'undefined' || !selectedCarnet) return;
+
+    const hasPhoto = Boolean(selectedCarnet.learner?.photoUrl || selectedCarnet.card?.photoUrl);
+    if (!hasPhoto) {
+      setWarningMessage('Se necesita cargar la foto del aprendiz para poder imprimir.');
+      return;
+    }
+
+    setWarningMessage('');
     markAsPrinted([selectedCarnet.learner]);
     const pairHtml = buildCarnetPairHtml(selectedCarnet.learner, selectedCarnet.card);
     const selectedName =
@@ -206,6 +240,16 @@ export default function ImprimirScreen({ navigation }) {
               onPrint={handlePrint}
               canPrint={fichaLearners.length > 0}
             />
+
+            {warningMessage ? (
+              <View style={styles.warningBox}>
+                <Text style={styles.warningIcon}>⚠️</Text>
+                <Text style={styles.warningText}>{warningMessage}</Text>
+                <TouchableOpacity onPress={() => setWarningMessage('')} style={styles.warningClose}>
+                  <Text style={styles.warningCloseText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
 
             {loading ? (
               <ActivityIndicator color="#079B72" style={{ marginTop: 30 }} />
@@ -246,6 +290,7 @@ export default function ImprimirScreen({ navigation }) {
           selectedCarnet={selectedCarnet}
           onClose={() => setSelectedCarnet(null)}
           onPrint={handlePrintSelected}
+          warningMessage={warningMessage}
         />
       </View>
     </WebFrame>
