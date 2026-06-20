@@ -63,7 +63,7 @@ export default function CarnetGatewayScreen({ navigation }) {
         />
 
         <View style={styles.contentFrame}>
-          {!isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} />}
+          {!isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Card" />}
 
           <ScrollView
             style={styles.mainArea}
@@ -71,7 +71,7 @@ export default function CarnetGatewayScreen({ navigation }) {
             showsVerticalScrollIndicator={false}
             overScrollMode="never"
           >
-            {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} />}
+            {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Card" />}
 
             <View style={styles.headerBlock}>
               <Text style={styles.pageTitle}>Carnets</Text>
