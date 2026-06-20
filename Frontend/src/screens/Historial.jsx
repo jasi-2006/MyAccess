@@ -17,7 +17,7 @@ const STATE_COLORS = {
   rechazado: { bg: '#FEF2F2', text: '#DC2626' },
 };
 
-const FILTERS = ['todos', 'pendiente', 'validado', 'impreso', 'rechazado'];
+const FILTERS = ['Todos', 'Pendiente', 'Validado', 'Impreso', 'Rechazado'];
 
 function Badge({ state }) {
   const normalizedState = state?.toLowerCase();
@@ -41,7 +41,7 @@ export default function HistorialScreen({ navigation }) {
   const [profile, setProfile] = useState(null);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('todos');
+  const [filter, setFilter] = useState('Todos');
 
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
@@ -57,7 +57,7 @@ export default function HistorialScreen({ navigation }) {
   const count = (state) =>
     requests.filter((request) => request.state?.toLowerCase() === state).length;
 
-  const filtered = filter === 'todos'
+  const filtered = filter === 'Todos'
     ? requests
     : requests.filter((request) => request.state?.toLowerCase() === filter);
 
@@ -89,9 +89,9 @@ export default function HistorialScreen({ navigation }) {
 
             <View style={styles.row}>
               <StatCard title="Total" value={String(requests.length)} />
-              <StatCard title="Pendientes" value={String(count('pendiente'))} />
-              <StatCard title="Validados" value={String(count('validado'))} />
-              <StatCard title="Impresos" value={String(count('impreso'))} />
+              <StatCard title="Pendientes" value={String(count('Pendiente'))} />
+              <StatCard title="Validados" value={String(count('Validado'))} />
+              <StatCard title="Impresos" value={String(count('Impreso'))} />
             </View>
 
             <ScrollView
@@ -115,7 +115,7 @@ export default function HistorialScreen({ navigation }) {
 
             <View style={styles.tableCard}>
               <Text style={styles.tableTitle}>
-                {filtered.length} registro{filtered.length !== 1 ? 's' : ''}
+                {filtered.length} Registro{filtered.length !== 1 ? 's' : ''}
               </Text>
 
               {loading ? (
@@ -224,17 +224,23 @@ const styles = StyleSheet.create({
   filterRow: { marginTop: 12, marginBottom: 4 },
   filterContent: { paddingRight: 4 },
   filterBtn: {
-    paddingHorizontal: 10,
-    height:60,
-    paddingVertical: 16,
+    width: 75,                  // Fijado al tamaño promedio del botón "Todos"
+    height: 60,                 // Conserva tu altura original intacta
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     marginRight: 6,
     borderWidth: 1,
     borderColor: '#D1FAE5',
+    justifyContent: 'center',   // Centrado vertical del texto
+    alignItems: 'center',       // Centrado horizontal del texto
   },
   filterBtnActive: { backgroundColor: '#079B72', borderColor: '#079B72' },
-  filterText: { fontSize: 11, color: '#374151', fontWeight: '600' },
+  filterText: { 
+    fontSize: 11, 
+    color: '#374151', 
+    fontWeight: '600',
+    textAlign: 'center',        // Garantiza que la tipografía apunte al centro del botón
+  },
   filterTextActive: { color: '#FFFFFF' },
   tableCard: {
     backgroundColor: '#FFFFFF',
