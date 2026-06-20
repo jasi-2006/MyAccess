@@ -94,6 +94,9 @@ export default function InstructorDashboard({ navigation }) {
                 { title: 'Ver solicitudes',      text: 'Revisar estados de impresión de carnets.',                      route: 'Solicitudes' },
                 { title: 'Ver carnet digital',   text: 'Abrir la misma estructura de carnet que ve el aprendiz.',       route: 'Carnet' },
                 { title: 'Crear notificación',   text: 'Enviar un aviso a un usuario o dejarlo registrado en gestión.', route: null },
+                ...(normalizeRole(profile?.nameRole) === ROLES.ADMIN ? [
+                  { title: 'Crear Carnet Instructor', text: 'Generar carnet digital exclusivo para instructores.', route: 'CreateInstructorCard' }
+                ] : []),
               ].map((a) => (
                 <TouchableOpacity
                   key={a.title}

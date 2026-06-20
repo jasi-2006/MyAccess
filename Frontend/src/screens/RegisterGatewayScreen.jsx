@@ -32,7 +32,7 @@ export default function RegisterGatewayScreen({ navigation }) {
 
   const [values, setValues] = useState({
     name: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
-    regional: 'quindio', trainingCenter: 'centro comercio y turismo',
+    regional: 'Quindio', trainingCenter: 'Centro Comercio y Turismo',
     nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
   });
