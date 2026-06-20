@@ -208,8 +208,8 @@ export function buildCarnetPairHtml(learner, card) {
     </div>`;
 
   const back = `
-    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:8px;font-size:9px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="font-size:10px;color:#2E2E2E;line-height:13px;text-align:left;">
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:5px;font-size:8px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="font-size:8px;color:#2E2E2E;line-height:11px;text-align:left;">
         Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
         <br/>
         Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno.
@@ -228,7 +228,7 @@ export function buildCarnetPairHtml(learner, card) {
         <div style="font-size:11px;color:#333333;font-weight:700;letter-spacing:0.4px;">FIRMA AUTORIZADA</div>
       </div>
 
-      <div style="font-size:10px;color:#2E2E2E;line-height:13px;">
+      <div style="font-size:8px;color:#2E2E2E;line-height:11px;">
         Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
       </div>
     </div>`;
