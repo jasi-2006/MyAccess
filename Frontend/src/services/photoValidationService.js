@@ -1,4 +1,4 @@
-const GEMINI_API_KEY = 'AQ.Ab8RN6L-1gHS6Ix7IyR3mnfr9nkHmJabNidug8XnLcC1DQn62Q';
+const GEMINI_API_KEY = 'AQ.Ab8RN6LF64kr4xRR27iUBuK_UhtVQ0IqS61zpNqJqJHdILfsGA';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 function fileToBase64(file) {
