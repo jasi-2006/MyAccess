@@ -15,6 +15,7 @@ import UserProfile from '../screens/UserProfile.jsx';
 import NotificationsScreen from '../screens/NotificationsScreen.jsx';
 import NotificationDetailScreen from '../screens/NotificationDetailScreen.jsx';
 import InstructorDashboard from '../screens/InstructorDashboard.jsx';
+import CreateInstructorCardScreen from '../screens/CreateInstructorCardScreen.jsx';
 import FichasScreen from '../screens/Fichas.jsx';
 import SolicitudesScreen from '../screens/Solicitudes.jsx';
 import HistorialScreen from '../screens/Historial.jsx';
@@ -106,6 +107,7 @@ const ProtectedUser = protect('User', UserProfile);
 const ProtectedNotifications = protect('Notifications', NotificationsScreen);
 const ProtectedNotificationDetail = protect('NotificationDetail', NotificationDetailScreen);
 const ProtectedInstructor = protect('Instructor', InstructorDashboard);
+const ProtectedCreateInstructorCard = protect('CreateInstructorCard', CreateInstructorCardScreen);
 const ProtectedFichas = protect('Fichas', FichasScreen);
 const ProtectedSolicitudes = protect('Solicitudes', SolicitudesScreen);
 const ProtectedHistorial = protect('Historial', HistorialScreen);
@@ -144,6 +146,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Notifications" component={ProtectedNotifications} />
         <Stack.Screen name="NotificationDetail" component={ProtectedNotificationDetail} />
         <Stack.Screen name="Instructor" component={ProtectedInstructor} />
+        <Stack.Screen name="CreateInstructorCard" component={ProtectedCreateInstructorCard} />
         <Stack.Screen name="Fichas" component={ProtectedFichas} />
         <Stack.Screen name="Solicitudes" component={ProtectedSolicitudes} />
         <Stack.Screen name="Historial" component={ProtectedHistorial} />
