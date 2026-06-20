@@ -3,6 +3,7 @@ const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemi
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
+    
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
