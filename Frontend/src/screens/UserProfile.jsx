@@ -72,6 +72,13 @@ export default function UserProfile({ navigation }) {
           Alert.alert('Foto no válida', validation.errors.join('\n'));
           return;
         }
+        if (validation.file) {
+          // Use the preview URL provided by validation if available
+          const uri = validation.previewUrl || URL.createObjectURL(validation.file);
+          photo.file = validation.file;
+          photo.uri = uri;
+          setPhoto({ ...photo });
+        }
       }
 
       await updateUserProfile(profile.document, buildUpdatePayload());

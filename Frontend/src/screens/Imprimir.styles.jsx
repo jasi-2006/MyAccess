@@ -177,4 +177,34 @@ export const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   carnetFooterText: { fontSize: 8, color: '#6B7280', fontWeight: '700' },
+  warningBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF3C7',
+    borderLeftWidth: 4,
+    borderLeftColor: '#F59E0B',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginTop: 10,
+    marginBottom: 14,
+    gap: 10,
+  },
+  warningIcon: {
+    fontSize: 15,
+  },
+  warningText: {
+    flex: 1,
+    color: '#B45309',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  warningClose: {
+    paddingHorizontal: 6,
+  },
+  warningCloseText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#B45309',
+  },
 });

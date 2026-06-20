@@ -32,7 +32,7 @@ export default function RegisterGatewayScreen({ navigation }) {
 
   const [values, setValues] = useState({
     name: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
-    regional: 'quindio', trainingCenter: 'centro comercio y turismo',
+    regional: 'Quindio', trainingCenter: 'Centro Comercio y Turismo',
     nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
     email: '', password: '',
   });
@@ -105,6 +105,11 @@ export default function RegisterGatewayScreen({ navigation }) {
           if (!validation.valid) {
             setSubmitError('Foto no válida:\n• ' + validation.errors.join('\n• '));
             return;
+          }
+          if (validation.file) {
+            photo.file = validation.file;
+            photo.uri = URL.createObjectURL(validation.file);
+            setPhoto({ ...photo });
           }
         } catch (validationErr) {
           setSubmitError('No se pudo validar la foto: ' + (validationErr?.message || 'Error desconocido'));

@@ -10,6 +10,111 @@ function fileToBase64(file) {
   });
 }
 
+export async function removeImageBackground(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const visited = new Uint8Array(width * height);
+        const queue = [];
+
+        const colorDiff = (r1, g1, b1, r2, g2, b2) => {
+          return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+        };
+
+        const bgR = data[0];
+        const bgG = data[1];
+        const bgB = data[2];
+
+        for (let x = 0; x < width; x++) {
+          queue.push(x);
+          visited[x] = 1;
+          const idx = (height - 1) * width + x;
+          queue.push(idx);
+          visited[idx] = 1;
+        }
+        for (let y = 0; y < height; y++) {
+          const idxL = y * width;
+          if (!visited[idxL]) {
+            queue.push(idxL);
+            visited[idxL] = 1;
+          }
+          const idxR = y * width + (width - 1);
+          if (!visited[idxR]) {
+            queue.push(idxR);
+            visited[idxR] = 1;
+          }
+        }
+
+        let head = 0;
+        const threshold = 40;
+
+        while (head < queue.length) {
+          const curr = queue[head++];
+          const cx = curr % width;
+          const cy = Math.floor(curr / width);
+          const idx = curr * 4;
+
+          const r = data[idx];
+          const g = data[idx + 1];
+          const b = data[idx + 2];
+
+          const matchesBg = colorDiff(r, g, b, bgR, bgG, bgB) < threshold;
+          const isLight = r > 200 && g > 200 && b > 200;
+
+          if (matchesBg || isLight) {
+            data[idx + 3] = 0;
+
+            const neighbors = [
+              { x: cx + 1, y: cy },
+              { x: cx - 1, y: cy },
+              { x: cx, y: cy + 1 },
+              { x: cx, y: cy - 1 }
+            ];
+
+            for (const n of neighbors) {
+              if (n.x >= 0 && n.x < width && n.y >= 0 && n.y < height) {
+                const nIdx = n.y * width + n.x;
+                if (!visited[nIdx]) {
+                  visited[nIdx] = 1;
+                  queue.push(nIdx);
+                }
+              }
+            }
+          }
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const processedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + "_no_bg.png", { type: 'image/png' });
+            resolve(processedFile);
+          } else {
+            resolve(file);
+          }
+        }, 'image/png');
+      };
+      img.onerror = () => resolve(file);
+      img.src = event.target.result;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 export async function validateCarnetPhoto(file) {
   const base64 = await fileToBase64(file);
 
@@ -61,7 +166,18 @@ REGLAS:
   if (!match) throw new Error(`Respuesta inesperada de Gemini: ${text.slice(0, 200)}`);
 
   try {
-    return JSON.parse(match[0]);
+    const result = JSON.parse(match[0]);
+    if (result.valid) {
+      try {
+        const processedFile = await removeImageBackground(file);
+        result.file = processedFile;
+        // Create a temporary preview URL for immediate UI display
+        result.previewUrl = URL.createObjectURL(processedFile);
+      } catch (e) {
+        console.error("Error al remover el fondo: ", e);
+      }
+    }
+    return result;
   } catch {
     throw new Error(`JSON invalido en respuesta de Gemini: ${match[0].slice(0, 200)}`);
   }
