@@ -98,8 +98,10 @@ export default function VerifyResetCodeScreen({ navigation, route }) {
 
           <View style={[styles.content, { paddingTop: topPadding }]}>
             <View style={styles.titleContainer}>
-              <Text style={[styles.titleGreen, { fontSize: fontSizeTitle }]}>Verifica tu</Text>
-              <Text style={[styles.titleDark, { fontSize: fontSizeTitle }]}>correo!</Text>
+               <Text style={{ fontSize: fontSizeTitle, fontWeight: 'bold' }}>
+                <Text style={styles.titleGreen}>Verifica tu </Text>
+                <Text style={styles.titleDark}>correo!</Text>
+                 </Text>
             </View>
 
             <Text style={[styles.subtitle, { fontSize: fontSizeSubtitle }]}>
@@ -186,6 +188,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
+     marginTop: 40,
     marginBottom: '4%',
   },
   titleGreen: {
@@ -230,7 +233,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
   },
   verifyButton: {
-    width: '100%',
+    width: '56%',
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -242,7 +245,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   verifyButtonDisabled: {
-    backgroundColor: '#A7F3D0',
+    backgroundColor: colors.primary,
+    opacity: 0.6,
   },
   verifyButtonText: {
     fontWeight: '600',
@@ -258,7 +262,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   resendLink: {
-    color: '#000000',
+    color: '#f8efef',
     fontWeight: '600',
   },
 });

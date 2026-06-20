@@ -35,6 +35,7 @@ const ROLE_ROUTE_ACCESS = {
     'Fichas',
     'Solicitudes',
     'Historial',
+    'SofiaVerification',
   ],
   [ROLES.APRENDIZ]: [
     'Home',
@@ -43,7 +44,9 @@ const ROLE_ROUTE_ACCESS = {
     'User',
     'Notifications',
     'NotificationDetail',
+    'SofiaVerification',
   ],
+
 };
 
 const ROLE_HOME_ROUTE = {

@@ -157,7 +157,7 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
           <TouchableOpacity style={styles.photoPicker} onPress={pickImage}>
             {photo
               ? <Image source={{ uri: photo.uri }} style={styles.photoPreview} />
-              : <Text style={styles.photoText}>📷  Subir foto de perfil</Text>
+              : <Text style={styles.photoText}>Subir foto de perfil</Text>
             }
           </TouchableOpacity>
         </>

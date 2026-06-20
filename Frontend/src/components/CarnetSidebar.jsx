@@ -4,10 +4,11 @@ import { normalizeRole, ROLES } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio'      },
-  { key: 'Carnet',      label: 'Mi carnet', management: true},
+  { key: 'Card',        label: 'Mi carnet', management: true},
   { key: 'User',        label: 'Mi perfil'},
   { key: 'Notifications', label: 'Notificaciones'},
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
+  { key: 'SofiaVerification', label: 'Validar Sofia Plus', aprendizOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
   { key: 'Fichas',      label: 'Fichas', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
@@ -30,11 +31,10 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
 
   const handlePress = (key) => {
     const routes = {
-      home: 'Home', Carnet: 'Card', User: 'User',
+      home: 'Home', Card: 'Card', User: 'User',
       status: 'Tramite', Notifications: 'Notifications', Instructor: 'Instructor',
       Fichas: 'Fichas', Solicitudes: 'Solicitudes', Historial: 'Historial',
-      Imprimir: 'Imprimir',
-
+      Imprimir: 'Imprimir', SofiaVerification: 'SofiaVerification',
     };
     if (routes[key]) navigation.navigate(routes[key]);
   };
