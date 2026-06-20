@@ -40,7 +40,7 @@ export default function HomeGatewayScreen({ navigation }) {
   return (
     <WebFrame>
       <View style={styles.root}>
-        <HomeNavbar navigation={navigation} role={profile?.nameRole} />
+        <HomeNavbar navigation={navigation} role={profile?.nameRole} fullName={profile?.fullName} />
 
         <View style={styles.body}>
 
