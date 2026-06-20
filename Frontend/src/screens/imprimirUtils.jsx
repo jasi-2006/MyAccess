@@ -208,7 +208,7 @@ export function buildCarnetPairHtml(learner, card) {
     </div>`;
 
   const back = `
-    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:8px;font-size:9px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
       <div style="font-size:10px;color:#2E2E2E;line-height:13px;text-align:left;">
         Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
         <br/>
