@@ -130,8 +130,8 @@ export default function SolicitudesScreen({ navigation }) {
               <StatCard title="Pendientes" value={String(count('pendiente'))} />
               <StatCard title="Validados" value={String(count('validado'))} />
               <StatCard title="Impresos" value={String(count('impreso'))} />
+              <StatCard title="Rechazados" value={String(count('rechazado'))} />
             </View>
-
             <View style={styles.tableWrap}>
               <View style={styles.table}>
                 <Text style={styles.tableTitle}>
