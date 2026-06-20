@@ -141,16 +141,84 @@ export async function removeImageBackground(file) {
  */
 export async function validatePhoto(file) {
   const base64 = await fileToBase64(file);
+  console.log('validatePhoto: base64 length', base64.length);
+  const payload = {
+    contents: [{
+      role: 'user',
+      parts: [{ inlineData: { mimeType: file.type || 'image/jpeg', data: base64 } }],
+    }],
+  };
+  console.log('validatePhoto: payload', payload);
   const response = await fetchWithRetry(GEMINI_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+    body: JSON.stringify(payload),
+  });
+  console.log('validatePhoto: response status', response.status);
+  if (!response.ok) {
+    throw new Error('Gemini API error: ' + response.statusText);
+  }
+  return response.json();
+}
+  const base64 = await fileToBase64(file);
+  console.log('validatePhoto: base64 length', base64.length);
+  const payload = {
+    contents: [{
+      role: 'user',
+      parts: [{ inlineData: { mimeType: file.type || 'image/jpeg', data: base64 } }],
+    }],
+  };
+  console.log('validatePhoto: payload', payload);
+  const response = await fetchWithRetry(GEMINI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  console.log('validatePhoto: response status', response.status);
+  if (!response.ok) {
+    throw new Error('Gemini API error: ' + response.statusText);
+  }
+  return response.json();
+}
+  const base64 = await fileToBase64(file);
+  console.log('validatePhoto: base64 length', base64.length);
+  const payload = {
+    contents: [{
+      role: 'user',
+      parts: [{ inlineData: { mimeType: file.type || 'image/jpeg', data: base64 } }],
+    }],
+  };
+  console.log('validatePhoto: payload', payload);
+  const response = await fetchWithRetry(GEMINI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  console.log('validatePhoto: response status', response.status);
+  if (!response.ok) {
+    throw new Error('Gemini API error: ' + response.statusText);
+  }
+  return response.json();
+}
+  const base64 = await fileToBase64(file);
+  console.log('validatePhoto: base64 length', base64.length);
+  const response = await fetchWithRetry(GEMINI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    const payload = {
       contents: [{
         role: 'user',
         parts: [{ inlineData: { mimeType: file.type || 'image/jpeg', data: base64 } }],
       }],
-    }),
+    };
+    console.log('validatePhoto: payload', payload);
+    const response = await fetchWithRetry(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
   });
+  console.log('validatePhoto: response status', response.status);
   if (!response.ok) {
     throw new Error('Gemini API error: ' + response.statusText);
   }
