@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, useWindowDimensions, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, ScrollView, useWindowDimensions, ActivityIndicator, Platform, TouchableOpacity } from 'react-native';
 import WebFrame from '../components/WebFrame.jsx';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
