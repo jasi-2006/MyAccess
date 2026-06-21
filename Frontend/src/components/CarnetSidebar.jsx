@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { normalizeRole, ROLES } from '../utils/accessControl';
+import { normalizeRole, ROLES, resolveUserRole } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio'      },
@@ -19,7 +19,7 @@ const sidebarItems = [
 export default function CarnetSidebar({ navigation, role, activeKey }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
-  const normalizedRole = normalizeRole(role);
+  const normalizedRole = resolveUserRole({ nameRole: role });
   const canManage = normalizedRole === ROLES.ADMIN || normalizedRole === ROLES.INSTRUCTOR;
 
   const visibleItems = sidebarItems.filter((item) => {

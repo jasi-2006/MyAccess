@@ -84,6 +84,15 @@ export default function SofiaVerificationScreen({ navigation }) {
   }, [validating]);
 
   const handleValidate = async () => {
+    const hasPhoto = profile?.photoUrl || profile?.photo || profile?.photoURL || profile?.photoPath;
+    if (!hasPhoto) {
+      Alert.alert(
+        'Foto requerida',
+        'Por favor, sube una foto de perfil antes de iniciar la validación automática con Sofia Plus.'
+      );
+      return;
+    }
+
     if (!password && !useMock) {
       Alert.alert('Contraseña requerida', 'Por favor ingresa tu contraseña de Sofia Plus.');
       return;
