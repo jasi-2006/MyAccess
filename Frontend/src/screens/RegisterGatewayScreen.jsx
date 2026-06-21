@@ -33,7 +33,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [values, setValues] = useState({
     nombres: '', apellidos: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
     regional: 'Quindio', trainingCenter: 'Centro Comercio y Turismo',
-    nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '',
+    nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '', fichas: [],
     email: '', password: '',
   });
 
@@ -90,10 +90,15 @@ export default function RegisterGatewayScreen({ navigation }) {
         e.nameRole = 'Selecciona Aprendiz o Instructor';
       }
       if (!values.trainingProgram) e.trainingProgram = 'Programa requerido';
-      if (!values.Ficha) {
-        e.Ficha = 'Numero de ficha requerido';
-      } else if (!isDigitsOnly(values.Ficha)) {
-        e.Ficha = 'Solo se permiten numeros';
+      if (values.nameRole === ROLES.INSTRUCTOR) {
+        if (!values.fichas || values.fichas.length === 0)
+          e.fichas = 'Agrega al menos una ficha';
+      } else {
+        if (!values.Ficha) {
+          e.Ficha = 'Numero de ficha requerido';
+        } else if (!isDigitsOnly(values.Ficha)) {
+          e.Ficha = 'Solo se permiten numeros';
+        }
       }
     }
     if (s === 2) {
@@ -162,7 +167,9 @@ export default function RegisterGatewayScreen({ navigation }) {
         trainingCenter: values.trainingCenter, regional: values.regional.toLowerCase(),
         bloodType: values.bloodType,
         nameRole: values.nameRole,
-        ficha: values.Ficha,
+        ficha: values.nameRole === ROLES.INSTRUCTOR
+          ? values.fichas.join(',')
+          : values.Ficha,
       });
 
       if (photo) {
@@ -287,7 +294,7 @@ export default function RegisterGatewayScreen({ navigation }) {
                 ['Regional',  values.regional],
                 ['Centro',    values.trainingCenter],
                 ['Programa',  values.trainingProgram],
-                ['Ficha',     values.Ficha],
+                ['Ficha(s)',  values.nameRole === ROLES.INSTRUCTOR ? (values.fichas.join(', ') || '-') : values.Ficha],
                 ['Rol',       values.nameRole],
                 ['Correo',    values.email],
               ].map(([label, val]) => (
