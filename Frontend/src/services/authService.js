@@ -39,9 +39,14 @@ export async function registerUser(payload) {
   });
 }
 
+<<<<<<< HEAD
+export async function uploadPhoto(document, formData) {
+  return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
+=======
 export async function uploadRejectedPhoto(document, formData) {
   // Placeholder endpoint for rejected carnet photos
   return userServiceRequest(`/auth/photo/rejected/${encodeURIComponent(document)}`, {
+>>>>>>> 18fcdd891cfcc55e93b16452c9cb736c23f54f82
     method: 'POST',
     body: formData,
     // Assuming authentication not required; adjust if needed
