@@ -6,6 +6,8 @@ import lombok.Data;
 public class UserRegisterProfileRequestDTO {
     private String document;
     private String typeDocument;
+    private String nombres;
+    private String apellidos;
     private String fullName;
     private String trainingProgram;
     private String trainingCenter;

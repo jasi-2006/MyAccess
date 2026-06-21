@@ -2,13 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { countUnreadNotifications, getNotifications } from '../services/notificationService.js';
+import { getUserProfile } from '../services/authService';
 
 export default function CarnetTopbar({ navigation, studentName, studentInitial, notificationRefreshKey }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
-  const isTablet = width >= 768 && width < 1100;
-  const pagePadding = isMobile ? 14 : isTablet ? 18 : 24;
+  const pagePadding = isMobile ? 14 : width < 1100 ? 18 : 24;
+
   const [notificationCount, setNotificationCount] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const loadNotificationCount = useCallback(async () => {
     try {
@@ -19,52 +21,63 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial, 
     }
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadNotificationCount();
-    }, [loadNotificationCount])
-  );
+  useFocusEffect(useCallback(() => { loadNotificationCount(); }, [loadNotificationCount]));
 
   useEffect(() => {
-    if (notificationRefreshKey !== undefined) {
-      loadNotificationCount();
-    }
+    if (notificationRefreshKey !== undefined) loadNotificationCount();
   }, [loadNotificationCount, notificationRefreshKey]);
 
   const badgeText = notificationCount > 99 ? '99+' : String(notificationCount);
 
   return (
     <View style={[styles.topbar, { paddingHorizontal: pagePadding }]}>
-      <View style={styles.topbarLeft}>
+
+      {/* IZQUIERDA — Logo */}
+      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.brand}>MyAccess</Text>
+      </TouchableOpacity>
+
+      {/* DERECHA — Inicio · Campana · Nombre */}
+      <View style={styles.rightSection}>
+
+        {/* Inicio */}
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Text style={styles.brand}>MyAccess</Text>
+          <Text style={styles.linkText}>Inicio</Text>
         </TouchableOpacity>
-        {!isMobile && (
-          <View style={styles.topLinks}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-              <Text style={styles.topLink}>Inicio</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=> navigation.navigate('User')}>
-              <Text style={styles.topLink}>Configuracion</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bellWrap} onPress={()=> navigation.navigate('Notifications')}>
-              <Text style={styles.bellIcon}>🔔</Text>
-              {notificationCount > 0 ? (
-                <View style={styles.notificationBadge}>
-                  <Text style={styles.notificationBadgeText}>{badgeText}</Text>
-                </View>
-              ) : null}
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-      <View style={styles.topbarRight}>
-        <View style={styles.avatar}>
-          <View style={styles.avatarBadge}>
-            <Text style={styles.avatarInitial}>{studentInitial}</Text>
-          </View>
-          <Text style={styles.avatarText} numberOfLines={1}>{studentName}</Text>
+
+        {/* Campana */}
+        <TouchableOpacity style={styles.bellWrap} onPress={() => navigation.navigate('Notifications')}>
+          <Text style={styles.bellIcon}>🔔</Text>
+          {notificationCount > 0 && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{badgeText}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        {/* Nombre del aprendiz con dropdown Salir */}
+        <View style={styles.userWrap}>
+          <TouchableOpacity style={styles.userBtn} onPress={() => setMenuOpen((v) => !v)}>
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarInitial}>{studentInitial}</Text>
+            </View>
+            <Text style={styles.userName} numberOfLines={1}>{studentName}</Text>
+          </TouchableOpacity>
+
+          {menuOpen && (
+            <View style={styles.dropdown}>
+              <Text style={styles.dropdownName} numberOfLines={1}>{studentName}</Text>
+              <View style={styles.divider} />
+              <TouchableOpacity
+                style={styles.dropdownItem}
+                onPress={() => { setMenuOpen(false); navigation.navigate('Login'); }}
+              >
+                <Text style={styles.logoutText}>Salir</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
+
       </View>
     </View>
   );
@@ -72,42 +85,132 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial, 
 
 const styles = StyleSheet.create({
   topbar: {
-    minHeight: 42, backgroundColor: '#FFFFFF',
-    borderTopWidth: 1, borderTopColor: '#2FD16A',
-    borderBottomWidth: 1, borderBottomColor: '#DADADA',
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    height: 52,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 3,
+    borderTopColor: '#2FD16A',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    zIndex: 100,
   },
-  topbarLeft:  { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  brand:       { fontSize: 14, fontWeight: '800', color: '#2FD16A' },
-  topLinks:    { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  topLink:     { fontSize: 11, color: '#8B8B8B' },
-  bellWrap:    { width: 24, height: 24, alignItems: 'center', justifyContent: 'center', position: 'relative' },
-  bellIcon:    { fontSize: 14 },
-  notificationBadge: {
+  brand: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#2FD16A',
+  },
+
+  /* Sección derecha */
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
+  linkText: {
+    fontSize: 13,
+    color: '#555555',
+    fontWeight: '500',
+  },
+
+  /* Campana */
+  bellWrap: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  bellIcon: { fontSize: 16 },
+  badge: {
     position: 'absolute',
-    top: -7,
-    right: -9,
+    top: -4,
+    right: -6,
     minWidth: 16,
     height: 16,
     borderRadius: 8,
-    paddingHorizontal: 4,
+    paddingHorizontal: 3,
     backgroundColor: '#EF4444',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#FFFFFF',
   },
-  notificationBadgeText: {
+  badgeText: {
     color: '#FFFFFF',
     fontSize: 9,
     fontWeight: '900',
   },
-  topbarRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  avatar:      { flexDirection: 'row', alignItems: 'center', gap: 6, maxWidth: 130 },
-  avatarBadge: {
-    width: 26, height: 26, borderRadius: 13,
-    backgroundColor: '#E6DDD7', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+
+  /* Usuario */
+  userWrap: {
+    position: 'relative',
+    zIndex: 200,
   },
-  avatarInitial: { color: '#8B6D58', fontWeight: '700', fontSize: 11 },
-  avatarText:    { color: '#3E3E3E', fontWeight: '600', fontSize: 11, flexShrink: 1 },
+  userBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    cursor: 'pointer',
+  },
+  avatarCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#E6DDD7',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarInitial: {
+    color: '#8B6D58',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  userName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#3E3E3E',
+    maxWidth: 140,
+  },
+
+  /* Dropdown */
+  dropdown: {
+    position: 'absolute',
+    top: 36,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
+    minWidth: 160,
+    zIndex: 999,
+    paddingVertical: 6,
+  },
+  dropdownName: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#3E3E3E',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginHorizontal: 10,
+  },
+  dropdownItem: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  logoutText: {
+    fontSize: 13,
+    color: '#DC2626',
+    fontWeight: '600',
+  },
 });

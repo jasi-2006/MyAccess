@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { normalizeRole, ROLES } from '../utils/accessControl';
+import { normalizeRole, ROLES, resolveUserRole } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio',           },
@@ -19,12 +19,14 @@ const sidebarItems = [
 export default function UserSidebar({ navigation, activeKey, role }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
-  const normalizedRole = normalizeRole(role);
+  const normalizedRole = resolveUserRole({ nameRole: role });
   const canManage = normalizedRole === ROLES.ADMIN || normalizedRole === ROLES.INSTRUCTOR;
 
   const visibleItems = sidebarItems.filter((item) => {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
+    if ((item.key === 'imprimir' || item.key === 'Imprimir') && normalizedRole !== ROLES.ADMIN) return false;
+    if (['Instructor', 'Fichas', 'Solicitudes'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
     return true;
   });
 

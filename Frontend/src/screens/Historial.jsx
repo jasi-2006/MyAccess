@@ -3,12 +3,14 @@ import {
   View, Text, StyleSheet, ScrollView, useWindowDimensions,
   TouchableOpacity, ActivityIndicator,
 } from 'react-native';
+
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
-import { getUserProfile } from '../services/authService';
-import { getAllRequestCards } from '../services/requestCardService';
+import { getUserProfile, getAllUserProfiles } from '../services/authService';
+import { getAllRequestCards, createRequestCard, updateRequestCard } from '../services/requestCardService';
+import { resolveUserRole, normalizeRole, ROLES } from '../utils/accessControl';
 
 const STATE_COLORS = {
   pendiente: { bg: '#FFF7ED', text: '#D97706' },
@@ -17,7 +19,7 @@ const STATE_COLORS = {
   rechazado: { bg: '#FEF2F2', text: '#DC2626' },
 };
 
-const FILTERS = ['todos', 'pendiente', 'validado', 'impreso', 'rechazado'];
+const FILTERS = ['Todos', 'Pendiente', 'Validado', 'Impreso', 'Rechazado'];
 
 function Badge({ state }) {
   const normalizedState = state?.toLowerCase();
@@ -41,10 +43,14 @@ export default function HistorialScreen({ navigation }) {
   const [profile, setProfile] = useState(null);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('todos');
+  const [filter, setFilter] = useState('Todos');
+  const [requesting, setRequesting] = useState(false);
+  const [requestMsg, setRequestMsg] = useState('');
 
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
+  const isAdmin = profile?.nameRole === 'Administrador' || resolveUserRole(profile) === ROLES.ADMIN;
+  const isInstructor = resolveUserRole(profile) === ROLES.INSTRUCTOR;
 
   useEffect(() => {
     getUserProfile().then(setProfile).catch(() => setProfile(null));
@@ -54,12 +60,62 @@ export default function HistorialScreen({ navigation }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const count = (state) =>
-    requests.filter((request) => request.state?.toLowerCase() === state).length;
+  const handleSolicitarImpresion = async () => {
+    if (requesting) return;
+    setRequesting(true);
+    setRequestMsg('');
+    try {
+      const [allUsers, allRequests] = await Promise.all([
+        getAllUserProfiles(),
+        getAllRequestCards().catch(() => []),
+      ]);
 
-  const filtered = filter === 'todos'
+      const instructorFicha = String(profile?.ficha || profile?.Ficha || '').trim();
+      const aprendices = (Array.isArray(allUsers) ? allUsers : []).filter(
+        (u) => normalizeRole(u?.nameRole) === ROLES.APRENDIZ &&
+          String(u?.ficha || u?.Ficha || '').trim() === instructorFicha
+      );
+
+      if (!aprendices.length) {
+        setRequestMsg('No se encontraron aprendices en tu ficha asignada.');
+        return;
+      }
+
+      await Promise.all(
+        aprendices.map((learner) => {
+          const existing = (Array.isArray(allRequests) ? allRequests : []).find(
+            (r) => r.idUser === learner.id
+          );
+          const payload = {
+            idUser: learner.id,
+            requestTipe: 'impresion_colectiva',
+            cardTipe: 'fisico',
+            state: 'pendiente',
+            approbedBy: null,
+            printedBy: null,
+          };
+          return existing?.idRequest
+            ? updateRequestCard(existing.idRequest, { ...existing, state: 'pendiente' })
+            : createRequestCard(payload);
+        })
+      );
+
+      setRequestMsg(`Solicitud enviada para ${aprendices.length} aprendices de la ficha #${instructorFicha}.`);
+      const updated = await getAllRequestCards().catch(() => requests);
+      setRequests(updated);
+    } catch {
+      setRequestMsg('Error al enviar la solicitud de impresión.');
+    } finally {
+      setRequesting(false);
+    }
+  };
+
+  const count = (state) =>
+    requests.filter((request) => request.state?.toLowerCase() === state.toLowerCase()).length;
+
+  const filtered = filter === 'Todos'
     ? requests
-    : requests.filter((request) => request.state?.toLowerCase() === filter);
+    : requests.filter((request) => request.state?.toLowerCase() === filter.toLowerCase());
 
   return (
     <WebFrame>
@@ -79,19 +135,34 @@ export default function HistorialScreen({ navigation }) {
                 <Text style={styles.pageTitle}>Historial de solicitudes</Text>
                 <Text style={styles.pageSubtitle}>Consulta el historial completo de solicitudes de carnet.</Text>
               </View>
-              <TouchableOpacity
-                style={styles.headerPrintBtn}
-                onPress={() => navigation.navigate('Imprimir')}
-              >
-                <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
-              </TouchableOpacity>
+              {isAdmin && (
+                <TouchableOpacity
+                  style={styles.headerPrintBtn}
+                  onPress={() => navigation.navigate('Imprimir')}
+                >
+                  <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
+                </TouchableOpacity>
+              )}
+              {isInstructor && (
+                <TouchableOpacity
+                  style={[styles.headerPrintBtn, requesting && styles.headerPrintBtnDisabled]}
+                  onPress={handleSolicitarImpresion}
+                  disabled={requesting}
+                >
+                  <Text style={styles.headerPrintBtnText}>
+                    {requesting ? 'Enviando...' : 'Solicitar impresión'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {!!requestMsg && <Text style={styles.requestMsg}>{requestMsg}</Text>}
             </View>
 
             <View style={styles.row}>
               <StatCard title="Total" value={String(requests.length)} />
-              <StatCard title="Pendientes" value={String(count('pendiente'))} />
-              <StatCard title="Validados" value={String(count('validado'))} />
-              <StatCard title="Impresos" value={String(count('impreso'))} />
+              <StatCard title="Pendientes" value={String(count('Pendiente'))} />
+              <StatCard title="Validados" value={String(count('Validado'))} />
+              <StatCard title="Impresos" value={String(count('Impreso'))} />
+              <StatCard title="Rechazados" value={String(count('Rechazado'))} color="#DC2626" />
             </View>
 
             <ScrollView
@@ -115,7 +186,7 @@ export default function HistorialScreen({ navigation }) {
 
             <View style={styles.tableCard}>
               <Text style={styles.tableTitle}>
-                {filtered.length} registro{filtered.length !== 1 ? 's' : ''}
+                {filtered.length} Registro{filtered.length !== 1 ? 's' : ''}
               </Text>
 
               {loading ? (
@@ -142,12 +213,14 @@ export default function HistorialScreen({ navigation }) {
                         <Text style={styles.mobileLabel}>Carnet</Text>
                         <Text style={styles.mobileValue}>{request.cardTipe || '-'}</Text>
                       </View>
-                      <TouchableOpacity
-                        style={styles.mobilePrintBtn}
-                        onPress={() => navigation.navigate('Imprimir')}
-                      >
-                        <Text style={styles.printBtnText}>Imprimir</Text>
-                      </TouchableOpacity>
+                      {isAdmin && (
+                        <TouchableOpacity
+                          style={styles.mobilePrintBtn}
+                          onPress={() => navigation.navigate('Imprimir')}
+                        >
+                          <Text style={styles.printBtnText}>Imprimir</Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   ))}
                 </View>
@@ -162,7 +235,7 @@ export default function HistorialScreen({ navigation }) {
                       <Text style={[styles.cell, styles.cellHeader]}>Estado</Text>
                       <Text style={[styles.cell, styles.cellHeader]}>Aprobado por</Text>
                       <Text style={[styles.cell, styles.cellHeader]}>Impreso por</Text>
-                      <Text style={[styles.cell, styles.cellHeader, styles.cellAction]}>Accion</Text>
+                      {isAdmin && <Text style={[styles.cell, styles.cellHeader, styles.cellAction]}>Accion</Text>}
                     </View>
 
                     {filtered.map((request, index) => (
@@ -176,14 +249,16 @@ export default function HistorialScreen({ navigation }) {
                         </View>
                         <Text style={styles.cell} numberOfLines={1}>{request.approbedBy || '-'}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.printedBy || '-'}</Text>
-                        <View style={[styles.cell, styles.cellAction, styles.cellCenter]}>
-                          <TouchableOpacity
-                            style={styles.printBtn}
-                            onPress={() => navigation.navigate('Imprimir')}
-                          >
-                            <Text style={styles.printBtnText}>Imprimir</Text>
-                          </TouchableOpacity>
-                        </View>
+                        {isAdmin && (
+                          <View style={[styles.cell, styles.cellAction, styles.cellCenter]}>
+                            <TouchableOpacity
+                              style={styles.printBtn}
+                              onPress={() => navigation.navigate('Imprimir')}
+                            >
+                              <Text style={styles.printBtnText}>Imprimir</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )}
                       </View>
                     ))}
                   </View>
@@ -220,21 +295,29 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   headerPrintBtnText: { color: '#FFFFFF', fontSize: 12, fontWeight: '800' },
+  headerPrintBtnDisabled: { opacity: 0.55 },
+  requestMsg: { fontSize: 11, color: '#059669', fontWeight: '700', marginTop: 4, flex: 1 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   filterRow: { marginTop: 12, marginBottom: 4 },
   filterContent: { paddingRight: 4 },
   filterBtn: {
-    paddingHorizontal: 10,
-    height:60,
-    paddingVertical: 16,
+    width: 75,                  
+    height: 60,                 
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     marginRight: 6,
     borderWidth: 1,
     borderColor: '#D1FAE5',
+    justifyContent: 'center',   
+    alignItems: 'center',       
   },
   filterBtnActive: { backgroundColor: '#079B72', borderColor: '#079B72' },
-  filterText: { fontSize: 11, color: '#374151', fontWeight: '600' },
+  filterText: { 
+    fontSize: 11, 
+    color: '#374151', 
+    fontWeight: '600',
+    textAlign: 'center',        
+  },
   filterTextActive: { color: '#FFFFFF' },
   tableCard: {
     backgroundColor: '#FFFFFF',

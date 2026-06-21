@@ -77,6 +77,8 @@ public class AuthController {
         UserRegisterProfileRequestDTO profileDTO = new UserRegisterProfileRequestDTO();
         profileDTO.setDocument(request.getDocument());
         profileDTO.setTypeDocument(request.getTypeDocument());
+        profileDTO.setNombres(request.getNombres());
+        profileDTO.setApellidos(request.getApellidos());
         profileDTO.setFullName(request.getFullName());
         profileDTO.setTrainingProgram(request.getTrainingProgram());
         profileDTO.setTrainingCenter(request.getTrainingCenter());
