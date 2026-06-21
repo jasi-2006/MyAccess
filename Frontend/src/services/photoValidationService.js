@@ -1,4 +1,4 @@
-const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
+const GROQ_API_KEY = typeof process !== 'undefined' && process.env ? process.env.EXPO_PUBLIC_GROQ_API_KEY : (import.meta && import.meta.env ? import.meta.env.EXPO_PUBLIC_GROQ_API_KEY : null);
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 function fileToBase64(file) {
@@ -11,6 +11,10 @@ function fileToBase64(file) {
 }
 
 export async function validateCarnetPhoto(file) {
+  if (!GROQ_API_KEY) {
+    throw new Error('API Key de Groq no configurada. Agrega EXPO_PUBLIC_GROQ_API_KEY en tu archivo .env');
+  }
+  
   const base64 = await fileToBase64(file);
 
   const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco o de color claro uniforme\n2. Rostro visible, centrado y mirando a cámara\n3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro\n4. Expresión neutral (boca cerrada, sin sonreír)\n5. Iluminación uniforme (sin sombras fuertes en rostro ni fondo)`;
