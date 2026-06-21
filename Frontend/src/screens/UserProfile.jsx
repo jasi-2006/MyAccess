@@ -174,6 +174,7 @@ export default function UserProfile({ navigation }) {
           currentPhotoUrl={profile?.photoUrl}
           photo={photo}
           onPhotoChange={setPhoto}
+          userRole={profile?.nameRole}
         />
       </View>
     </WebFrame>
