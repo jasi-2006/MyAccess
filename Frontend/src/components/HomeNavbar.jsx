@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'r
 import { useFocusEffect } from '@react-navigation/native';
 import { countUnreadNotifications, getNotifications } from '../services/notificationService.js';
 import { logoutUser } from '../services/authService';
+import { normalizeRole, ROLES } from '../utils/accessControl';
 
-export default function HomeNavbar({ navigation, active = 'Home', fullName }) {
+export default function HomeNavbar({ navigation, active = 'Home', fullName, role }) {
   const { width } = useWindowDimensions();
   const isMobile  = width < 480;
   const isTablet  = width >= 480 && width < 900;
@@ -13,6 +14,7 @@ export default function HomeNavbar({ navigation, active = 'Home', fullName }) {
   const px = isDesktop ? 40 : isTablet ? 24 : 16;
   const [notificationCount, setNotificationCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const isAdmin = normalizeRole(role) === ROLES.ADMIN;
 
   const userInitial = fullName ? fullName.trim().charAt(0).toUpperCase() : 'U';
 
@@ -51,23 +53,27 @@ export default function HomeNavbar({ navigation, active = 'Home', fullName }) {
           <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7}>
             <Text style={[styles.navLink, active === 'Home' && styles.navLinkActive]}>Inicio</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('User')} activeOpacity={0.7}>
-            <Text style={[styles.navLink, active === 'User' && styles.navLinkActive]}>Configuracion</Text>
-          </TouchableOpacity>
+          {isAdmin && (
+            <TouchableOpacity onPress={() => navigation.navigate('User')} activeOpacity={0.7}>
+              <Text style={[styles.navLink, active === 'User' && styles.navLinkActive]}>Configuracion</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        <TouchableOpacity 
-          style={styles.notificationLink} 
-          onPress={() => navigation.navigate('Notifications')}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.bellIcon}>🔔</Text>
-          {notificationCount > 0 ? (
-            <View style={styles.notificationBadge}>
-              <Text style={styles.notificationBadgeText}>{badgeText}</Text>
-            </View>
-          ) : null}
-        </TouchableOpacity>
+        {isAdmin && (
+          <TouchableOpacity 
+            style={styles.notificationLink} 
+            onPress={() => navigation.navigate('Notifications')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.bellIcon}>🔔</Text>
+            {notificationCount > 0 ? (
+              <View style={styles.notificationBadge}>
+                <Text style={styles.notificationBadgeText}>{badgeText}</Text>
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Sección Derecha (Gestión de Usuario y Cierre de Sesión) */}

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { countUnreadNotifications, getNotifications } from '../services/notificationService.js';
+import { getUserProfile } from '../services/authService';
+import { resolveUserRole, ROLES } from '../utils/accessControl';
 
 export default function CarnetTopbar({ navigation, studentName, studentInitial, notificationRefreshKey }) {
   const { width } = useWindowDimensions();
@@ -9,6 +11,22 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial, 
   const isTablet = width >= 768 && width < 1100;
   const pagePadding = isMobile ? 14 : isTablet ? 18 : 24;
   const [notificationCount, setNotificationCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    getUserProfile()
+      .then((profile) => {
+        if (mounted && profile) {
+          const role = resolveUserRole(profile);
+          setIsAdmin(role === ROLES.ADMIN);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const loadNotificationCount = useCallback(async () => {
     try {
@@ -44,17 +62,21 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial, 
             <TouchableOpacity onPress={() => navigation.navigate('Home')}>
               <Text style={styles.topLink}>Inicio</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=> navigation.navigate('User')}>
-              <Text style={styles.topLink}>Configuracion</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bellWrap} onPress={()=> navigation.navigate('Notifications')}>
-              <Text style={styles.bellIcon}>🔔</Text>
-              {notificationCount > 0 ? (
-                <View style={styles.notificationBadge}>
-                  <Text style={styles.notificationBadgeText}>{badgeText}</Text>
-                </View>
-              ) : null}
-            </TouchableOpacity>
+            {isAdmin && (
+              <>
+                <TouchableOpacity onPress={()=> navigation.navigate('User')}>
+                  <Text style={styles.topLink}>Configuracion</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.bellWrap} onPress={()=> navigation.navigate('Notifications')}>
+                  <Text style={styles.bellIcon}>🔔</Text>
+                  {notificationCount > 0 ? (
+                    <View style={styles.notificationBadge}>
+                      <Text style={styles.notificationBadgeText}>{badgeText}</Text>
+                    </View>
+                  ) : null}
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         )}
       </View>
