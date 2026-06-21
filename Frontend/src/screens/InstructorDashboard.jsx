@@ -1,36 +1,80 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
-import { normalizeRole, ROLES } from '../utils/accessControl';
-import { getUserProfile } from '../services/authService';
-import WebFrame from '../components/WebFrame.jsx';
+import { useFocusEffect } from '@react-navigation/native';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
 import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
+import WebFrame from '../components/WebFrame.jsx';
+import { getAllUserProfiles, getUserProfile } from '../services/authService';
+import { getAllRequestCards } from '../services/requestCardService';
+import { normalizeRole, ROLES } from '../utils/accessControl';
 
 export default function InstructorDashboard({ navigation }) {
   const { width, height } = useWindowDimensions();
   const isMobile = width < 768;
-  const isDesktop = width >= 910;
-  const isTablet = width >= 490 && width < 910;
-  const px = isDesktop ? 50 : isTablet ? 40 : 14;
-  const pagePadding = px;
+  const isTablet = width >= 768 && width < 1100;
+  const pagePadding = isMobile ? 10 : isTablet ? 14 : 18;
 
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [fichasCount, setFichasCount] = useState(0);
+  const [requests, setRequests] = useState([]);
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
+  const [redirecting, setRedirecting] = useState(true);
 
-  useEffect(() => {
-    getUserProfile()
-      .then((profile) => {
-        setProfile(profile);
-        if (normalizeRole(profile?.nameRole) !== ROLES.INSTRUCTOR) {
-          navigation.replace('Home');
+  const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
+  const userInitial = userName.charAt(0).toUpperCase();
+
+  useFocusEffect(
+    useCallback(() => {
+      let mounted = true;
+
+      async function loadData() {
+        try {
+          const [currentProfile, allUsers, allRequests] = await Promise.all([
+            getUserProfile(),
+            getAllUserProfiles(),
+            getAllRequestCards(),
+          ]);
+
+          if (!mounted) return;
+
+          const role = normalizeRole(currentProfile?.nameRole);
+
+          // Instructor → redirige a Fichas
+          if (role === ROLES.INSTRUCTOR) {
+            navigation.replace('Fichas');
+            return;
+          }
+
+          const registeredFichas = new Set(
+            (Array.isArray(allUsers) ? allUsers : [])
+              .filter((u) => normalizeRole(u?.nameRole) === ROLES.APRENDIZ)
+              .map((u) => String(u.ficha || u.Ficha || '').trim())
+              .filter(Boolean)
+          );
+
+          setProfile(currentProfile);
+          setFichasCount(registeredFichas.size);
+          setRequests(Array.isArray(allRequests) ? allRequests : []);
+          setRedirecting(false);
+        } catch {
+          if (mounted) navigation.replace('Home');
         }
-      })
-      .catch(() => navigation.replace('Home'))
-      .finally(() => setLoading(false));
-  }, []);
+      }
+
+      loadData();
+      return () => { mounted = false; };
+    }, [])
+  );
+
+  if (redirecting) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator color="#079B72" size="large" />
+      </View>
+    );
+  }
 
   if (loading) {
     return (
@@ -61,8 +105,8 @@ export default function InstructorDashboard({ navigation }) {
             {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Instructor" />}
 
             <View style={styles.headerBlock}>
-              <Text style={styles.pageTitle}>Área de instructor</Text>
-              <Text style={styles.pageSubtitle}>Seleccione sus fichas, revise solicitudes o consulte el carnet digital.</Text>
+              <Text style={styles.pageTitle}>Panel de administración</Text>
+              <Text style={styles.pageSubtitle}>Gestiona fichas, solicitudes, carnets y notificaciones.</Text>
             </View>
 
             <View style={styles.row}>
@@ -72,37 +116,14 @@ export default function InstructorDashboard({ navigation }) {
               <StatCard title="Impresos"    value={String(requests.filter(r => r.state?.toLowerCase() === 'impreso').length)} />
             </View>
 
-            {(() => {
-              const isGroupDirector = profile?.nameRole === 'DIRECTOR_DE_GRUPO' || profile?.nameRole === 'DIRECTOR' || String(profile?.nameRole).toLowerCase().includes('director');
-              const assignedFichas = profile?.ficha ? [String(profile.ficha).trim()] : ['3144615'];
-              return isGroupDirector ? (
-                <View style={styles.assignedSection}>
-                  <Text style={styles.assignedTitle}>Mis Fichas Asignadas</Text>
-                  <View style={styles.assignedGrid}>
-                    {assignedFichas.map((ficha) => (
-                      <TouchableOpacity
-                        key={ficha}
-                        style={styles.assignedCard}
-                        onPress={() => navigation.navigate('Fichas', { selectedFicha: ficha })}
-                        activeOpacity={0.85}
-                      >
-                        <Text style={styles.assignedCardText}>Ficha: {ficha}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-              ) : null;
-            })()}
-
             <View style={styles.actions}>
               {[
-                { title: 'Ver fichas',          text: 'Gestionar grupos y programas activos.',                          route: 'Fichas' },
-                { title: 'Ver solicitudes',      text: 'Revisar estados de impresión de carnets.',                      route: 'Solicitudes' },
-                { title: 'Ver carnet digital',   text: 'Abrir la misma estructura de carnet que ve el aprendiz.',       route: 'Carnet' },
-                { title: 'Crear notificación',   text: 'Enviar un aviso a un usuario o dejarlo registrado en gestión.', route: null },
-                ...(normalizeRole(profile?.nameRole) === ROLES.ADMIN ? [
-                  { title: 'Crear Carnet Instructor', text: 'Generar carnet digital exclusivo para instructores.', route: 'CreateInstructorCard' }
-                ] : []),
+                { title: 'Fichas',              text: 'Gestionar grupos y aprendices por ficha.',               route: 'Fichas' },
+                { title: 'Solicitudes',          text: 'Revisar y gestionar solicitudes de carnets.',            route: 'Solicitudes' },
+                { title: 'Historial',            text: 'Consultar el historial completo de solicitudes.',        route: 'Historial' },
+                { title: 'Imprimir carnets',     text: 'Imprimir carnets físicos de aprendices.',               route: 'Imprimir' },
+                { title: 'Crear notificación',   text: 'Enviar avisos a usuarios del sistema.',                 route: null },
+                { title: 'Carnet instructor',    text: 'Generar carnet digital exclusivo para instructores.',   route: 'CreateInstructorCard' },
               ].map((a) => (
                 <TouchableOpacity
                   key={a.title}
@@ -128,6 +149,7 @@ export default function InstructorDashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  center:        { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAE6E6' },
   screen:        { flex: 1, backgroundColor: '#EAE6E6' },
   contentFrame:  { flex: 1, flexDirection: 'row' },
   mainArea:      { flex: 1 },
@@ -138,11 +160,6 @@ const styles = StyleSheet.create({
   row:           { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   actions:       { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
   actionButton:  { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
-  actionTitle:   { color: '#079B72', fontSize: 16, fontWeight: '900', marginBottom: 6 },
-  actionText:    { color: '#6B7280', fontSize: 13, fontWeight: '700' },
-  assignedSection: { marginTop: 15, marginBottom: 5 },
-  assignedTitle: { fontSize: 11, fontWeight: '800', color: '#6B7280', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.3 },
-  assignedGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  assignedCard: { flexBasis: 140, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 14, alignItems: 'center', justifyContent: 'center' },
-  assignedCardText: { color: '#079B72', fontSize: 15, fontWeight: '900' },
+  actionTitle:   { color: '#079B72', fontSize: 15, fontWeight: '900', marginBottom: 6 },
+  actionText:    { color: '#6B7280', fontSize: 12, fontWeight: '600' },
 });
