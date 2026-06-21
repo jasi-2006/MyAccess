@@ -11,6 +11,7 @@ import WebFrame from '../components/WebFrame.jsx';
 export default function UserProfile({ navigation }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+  
   const isDesktop = width >= 910;
   const isTablet = width >= 490 && width < 910;
   const px = isDesktop ? 50 : isTablet ? 40 : 14;
