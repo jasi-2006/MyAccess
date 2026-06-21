@@ -1,5 +1,5 @@
 const GEMINI_API_KEY = 'AQ.Ab8RN6LF64kr4xRR27iUBuK_UhtVQ0IqS61zpNqJqJHdILfsGA';
-const DEFAULT_MODEL = 'gemini-1.5-flash'; // Change to 'gemini-1.5-flash' if 2.5 not available
+const DEFAULT_MODEL = 'gemini-2.0-flash'; // Using a model that exists in the project
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${DEFAULT_MODEL}:generateContent?key=${GEMINI_API_KEY}`; // v1beta endpoint (required for gemini-1.5-flash)
 
 function fileToBase64(file) {
