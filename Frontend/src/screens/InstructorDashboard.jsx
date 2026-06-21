@@ -76,6 +76,21 @@ export default function InstructorDashboard({ navigation }) {
     );
   }
 
+  if (loading) {
+    return (
+      <WebFrame>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color="#079B72" />
+        </View>
+      </WebFrame>
+    );
+  }
+
+  const userName = profile?.fullName || 'Instructor';
+  const userInitial = userName.charAt(0).toUpperCase();
+  const fichasCount = profile?.ficha ? 1 : 0;
+  const requests = [];
+
   return (
     <WebFrame>
       <View style={styles.screen}>
