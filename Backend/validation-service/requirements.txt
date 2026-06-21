@@ -7,3 +7,6 @@ python-dotenv
 requests
 pymysql
 cryptography
+selenium
+webdriver-manager
+beautifulsoup4
