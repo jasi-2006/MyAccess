@@ -57,6 +57,13 @@ export async function uploadProfilePhoto(document, formData) {
   });
 }
 
+/** Validar localmente y marcar como verificado si la foto está cargada. */
+export async function verifyLocalProfile(document) {
+  return userServiceRequest(`/register/users/document/${encodeURIComponent(document)}/verify-local`, {
+    method: 'PUT',
+  });
+}
+
 export async function verifyUser(email, code) {
   const query = `email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`;
   return userServiceRequest(`/auth/verify?${query}`, { method: 'POST', skipAuth: true });
