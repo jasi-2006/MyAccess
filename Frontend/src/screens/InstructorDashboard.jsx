@@ -102,6 +102,7 @@ export default function InstructorDashboard({ navigation }) {
 
             <View style={styles.actions}>
               {[
+                { title: 'Instructores',      text: 'Ver y gestionar carnets de instructores.',               route: 'Instructores' },
                 { title: 'Fichas',             text: 'Gestionar grupos y aprendices por ficha.',             route: 'Fichas' },
                 { title: 'Solicitudes',        text: 'Revisar y gestionar solicitudes de carnets.',          route: 'Solicitudes' },
                 { title: 'Historial',          text: 'Consultar el historial completo de solicitudes.',      route: 'Historial' },

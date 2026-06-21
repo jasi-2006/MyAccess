@@ -10,6 +10,7 @@ const sidebarItems = [
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
   { key: 'SofiaVerification', label: 'Validar Sofia Plus', aprendizOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
+  { key: 'Instructores', label: 'Instructores', managementOnly: true },
   { key: 'Fichas',      label: 'Fichas', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
   { key: 'Historial',   label: 'Historial', managementOnly: true },
@@ -26,7 +27,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
     if ((item.key === 'Imprimir' || item.key === 'imprimir') && normalizedRole !== ROLES.ADMIN) return false;
-    if (['Instructor', 'Solicitudes', 'Historial'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
+    if (['Instructor', 'Instructores', 'Solicitudes', 'Historial'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
     if (item.key === 'Fichas' && normalizedRole !== ROLES.ADMIN && normalizedRole !== ROLES.INSTRUCTOR) return false;
     return true;
   });
@@ -36,7 +37,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
       home: 'Home', Card: 'Card', User: 'User',
       status: 'Tramite', Notifications: 'Notifications', Instructor: 'Instructor',
       Fichas: 'Fichas', Solicitudes: 'Solicitudes', Historial: 'Historial',
-      Imprimir: 'Imprimir', SofiaVerification: 'SofiaVerification',
+      Instructores: 'Instructores', Imprimir: 'Imprimir', SofiaVerification: 'SofiaVerification',
     };
     if (routes[key]) navigation.navigate(routes[key]);
   };
