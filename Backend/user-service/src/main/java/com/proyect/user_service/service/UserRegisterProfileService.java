@@ -100,7 +100,45 @@ public class UserRegisterProfileService {
     private void applyUpdate(UserRegisterProfile user, UserRegisterProfileRequestDTO dto) {
         if (dto.getDocument() != null)        user.setDocument(dto.getDocument());
         if (dto.getTypeDocument() != null)    user.setTypeDocument(dto.getTypeDocument());
-        if (dto.getFullName() != null)        user.setFullName(dto.getFullName());
+        if (dto.getNombres() != null)         user.setNombres(dto.getNombres());
+        if (dto.getApellidos() != null)       user.setApellidos(dto.getApellidos());
+        
+        if (dto.getFullName() != null) {
+            String full = dto.getFullName().trim();
+            user.setFullName(full);
+            if (dto.getNombres() == null && dto.getApellidos() == null) {
+                String[] parts = full.split("\\s+");
+                if (parts.length == 1) {
+                    user.setNombres(parts[0]);
+                    user.setApellidos("");
+                } else if (parts.length == 2) {
+                    user.setNombres(parts[0]);
+                    user.setApellidos(parts[1]);
+                } else if (parts.length == 3) {
+                    user.setNombres(parts[0] + " " + parts[1]);
+                    user.setApellidos(parts[2]);
+                } else {
+                    int mid = parts.length / 2;
+                    StringBuilder nom = new StringBuilder();
+                    StringBuilder ape = new StringBuilder();
+                    for (int i = 0; i < mid; i++) {
+                        if (i > 0) nom.append(" ");
+                        nom.append(parts[i]);
+                    }
+                    for (int i = mid; i < parts.length; i++) {
+                        if (i > mid) ape.append(" ");
+                        ape.append(parts[i]);
+                    }
+                    user.setNombres(nom.toString());
+                    user.setApellidos(ape.toString());
+                }
+            }
+        } else if (dto.getNombres() != null || dto.getApellidos() != null) {
+            String n = user.getNombres() != null ? user.getNombres() : "";
+            String a = user.getApellidos() != null ? user.getApellidos() : "";
+            user.setFullName((n.trim() + " " + a.trim()).trim());
+        }
+
         if (dto.getTrainingProgram() != null) user.setTrainingProgram(dto.getTrainingProgram());
         if (dto.getTrainingCenter() != null)  user.setTrainingCenter(dto.getTrainingCenter());
         if (dto.getRegional() != null)        user.setRegional(dto.getRegional());
@@ -216,6 +254,8 @@ public class UserRegisterProfileService {
         r.setId(user.getId());
         r.setDocument(user.getDocument());
         r.setTypeDocument(user.getTypeDocument());
+        r.setNombres(user.getNombres());
+        r.setApellidos(user.getApellidos());
         r.setFullName(user.getFullName());
         r.setTrainingProgram(user.getTrainingProgram());
         r.setTrainingCenter(user.getTrainingCenter());

@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function StatCard({ title, value }) {
+export default function StatCard({ title, value, color }) {
   return (
     <View style={styles.card}>
-      <Text style={styles.value}>{value}</Text>
+      <Text style={[styles.value, color && { color }]}>{value}</Text>
       <Text style={styles.title}>{title}</Text>
     </View>
   );

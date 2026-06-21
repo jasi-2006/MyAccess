@@ -1,67 +1,20 @@
-import { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import CarnetTopbar from '../components/CarnetTopbar.jsx';
-import CarnetSidebar from '../components/CarnetSidebar.jsx';
-import StatCard from '../components/StatCard.jsx';
-import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
-import WebFrame from '../components/WebFrame.jsx';
-import { getAllUserProfiles, getUserProfile } from '../services/authService';
-import { getAllRequestCards } from '../services/requestCardService';
+import { useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { normalizeRole, ROLES } from '../utils/accessControl';
+import { getUserProfile } from '../services/authService';
 
 export default function InstructorDashboard({ navigation }) {
-  const { width, height } = useWindowDimensions();
-  const isMobile = width < 768;
-  const isTablet = width >= 768 && width < 1100;
-  const pagePadding = isMobile ? 10 : isTablet ? 14 : 18;
-
-  const [profile, setProfile] = useState(null);
-  const [fichasCount, setFichasCount] = useState(0);
-  const [requests, setRequests] = useState([]);
-  const [notificationModalVisible, setNotificationModalVisible] = useState(false);
-
-  const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
-  const userInitial = userName.charAt(0).toUpperCase();
-
-  useFocusEffect(
-    useCallback(() => {
-    let mounted = true;
-
-    async function loadDashboardData() {
-      try {
-        const [currentProfile, allUsers, allRequests] = await Promise.all([
-          getUserProfile(),
-          getAllUserProfiles(),
-          getAllRequestCards(),
-        ]);
-
-        if (!mounted) return;
-
-        const registeredFichas = new Set(
-          (Array.isArray(allUsers) ? allUsers : [])
-            .filter((user) => normalizeRole(user?.nameRole) === ROLES.APRENDIZ)
-            .map((user) => String(user.ficha || user.Ficha || '').trim())
-            .filter(Boolean)
-        );
-
-        setProfile(currentProfile);
-        setFichasCount(registeredFichas.size);
-        setRequests(Array.isArray(allRequests) ? allRequests : []);
-      } catch {
-        if (!mounted) return;
-        setProfile(null);
-        setFichasCount(0);
-      }
-    }
-
-    loadDashboardData();
-
-    return () => {
-      mounted = false;
-    };
-  }, [])
-  );
+  useEffect(() => {
+    getUserProfile()
+      .then((profile) => {
+        if (normalizeRole(profile?.nameRole) === ROLES.INSTRUCTOR) {
+          navigation.replace('Fichas');
+        } else {
+          navigation.replace('Home');
+        }
+      })
+      .catch(() => navigation.replace('Home'));
+  }, []);
 
   return (
     <WebFrame>
