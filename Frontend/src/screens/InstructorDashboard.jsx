@@ -1,20 +1,51 @@
-import { useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 import { getUserProfile } from '../services/authService';
+import WebFrame from '../components/WebFrame.jsx';
+import CarnetTopbar from '../components/CarnetTopbar.jsx';
+import CarnetSidebar from '../components/CarnetSidebar.jsx';
+import StatCard from '../components/StatCard.jsx';
+import CreateNotificationModal from '../components/CreateNotificationModal.jsx';
 
 export default function InstructorDashboard({ navigation }) {
+  const { width, height } = useWindowDimensions();
+  const isMobile = width < 768;
+  const isDesktop = width >= 910;
+  const isTablet = width >= 490 && width < 910;
+  const px = isDesktop ? 50 : isTablet ? 40 : 14;
+  const pagePadding = px;
+
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notificationModalVisible, setNotificationModalVisible] = useState(false);
+
   useEffect(() => {
     getUserProfile()
       .then((profile) => {
-        if (normalizeRole(profile?.nameRole) === ROLES.INSTRUCTOR) {
-          navigation.replace('Fichas');
-        } else {
+        setProfile(profile);
+        if (normalizeRole(profile?.nameRole) !== ROLES.INSTRUCTOR) {
           navigation.replace('Home');
         }
       })
-      .catch(() => navigation.replace('Home'));
+      .catch(() => navigation.replace('Home'))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <WebFrame>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color="#079B72" />
+        </View>
+      </WebFrame>
+    );
+  }
+
+  const userName = profile?.fullName || 'Instructor';
+  const userInitial = userName.charAt(0).toUpperCase();
+  const fichasCount = profile?.ficha ? 1 : 0;
+  const requests = [];
 
   return (
     <WebFrame>
