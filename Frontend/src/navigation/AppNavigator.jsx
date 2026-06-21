@@ -114,6 +114,7 @@ const ProtectedSolicitudes = protect('Solicitudes', SolicitudesScreen);
 const ProtectedHistorial = protect('Historial', HistorialScreen);
 const ProtectedImprimir = protect('Imprimir', ImprimirScreen);
 const ProtectedInstructores = protect('Instructores', InstructoresScreen);
+const ProtectedGestion = protect('Gestion', GestionFichas);
 const ProtectedProcessingStatus = protect('Tramite', ProcessingStatus);
 const ProtectedSofiaVerification = protect('SofiaVerification', SofiaVerificationScreen);
 
@@ -153,7 +154,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Historial" component={ProtectedHistorial} />
         <Stack.Screen name="Imprimir" component={ProtectedImprimir} />
         <Stack.Screen name="Instructores" component={ProtectedInstructores} />
-        <Stack.Screen name="Gestion" component={protectedGestion}/>
+        <Stack.Screen name="Gestion" component={ProtectedGestion}/>
         <Stack.Screen name="Tramite" component={ProtectedProcessingStatus} />
         <Stack.Screen name="SofiaVerification" component={ProtectedSofiaVerification} />
 
