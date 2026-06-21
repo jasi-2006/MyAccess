@@ -15,6 +15,7 @@ export async function validateCarnetPhoto(file) {
   if (!GROQ_API_KEY) {
     console.warn('EXPO_PUBLIC_GROQ_API_KEY no está configurada en Frontend/.env');
   }
+  
 
   const base64 = await fileToBase64(file);
 
