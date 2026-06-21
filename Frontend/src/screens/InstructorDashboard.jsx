@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -22,9 +22,6 @@ export default function InstructorDashboard({ navigation }) {
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
   const [redirecting, setRedirecting] = useState(true);
 
-  const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
-  const userInitial = userName.charAt(0).toUpperCase();
-
   useFocusEffect(
     useCallback(() => {
       let mounted = true;
@@ -41,7 +38,6 @@ export default function InstructorDashboard({ navigation }) {
 
           const role = normalizeRole(currentProfile?.nameRole);
 
-          // Instructor → redirige a Fichas
           if (role === ROLES.INSTRUCTOR) {
             navigation.replace('Fichas');
             return;
@@ -76,20 +72,8 @@ export default function InstructorDashboard({ navigation }) {
     );
   }
 
-  if (loading) {
-    return (
-      <WebFrame>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" color="#079B72" />
-        </View>
-      </WebFrame>
-    );
-  }
-
-  const userName = profile?.fullName || 'Instructor';
+  const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Admin';
   const userInitial = userName.charAt(0).toUpperCase();
-  const fichasCount = profile?.ficha ? 1 : 0;
-  const requests = [];
 
   return (
     <WebFrame>
@@ -118,12 +102,12 @@ export default function InstructorDashboard({ navigation }) {
 
             <View style={styles.actions}>
               {[
-                { title: 'Fichas',              text: 'Gestionar grupos y aprendices por ficha.',               route: 'Fichas' },
-                { title: 'Solicitudes',          text: 'Revisar y gestionar solicitudes de carnets.',            route: 'Solicitudes' },
-                { title: 'Historial',            text: 'Consultar el historial completo de solicitudes.',        route: 'Historial' },
-                { title: 'Imprimir carnets',     text: 'Imprimir carnets físicos de aprendices.',               route: 'Imprimir' },
-                { title: 'Crear notificación',   text: 'Enviar avisos a usuarios del sistema.',                 route: null },
-                { title: 'Carnet instructor',    text: 'Generar carnet digital exclusivo para instructores.',   route: 'CreateInstructorCard' },
+                { title: 'Fichas',             text: 'Gestionar grupos y aprendices por ficha.',             route: 'Fichas' },
+                { title: 'Solicitudes',        text: 'Revisar y gestionar solicitudes de carnets.',          route: 'Solicitudes' },
+                { title: 'Historial',          text: 'Consultar el historial completo de solicitudes.',      route: 'Historial' },
+                { title: 'Imprimir carnets',   text: 'Imprimir carnets físicos de aprendices.',             route: 'Imprimir' },
+                { title: 'Crear notificación', text: 'Enviar avisos a usuarios del sistema.',               route: null },
+                { title: 'Carnet instructor',  text: 'Generar carnet digital exclusivo para instructores.', route: 'CreateInstructorCard' },
               ].map((a) => (
                 <TouchableOpacity
                   key={a.title}
@@ -149,17 +133,17 @@ export default function InstructorDashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  center:        { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAE6E6' },
-  screen:        { flex: 1, backgroundColor: '#EAE6E6' },
-  contentFrame:  { flex: 1, flexDirection: 'row' },
-  mainArea:      { flex: 1 },
-  mainScroll:    { flexGrow: 1, paddingTop: 6, paddingBottom: 16 },
-  headerBlock:   { marginBottom: 10 },
-  pageTitle:     { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
-  pageSubtitle:  { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
-  row:           { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  actions:       { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
-  actionButton:  { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
-  actionTitle:   { color: '#079B72', fontSize: 15, fontWeight: '900', marginBottom: 6 },
-  actionText:    { color: '#6B7280', fontSize: 12, fontWeight: '600' },
+  center:       { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAE6E6' },
+  screen:       { flex: 1, backgroundColor: '#EAE6E6' },
+  contentFrame: { flex: 1, flexDirection: 'row' },
+  mainArea:     { flex: 1 },
+  mainScroll:   { flexGrow: 1, paddingTop: 6, paddingBottom: 16 },
+  headerBlock:  { marginBottom: 10 },
+  pageTitle:    { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
+  pageSubtitle: { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
+  row:          { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  actions:      { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
+  actionButton: { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
+  actionTitle:  { color: '#079B72', fontSize: 15, fontWeight: '900', marginBottom: 6 },
+  actionText:   { color: '#6B7280', fontSize: 12, fontWeight: '600' },
 });
