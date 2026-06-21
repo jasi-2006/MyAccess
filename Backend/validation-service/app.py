@@ -2,7 +2,9 @@ import os
 import logging
 import unicodedata
 from typing import Optional
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI, HTTPException
+# pyrefly: ignore [missing-import]
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -96,6 +98,7 @@ def explain_with_ai(field: str, local_val: str, sofia_val: str) -> str:
     
     if gemini_key:
         try:
+            # pyrefly: ignore [missing-import]
             import google.generativeai as genai
             genai.configure(api_key=gemini_key)
             model = genai.GenerativeModel('gemini-1.5-flash')
@@ -130,6 +133,10 @@ def explain_with_ai(field: str, local_val: str, sofia_val: str) -> str:
         return f"El programa de formación '{local_val}' no coincide con el programa oficial '{sofia_val}' en el que estás matriculado."
     elif field == "status":
         return f"Tu estado académico actual en Sofia Plus es '{sofia_val}', lo cual no permite validar un carnet activo. Debe ser 'EN FORMACION'."
+    elif field == "regional":
+        return f"La regional registrada '{local_val}' no coincide con la regional oficial '{sofia_val}' de tu ficha en Sofia Plus."
+    elif field == "trainingCenter":
+        return f"El centro de formación registrado '{local_val}' no coincide con el centro oficial '{sofia_val}' en Sofia Plus."
     
     return f"El campo '{field}' no coincide con el registro oficial de Sofia Plus."
 
@@ -220,6 +227,28 @@ def validate_sofia(req: ValidationRequest):
                 "field": "status",
                 "local": "ACTIVO",
                 "sofia": status,
+                "explanation": explanation
+            })
+
+        # Comparación de Regional
+        sofia_regional = scraped_data.get("regional", "")
+        if sofia_regional and normalize_text(local_regional) != normalize_text(sofia_regional):
+            explanation = explain_with_ai("regional", local_regional, sofia_regional)
+            mismatches.append({
+                "field": "regional",
+                "local": local_regional,
+                "sofia": sofia_regional,
+                "explanation": explanation
+            })
+
+        # Comparación de Centro de Formación
+        sofia_center = scraped_data.get("trainingCenter", "")
+        if sofia_center and normalize_text(local_center) not in normalize_text(sofia_center) and normalize_text(sofia_center) not in normalize_text(local_center):
+            explanation = explain_with_ai("trainingCenter", local_center, sofia_center)
+            mismatches.append({
+                "field": "trainingCenter",
+                "local": local_center,
+                "sofia": sofia_center,
                 "explanation": explanation
             })
 
