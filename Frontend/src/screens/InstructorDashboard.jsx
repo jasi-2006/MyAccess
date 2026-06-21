@@ -22,7 +22,7 @@ export default function InstructorDashboard({ navigation }) {
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
   const [redirecting, setRedirecting] = useState(true);
 
-  const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
+  const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
 
   useFocusEffect(
