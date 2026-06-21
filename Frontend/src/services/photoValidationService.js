@@ -1,4 +1,4 @@
-const CLAUDE_API_KEY = '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';
+const CLAUDE_API_KEY = process.env.EXPO_PUBLIC_CLAUDE_API_KEY;
 const CLAUDE_URL = 'https://api.anthropic.com/v1/messages';
 
 function fileToBase64(file) {
