@@ -39,10 +39,17 @@ export async function registerUser(payload) {
   });
 }
 
+<<<<<<< HEAD
 export async function uploadPhoto(document, formData) {
   return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
+=======
+export async function uploadRejectedPhoto(document, formData) {
+  // Placeholder endpoint for rejected carnet photos
+  return userServiceRequest(`/auth/photo/rejected/${encodeURIComponent(document)}`, {
+>>>>>>> 18fcdd891cfcc55e93b16452c9cb736c23f54f82
     method: 'POST',
     body: formData,
+    // Assuming authentication not required; adjust if needed
     skipAuth: true,
   });
 }
@@ -52,6 +59,13 @@ export async function uploadProfilePhoto(document, formData) {
   return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
     method: 'POST',
     body: formData,
+  });
+}
+
+/** Validar localmente y marcar como verificado si la foto está cargada. */
+export async function verifyLocalProfile(document) {
+  return userServiceRequest(`/register/users/document/${encodeURIComponent(document)}/verify-local`, {
+    method: 'PUT',
   });
 }
 

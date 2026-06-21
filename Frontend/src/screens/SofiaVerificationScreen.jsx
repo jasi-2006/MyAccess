@@ -40,6 +40,7 @@ export default function SofiaVerificationScreen({ navigation }) {
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [useMock, setUseMock] = useState(true); // Default mock for easier grading/testing
   const [validating, setValidating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -305,14 +306,23 @@ export default function SofiaVerificationScreen({ navigation }) {
 
                     <View style={styles.fieldGroup}>
                       <Text style={styles.inputLabel}>Contraseña de Sofia Plus</Text>
-                      <TextInput 
-                        value={password} 
-                        onChangeText={setPassword} 
-                        secureTextEntry 
-                        placeholder="••••••••••••"
-                        style={styles.input}
-                        editable={!useMock}
-                      />
+                      <View style={styles.passwordContainer}>
+                        <TextInput 
+                          value={password} 
+                          onChangeText={setPassword} 
+                          secureTextEntry={!showPassword} 
+                          placeholder="••••••••••••"
+                          style={[styles.passwordInput, useMock && styles.inputDisabled]}
+                          editable={!useMock}
+                        />
+                        <TouchableOpacity 
+                          style={styles.showPasswordBtn} 
+                          onPress={() => setShowPassword(!showPassword)}
+                          disabled={useMock}
+                        >
+                          <Text style={styles.showPasswordText}>{showPassword ? '👁️ Ocultar' : '👁️ Mostrar'}</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
 
                     {/* Toggle de Modo Demo */}
@@ -393,6 +403,37 @@ const styles = StyleSheet.create({
     fontSize: 14, color: '#1E293B', backgroundColor: '#FFFFFF',
   },
   inputDisabled: { backgroundColor: '#F1F5F9', color: '#64748B' },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+  },
+  passwordInput: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1E293B',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  showPasswordBtn: {
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F1F5F9',
+    height: '100%',
+    borderLeftWidth: 1,
+    borderLeftColor: '#CBD5E1',
+  },
+  showPasswordText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#475569',
+  },
   submitBtn: {
     backgroundColor: '#0F766E', borderRadius: 8, paddingVertical: 12, alignItems: 'center', marginTop: 12,
     shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4, elevation: 2,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform, ActivityIndicator, useWindowDimensions, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import WebFrame from '../components/WebFrame.jsx';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -35,6 +35,8 @@ export default function CreateInstructorCardScreen({ navigation }) {
     email: '',
   });
 
+  const [fichas, setFichas] = useState([]);
+  const [fichaInput, setFichaInput] = useState('');
   const fileInputRef = useRef(null);
 
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
@@ -75,6 +77,15 @@ export default function CreateInstructorCardScreen({ navigation }) {
     setPhoto({ uri, file });
   };
 
+  const addFicha = () => {
+    const val = fichaInput.trim();
+    if (!val || !/^\d+$/.test(val) || fichas.includes(val)) { setFichaInput(''); return; }
+    setFichas((prev) => [...prev, val]);
+    setFichaInput('');
+  };
+
+  const removeFicha = (f) => setFichas((prev) => prev.filter((x) => x !== f));
+
   const validate = () => {
     const e = {};
     if (!values.name || values.name.trim().length < 3) {
@@ -95,7 +106,11 @@ export default function CreateInstructorCardScreen({ navigation }) {
     } else if (!values.email.includes('@')) {
       e.email = 'Correo electrónico inválido';
     }
-    
+
+    if (fichas.length === 0) e.fichas = 'Agrega al menos una ficha';
+    if (!photo) {
+      e.photo = 'La fotografía del instructor es requerida';
+    }
     setErrors(e);
     return !Object.keys(e).length;
   };
@@ -117,7 +132,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
         regional: values.regional.trim().toLowerCase(),
         bloodType: 'O+', // Tipo de sangre por defecto
         nameRole: 'INSTRUCTOR',
-        ficha: null,
+        ficha: fichas.join(','),
         trainingProgram: null,
       });
 
@@ -162,6 +177,8 @@ export default function CreateInstructorCardScreen({ navigation }) {
       regional: 'Quindio',
       email: '',
     });
+    setFichas([]);
+    setFichaInput('');
     setPhoto(null);
     setErrors({});
     setSubmitError('');
@@ -284,6 +301,39 @@ export default function CreateInstructorCardScreen({ navigation }) {
                       keyboardType="email-address"
                     />
                   </View>
+                </View>
+
+                {/* Fichas asignadas */}
+                <View style={styles.fichasBlock}>
+                  <Text style={styles.roleLabel}>Fichas asignadas</Text>
+                  <View style={styles.fichaInputRow}>
+                    <TextInput
+                      style={styles.fichaInput}
+                      value={fichaInput}
+                      onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
+                      placeholder="N° de ficha"
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      onSubmitEditing={addFicha}
+                      placeholderTextColor="#9CA3AF"
+                    />
+                    <TouchableOpacity style={styles.fichaAddBtn} onPress={addFicha}>
+                      <Text style={styles.fichaAddBtnText}>+ Agregar</Text>
+                    </TouchableOpacity>
+                  </View>
+                  {fichas.length > 0 && (
+                    <View style={styles.fichaChips}>
+                      {fichas.map((f) => (
+                        <View key={f} style={styles.fichaChip}>
+                          <Text style={styles.fichaChipText}>#{f}</Text>
+                          <TouchableOpacity onPress={() => removeFicha(f)}>
+                            <Text style={styles.fichaChipRemove}>✕</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                  {errors.fichas ? <Text style={styles.errorText}>{errors.fichas}</Text> : null}
                 </View>
 
                 {/* Subida de Fotografía */}
@@ -409,9 +459,27 @@ const styles = StyleSheet.create({
   roleChipTextActive: {
     color: '#118449',
   },
-  photoBlock: {
-    marginTop: 10,
+  photoBlock: { marginTop: 10 },
+  fichasBlock: { marginTop: 4, marginBottom: 8 },
+  fichaInputRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  fichaInput: {
+    flex: 1, height: 40, borderWidth: 1, borderColor: '#D1D5DB',
+    borderRadius: 10, paddingHorizontal: 12, fontSize: 13,
+    color: '#1F2937', backgroundColor: '#FFFFFF',
   },
+  fichaAddBtn: {
+    height: 40, paddingHorizontal: 14, borderRadius: 10,
+    backgroundColor: '#24C565', alignItems: 'center', justifyContent: 'center',
+  },
+  fichaAddBtnText: { color: '#FFFFFF', fontWeight: '800', fontSize: 12 },
+  fichaChips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 8 },
+  fichaChip: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20,
+    backgroundColor: '#E8FFF5', borderWidth: 1, borderColor: '#24C565',
+  },
+  fichaChipText: { fontSize: 12, fontWeight: '700', color: '#118449' },
+  fichaChipRemove: { fontSize: 11, color: '#EF4444', fontWeight: '900' },
   photoPicker: {
     height: 80,
     borderRadius: 14,

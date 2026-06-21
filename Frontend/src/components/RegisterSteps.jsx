@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform, TextInput } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import CustomInput from './CustomInput.jsx';
 import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
@@ -11,19 +11,10 @@ export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
   const isCarnetStep = step === 1;
-  const isInstructor = values.nameRole === 'INSTRUCTOR';
-  const { nombres, apellidos, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, fichas = [], email, password } = values;
+  const isInstructor = false; // fichas solo se asignan desde el panel admin
+  const { nombres, apellidos, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, email, password } = values;
+
   const fileInputRef = useRef(null);
-  const [fichaInput, setFichaInput] = useState('');
-
-  const addFicha = () => {
-    const val = fichaInput.trim();
-    if (!val || !/^\d+$/.test(val) || fichas.includes(val)) { setFichaInput(''); return; }
-    onChange('fichas', [...fichas, val]);
-    setFichaInput('');
-  };
-
-  const removeFicha = (f) => onChange('fichas', fichas.filter((x) => x !== f));
 
   const pickImage = async () => {
     if (Platform.OS === 'web') {
@@ -58,7 +49,7 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
       inp('📄', 'Regional',             regional,        o('regional'),        {}),
       inp('🏢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
       inp('⚙️', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      ...(!isInstructor ? [inp('🔢', 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true })] : []),
+      inp('🔢', 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
     ],
     [
       inp('📧', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
@@ -155,39 +146,6 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
         </>
       ) : (
         stepFields[step].map(renderField)
-      )}
-      {step === 1 && isInstructor && (
-        <View style={styles.fichasBlock}>
-          <Text style={styles.roleLabel}>Fichas asignadas</Text>
-          <View style={styles.fichaInputRow}>
-            <TextInput
-              style={styles.fichaInput}
-              value={fichaInput}
-              onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
-              placeholder="N° de ficha"
-              keyboardType="numeric"
-              returnKeyType="done"
-              onSubmitEditing={addFicha}
-              placeholderTextColor="#9CA3AF"
-            />
-            <TouchableOpacity style={styles.fichaAddBtn} onPress={addFicha}>
-              <Text style={styles.fichaAddBtnText}>+ Agregar</Text>
-            </TouchableOpacity>
-          </View>
-          {fichas.length > 0 && (
-            <View style={styles.fichaChips}>
-              {fichas.map((f) => (
-                <View key={f} style={styles.fichaChip}>
-                  <Text style={styles.fichaChipText}>#{f}</Text>
-                  <TouchableOpacity onPress={() => removeFicha(f)}>
-                    <Text style={styles.fichaChipRemove}>✕</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          )}
-          {errors.fichas ? <Text style={styles.roleError}>{errors.fichas}</Text> : null}
-        </View>
       )}
       {step === 0 && (
         <>

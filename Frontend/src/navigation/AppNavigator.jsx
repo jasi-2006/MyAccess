@@ -20,6 +20,7 @@ import FichasScreen from '../screens/Fichas.jsx';
 import SolicitudesScreen from '../screens/Solicitudes.jsx';
 import HistorialScreen from '../screens/Historial.jsx';
 import GestionFichas from '../screens/GestionFichas.jsx';
+import InstructoresScreen from '../screens/Instructores.jsx';
 import ImprimirScreen from '../screens/Imprimir.jsx';
 import ProcessingStatus from '../screens/Processingstatus.jsx';
 import SofiaVerificationScreen from '../screens/SofiaVerificationScreen.jsx';
@@ -112,7 +113,8 @@ const ProtectedFichas = protect('Fichas', FichasScreen);
 const ProtectedSolicitudes = protect('Solicitudes', SolicitudesScreen);
 const ProtectedHistorial = protect('Historial', HistorialScreen);
 const ProtectedImprimir = protect('Imprimir', ImprimirScreen);
-const protectedGestion = protect ('Gestion', GestionFichas );
+const ProtectedInstructores = protect('Instructores', InstructoresScreen);
+const ProtectedGestion = protect('Gestion', GestionFichas);
 const ProtectedProcessingStatus = protect('Tramite', ProcessingStatus);
 const ProtectedSofiaVerification = protect('SofiaVerification', SofiaVerificationScreen);
 
@@ -151,7 +153,8 @@ export default function AppNavigator() {
         <Stack.Screen name="Solicitudes" component={ProtectedSolicitudes} />
         <Stack.Screen name="Historial" component={ProtectedHistorial} />
         <Stack.Screen name="Imprimir" component={ProtectedImprimir} />
-        <Stack.Screen name="Gestion" component={protectedGestion}/>
+        <Stack.Screen name="Instructores" component={ProtectedInstructores} />
+        <Stack.Screen name="Gestion" component={ProtectedGestion}/>
         <Stack.Screen name="Tramite" component={ProtectedProcessingStatus} />
         <Stack.Screen name="SofiaVerification" component={ProtectedSofiaVerification} />
 
