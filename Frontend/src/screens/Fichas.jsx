@@ -29,9 +29,23 @@ export default function FichasScreen({ navigation, route }) {
 
   const isInstructor = normalizeRole(profile?.nameRole) === ROLES.INSTRUCTOR;
 
+  // Fichas asignadas al instructor (puede ser "2345" o "2345,6789")
+  const instructorFichas = isInstructor
+    ? String(profile?.ficha || profile?.Ficha || '')
+        .split(',')
+        .map((f) => f.trim())
+        .filter(Boolean)
+    : null;
+
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
-  const learners = users.filter((user) => normalizeRole(user?.nameRole) === ROLES.APRENDIZ && (user?.ficha || user?.Ficha));
+  const learners = users.filter((user) => {
+    if (normalizeRole(user?.nameRole) !== ROLES.APRENDIZ) return false;
+    const userFicha = String(user?.ficha || user?.Ficha || '').trim();
+    if (!userFicha) return false;
+    if (instructorFichas) return instructorFichas.includes(userFicha);
+    return true;
+  });
   const fichas = Array.from(new Set(learners.map((user) => String(user.ficha || user.Ficha).trim()).filter(Boolean))).sort();
   const selectedLearners = learners.filter((user) => String(user.ficha || user.Ficha).trim() === selectedFicha);
   const activeCards = Object.values(cardsByUser).filter((card) => card?.active ?? true).length;
@@ -325,6 +339,10 @@ export default function FichasScreen({ navigation, route }) {
               <View style={styles.loadingBox}>
                 <ActivityIndicator color="#079B72" />
                 <Text style={styles.loadingText}>Cargando fichas...</Text>
+              </View>
+            ) : isInstructor && instructorFichas.length === 0 ? (
+              <View style={styles.loadingBox}>
+                <Text style={styles.errorText}>No tienes fichas asignadas. Contacta al administrador.</Text>
               </View>
             ) : (
               <>
