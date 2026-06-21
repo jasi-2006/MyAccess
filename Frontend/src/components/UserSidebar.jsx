@@ -26,6 +26,7 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
     if ((item.key === 'imprimir' || item.key === 'Imprimir') && normalizedRole !== ROLES.ADMIN) return false;
+    if (['Instructor', 'Fichas', 'Solicitudes'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
     return true;
   });
 

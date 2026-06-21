@@ -10,6 +10,7 @@ import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getUserProfile } from '../services/authService';
 import { getAllRequestCards } from '../services/requestCardService';
+import { resolveUserRole, ROLES } from '../utils/accessControl';
 
 const STATE_COLORS = {
   pendiente: { bg: '#FFF7ED', text: '#D97706' },
@@ -46,6 +47,7 @@ export default function HistorialScreen({ navigation }) {
 
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
+  const isAdmin = profile?.nameRole === 'Administrador' || resolveUserRole(profile) === ROLES.ADMIN;
 
   useEffect(() => {
     getUserProfile().then(setProfile).catch(() => setProfile(null));
@@ -80,12 +82,14 @@ export default function HistorialScreen({ navigation }) {
                 <Text style={styles.pageTitle}>Historial de solicitudes</Text>
                 <Text style={styles.pageSubtitle}>Consulta el historial completo de solicitudes de carnet.</Text>
               </View>
-              <TouchableOpacity
-                style={styles.headerPrintBtn}
-                onPress={() => navigation.navigate('Imprimir')}
-              >
-                <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
-              </TouchableOpacity>
+              {isAdmin && (
+                <TouchableOpacity
+                  style={styles.headerPrintBtn}
+                  onPress={() => navigation.navigate('Imprimir')}
+                >
+                  <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             <View style={styles.row}>
@@ -144,12 +148,14 @@ export default function HistorialScreen({ navigation }) {
                         <Text style={styles.mobileLabel}>Carnet</Text>
                         <Text style={styles.mobileValue}>{request.cardTipe || '-'}</Text>
                       </View>
-                      <TouchableOpacity
-                        style={styles.mobilePrintBtn}
-                        onPress={() => navigation.navigate('Imprimir')}
-                      >
-                        <Text style={styles.printBtnText}>Imprimir</Text>
-                      </TouchableOpacity>
+                      {isAdmin && (
+                        <TouchableOpacity
+                          style={styles.mobilePrintBtn}
+                          onPress={() => navigation.navigate('Imprimir')}
+                        >
+                          <Text style={styles.printBtnText}>Imprimir</Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   ))}
                 </View>
@@ -164,7 +170,7 @@ export default function HistorialScreen({ navigation }) {
                       <Text style={[styles.cell, styles.cellHeader]}>Estado</Text>
                       <Text style={[styles.cell, styles.cellHeader]}>Aprobado por</Text>
                       <Text style={[styles.cell, styles.cellHeader]}>Impreso por</Text>
-                      <Text style={[styles.cell, styles.cellHeader, styles.cellAction]}>Accion</Text>
+                      {isAdmin && <Text style={[styles.cell, styles.cellHeader, styles.cellAction]}>Accion</Text>}
                     </View>
 
                     {filtered.map((request, index) => (
@@ -178,14 +184,16 @@ export default function HistorialScreen({ navigation }) {
                         </View>
                         <Text style={styles.cell} numberOfLines={1}>{request.approbedBy || '-'}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.printedBy || '-'}</Text>
-                        <View style={[styles.cell, styles.cellAction, styles.cellCenter]}>
-                          <TouchableOpacity
-                            style={styles.printBtn}
-                            onPress={() => navigation.navigate('Imprimir')}
-                          >
-                            <Text style={styles.printBtnText}>Imprimir</Text>
-                          </TouchableOpacity>
-                        </View>
+                        {isAdmin && (
+                          <View style={[styles.cell, styles.cellAction, styles.cellCenter]}>
+                            <TouchableOpacity
+                              style={styles.printBtn}
+                              onPress={() => navigation.navigate('Imprimir')}
+                            >
+                              <Text style={styles.printBtnText}>Imprimir</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )}
                       </View>
                     ))}
                   </View>
