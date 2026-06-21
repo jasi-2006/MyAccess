@@ -8,9 +8,9 @@ import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
-import { getUserProfile } from '../services/authService';
-import { getAllRequestCards } from '../services/requestCardService';
-import { resolveUserRole, ROLES } from '../utils/accessControl';
+import { getUserProfile, getAllUserProfiles } from '../services/authService';
+import { getAllRequestCards, createRequestCard, updateRequestCard } from '../services/requestCardService';
+import { resolveUserRole, normalizeRole, ROLES } from '../utils/accessControl';
 
 const STATE_COLORS = {
   pendiente: { bg: '#FFF7ED', text: '#D97706' },
@@ -44,6 +44,8 @@ export default function HistorialScreen({ navigation }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('Todos');
+  const [requesting, setRequesting] = useState(false);
+  const [requestMsg, setRequestMsg] = useState('');
 
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
@@ -57,6 +59,56 @@ export default function HistorialScreen({ navigation }) {
       .catch(() => setRequests([]))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleSolicitarImpresion = async () => {
+    if (requesting) return;
+    setRequesting(true);
+    setRequestMsg('');
+    try {
+      const [allUsers, allRequests] = await Promise.all([
+        getAllUserProfiles(),
+        getAllRequestCards().catch(() => []),
+      ]);
+
+      const instructorFicha = String(profile?.ficha || profile?.Ficha || '').trim();
+      const aprendices = (Array.isArray(allUsers) ? allUsers : []).filter(
+        (u) => normalizeRole(u?.nameRole) === ROLES.APRENDIZ &&
+          String(u?.ficha || u?.Ficha || '').trim() === instructorFicha
+      );
+
+      if (!aprendices.length) {
+        setRequestMsg('No se encontraron aprendices en tu ficha asignada.');
+        return;
+      }
+
+      await Promise.all(
+        aprendices.map((learner) => {
+          const existing = (Array.isArray(allRequests) ? allRequests : []).find(
+            (r) => r.idUser === learner.id
+          );
+          const payload = {
+            idUser: learner.id,
+            requestTipe: 'impresion_colectiva',
+            cardTipe: 'fisico',
+            state: 'pendiente',
+            approbedBy: null,
+            printedBy: null,
+          };
+          return existing?.idRequest
+            ? updateRequestCard(existing.idRequest, { ...existing, state: 'pendiente' })
+            : createRequestCard(payload);
+        })
+      );
+
+      setRequestMsg(`Solicitud enviada para ${aprendices.length} aprendices de la ficha #${instructorFicha}.`);
+      const updated = await getAllRequestCards().catch(() => requests);
+      setRequests(updated);
+    } catch {
+      setRequestMsg('Error al enviar la solicitud de impresión.');
+    } finally {
+      setRequesting(false);
+    }
+  };
 
   const count = (state) =>
     requests.filter((request) => request.state?.toLowerCase() === state.toLowerCase()).length;
@@ -83,14 +135,26 @@ export default function HistorialScreen({ navigation }) {
                 <Text style={styles.pageTitle}>Historial de solicitudes</Text>
                 <Text style={styles.pageSubtitle}>Consulta el historial completo de solicitudes de carnet.</Text>
               </View>
-              {(isAdmin || isInstructor) && (
+              {isAdmin && (
                 <TouchableOpacity
                   style={styles.headerPrintBtn}
                   onPress={() => navigation.navigate('Imprimir')}
                 >
-                  <Text style={styles.headerPrintBtnText}>Solicitar impresión</Text>
+                  <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
                 </TouchableOpacity>
               )}
+              {isInstructor && (
+                <TouchableOpacity
+                  style={[styles.headerPrintBtn, requesting && styles.headerPrintBtnDisabled]}
+                  onPress={handleSolicitarImpresion}
+                  disabled={requesting}
+                >
+                  <Text style={styles.headerPrintBtnText}>
+                    {requesting ? 'Enviando...' : 'Solicitar impresión'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {!!requestMsg && <Text style={styles.requestMsg}>{requestMsg}</Text>}
             </View>
 
             <View style={styles.row}>
@@ -231,6 +295,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   headerPrintBtnText: { color: '#FFFFFF', fontSize: 12, fontWeight: '800' },
+  headerPrintBtnDisabled: { opacity: 0.55 },
+  requestMsg: { fontSize: 11, color: '#059669', fontWeight: '700', marginTop: 4, flex: 1 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   filterRow: { marginTop: 12, marginBottom: 4 },
   filterContent: { paddingRight: 4 },
