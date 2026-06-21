@@ -3,17 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'r
 import { normalizeRole, ROLES, resolveUserRole } from '../utils/accessControl';
 
 const sidebarItems = [
-  { key: 'home',        label: 'Inicio',           },
-  { key: 'Card',      label: 'Mi carnet',         },
-  { key: 'User',        label: 'Mi perfil',       },
+  { key: 'home',        label: 'Inicio' },
+  { key: 'Card',        label: 'Mi carnet' },
+  { key: 'User',        label: 'Mi perfil' },
   { key: 'Notifications', label: 'Notificaciones' },
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
   { key: 'SofiaVerification', label: 'Validar Sofia Plus', aprendizOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',    managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',   managementOnly: true },
-  {key: 'imprimir',     label: 'imprimir',  managementOnly:true},
+  { key: 'Historial',   label: 'Historial', managementOnly: true },
+  { key: 'imprimir',    label: 'Imprimir', managementOnly: true },
 ];
 
 export default function UserSidebar({ navigation, activeKey, role }) {
@@ -26,7 +26,8 @@ export default function UserSidebar({ navigation, activeKey, role }) {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
     if ((item.key === 'imprimir' || item.key === 'Imprimir') && normalizedRole !== ROLES.ADMIN) return false;
-    if (['Instructor', 'Fichas', 'Solicitudes'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
+    if (['Instructor', 'Solicitudes', 'Historial', 'imprimir'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
+    if (item.key === 'Fichas' && normalizedRole !== ROLES.ADMIN && normalizedRole !== ROLES.INSTRUCTOR) return false;
     return true;
   });
 

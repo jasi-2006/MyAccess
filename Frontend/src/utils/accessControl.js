@@ -31,6 +31,8 @@ const ROLE_ROUTE_ACCESS = {
     'User',
     'Notifications',
     'NotificationDetail',
+    'Instructor',
+    'Fichas',
     'Historial',
     'SofiaVerification',
   ],
