@@ -48,6 +48,7 @@ export default function HistorialScreen({ navigation }) {
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
   const isAdmin = profile?.nameRole === 'Administrador' || resolveUserRole(profile) === ROLES.ADMIN;
+  const isInstructor = resolveUserRole(profile) === ROLES.INSTRUCTOR;
 
   useEffect(() => {
     getUserProfile().then(setProfile).catch(() => setProfile(null));
@@ -82,12 +83,12 @@ export default function HistorialScreen({ navigation }) {
                 <Text style={styles.pageTitle}>Historial de solicitudes</Text>
                 <Text style={styles.pageSubtitle}>Consulta el historial completo de solicitudes de carnet.</Text>
               </View>
-              {isAdmin && (
+              {(isAdmin || isInstructor) && (
                 <TouchableOpacity
                   style={styles.headerPrintBtn}
                   onPress={() => navigation.navigate('Imprimir')}
                 >
-                  <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
+                  <Text style={styles.headerPrintBtnText}>Solicitar impresión</Text>
                 </TouchableOpacity>
               )}
             </View>
