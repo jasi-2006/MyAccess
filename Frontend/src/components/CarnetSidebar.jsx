@@ -26,7 +26,7 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
     if ((item.key === 'Imprimir' || item.key === 'imprimir') && normalizedRole !== ROLES.ADMIN) return false;
-    if (['Instructor', 'Fichas', 'Solicitudes'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
+    if (['Instructor', 'Fichas', 'Solicitudes', 'Historial'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
     return true;
   });
 

@@ -27,6 +27,8 @@ export default function FichasScreen({ navigation, route }) {
   const [editForm, setEditForm] = useState({ digitalState: '', physicalState: '' });
   const [savingEdit, setSavingEdit] = useState(false);
 
+  const isInstructor = normalizeRole(profile?.nameRole) === ROLES.INSTRUCTOR;
+
   const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
   const userInitial = userName.charAt(0).toUpperCase();
   const learners = users.filter((user) => normalizeRole(user?.nameRole) === ROLES.APRENDIZ && (user?.ficha || user?.Ficha));
@@ -406,14 +408,16 @@ export default function FichasScreen({ navigation, route }) {
                           </View>
 
                           <View style={styles.rowActions}>
-                            <TouchableOpacity
-                              style={[styles.editButton, !card?.idCard && styles.disabledButton]}
-                              onPress={() => openEditCard(card)}
-                              disabled={!card?.idCard}
-                              activeOpacity={0.85}
-                            >
-                              <Text style={styles.editButtonText}>Editar</Text>
-                            </TouchableOpacity>
+                            {!isInstructor && (
+                              <TouchableOpacity
+                                style={[styles.editButton, !card?.idCard && styles.disabledButton]}
+                                onPress={() => openEditCard(card)}
+                                disabled={!card?.idCard}
+                                activeOpacity={0.85}
+                              >
+                                <Text style={styles.editButtonText}>Editar</Text>
+                              </TouchableOpacity>
+                            )}
                             <Switch
                               value={isActive}
                               onValueChange={(value) => handleToggleCard(learner, card, value)}
@@ -435,6 +439,7 @@ export default function FichasScreen({ navigation, route }) {
           </ScrollView>
         </View>
 
+        {!isInstructor && (
         <Modal
           visible={Boolean(editingCard)}
           transparent
@@ -480,6 +485,7 @@ export default function FichasScreen({ navigation, route }) {
             </View>
           </View>
         </Modal>
+        )}
       </View>
     </WebFrame>
   );
