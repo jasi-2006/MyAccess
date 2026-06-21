@@ -63,6 +63,7 @@ export default function RecoverPasswordScreen({ navigation }) {
       await requestPasswordResetCode(normalizedEmail);
       setStep(1);
       setSuccessMessage('Te enviamos un codigo de verificacion a tu correo.');
+      
     } catch (error) {
       setSuccessMessage('');
       setSubmitError(error.message || 'No fue posible enviar el codigo al correo.');

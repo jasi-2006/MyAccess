@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Alert, useWindowDimensions, Platform } from 'react-native';
-import { getUserProfile, updateUserProfile, uploadProfilePhoto } from '../services/authService';
+import { getUserProfile, updateUserProfile, uploadProfilePhoto, verifyLocalProfile } from '../services/authService';
 import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
@@ -11,6 +11,7 @@ import WebFrame from '../components/WebFrame.jsx';
 export default function UserProfile({ navigation }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+  
   const isDesktop = width >= 910;
   const isTablet = width >= 490 && width < 910;
   const px = isDesktop ? 50 : isTablet ? 40 : 14;
@@ -96,8 +97,22 @@ export default function UserProfile({ navigation }) {
             });
           }
           await uploadProfilePhoto(profile.document, formData);
+          
+          // Validar localmente y marcar como verificado si la foto está cargada
+          try {
+            await verifyLocalProfile(profile.document);
+          } catch (verifyErr) {
+            console.error('Error al validar localmente:', verifyErr);
+          }
         } catch (photoErr) {
           photoError = photoErr?.payload?.message || photoErr?.message || 'No se pudo subir la foto.';
+        }
+      } else {
+        // Si no hay foto, validar igualmente (pero no se marcará como verificado)
+        try {
+          await verifyLocalProfile(profile.document);
+        } catch (verifyErr) {
+          console.error('Error al validar localmente:', verifyErr);
         }
       }
 

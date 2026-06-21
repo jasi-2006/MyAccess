@@ -13,6 +13,7 @@ import { colors } from '../theme/colors.jsx';
 import { resolveImageUrl } from '../services/api.js';
 import { resolveUserRole, getRoleDisplayName, ROLES } from '../utils/accessControl';
 
+
 const QR_PATTERN = [
   '11111110001001111111',
   '10000010110010100001',
