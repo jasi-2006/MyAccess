@@ -27,10 +27,10 @@ const STATE_COLORS = {
 };
 
 const STATE_MESSAGES = {
-  validado:  { title: 'Solicitud validada ✅',   body: 'Tu solicitud de carnet ha sido validada y está lista para impresión.' },
-  impreso:   { title: 'Carnet impreso 🪪',        body: 'Tu carnet ha sido impreso exitosamente. Puedes pasar a recogerlo.' },
-  rechazado: { title: 'Solicitud rechazada ❌',   body: 'Tu solicitud de carnet ha sido rechazada. Contacta al administrador para más información.' },
-  pendiente: { title: 'Solicitud en revisión 🔄', body: 'Tu solicitud de carnet ha sido marcada como pendiente nuevamente.' },
+  validado:  { affair: 'Solicitud validada',         messaje: 'Tu solicitud de carnet ha sido validada y está lista para impresión.' },
+  impreso:   { affair: 'Carnet impreso',              messaje: 'Tu carnet ha sido impreso exitosamente. Puedes pasar a recogerlo.' },
+  rechazado: { affair: 'Solicitud rechazada',         messaje: 'Tu solicitud de carnet ha sido rechazada. Contacta al administrador para más información.' },
+  pendiente: { affair: 'Solicitud en revisión',       messaje: 'Tu solicitud de carnet ha sido marcada como pendiente nuevamente.' },
 };
 
 export default function SolicitudesScreen({ navigation }) {
@@ -102,8 +102,10 @@ export default function SolicitudesScreen({ navigation }) {
       if (msg && request.idUser) {
         createNotification({
           idUser: request.idUser,
-          title: msg.title,
-          message: msg.body,
+          affair: msg.affair,
+          messaje: msg.messaje,
+          tipe: 'Carnet',
+          category: 'Estado de solicitud',
           statedSend: 'enviado',
         }).catch(() => {});
       }
