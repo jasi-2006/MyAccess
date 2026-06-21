@@ -95,9 +95,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
     } else if (!values.email.includes('@')) {
       e.email = 'Correo electrónico inválido';
     }
-    if (!photo) {
-      e.photo = 'La fotografía del instructor es requerida';
-    }
+    
     setErrors(e);
     return !Object.keys(e).length;
   };

@@ -40,7 +40,7 @@ export async function registerUser(payload) {
 }
 
 export async function uploadPhoto(document, formData) {
-  return userServiceRequest(`/auth/photo/${encodeURIComponent(document)}`, {
+  return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
     method: 'POST',
     body: formData,
     skipAuth: true,
