@@ -88,6 +88,28 @@ export default function InstructorDashboard({ navigation }) {
               <StatCard title="Impresos"    value={String(requests.filter(r => r.state?.toLowerCase() === 'impreso').length)} />
             </View>
 
+            {(() => {
+              const isGroupDirector = profile?.nameRole === 'DIRECTOR_DE_GRUPO' || profile?.nameRole === 'DIRECTOR' || String(profile?.nameRole).toLowerCase().includes('director');
+              const assignedFichas = profile?.ficha ? [String(profile.ficha).trim()] : ['3144615'];
+              return isGroupDirector ? (
+                <View style={styles.assignedSection}>
+                  <Text style={styles.assignedTitle}>Mis Fichas Asignadas</Text>
+                  <View style={styles.assignedGrid}>
+                    {assignedFichas.map((ficha) => (
+                      <TouchableOpacity
+                        key={ficha}
+                        style={styles.assignedCard}
+                        onPress={() => navigation.navigate('Fichas', { selectedFicha: ficha })}
+                        activeOpacity={0.85}
+                      >
+                        <Text style={styles.assignedCardText}>Ficha: {ficha}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              ) : null;
+            })()}
+
             <View style={styles.actions}>
               {[
                 { title: 'Ver fichas',          text: 'Gestionar grupos y programas activos.',                          route: 'Fichas' },
@@ -134,4 +156,9 @@ const styles = StyleSheet.create({
   actionButton:  { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
   actionTitle:   { color: '#079B72', fontSize: 16, fontWeight: '900', marginBottom: 6 },
   actionText:    { color: '#6B7280', fontSize: 13, fontWeight: '700' },
+  assignedSection: { marginTop: 15, marginBottom: 5 },
+  assignedTitle: { fontSize: 11, fontWeight: '800', color: '#6B7280', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.3 },
+  assignedGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  assignedCard: { flexBasis: 140, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 14, alignItems: 'center', justifyContent: 'center' },
+  assignedCardText: { color: '#079B72', fontSize: 15, fontWeight: '900' },
 });

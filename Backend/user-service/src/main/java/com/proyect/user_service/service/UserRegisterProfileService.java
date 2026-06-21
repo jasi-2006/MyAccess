@@ -138,6 +138,7 @@ public class UserRegisterProfileService {
         user.setPhotoUrl("/uploads/" + filename);
         user.setPhotoData(bytes);
         user.setPhotoContentType(resolveContentType(photo, filename));
+        user.setSofiaVerified(true);
         return Optional.of(toResponse(userRepository.save(user)));
     }
 
