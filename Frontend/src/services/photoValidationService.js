@@ -1,6 +1,5 @@
-const GEMINI_API_KEY = 'AQ.Ab8RN6LF64kr4xRR27iUBuK_UhtVQ0IqS61zpNqJqJHdILfsGA';
-const DEFAULT_MODEL = 'gemini-2.0-flash'; // Using a model that exists in the project
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${DEFAULT_MODEL}:generateContent?key=${GEMINI_API_KEY}`; // v1beta endpoint (required for gemini-1.5-flash)
+const GEMINI_API_KEY = 'AQ.Ab8RN6L-1gHS6Ix7IyR3mnfr9nkHmJabNidug8XnLcC1DQn62Q ';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -14,26 +13,8 @@ function fileToBase64(file) {
 export async function validateCarnetPhoto(file) {
   const base64 = await fileToBase64(file);
 
-  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta, sin texto adicional ni markdown:
-
-{
-  "valid": boolean,
-  "errors": ["error1", "error2", ...]
-}
-
-CRITERIOS OBLIGATORIOS (todos deben cumplirse):
-1. Fondo blanco o de color claro uniforme
-2. Rostro visible, centrado y mirando a cámara
-3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro
-4. Expresión neutral (boca cerrada, sin sonreír)
-5. Iluminación uniforme (sin sombras fuertes en rostro ni fondo)
-6. Imagen nítida, sin desenfoque ni ruido excesivo
-7. Solo una persona visible en la foto
-
-REGLAS:
-- Si TODOS los criterios se cumplen: "valid": true, "errors": []
-- Si ALGÚN criterio NO se cumple: "valid": false, lista los errores específicos encontrados
-- No incluyas explicaciones, solo el JSON`;
+  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco o de color claro uniforme\n2. Rostro visible, centrado y mirando a cámara\n3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro\n4. Expresión neutral (boca cerrada, sin sonreír)\n5. Iluminación uniforme (sin sombras fuertes en rostro ni fondo)
+`;
 
   const response = await fetch(GEMINI_URL, {
     method: 'POST',

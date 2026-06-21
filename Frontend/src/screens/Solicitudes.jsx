@@ -15,6 +15,7 @@ import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getUserProfile, getAllUserProfiles } from '../services/authService';
 import { getAllRequestCards, updateRequestCard } from '../services/requestCardService';
+import { createNotification } from '../services/notificationService';
 
 const STATES = ['pendiente', 'validado', 'impreso', 'rechazado'];
 
@@ -23,6 +24,13 @@ const STATE_COLORS = {
   validado: { bg: '#ECFDF5', text: '#059669' },
   impreso: { bg: '#EFF6FF', text: '#2563EB' },
   rechazado: { bg: '#FEF2F2', text: '#DC2626' },
+};
+
+const STATE_MESSAGES = {
+  validado:  { title: 'Solicitud validada ✅',   body: 'Tu solicitud de carnet ha sido validada y está lista para impresión.' },
+  impreso:   { title: 'Carnet impreso 🪪',        body: 'Tu carnet ha sido impreso exitosamente. Puedes pasar a recogerlo.' },
+  rechazado: { title: 'Solicitud rechazada ❌',   body: 'Tu solicitud de carnet ha sido rechazada. Contacta al administrador para más información.' },
+  pendiente: { title: 'Solicitud en revisión 🔄', body: 'Tu solicitud de carnet ha sido marcada como pendiente nuevamente.' },
 };
 
 export default function SolicitudesScreen({ navigation }) {
@@ -89,6 +97,16 @@ export default function SolicitudesScreen({ navigation }) {
       setRequests((prev) =>
         prev.map((r) => (r.idRequest === request.idRequest ? { ...r, state: newState } : r))
       );
+      // Enviar notificación automática al usuario
+      const msg = STATE_MESSAGES[newState];
+      if (msg && request.idUser) {
+        createNotification({
+          idUser: request.idUser,
+          title: msg.title,
+          message: msg.body,
+          statedSend: 'enviado',
+        }).catch(() => {});
+      }
     } catch {
       // silent
     } finally {
