@@ -1,4 +1,4 @@
-const CLAUDE_API_KEY = process.env.EXPO_PUBLIC_CLAUDE_API_KEY;
+const CLAUDE_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
 const CLAUDE_URL = 'https://api.anthropic.com/v1/messages';
 
 function fileToBase64(file) {
