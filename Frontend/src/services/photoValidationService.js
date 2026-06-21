@@ -1,4 +1,4 @@
-const GROQ_API_KEY = typeof process !== 'undefined' && process.env ? process.env.EXPO_PUBLIC_GROQ_API_KEY : (import.meta && import.meta.env ? import.meta.env.EXPO_PUBLIC_GROQ_API_KEY : null);
+const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 function fileToBase64(file) {
@@ -12,7 +12,7 @@ function fileToBase64(file) {
 
 export async function validateCarnetPhoto(file) {
   if (!GROQ_API_KEY) {
-    throw new Error('API Key de Groq no configurada. Agrega EXPO_PUBLIC_GROQ_API_KEY en tu archivo .env');
+    console.warn('GROQ_API_KEY no está configurada en .env');
   }
   
   const base64 = await fileToBase64(file);
