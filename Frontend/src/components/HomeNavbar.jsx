@@ -6,213 +6,253 @@ import { logoutUser } from '../services/authService';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 export default function HomeNavbar({ navigation, active = 'Home', fullName, role }) {
- const { width } = useWindowDimensions();
-   const isMobile = width < 768;
-   const pagePadding = isMobile ? 14 : width < 1100 ? 18 : 24;
- 
-   const [notificationCount, setNotificationCount] = useState(0);
-   const [menuOpen, setMenuOpen] = useState(false);
- 
-   const loadNotificationCount = useCallback(async () => {
-     try {
-       const response = await getNotifications();
-       setNotificationCount(countUnreadNotifications(response));
-     } catch {
-       setNotificationCount(0);
-     }
-   }, []);
- 
-   useFocusEffect(useCallback(() => { loadNotificationCount(); }, [loadNotificationCount]));
- 
-   useEffect(() => {
-     if (notificationRefreshKey !== undefined) loadNotificationCount();
-   }, [loadNotificationCount, notificationRefreshKey]);
- 
-   const badgeText = notificationCount > 99 ? '99+' : String(notificationCount);
- 
-   return (
-     <View style={[styles.topbar, { paddingHorizontal: pagePadding }]}>
- 
-       {/* IZQUIERDA — Logo */}
-       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-         <Text style={styles.brand}>MyAccess</Text>
-       </TouchableOpacity>
- 
-       {/* DERECHA — Inicio · Campana · Nombre */}
-       <View style={styles.rightSection}>
- 
-         {/* Inicio */}
-         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-           <Text style={styles.linkText}>Inicio</Text>
-         </TouchableOpacity>
- 
-         {/* Campana */}
-         <TouchableOpacity style={styles.bellWrap} onPress={() => navigation.navigate('Notifications')}>
-           <Text style={styles.bellIcon}>🔔</Text>
-           {notificationCount > 0 && (
-             <View style={styles.badge}>
-               <Text style={styles.badgeText}>{badgeText}</Text>
-             </View>
-           )}
-         </TouchableOpacity>
- 
-         {/* Nombre del aprendiz con dropdown Salir */}
-         <View style={styles.userWrap}>
-           <TouchableOpacity style={styles.userBtn} onPress={() => setMenuOpen((v) => !v)}>
-             <View style={styles.avatarCircle}>
-               <Text style={styles.avatarInitial}>{studentInitial}</Text>
-             </View>
-             <Text style={styles.userName} numberOfLines={1}>{studentName}</Text>
-           </TouchableOpacity>
- 
-           {menuOpen && (
-             <View style={styles.dropdown}>
-               <Text style={styles.dropdownName} numberOfLines={1}>{studentName}</Text>
-               <View style={styles.divider} />
-               <TouchableOpacity
-                 style={styles.dropdownItem}
-                 onPress={() => { setMenuOpen(false); navigation.navigate('Login'); }}
-               >
-                 <Text style={styles.logoutText}>Salir</Text>
-               </TouchableOpacity>
-             </View>
-           )}
-         </View>
- 
-       </View>
-     </View>
-   );
- }
- 
- const styles = StyleSheet.create({
-   topbar: {
-     height: 52,
-     backgroundColor: '#FFFFFF',
-     borderTopWidth: 3,
-     borderTopColor: '#2FD16A',
-     borderBottomWidth: 1,
-     borderBottomColor: '#E5E7EB',
-     flexDirection: 'row',
-     alignItems: 'center',
-     justifyContent: 'space-between',
-     zIndex: 100,
-   },
-   brand: {
-     fontSize: 15,
-     fontWeight: '800',
-     color: '#2FD16A',
-   },
- 
-   /* Sección derecha */
-   rightSection: {
-     flexDirection: 'row',
-     alignItems: 'center',
-     gap: 20,
-   },
-   linkText: {
-     fontSize: 13,
-     color: '#555555',
-     fontWeight: '500',
-   },
- 
-   /* Campana */
-   bellWrap: {
-     width: 28,
-     height: 28,
-     alignItems: 'center',
-     justifyContent: 'center',
-     position: 'relative',
-   },
-   bellIcon: { fontSize: 16 },
-   badge: {
-     position: 'absolute',
-     top: -4,
-     right: -6,
-     minWidth: 16,
-     height: 16,
-     borderRadius: 8,
-     paddingHorizontal: 3,
-     backgroundColor: '#EF4444',
-     alignItems: 'center',
-     justifyContent: 'center',
-     borderWidth: 1.5,
-     borderColor: '#FFFFFF',
-   },
-   badgeText: {
-     color: '#FFFFFF',
-     fontSize: 9,
-     fontWeight: '900',
-   },
- 
-   /* Usuario */
-   userWrap: {
-     position: 'relative',
-     zIndex: 200,
-   },
-   userBtn: {
-     flexDirection: 'row',
-     alignItems: 'center',
-     gap: 7,
-     cursor: 'pointer',
-   },
-   avatarCircle: {
-     width: 28,
-     height: 28,
-     borderRadius: 14,
-     backgroundColor: '#E6DDD7',
-     alignItems: 'center',
-     justifyContent: 'center',
-   },
-   avatarInitial: {
-     color: '#8B6D58',
-     fontWeight: '700',
-     fontSize: 12,
-   },
-   userName: {
-     fontSize: 13,
-     fontWeight: '600',
-     color: '#3E3E3E',
-     maxWidth: 140,
-   },
- 
-   /* Dropdown */
-   dropdown: {
-     position: 'absolute',
-     top: 36,
-     right: 0,
-     backgroundColor: '#FFFFFF',
-     borderRadius: 10,
-     borderWidth: 1,
-     borderColor: '#E5E7EB',
-     shadowColor: '#000',
-     shadowOpacity: 0.1,
-     shadowRadius: 10,
-     shadowOffset: { width: 0, height: 4 },
-     elevation: 8,
-     minWidth: 160,
-     zIndex: 999,
-     paddingVertical: 6,
-   },
-   dropdownName: {
-     fontSize: 12,
-     fontWeight: '700',
-     color: '#3E3E3E',
-     paddingHorizontal: 14,
-     paddingVertical: 8,
-   },
-   divider: {
-     height: 1,
-     backgroundColor: '#F3F4F6',
-     marginHorizontal: 10,
-   },
-   dropdownItem: {
-     paddingHorizontal: 14,
-     paddingVertical: 10,
-   },
-   logoutText: {
-     fontSize: 13,
-     color: '#DC2626',
-     fontWeight: '600',
-   },
- });
- 
+  const { width } = useWindowDimensions();
+  const isMobile  = width < 480;
+  const isTablet  = width >= 480 && width < 900;
+  const isDesktop = width >= 900;
+  
+  const px = isDesktop ? 40 : isTablet ? 24 : 16;
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const isAdmin = normalizeRole(role) === ROLES.ADMIN;
+
+  const userInitial = fullName ? fullName.trim().charAt(0).toUpperCase() : 'U';
+
+  const loadNotificationCount = useCallback(async () => {
+    try {
+      const response = await getNotifications();
+      setNotificationCount(countUnreadNotifications(response));
+    } catch {
+      setNotificationCount(0);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadNotificationCount();
+    }, [loadNotificationCount])
+  );
+
+  const badgeText = notificationCount > 99 ? '99+' : String(notificationCount);
+
+  const handleLogout = async () => {
+    setDropdownOpen(false);
+    await logoutUser();
+    navigation.replace('Login');
+  };
+
+  return (
+    <View style={[styles.navbar, { paddingHorizontal: px }]}>
+      {/* Sección Izquierda (Identidad y Enlaces Base) */}
+      <View style={styles.navLeft}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.8}>
+          <Text style={styles.logoText}>MyAccess</Text>
+        </TouchableOpacity>
+
+        <View style={styles.navLinks}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7}>
+            <Text style={[styles.navLink, active === 'Home' && styles.navLinkActive]}>Inicio</Text>
+          </TouchableOpacity>
+          {isAdmin && (
+            <TouchableOpacity onPress={() => navigation.navigate('User')} activeOpacity={0.7}>
+              <Text style={[styles.navLink, active === 'User' && styles.navLinkActive]}>Configuracion</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {isAdmin && (
+          <TouchableOpacity 
+            style={styles.notificationLink} 
+            onPress={() => navigation.navigate('Notifications')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.bellIcon}>🔔</Text>
+            {notificationCount > 0 ? (
+              <View style={styles.notificationBadge}>
+                <Text style={styles.notificationBadgeText}>{badgeText}</Text>
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* Sección Derecha (Gestión de Usuario y Cierre de Sesión) */}
+      <View style={styles.navRight}>
+        <TouchableOpacity 
+          style={styles.profileContainer} 
+          onPress={() => setDropdownOpen(!dropdownOpen)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.avatarBadge}>
+            <Text style={styles.avatarInitial}>{userInitial}</Text>
+          </View>
+          <Text style={[styles.profileName, { maxWidth: isMobile ? 80 : 150 }]} numberOfLines={1}>
+            {fullName || 'Usuario'}
+          </Text>
+        </TouchableOpacity>
+
+        {dropdownOpen && (
+          <>
+            <TouchableOpacity
+              style={styles.dropdownOverlay}
+              activeOpacity={1}
+              onPress={() => setDropdownOpen(false)}
+            />
+            <View style={styles.dropdownMenu}>
+              <TouchableOpacity 
+                style={styles.dropdownItem} 
+                onPress={handleLogout}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.dropdownItemText}>Cerrar sesión</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  navbar: {
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 3,
+    borderTopColor: '#2FD16A',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    zIndex: 10,
+  },
+  navLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
+  logoText: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#2FD16A',
+    letterSpacing: -0.5,
+  },
+  navLinks: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  navLink: {
+    fontSize: 13,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  navLinkActive: {
+    color: '#0F766E',
+    fontWeight: '700',
+  },
+  notificationLink: {
+    position: 'relative',
+    padding: 4,
+  },
+  bellIcon: {
+    fontSize: 18,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -6,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#EF4444',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    paddingHorizontal: 2,
+  },
+  notificationBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 8,
+    fontWeight: '900',
+  },
+  navRight: {
+    position: 'relative',
+    zIndex: 20,
+  },
+  profileContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 20,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+  },
+  avatarBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#EAE0D8',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarInitial: {
+    color: '#8B6D58',
+    fontWeight: '700',
+    fontSize: 14,
+  },
+  profileName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#374151',
+    marginLeft: 8,
+  },
+  dropdownOverlay: {
+    position: 'absolute',
+    top: -500,
+    bottom: -1000,
+    left: -1000,
+    right: -500,
+    backgroundColor: 'transparent',
+    zIndex: 999,
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 42,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    minWidth: 130,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
+  },
+  dropdownItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    backgroundColor: 'transparent',
+  },
+  dropdownItemText: {
+    fontSize: 13,
+    color: '#EF4444',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+});
