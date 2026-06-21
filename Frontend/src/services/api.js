@@ -29,7 +29,7 @@ const ENV_VALIDATION_SERVICE_URL = process.env.EXPO_PUBLIC_VALIDATION_SERVICE_UR
 function shouldIgnoreEnvUrl(url) {
   if (!url) return true;
   const normalized = String(url).trim().toLowerCase();
-
+  
   // Deprecated Render URLs are always ignored
   if (normalized.includes('.onrender.com')) {
     return true;
