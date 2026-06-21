@@ -41,13 +41,17 @@ export async function registerUser(payload) {
 
 export async function uploadPhoto(document, formData) {
   return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
+    method: 'POST',
+    body: formData,
+    skipAuth: true,
+  });
+}
+
 export async function uploadRejectedPhoto(document, formData) {
   // Placeholder endpoint for rejected carnet photos
   return userServiceRequest(`/auth/photo/rejected/${encodeURIComponent(document)}`, {
-
     method: 'POST',
     body: formData,
-    // Assuming authentication not required; adjust if needed
     skipAuth: true,
   });
 }
