@@ -1,4 +1,4 @@
-const CLAUDE_API_KEY = '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';
+const CLAUDE_API_KEY = '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';
 const CLAUDE_URL = 'https://api.anthropic.com/v1/messages';
 
 function fileToBase64(file) {
@@ -21,7 +21,6 @@ export async function validateCarnetPhoto(file) {
       'Content-Type': 'application/json',
       'x-api-key': CLAUDE_API_KEY,
       'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
       model: 'claude-3-5-sonnet-20241022',
