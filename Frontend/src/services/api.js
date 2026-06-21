@@ -17,12 +17,14 @@ const DEFAULT_USER_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
 const DEFAULT_NOTIFICATIONS_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
 const DEFAULT_CARD_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
 const DEFAULT_NEWS_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
+const DEFAULT_VALIDATION_SERVICE_URL = useRelative ? '/api/v1/validation' : `${ALB_URL}/api/v1/validation`;
 
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
 const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
 const ENV_NOTIFICATIONS_SERVICE_URL = process.env.EXPO_PUBLIC_NOTIFICATIONS_SERVICE_URL;
 const ENV_CARD_SERVICE_URL = process.env.EXPO_PUBLIC_CARD_SERVICE_URL;
 const ENV_NEWS_SERVICE_URL = process.env.EXPO_PUBLIC_NEWS_SERVICE_URL;
+const ENV_VALIDATION_SERVICE_URL = process.env.EXPO_PUBLIC_VALIDATION_SERVICE_URL;
 
 function shouldIgnoreEnvUrl(url) {
   if (!url) return true;
@@ -100,11 +102,20 @@ function resolveNewsServiceUrl() {
   return normalizedEnvUrl;
 }
 
+function resolveValidationServiceUrl() {
+  const normalizedEnvUrl = String(ENV_VALIDATION_SERVICE_URL || '').trim();
+  if (shouldIgnoreEnvUrl(normalizedEnvUrl)) {
+    return DEFAULT_VALIDATION_SERVICE_URL;
+  }
+  return normalizedEnvUrl;
+}
+
 const API_GATEWAY_URL = resolveGatewayUrl();
 const USER_SERVICE_URL = resolveUserServiceUrl();
 const NOTIFICATIONS_SERVICE_URL = resolveNotificationsServiceUrl();
 const CARD_SERVICE_URL = resolveCardServiceUrl();
 const NEWS_SERVICE_URL = resolveNewsServiceUrl();
+const VALIDATION_SERVICE_URL = resolveValidationServiceUrl();
 
 let authTokenCache = null;
 let refreshTokenCache = null;
@@ -240,6 +251,10 @@ export async function newsServiceRequest(path, options = {}) {
   return baseRequest(NEWS_SERVICE_URL, path, options);
 }
 
+export async function validationServiceRequest(path, options = {}) {
+  return baseRequest(VALIDATION_SERVICE_URL, path, options);
+}
+
 async function baseRequest(baseUrl, path, options = {}) {
   const token = getToken();
   const isFormData = options.body instanceof FormData;
@@ -367,4 +382,5 @@ export {
   NOTIFICATIONS_SERVICE_URL,
   CARD_SERVICE_URL,
   NEWS_SERVICE_URL,
+  VALIDATION_SERVICE_URL,
 };
