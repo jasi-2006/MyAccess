@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Modal, View, Text, StyleSheet, ScrollView,
   TextInput, TouchableOpacity, ActivityIndicator, useWindowDimensions,
@@ -7,6 +7,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { digitsOnly } from '../utils/inputFilters.js';
 import { resolveImageUrl } from '../services/api.js';
+import { normalizeRole, ROLES } from '../utils/accessControl';
 
 export default function ProfileEditModal({
   visible,
@@ -19,11 +20,31 @@ export default function ProfileEditModal({
   currentPhotoUrl,
   photo,
   onPhotoChange,
+  userRole,
 }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 910;
   const fileInputRef = useRef(null);
   const previewUrl = photo?.uri || resolveImageUrl(currentPhotoUrl);
+  const [fichaInput, setFichaInput] = useState('');
+
+  const isInstructor = normalizeRole(userRole) === ROLES.INSTRUCTOR;
+
+  // fichas como array derivado del form
+  const fichas = isInstructor
+    ? String(form.ficha || '').split(',').map((f) => f.trim()).filter(Boolean)
+    : [];
+
+  const addFicha = () => {
+    const val = fichaInput.trim();
+    if (!val || !/^\d+$/.test(val) || fichas.includes(val)) { setFichaInput(''); return; }
+    onChange('ficha', [...fichas, val].join(','));
+    setFichaInput('');
+  };
+
+  const removeFicha = (f) => {
+    onChange('ficha', fichas.filter((x) => x !== f).join(','));
+  };
 
   const pickImage = async () => {
     if (Platform.OS === 'web') {
@@ -73,7 +94,44 @@ export default function ProfileEditModal({
               </TouchableOpacity>
             </View>
 
-            {fields.map((f) => (
+            {fields.map((f) => {
+              // Campo ficha para instructor: selector de múltiples fichas
+              if (f.key === 'ficha' && isInstructor) {
+                return (
+                  <View key={f.key} style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Fichas asignadas</Text>
+                    <View style={styles.fichaInputRow}>
+                      <TextInput
+                        style={styles.fichaInput}
+                        value={fichaInput}
+                        onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
+                        placeholder="N° de ficha"
+                        keyboardType="numeric"
+                        returnKeyType="done"
+                        onSubmitEditing={addFicha}
+                        placeholderTextColor="#94A3B8"
+                      />
+                      <TouchableOpacity style={styles.fichaAddBtn} onPress={addFicha}>
+                        <Text style={styles.fichaAddBtnText}>+ Agregar</Text>
+                      </TouchableOpacity>
+                    </View>
+                    {fichas.length > 0 && (
+                      <View style={styles.fichaChips}>
+                        {fichas.map((fc) => (
+                          <View key={fc} style={styles.fichaChip}>
+                            <Text style={styles.fichaChipText}>#{fc}</Text>
+                            <TouchableOpacity onPress={() => removeFicha(fc)}>
+                              <Text style={styles.fichaChipRemove}>✕</Text>
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                );
+              }
+              // Campo normal
+              return (
               <View key={f.key} style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>{f.label}</Text>
                 <TextInput
@@ -87,7 +145,8 @@ export default function ProfileEditModal({
                   editable={f.key !== 'document'}
                 />
               </View>
-            ))}
+              );
+            })}
           </ScrollView>
           <View style={styles.actions}>
             <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
@@ -136,4 +195,23 @@ const styles = StyleSheet.create({
   cancelText: { color: '#64748B', fontWeight: '600' },
   saveBtn: { backgroundColor: '#0F766E', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8 },
   saveText: { color: '#fff', fontWeight: '600' },
+  fichaInputRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  fichaInput: {
+    flex: 1, height: 40, borderWidth: 1, borderColor: '#E2E8F0',
+    borderRadius: 8, paddingHorizontal: 12, fontSize: 13,
+    color: '#1E293B', backgroundColor: '#F8FAFC',
+  },
+  fichaAddBtn: {
+    height: 40, paddingHorizontal: 14, borderRadius: 8,
+    backgroundColor: '#0F766E', alignItems: 'center', justifyContent: 'center',
+  },
+  fichaAddBtnText: { color: '#FFFFFF', fontWeight: '800', fontSize: 12 },
+  fichaChips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 8 },
+  fichaChip: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20,
+    backgroundColor: '#E8FFF5', borderWidth: 1, borderColor: '#0F766E',
+  },
+  fichaChipText: { fontSize: 12, fontWeight: '700', color: '#0F766E' },
+  fichaChipRemove: { fontSize: 11, color: '#EF4444', fontWeight: '900' },
 });
