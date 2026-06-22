@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform, ActivityIndicator, useWindowDimensions, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import WebFrame from '../components/WebFrame.jsx';
@@ -6,6 +6,7 @@ import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import CustomInput from '../components/CustomInput.jsx';
 import PrimaryButton from '../components/PrimaryButton.jsx';
+import { removePhotoBackground } from '../services/photoBackgroundService.js';
 import { getUserProfile, registerUser, uploadPhoto } from '../services/authService';
 import { createCard } from '../services/cardService';
 import { normalizeRole, ROLES } from '../utils/accessControl';
@@ -54,29 +55,27 @@ export default function CreateInstructorCardScreen({ navigation }) {
   const pickImage = async () => {
     if (Platform.OS === 'web') {
       fileInputRef.current?.click();
-    } else {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permiso de galería requerido para subir fotos.');
-        return;
-      }
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.7,
-      });
-      if (!result.canceled) setPhoto(result.assets[0]);
+      return;
     }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permiso de galeria requerido para subir fotos.');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    if (!result.canceled) setPhoto(await removePhotoBackground(result.assets[0]));
   };
 
-  const onFileChange = (e) => {
-    const file = e.target.files[0];
+  const onFileChange = async (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
-    const uri = URL.createObjectURL(file);
-    setPhoto({ uri, file });
+    setPhoto(await removePhotoBackground({ uri: URL.createObjectURL(file), file, fileName: file.name, type: file.type }));
   };
-
   const addFicha = () => {
     const val = fichaInput.trim();
     if (!val || !/^\d+$/.test(val) || fichas.includes(val)) { setFichaInput(''); return; }
@@ -89,27 +88,27 @@ export default function CreateInstructorCardScreen({ navigation }) {
   const validate = () => {
     const e = {};
     if (!values.name || values.name.trim().length < 3) {
-      e.name = 'Nombre completo requerido (mínimo 3 caracteres)';
+      e.name = 'Nombre completo requerido (mÃ­nimo 3 caracteres)';
     }
     if (!values.document) {
-      e.document = 'Número de documento requerido';
+      e.document = 'NÃºmero de documento requerido';
     } else if (!/^\d+$/.test(values.document)) {
-      e.document = 'Solo se permiten números';
+      e.document = 'Solo se permiten nÃºmeros';
     } else if (values.document.length < 5) {
-      e.document = 'Mínimo 5 dígitos';
+      e.document = 'MÃ­nimo 5 dÃ­gitos';
     }
     if (!values.trainingCenter || values.trainingCenter.trim().length < 3) {
-      e.trainingCenter = 'Centro de formación requerido';
+      e.trainingCenter = 'Centro de formaciÃ³n requerido';
     }
     if (!values.email) {
-      e.email = 'Correo electrónico requerido';
+      e.email = 'Correo electrÃ³nico requerido';
     } else if (!values.email.includes('@')) {
-      e.email = 'Correo electrónico inválido';
+      e.email = 'Correo electrÃ³nico invÃ¡lido';
     }
 
     if (fichas.length === 0) e.fichas = 'Agrega al menos una ficha';
     if (!photo) {
-      e.photo = 'La fotografía del instructor es requerida';
+      e.photo = 'La fotografÃ­a del instructor es requerida';
     }
     setErrors(e);
     return !Object.keys(e).length;
@@ -124,7 +123,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
       // 1. Registrar usuario Instructor (con password por defecto y ficha/programa null)
       const registerResponse = await registerUser({
         email: values.email.trim().toLowerCase(),
-        password: 'Instructor2026*', // Contraseña por defecto válida
+        password: 'Instructor2026*', // ContraseÃ±a por defecto vÃ¡lida
         fullName: values.name.trim(),
         typeDocument: values.typeDocument,
         document: values.document.trim(),
@@ -140,10 +139,10 @@ export default function CreateInstructorCardScreen({ navigation }) {
       let finalPhotoUrl = registerResponse?.photoUrl || null;
       if (photo) {
         const formData = new FormData();
-        if (Platform.OS === 'web' && photo.file) {
-          formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
+        if (photo.file) {
+          formData.append('photo', photo.file, photo.name || photo.fileName || 'profile.jpg');
         } else {
-          formData.append('photo', { uri: photo.uri, name: 'profile.jpg', type: 'image/jpeg' });
+          formData.append('photo', { uri: photo.uri, name: photo.name || photo.fileName || 'profile.jpg', type: photo.type || 'image/jpeg' });
         }
         const photoResponse = await uploadPhoto(values.document.trim(), formData);
         finalPhotoUrl = photoResponse?.photoUrl || null;
@@ -220,8 +219,8 @@ export default function CreateInstructorCardScreen({ navigation }) {
 
             {success ? (
               <View style={styles.successCard}>
-                <Text style={styles.successIcon}>✓</Text>
-                <Text style={styles.successTitle}>¡Carnet Creado Exitosamente!</Text>
+                <Text style={styles.successIcon}>âœ“</Text>
+                <Text style={styles.successTitle}>Â¡Carnet Creado Exitosamente!</Text>
                 <Text style={styles.successText}>
                   El instructor {values.name} ha sido registrado en el sistema con el rol correspondiente y su carnet digital ya se encuentra activo.
                 </Text>
@@ -240,14 +239,14 @@ export default function CreateInstructorCardScreen({ navigation }) {
                   <View style={styles.gridCol}>
                     <CustomInput
                       label="Nombre Completo"
-                      placeholder="Ej. Génesis Daniela Hernandez"
+                      placeholder="Ej. GÃ©nesis Daniela Hernandez"
                       value={values.name}
                       onChangeText={(val) => onChange('name', val)}
                       error={errors.name}
                     />
 
                     <CustomInput
-                      label="Número de Documento"
+                      label="NÃºmero de Documento"
                       placeholder="Ej. 1094123456"
                       value={values.document}
                       onChangeText={(val) => onChange('document', val)}
@@ -278,7 +277,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
 
                   <View style={styles.gridCol}>
                     <CustomInput
-                      label="Centro de Formación"
+                      label="Centro de FormaciÃ³n"
                       placeholder="Ej. Centro Comercio y Turismo"
                       value={values.trainingCenter}
                       onChangeText={(val) => onChange('trainingCenter', val)}
@@ -311,7 +310,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
                       style={styles.fichaInput}
                       value={fichaInput}
                       onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
-                      placeholder="N° de ficha"
+                      placeholder="NÂ° de ficha"
                       keyboardType="numeric"
                       returnKeyType="done"
                       onSubmitEditing={addFicha}
@@ -327,7 +326,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
                         <View key={f} style={styles.fichaChip}>
                           <Text style={styles.fichaChipText}>#{f}</Text>
                           <TouchableOpacity onPress={() => removeFicha(f)}>
-                            <Text style={styles.fichaChipRemove}>✕</Text>
+                            <Text style={styles.fichaChipRemove}>âœ•</Text>
                           </TouchableOpacity>
                         </View>
                       ))}
@@ -336,9 +335,9 @@ export default function CreateInstructorCardScreen({ navigation }) {
                   {errors.fichas ? <Text style={styles.errorText}>{errors.fichas}</Text> : null}
                 </View>
 
-                {/* Subida de Fotografía */}
+                {/* Subida de FotografÃ­a */}
                 <View style={styles.photoBlock}>
-                  <Text style={styles.roleLabel}>Fotografía del Instructor</Text>
+                  <Text style={styles.roleLabel}>FotografÃ­a del Instructor</Text>
                   {Platform.OS === 'web' && (
                     <input
                       ref={fileInputRef}
@@ -355,7 +354,7 @@ export default function CreateInstructorCardScreen({ navigation }) {
                         <Text style={styles.photoChangeText}>Cambiar foto</Text>
                       </View>
                     ) : (
-                      <Text style={styles.photoText}>📷  Subir foto de perfil</Text>
+                      <Text style={styles.photoText}>ðŸ“·  Subir foto de perfil</Text>
                     )}
                   </TouchableOpacity>
                   {errors.photo ? <Text style={styles.errorText}>{errors.photo}</Text> : null}
@@ -622,3 +621,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
+
+

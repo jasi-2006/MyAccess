@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   Modal, View, Text, StyleSheet, ScrollView,
   TextInput, TouchableOpacity, ActivityIndicator, useWindowDimensions,
@@ -7,6 +7,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { digitsOnly } from '../utils/inputFilters.js';
 import { resolveImageUrl } from '../services/api.js';
+import { removePhotoBackground } from '../services/photoBackgroundService.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 
 export default function ProfileEditModal({
@@ -59,15 +60,14 @@ export default function ProfileEditModal({
       aspect: [1, 1],
       quality: 0.7,
     });
-    if (!result.canceled) onPhotoChange(result.assets[0]);
+    if (!result.canceled) onPhotoChange(await removePhotoBackground(result.assets[0]));
   };
 
-  const onFileChange = (e) => {
+  const onFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    onPhotoChange({ uri: URL.createObjectURL(file), file });
+    onPhotoChange(await removePhotoBackground({ uri: URL.createObjectURL(file), file, fileName: file.name, type: file.type }));
   };
-
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
@@ -95,7 +95,7 @@ export default function ProfileEditModal({
             </View>
 
             {fields.map((f) => {
-              // Campo ficha para instructor: selector de múltiples fichas
+              // Campo ficha para instructor: selector de mÃºltiples fichas
               if (f.key === 'ficha' && isInstructor) {
                 return (
                   <View key={f.key} style={styles.inputGroup}>
@@ -105,7 +105,7 @@ export default function ProfileEditModal({
                         style={styles.fichaInput}
                         value={fichaInput}
                         onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
-                        placeholder="N° de ficha"
+                        placeholder="NÂ° de ficha"
                         keyboardType="numeric"
                         returnKeyType="done"
                         onSubmitEditing={addFicha}
@@ -121,7 +121,7 @@ export default function ProfileEditModal({
                           <View key={fc} style={styles.fichaChip}>
                             <Text style={styles.fichaChipText}>#{fc}</Text>
                             <TouchableOpacity onPress={() => removeFicha(fc)}>
-                              <Text style={styles.fichaChipRemove}>✕</Text>
+                              <Text style={styles.fichaChipRemove}>âœ•</Text>
                             </TouchableOpacity>
                           </View>
                         ))}
@@ -215,3 +215,4 @@ const styles = StyleSheet.create({
   fichaChipText: { fontSize: 12, fontWeight: '700', color: '#0F766E' },
   fichaChipRemove: { fontSize: 11, color: '#EF4444', fontWeight: '900' },
 });
+

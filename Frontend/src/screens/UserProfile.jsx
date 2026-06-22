@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert, useWindowDimensions, Platform } from 'react-native';
+﻿import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Alert, useWindowDimensions } from 'react-native';
 import { getUserProfile, updateUserProfile, uploadProfilePhoto, verifyLocalProfile } from '../services/authService';
 import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -41,7 +41,7 @@ export default function UserProfile({ navigation }) {
     { label: 'Regional',         value: profile?.regional,        key: 'regional' },
     // { label: 'Role',              value: profile?.nameRole,        key: 'nameRole' },
     { label: 'email',            value: profile?.email,           key: 'email' },
-    { label: 'Verificado Sofia Plus', value: profile?.sofiaVerified ? 'Verificado ✓' : 'Pendiente ✗', key: 'sofiaVerified' },
+    { label: 'Verificado Sofia Plus', value: profile?.sofiaVerified ? 'Verificado âœ“' : 'Pendiente âœ—', key: 'sofiaVerified' },
   ];
 
 
@@ -67,10 +67,10 @@ export default function UserProfile({ navigation }) {
     let photoError = null;
 
     try {
-      if (photo && Platform.OS === 'web' && photo.file) {
+      if (photo?.file) {
         const validation = await validateCarnetPhoto(photo.file);
         if (!validation.valid) {
-          Alert.alert('Foto no válida', validation.errors.join('\n'));
+          Alert.alert('Foto no vÃ¡lida', validation.errors.join('\n'));
           return;
         }
         if (validation.file) {
@@ -87,18 +87,18 @@ export default function UserProfile({ navigation }) {
       if (photo) {
         try {
           const formData = new FormData();
-          if (Platform.OS === 'web' && photo.file) {
-            formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
+          if (photo.file) {
+            formData.append('photo', photo.file, photo.name || photo.fileName || 'profile.jpg');
           } else {
             formData.append('photo', {
               uri: photo.uri,
-              name: 'profile.jpg',
-              type: 'image/jpeg',
+              name: photo.name || photo.fileName || 'profile.jpg',
+              type: photo.type || 'image/jpeg',
             });
           }
           await uploadProfilePhoto(profile.document, formData);
           
-          // Validar localmente y marcar como verificado si la foto está cargada
+          // Validar localmente y marcar como verificado si la foto estÃ¡ cargada
           try {
             await verifyLocalProfile(profile.document);
           } catch (verifyErr) {
@@ -108,7 +108,7 @@ export default function UserProfile({ navigation }) {
           photoError = photoErr?.payload?.message || photoErr?.message || 'No se pudo subir la foto.';
         }
       } else {
-        // Si no hay foto, validar igualmente (pero no se marcará como verificado)
+        // Si no hay foto, validar igualmente (pero no se marcarÃ¡ como verificado)
         try {
           await verifyLocalProfile(profile.document);
         } catch (verifyErr) {
@@ -124,7 +124,7 @@ export default function UserProfile({ navigation }) {
       if (photoError) {
         Alert.alert(
           'Datos guardados',
-          `Tu información se actualizó, pero la foto falló: ${photoError}`,
+          `Tu informaciÃ³n se actualizÃ³, pero la foto fallÃ³: ${photoError}`,
         );
       }
     } catch (err) {
@@ -186,3 +186,6 @@ const styles = StyleSheet.create({
   body: { flex: 1, flexDirection: 'row' },
   main: { flex: 1 },
 });
+
+
+

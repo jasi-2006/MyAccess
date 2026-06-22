@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
+﻿import React, { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import CustomInput from './CustomInput.jsx';
+import { removePhotoBackground } from '../services/photoBackgroundService.js';
+import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
 const DOCUMENT_TYPES = ['C.C', 'T.I', 'PPT'];
@@ -17,41 +19,46 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
   const pickImage = async () => {
     if (Platform.OS === 'web') {
       fileInputRef.current?.click();
-    } else {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') return;
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.7,
-      });
-      if (!result.canceled) onPhotoChange(result.assets[0]);
+      return;
+    }
+
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') return;
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      onPhotoChange(await removePhotoBackground(result.assets[0]));
     }
   };
 
-  const onFileChange = (e) => {
-    const file = e.target.files[0];
+  const onFileChange = async (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     const uri = URL.createObjectURL(file);
-    onPhotoChange({ uri, file });
+    onPhotoChange(await removePhotoBackground({ uri, file, fileName: file.name, type: file.type }));
   };
 
   const stepFields = [
     [
-      inp('👤', 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
-      inp('👤', 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
-      inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
+      inp('ðŸ‘¤', 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
+      inp('ðŸ‘¤', 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
+      inp('#ï¸âƒ£', 'NÃºmero de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
-      inp('📄', 'Regional',             regional,        o('regional'),        {}),
-      inp('🏢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
-      inp('⚙️', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      inp('🔢', 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
+      inp('ðŸ“„', 'Regional',             regional,        o('regional'),        {}),
+      inp('ðŸ¢', 'Centro de formaciÃ³n',  trainingCenter,  o('trainingCenter'),  {}),
+      inp('âš™ï¸', 'Programa de formaciÃ³n', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
+      inp('ðŸ”¢', 'NÂ° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
     ],
     [
-      inp('📧', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
-      inp('🔒', 'Contraseña',         password, o('password'), { error: errors.password, secureTextEntry: true }),
+      inp('ðŸ“§', 'Correo electrÃ³nico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
+      inp('ðŸ”’', 'ContraseÃ±a',         password, o('password'), { error: errors.password, secureTextEntry: true }),
     ],
   ];
 
