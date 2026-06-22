@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { IndividualCarnet } from './ImprimirCarnetViews.jsx';
 
@@ -7,7 +7,7 @@ export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, o
     selectedCarnet?.name ||
     selectedCarnet?.learner?.fullName ||
     selectedCarnet?.learner?.full_name ||
-    'Carnet individual';
+    'Carnet digital individual';
 
   return (
     <Modal visible={Boolean(selectedCarnet)} transparent animationType="fade" onRequestClose={onClose}>
@@ -17,7 +17,7 @@ export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, o
             <View style={styles.modalTitleBlock}>
               <Text style={styles.modalTitle}>{displayName}</Text>
               <Text style={styles.modalSubtitle} numberOfLines={1}>
-                Carnet individual
+                Carnet digital individual
               </Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
@@ -27,7 +27,7 @@ export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, o
 
           {warningMessage ? (
             <View style={styles.warningBox}>
-              <Text style={styles.warningIcon}>⚠️</Text>
+              <Text style={styles.warningIcon}>âš ï¸</Text>
               <Text style={styles.warningText}>{warningMessage}</Text>
             </View>
           ) : null}
@@ -48,3 +48,4 @@ export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, o
     </Modal>
   );
 }
+

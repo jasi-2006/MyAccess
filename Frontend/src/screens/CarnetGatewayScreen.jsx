@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import { getUserProfile } from '../services/authService';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -74,7 +74,7 @@ export default function CarnetGatewayScreen({ navigation }) {
             {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Card" />}
 
             <View style={styles.headerBlock}>
-              <Text style={styles.pageTitle}>Carnets</Text>
+              <Text style={styles.pageTitle}>Carnets digitales</Text>
               <Text style={styles.pageSubtitle}>
                 Una identificacion estudiantil agil y segura directamente desde los dispositivos
               </Text>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import WebFrame from './WebFrame.jsx';
@@ -12,7 +12,7 @@ const menuItems = [
 
   {
     key: 'Carnet',
-    label: 'Mi carnet',
+    label: 'Mi carnet digital',
     icon: 'card',
   },
 
@@ -182,3 +182,4 @@ const styles = StyleSheet.create({
     paddingBottom: 28,
   },
 });
+

@@ -1,10 +1,10 @@
-import React from 'react';
+﻿import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { normalizeRole, ROLES, resolveUserRole } from '../utils/accessControl';
 
 const sidebarItems = [
   { key: 'home',        label: 'Inicio' },
-  { key: 'Card',        label: 'Mi carnet' },
+  { key: 'Card',        label: 'Mi carnet digital' },
   { key: 'User',        label: 'Mi perfil' },
   { key: 'Notifications', label: 'Notificaciones' },
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
@@ -116,3 +116,4 @@ const styles = StyleSheet.create({
   menuLabelActive: { color: '#FFFFFF', fontWeight: '600' },
   menuIcon: { fontSize: 18, color: '#079B72' },
 });
+
