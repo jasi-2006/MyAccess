@@ -585,4 +585,3 @@ const styles = StyleSheet.create({
     lineHeight: 13,
   },
 });
-
