@@ -502,6 +502,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+    backgroundColor: '#FFFFFF',
   },
   photoChangeText: {
     color: '#24C565',
@@ -621,5 +622,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
+
 
 
