@@ -86,19 +86,11 @@ export default function RegisterGatewayScreen({ navigation }) {
       }
     }
     if (s === 1) {
-      if (!isPublicRegistrationRole(values.nameRole)) {
-        e.nameRole = 'Selecciona Aprendiz o Instructor';
-      }
       if (!values.trainingProgram) e.trainingProgram = 'Programa requerido';
-      if (values.nameRole === ROLES.INSTRUCTOR) {
-        if (!values.fichas || values.fichas.length === 0)
-          e.fichas = 'Agrega al menos una ficha';
-      } else {
-        if (!values.Ficha) {
-          e.Ficha = 'Numero de ficha requerido';
-        } else if (!isDigitsOnly(values.Ficha)) {
-          e.Ficha = 'Solo se permiten numeros';
-        }
+      if (!values.Ficha) {
+        e.Ficha = 'Numero de ficha requerido';
+      } else if (!isDigitsOnly(values.Ficha)) {
+        e.Ficha = 'Solo se permiten numeros';
       }
     }
     if (s === 2) {
