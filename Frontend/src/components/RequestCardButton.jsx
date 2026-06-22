@@ -8,6 +8,7 @@ import { resolveUserRole, ROLES } from '../utils/accessControl';
 export default function RequestCardButton({ profile }) {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [warn, setWarn] = useState('');
 
   if (resolveUserRole(profile) !== ROLES.APRENDIZ) {
     return null;
@@ -17,7 +18,6 @@ export default function RequestCardButton({ profile }) {
     if (sent || loading) return;
 
     const profileId = Number(profile?.id ?? profile?.idUser ?? profile?.userId);
-    console.log('RequestCardButton:', { profileId, profile });
     if (!profileId) {
       Alert.alert(
         'Perfil incompleto',
@@ -35,23 +35,17 @@ export default function RequestCardButton({ profile }) {
       null;
 
     const photoUrl = resolveImageUrl(rawPhotoUrl);
-    console.log('Photo URL:', rawPhotoUrl, '->', photoUrl);
     if (!photoUrl) {
-      Alert.alert(
-        '⚠️ Foto requerida',
-        'Para solicitar la impresión del carnet, primero debes cargar una foto de perfil válida.\n\nVe a "Mi Información" > "Editar" y selecciona una foto que cumpla con los requisitos (fondo blanco, rostro visible).',
-      );
+      setWarn('⚠️ Debes cargar una foto de perfil antes de solicitar la impresión del carnet. Ve a "Mi perfil" > "Editar".');
       return;
     }
+
+    setWarn('');
 
     try {
       setLoading(true);
 
-      const existing = await getRequestCardsByUser(profileId).catch((err) => {
-        console.error('Error getting requests:', err);
-        return [];
-      });
-      console.log('Existing requests:', existing);
+      const existing = await getRequestCardsByUser(profileId).catch(() => []);
       const hasPending = Array.isArray(existing) && existing.some(
         (r) => String(r?.state || '').trim().toLowerCase() === 'pendiente',
       );
@@ -69,15 +63,10 @@ export default function RequestCardButton({ profile }) {
         approbedBy: null,
         printedBy: null,
       };
-      console.log('Creating request with payload:', payload);
-      
       const result = await createRequestCard(payload);
-      console.log('Request created:', result);
-
       setSent(true);
       Alert.alert('Solicitud enviada', 'Tu solicitud de impresion fue enviada al administrador.');
     } catch (e) {
-      console.error('Error creating request:', e);
       const apiMessage = e?.payload?.message || e?.message || 'No se pudo enviar la solicitud. Intenta de nuevo.';
       Alert.alert('Error', apiMessage);
     } finally {
@@ -87,6 +76,11 @@ export default function RequestCardButton({ profile }) {
 
   return (
     <View style={styles.wrapper}>
+      {!!warn && (
+        <View style={styles.warnBox}>
+          <Text style={styles.warnText}>{warn}</Text>
+        </View>
+      )}
       <TouchableOpacity
         style={[styles.button, sent && styles.buttonSent]}
         activeOpacity={0.85}
@@ -109,6 +103,24 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
     marginTop: 18,
+    width: '100%',
+  },
+  warnBox: {
+    width: '100%',
+    maxWidth: 380,
+    backgroundColor: '#FFFBEB',
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
+  warnText: {
+    color: '#92400E',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 18,
   },
   button: {
     minWidth: 220,

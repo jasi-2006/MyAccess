@@ -6,14 +6,13 @@ import { removePhotoBackground } from '../services/photoBackgroundService.js';
 import { PUBLIC_REGISTRATION_ROLES } from '../utils/accessControl';
 
 const inp = (icon, placeholder, value, onCT, extra = {}) => ({ icon, placeholder, value, onCT, ...extra });
-const DOCUMENT_TYPES = ['CC', 'TI', 'PPT'];
+const DOCUMENT_TYPES = ['C.C', 'T.I', 'PPT'];
 export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
   const isCarnetStep = step === 1;
-  const isInstructor = false; // fichas solo se asignan desde el panel admin
-  const { nombres, apellidos, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, email, password } = values;
+  const { nombres, apellidos, typeDocument, document, bloodType, regional, trainingCenter, trainingProgram, Ficha, email, password } = values;
 
   const fileInputRef = useRef(null);
 
@@ -83,28 +82,6 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   return (
     <View style={[styles.container, isCarnetStep && styles.containerDense]}>
-      {step === 1 && (
-        <View style={styles.roleBlock}>
-          <Text style={styles.roleLabel}>Tipo de usuario</Text>
-          <View style={styles.roleRow}>
-            {PUBLIC_REGISTRATION_ROLES.map((role) => {
-              const active = nameRole === role;
-              return (
-                <TouchableOpacity
-                  key={role}
-                  style={[styles.roleChip, active && styles.roleChipActive]}
-                  onPress={() => onChange('nameRole', role)}
-                >
-                  <Text style={[styles.roleChipText, active && styles.roleChipTextActive]}>
-                    {role === 'APRENDIZ' ? 'Aprendiz' : 'Instructor'}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          {errors.nameRole ? <Text style={styles.roleError}>{errors.nameRole}</Text> : null}
-        </View>
-      )}
       {step === 0 ? (
         <>
           {renderField(stepFields[0][0])}
