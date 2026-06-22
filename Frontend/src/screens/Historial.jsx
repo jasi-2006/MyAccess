@@ -214,6 +214,7 @@ export default function HistorialScreen({ navigation }) {
                         <Text style={styles.mobileValue}>{request.cardTipe || '-'}</Text>
                       </View>
                       {isAdmin && (
+                        
                         <TouchableOpacity
                           style={styles.mobilePrintBtn}
                           onPress={() => navigation.navigate('Imprimir')}
