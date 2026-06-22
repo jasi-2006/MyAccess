@@ -11,10 +11,10 @@ import {
 
 const ALL_FICHAS = '__all__';
 const PRINT_STYLE_ID = 'myaccess-print-styles';
-export const CARNET_WIDTH_PX = 265;
-export const CARNET_HEIGHT_PX = 420;
-const CARNET_WIDTH_MM = 70;
-const CARNET_HEIGHT_MM = 111;
+export const CARNET_WIDTH_PX = 205;
+export const CARNET_HEIGHT_PX = 322;
+const CARNET_WIDTH_MM = 54;
+const CARNET_HEIGHT_MM = 85;
 const senaLogoAsset = require('../assets/logoSena.png');
 const firmaAsset = require('../assets/firma.png');
 const senaLogoUri =
@@ -89,6 +89,7 @@ export function installPrintStyles() {
         gap: 12px !important;
         padding: 12px !important;
         background: #ffffff !important;
+        border-radius:15px
       }
       #print-area > div {
         break-inside: avoid;
@@ -181,34 +182,34 @@ export function buildCarnetPairHtml(learner, card) {
     <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;box-sizing:border-box;display:flex;flex-direction:column;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,0.08);padding:12px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;height:150px;">
         <div style="width:72px;padding-top:2px;">${logoHtml}</div>
-        <div style="width:118px;height:148px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
+        <div style="width:80px;height:100px;overflow:hidden;background:#E5E7EB;flex-shrink:0;">
           ${photoHtml}
         </div>
       </div>
 
-      <div style="font-size:12px;color:#000000;text-transform:uppercase;letter-spacing:0.4px;font-weight:400;line-height:14px;margin-bottom:3px;">
+      <div style="font-size:8px;color:#000000;text-transform:uppercase;letter-spacing:0.4px;font-weight:400;line-height:12px;margin-bottom:3px;">
         ${roleDisplay}
       </div>
       <div style="height:3px;background:#008542;margin-bottom:10px;"></div>
 
-      <div style="font-size:19px;font-weight:700;color:#008542;line-height:22px;margin-bottom:5px;">
+      <div style="font-size:14px;font-weight:700;color:#008542;line-height:20px;margin-bottom:5px;">
         ${nameHtml}
       </div>
-      <div style="font-size:11px;color:#000000;font-weight:400;margin-bottom:8px;">
+      <div style="font-size:10px;color:#000000;font-weight:400;margin-bottom:8px;">
         ${docType} ${docNum} ${blood}
       </div>
-      <div style="margin-bottom:10px;">
+      <div style="margin-bottom:12px;">
         ${barcodeHtml}
       </div>
-      <div style="font-size:12px;color:#000000;font-weight:700;line-height:15px;">${regional}</div>
-      <div style="font-size:11px;color:#008542;font-weight:600;line-height:14px;margin-top:3px;">${center}</div>
-      <div style="font-size:10px;color:#000000;font-weight:400;line-height:13px;margin-top:3px;">${program}</div>
-      <div style="font-size:10px;color:#000000;font-weight:400;line-height:13px;margin-top:2px;">Grupo No ${ficha}</div>
+      <div style="font-size:10px;color:#000000;font-weight:700;line-height:13px;">${regional}</div>
+      <div style="font-size:9px;color:#008542;font-weight:600;line-height:12px;margin-top:3px;">${center}</div>
+      <div style="font-size:9px;color:#000000;font-weight:400;line-height:11px;margin-top:3px;">${program}</div>
+      <div style="font-size:9px;color:#000000;font-weight:400;line-height:11px;margin-top:2px;">Grupo No ${ficha}</div>
     </div>`;
 
   const back = `
-    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-      <div style="font-size:10px;color:#2E2E2E;line-height:13px;text-align:left;">
+    <div class="carnet-card" style="width:${CARNET_WIDTH_PX}px;height:${CARNET_HEIGHT_PX}px;border-radius:20px;border:1px solid #D0D0D0;background:#FFFFFF;padding:5px;font-size:8px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;box-shadow:0 6px 14px rgba(0,0,0,0.08);-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+      <div style="font-size:8px;color:#2E2E2E;line-height:11px;text-align:left;">
         Este carnet pertenece a quien lo porta, unicamente para el cumplimiento de sus funciones y para la obtencion de servicios que el SENA presta a sus funcionarios y/o contratistas.
         <br/>
         Se solicita a las autoridades civiles y militares prestarle toda la colaboracion para su desempeno.
@@ -227,7 +228,7 @@ export function buildCarnetPairHtml(learner, card) {
         <div style="font-size:11px;color:#333333;font-weight:700;letter-spacing:0.4px;">FIRMA AUTORIZADA</div>
       </div>
 
-      <div style="font-size:10px;color:#2E2E2E;line-height:13px;">
+      <div style="font-size:8px;color:#2E2E2E;line-height:11px;">
         Si por algun motivo este carnet es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
       </div>
     </div>`;

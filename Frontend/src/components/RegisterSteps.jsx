@@ -11,7 +11,9 @@ export const BLOOD_TYPES = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
 export default function RegisterSteps({ step, values, onChange, errors, isMobile = false, showLabels = false, photo, onPhotoChange }) {
   const o = (k) => (v) => onChange(k, v);
   const isCarnetStep = step === 1;
-  const { name, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, email, password } = values;
+  const isInstructor = false; // fichas solo se asignan desde el panel admin
+  const { nombres, apellidos, typeDocument, document, bloodType, regional, trainingCenter, nameRole, trainingProgram, Ficha, email, password } = values;
+
   const fileInputRef = useRef(null);
 
   const pickImage = async () => {
@@ -39,14 +41,15 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   const stepFields = [
     [
-      inp('👤', 'Nombre completo',     name,         o('name'),         { error: errors.name,     autoCapitalize: 'words' }),
+      inp('👤', 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
+      inp('👤', 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
       inp('#️⃣', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
       inp('📄', 'Regional',             regional,        o('regional'),        {}),
       inp('🏢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
       inp('⚙️', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      inp('🔢', 'N° Ficha',             Ficha,           o('Ficha'),           { error: errors.Ficha, digitsOnly: true }),
+      inp('🔢', 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
     ],
     [
       inp('📧', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
@@ -100,6 +103,7 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
         <>
           {renderField(stepFields[0][0])}
           {renderField(stepFields[0][1])}
+          {renderField(stepFields[0][2])}
           <View style={styles.roleBlock}>
             <Text style={styles.roleLabel}>Tipo de documento</Text>
             <View style={styles.roleRow}>
@@ -157,7 +161,7 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
           <TouchableOpacity style={styles.photoPicker} onPress={pickImage}>
             {photo
               ? <Image source={{ uri: photo.uri }} style={styles.photoPreview} />
-              : <Text style={styles.photoText}>📷  Subir foto de perfil</Text>
+              : <Text style={styles.photoText}>Subir foto de perfil</Text>
             }
           </TouchableOpacity>
         </>
@@ -246,5 +250,65 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 6,
     marginLeft: 4,
+  },
+  fichasBlock: {
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  fichaInputRow: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  fichaInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    fontSize: 13,
+    color: '#1F2937',
+    backgroundColor: '#FFFFFF',
+  },
+  fichaAddBtn: {
+    height: 40,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: '#24C565',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fichaAddBtnText: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+    fontSize: 12,
+  },
+  fichaChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 8,
+  },
+  fichaChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    backgroundColor: '#E8FFF5',
+    borderWidth: 1,
+    borderColor: '#24C565',
+  },
+  fichaChipText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#118449',
+  },
+  fichaChipRemove: {
+    fontSize: 11,
+    color: '#EF4444',
+    fontWeight: '900',
   },
 });

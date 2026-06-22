@@ -17,6 +17,12 @@ public class UserRegisterProfile {
     @Column(name = "type_document")
     private String typeDocument;
 
+    @Column(name = "nombres")
+    private String nombres;
+
+    @Column(name = "apellidos")
+    private String apellidos;
+
     @Column(name = "full_name", nullable = false)
     private String fullName;
 

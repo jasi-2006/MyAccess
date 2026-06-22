@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { IndividualCarnet } from './ImprimirCarnetViews.jsx';
 
-export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, onPrint }) {
+export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, onPrint, warningMessage }) {
   const displayName =
     selectedCarnet?.name ||
     selectedCarnet?.learner?.fullName ||
@@ -25,8 +25,15 @@ export default function ImprimirCarnetModal({ styles, selectedCarnet, onClose, o
             </TouchableOpacity>
           </View>
 
+          {warningMessage ? (
+            <View style={styles.warningBox}>
+              <Text style={styles.warningIcon}>⚠️</Text>
+              <Text style={styles.warningText}>{warningMessage}</Text>
+            </View>
+          ) : null}
+
           {selectedCarnet ? (
-            <ScrollView style={{ maxHeight: 520 }} showsVerticalScrollIndicator={false} contentContainerStyle={styles.singlePrintArea} nativeID="single-print-area">
+            <ScrollView style={{ maxHeight: 500 }} showsVerticalScrollIndicator={false} contentContainerStyle={styles.singlePrintArea} nativeID="single-print-area">
               <IndividualCarnet learner={selectedCarnet.learner} card={selectedCarnet.card} />
             </ScrollView>
           ) : null}

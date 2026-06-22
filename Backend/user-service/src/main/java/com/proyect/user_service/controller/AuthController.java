@@ -9,6 +9,7 @@ import com.proyect.user_service.dto.RefreshTokenRequestDTO;
 import com.proyect.user_service.dto.ResetPasswordRequestDTO;
 import com.proyect.user_service.dto.RegisterRequestDTO;
 import com.proyect.user_service.dto.UserLoginRequestDTO;
+import com.proyect.user_service.dto.SocialLoginRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.exception.EmailDeliveryException;
@@ -48,6 +49,11 @@ public class AuthController {
         return ResponseEntity.ok(userLoginService.login(request));
     }
 
+    @PostMapping("/social-login")
+    public ResponseEntity<AuthResponseDTO> socialLogin(@RequestBody SocialLoginRequestDTO request) {
+        return ResponseEntity.ok(userLoginService.socialLogin(request));
+    }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO request) {
         return ResponseEntity.ok(userLoginService.refreshToken(request.getRefreshToken()));
@@ -71,6 +77,8 @@ public class AuthController {
         UserRegisterProfileRequestDTO profileDTO = new UserRegisterProfileRequestDTO();
         profileDTO.setDocument(request.getDocument());
         profileDTO.setTypeDocument(request.getTypeDocument());
+        profileDTO.setNombres(request.getNombres());
+        profileDTO.setApellidos(request.getApellidos());
         profileDTO.setFullName(request.getFullName());
         profileDTO.setTrainingProgram(request.getTrainingProgram());
         profileDTO.setTrainingCenter(request.getTrainingCenter());

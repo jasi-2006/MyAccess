@@ -33,7 +33,6 @@ const ROLE_ROUTE_ACCESS = {
     'NotificationDetail',
     'Instructor',
     'Fichas',
-    'Solicitudes',
     'Historial',
     'SofiaVerification',
   ],
@@ -59,7 +58,7 @@ export function normalizeRole(role) {
   const value = String(role || '').trim().toUpperCase();
   if (value === 'ADMINISTRADOR' || value === 'ADMINISTRATOR') return ROLES.ADMIN;
   if (value === 'ADMIN' || value === 'ANDIM' || value === 'ADMIM') return ROLES.ADMIN;
-  if (value === 'INSTRUCTOR' || value === 'INSTRUCTORA') return ROLES.INSTRUCTOR;
+  if (value === 'INSTRUCTOR' || value === 'INSTRUCTORA' || value === 'DIRECTOR_DE_GRUPO' || value === 'DIRECTOR') return ROLES.INSTRUCTOR;
   if (value === 'APRENDIZ' || value === 'ESTUDIANTE' || value === 'STUDENT') return ROLES.APRENDIZ;
   return value;
 }

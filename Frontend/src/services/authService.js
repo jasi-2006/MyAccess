@@ -40,7 +40,16 @@ export async function registerUser(payload) {
 }
 
 export async function uploadPhoto(document, formData) {
-  return userServiceRequest(`/auth/photo/${encodeURIComponent(document)}`, {
+  return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
+    method: 'POST',
+    body: formData,
+    skipAuth: true,
+  });
+}
+
+export async function uploadRejectedPhoto(document, formData) {
+  // Placeholder endpoint for rejected carnet photos
+  return userServiceRequest(`/auth/photo/rejected/${encodeURIComponent(document)}`, {
     method: 'POST',
     body: formData,
     skipAuth: true,
@@ -52,6 +61,13 @@ export async function uploadProfilePhoto(document, formData) {
   return userServiceRequest(`/register/users/photo/${encodeURIComponent(document)}`, {
     method: 'POST',
     body: formData,
+  });
+}
+
+/** Validar localmente y marcar como verificado si la foto está cargada. */
+export async function verifyLocalProfile(document) {
+  return userServiceRequest(`/register/users/document/${encodeURIComponent(document)}/verify-local`, {
+    method: 'PUT',
   });
 }
 
@@ -97,4 +113,19 @@ export async function updatePasswordWithCode(email, code, newPassword) {
     }),
     skipAuth: true,
   });
+}
+
+export async function socialLogin({ email, provider }) {
+  const response = await userServiceRequest('/auth/social-login', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: String(email).trim().toLowerCase(),
+      provider
+    }),
+    skipAuth: true,
+  });
+  const token = response?.token || response?.accessToken || response?.data?.token || response?.data?.accessToken;
+  const refreshToken = response?.refreshToken || response?.data?.refreshToken;
+  if (token) saveToken(token, refreshToken);
+  return response;
 }

@@ -66,9 +66,9 @@ export default function ForgotPasswordScreen({ navigation }) {
                 <Text style={styles.backArrow}>←</Text>
               </TouchableOpacity>
 
-              <Text style={styles.headerTitle}>
-                Verifica tu{'\n'}correo!
-              </Text>
+             <Text style={styles.headerTitle}>
+                 Verifica tu correo!
+                   </Text>
               <Text style={styles.headerSubtitle}>
                 Un nuevo comienzo te espera.
               </Text>
@@ -85,7 +85,6 @@ export default function ForgotPasswordScreen({ navigation }) {
           <View style={[styles.content, { paddingHorizontal: horizontalPadding }]}>
             {/* Label del input */}
             <View style={styles.inputLabelContainer}>
-              <Text style={styles.inputIcon}>✉️</Text>
               <Text style={styles.inputLabel}>Ingresa tu correo:</Text>
             </View>
 
@@ -133,20 +132,20 @@ const styles = StyleSheet.create({
   // ===== HEADER =====
   headerContainer: {
     width: '100%',
-    backgroundColor: '#5AEDB8',
+    backgroundColor: '#0F9F76',
   },
   headerCurved: {
-    backgroundColor: '#5AEDB8',
-    paddingTop: 16,
+    backgroundColor: '#0F9F76',
+    paddingTop: 100,
     paddingBottom: 36,
     position: 'relative',
   },
   backButton: {
     position: 'absolute',
-    top: 20,
-    left: 20,
-    width: 40,
-    height: 40,
+    top: 90,
+    left: 80,
+    width: 63,
+    height: 50,
     borderRadius: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     justifyContent: 'center',
@@ -154,23 +153,23 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   backArrow: {
-    fontSize: 20,
+    fontSize: 30,
     color: '#FFFFFF',
     fontWeight: 'bold',
   },
   headerTitle: {
-    fontSize: 32,
-    fontWeight: '900',
+    fontSize: 50,
+    fontWeight: '700', 
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 20,
+    lineHeight: 50,
+  },
+  headerSubtitle: {
+    fontSize: 18,
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 30,
-    lineHeight: 40,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginTop: 10,
     opacity: 0.9,
   },
   curveDecoration: {
@@ -193,11 +192,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   inputIcon: {
-    fontSize: 18,
+    fontSize: 16,
     marginRight: 8,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#6B7280',
     fontWeight: '500',
   },
@@ -211,13 +210,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 30,
     color: '#9CA3AF',
     borderWidth: 0,
   },
   validateButton: {
-    backgroundColor: '#5AEDB8',
-    borderRadius: 30,
+    backgroundColor: '#0F9F76',
+    borderRadius: 50,
     paddingVertical: 16,
     width: '100%',
     alignItems: 'center',
@@ -225,12 +224,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
-    elevation: 4,
+    elevation: 40,
   },
   validateButtonText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
-    color: '#1F2937',
-    textDecorationLine: 'underline',
+    color: '#f2f5f9',
   },
 });

@@ -1,30 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { normalizeRole, ROLES } from '../utils/accessControl';
+import { normalizeRole, ROLES, resolveUserRole } from '../utils/accessControl';
 
 const sidebarItems = [
-  { key: 'home',        label: 'Inicio',           },
-  { key: 'Card',      label: 'Mi carnet',         },
-  { key: 'User',        label: 'Mi perfil',       },
+  { key: 'home',        label: 'Inicio' },
+  { key: 'Card',        label: 'Mi carnet' },
+  { key: 'User',        label: 'Mi perfil' },
   { key: 'Notifications', label: 'Notificaciones' },
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
   { key: 'SofiaVerification', label: 'Validar Sofia Plus', aprendizOnly: true },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
-  { key: 'Fichas',      label: 'Fichas',    managementOnly: true },
+  { key: 'Fichas',      label: 'Fichas', managementOnly: true },
   { key: 'Solicitudes', label: 'Solicitudes', managementOnly: true },
-  { key: 'Historial',   label: 'Historial',   managementOnly: true },
-  {key: 'imprimir',     label: 'imprimir',  managementOnly:true},
+  { key: 'Historial',   label: 'Historial', managementOnly: true },
+  { key: 'imprimir',    label: 'Imprimir', managementOnly: true },
 ];
 
 export default function UserSidebar({ navigation, activeKey, role }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
-  const normalizedRole = normalizeRole(role);
+  const normalizedRole = resolveUserRole({ nameRole: role });
   const canManage = normalizedRole === ROLES.ADMIN || normalizedRole === ROLES.INSTRUCTOR;
 
   const visibleItems = sidebarItems.filter((item) => {
     if (item.managementOnly && !canManage) return false;
     if (item.aprendizOnly && canManage) return false;
+    if ((item.key === 'imprimir' || item.key === 'Imprimir') && normalizedRole !== ROLES.ADMIN) return false;
+    if (['Instructor', 'Solicitudes', 'Historial', 'imprimir'].includes(item.key) && normalizedRole !== ROLES.ADMIN) return false;
+    if (item.key === 'Fichas' && normalizedRole !== ROLES.ADMIN && normalizedRole !== ROLES.INSTRUCTOR) return false;
     return true;
   });
 

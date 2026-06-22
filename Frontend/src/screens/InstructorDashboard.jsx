@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
@@ -20,48 +20,60 @@ export default function InstructorDashboard({ navigation }) {
   const [fichasCount, setFichasCount] = useState(0);
   const [requests, setRequests] = useState([]);
   const [notificationModalVisible, setNotificationModalVisible] = useState(false);
-
-  const userName    = (profile?.fullName || profile?.full_name)?.trim() || 'Usuario';
-  const userInitial = userName.charAt(0).toUpperCase();
+  const [redirecting, setRedirecting] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
-    let mounted = true;
+      let mounted = true;
 
-    async function loadDashboardData() {
-      try {
-        const [currentProfile, allUsers, allRequests] = await Promise.all([
-          getUserProfile(),
-          getAllUserProfiles(),
-          getAllRequestCards(),
-        ]);
+      async function loadData() {
+        try {
+          const [currentProfile, allUsers, allRequests] = await Promise.all([
+            getUserProfile(),
+            getAllUserProfiles(),
+            getAllRequestCards(),
+          ]);
 
-        if (!mounted) return;
+          if (!mounted) return;
 
-        const registeredFichas = new Set(
-          (Array.isArray(allUsers) ? allUsers : [])
-            .filter((user) => normalizeRole(user?.nameRole) === ROLES.APRENDIZ)
-            .map((user) => String(user.ficha || user.Ficha || '').trim())
-            .filter(Boolean)
-        );
+          const role = normalizeRole(currentProfile?.nameRole);
 
-        setProfile(currentProfile);
-        setFichasCount(registeredFichas.size);
-        setRequests(Array.isArray(allRequests) ? allRequests : []);
-      } catch {
-        if (!mounted) return;
-        setProfile(null);
-        setFichasCount(0);
+          if (role === ROLES.INSTRUCTOR) {
+            navigation.replace('Fichas');
+            return;
+          }
+
+          const registeredFichas = new Set(
+            (Array.isArray(allUsers) ? allUsers : [])
+              .filter((u) => normalizeRole(u?.nameRole) === ROLES.APRENDIZ)
+              .map((u) => String(u.ficha || u.Ficha || '').trim())
+              .filter(Boolean)
+          );
+
+          setProfile(currentProfile);
+          setFichasCount(registeredFichas.size);
+          setRequests(Array.isArray(allRequests) ? allRequests : []);
+          setRedirecting(false);
+        } catch {
+          if (mounted) navigation.replace('Home');
+        }
       }
-    }
 
-    loadDashboardData();
-
-    return () => {
-      mounted = false;
-    };
-  }, [])
+      loadData();
+      return () => { mounted = false; };
+    }, [])
   );
+
+  if (redirecting) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator color="#079B72" size="large" />
+      </View>
+    );
+  }
+
+  const userName = (profile?.fullName || profile?.full_name)?.trim() || 'Admin';
+  const userInitial = userName.charAt(0).toUpperCase();
 
   return (
     <WebFrame>
@@ -77,8 +89,8 @@ export default function InstructorDashboard({ navigation }) {
             {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Instructor" />}
 
             <View style={styles.headerBlock}>
-              <Text style={styles.pageTitle}>Área de instructor</Text>
-              <Text style={styles.pageSubtitle}>Seleccione sus fichas, revise solicitudes o consulte el carnet digital.</Text>
+              <Text style={styles.pageTitle}>Panel de administración</Text>
+              <Text style={styles.pageSubtitle}>Gestiona fichas, solicitudes, carnets y notificaciones.</Text>
             </View>
 
             <View style={styles.row}>
@@ -90,10 +102,13 @@ export default function InstructorDashboard({ navigation }) {
 
             <View style={styles.actions}>
               {[
-                { title: 'Ver fichas',          text: 'Gestionar grupos y programas activos.',                          route: 'Fichas' },
-                { title: 'Ver solicitudes',      text: 'Revisar estados de impresión de carnets.',                      route: 'Solicitudes' },
-                { title: 'Ver carnet digital',   text: 'Abrir la misma estructura de carnet que ve el aprendiz.',       route: 'Carnet' },
-                { title: 'Crear notificación',   text: 'Enviar un aviso a un usuario o dejarlo registrado en gestión.', route: null },
+                { title: 'Instructores',      text: 'Ver y gestionar carnets de instructores.',               route: 'Instructores' },
+                { title: 'Fichas',             text: 'Gestionar grupos y aprendices por ficha.',             route: 'Fichas' },
+                { title: 'Solicitudes',        text: 'Revisar y gestionar solicitudes de carnets.',          route: 'Solicitudes' },
+                { title: 'Historial',          text: 'Consultar el historial completo de solicitudes.',      route: 'Historial' },
+                { title: 'Imprimir carnets',   text: 'Imprimir carnets físicos de aprendices.',             route: 'Imprimir' },
+                { title: 'Crear notificación', text: 'Enviar avisos a usuarios del sistema.',               route: null },
+                { title: 'Carnet instructor',  text: 'Generar carnet digital exclusivo para instructores.', route: 'CreateInstructorCard' },
               ].map((a) => (
                 <TouchableOpacity
                   key={a.title}
@@ -119,16 +134,17 @@ export default function InstructorDashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  screen:        { flex: 1, backgroundColor: '#EAE6E6' },
-  contentFrame:  { flex: 1, flexDirection: 'row' },
-  mainArea:      { flex: 1 },
-  mainScroll:    { flexGrow: 1, paddingTop: 6, paddingBottom: 16 },
-  headerBlock:   { marginBottom: 10 },
-  pageTitle:     { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
-  pageSubtitle:  { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
-  row:           { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  actions:       { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
-  actionButton:  { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
-  actionTitle:   { color: '#079B72', fontSize: 16, fontWeight: '900', marginBottom: 6 },
-  actionText:    { color: '#6B7280', fontSize: 13, fontWeight: '700' },
+  center:       { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAE6E6' },
+  screen:       { flex: 1, backgroundColor: '#EAE6E6' },
+  contentFrame: { flex: 1, flexDirection: 'row' },
+  mainArea:     { flex: 1 },
+  mainScroll:   { flexGrow: 1, paddingTop: 6, paddingBottom: 16 },
+  headerBlock:  { marginBottom: 10 },
+  pageTitle:    { fontSize: 18, fontWeight: '800', color: '#151515', marginBottom: 2 },
+  pageSubtitle: { maxWidth: 430, fontSize: 12, lineHeight: 16, color: '#2C2C2C' },
+  row:          { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  actions:      { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 15 },
+  actionButton: { flexBasis: 240, flexGrow: 1, backgroundColor: '#FFFFFF', borderColor: '#DDF7EC', borderRadius: 10, borderWidth: 1, padding: 16 },
+  actionTitle:  { color: '#079B72', fontSize: 15, fontWeight: '900', marginBottom: 6 },
+  actionText:   { color: '#6B7280', fontSize: 12, fontWeight: '600' },
 });

@@ -63,6 +63,7 @@ export default function RecoverPasswordScreen({ navigation }) {
       await requestPasswordResetCode(normalizedEmail);
       setStep(1);
       setSuccessMessage('Te enviamos un codigo de verificacion a tu correo.');
+      
     } catch (error) {
       setSuccessMessage('');
       setSubmitError(error.message || 'No fue posible enviar el codigo al correo.');
@@ -180,7 +181,7 @@ export default function RecoverPasswordScreen({ navigation }) {
 
                   <View style={styles.labelRow}>
                     <Text style={styles.labelIcon}>🔒</Text>
-                    <Text style={styles.labelText}>Nueva contrasena:</Text>
+                    <Text style={styles.labelText}>Nueva contraseña:</Text>
                   </View>
 
                   <TextInput
@@ -196,13 +197,12 @@ export default function RecoverPasswordScreen({ navigation }) {
                   />
 
                   <View style={styles.labelRow}>
-                    <Text style={styles.labelIcon}></Text>
-                    <Text style={styles.labelText}>Confirmar contrasena:</Text>
+                    <Text style={styles.labelText}>Confirmar contraseña:</Text>
                   </View>
 
                   <TextInput
                     style={styles.input}
-                    placeholder="Repite la contrasena"
+                    placeholder="Repite la contraseña"
                     placeholderTextColor="#8B9B99"
                     value={confirmPassword}
                     onChangeText={(value) => {
@@ -251,7 +251,7 @@ export default function RecoverPasswordScreen({ navigation }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.primary,
+    backgroundColor: '#FFFFFF',
   },
   scrollContent: {
     flexGrow: 1,
@@ -372,6 +372,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '700',
+    fontStyle: 'bold',
     textDecorationLine: 'underline',
     color: '#455253',
   },

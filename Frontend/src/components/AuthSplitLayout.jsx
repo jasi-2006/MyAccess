@@ -94,10 +94,9 @@ const styles = StyleSheet.create({
     maxWidth: 620,
   },
   logo: {
-    width: 182,
-    height: 72,
-    marginBottom: 22,
-    paddingLeft: 7,
+    width: 100,
+    height: 100,
+    
   },
 
    brandPanel: {
@@ -114,29 +113,29 @@ const styles = StyleSheet.create({
   },
   brandTitle: {
     color: '#FFFFFF',
-    fontSize: 37,
-    fontWeight: '800',
+    fontSize: 35,
     textAlign: 'center',
+    fontWeight: '700',
     position:'relative',
-    top: 60,
+    top: 80,
   
   },
   brandSubtitle: {
     color: '#DFFCF1',
-    fontSize:15,
+    fontSize:16,
     fontWeight: '600',
     lineHeight: 20,
-    maxWidth: 560,
+    maxWidth: 590,
    position:'relative',
-    top: 60,
+    top: 86,
     textAlign: 'center',
   },
   students: {
-    width: '150%',
-    maxWidth: 700, // Cambia esto si necesitas un tamaño específico
-    height: 390, // Aumentado el alto de la imagen
-     position:'relative',
-    top: 320,// Agregar margen para dar espacio superior
+    width: '140%',
+    maxWidth: 600, // Cambia esto si necesitas un tamaño específico
+    height: 440, // Aumentado el alto de la imagen
+    position:'relative',
+    top: 65,// Agregar margen para dar espacio superior
   },
   studentsCompact: {
     height: 270,

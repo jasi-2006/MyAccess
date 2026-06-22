@@ -15,6 +15,7 @@ import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getUserProfile, getAllUserProfiles } from '../services/authService';
 import { getAllRequestCards, updateRequestCard } from '../services/requestCardService';
+import { createNotification } from '../services/notificationService';
 
 const STATES = ['pendiente', 'validado', 'impreso', 'rechazado'];
 
@@ -23,6 +24,13 @@ const STATE_COLORS = {
   validado: { bg: '#ECFDF5', text: '#059669' },
   impreso: { bg: '#EFF6FF', text: '#2563EB' },
   rechazado: { bg: '#FEF2F2', text: '#DC2626' },
+};
+
+const STATE_MESSAGES = {
+  validado:  { affair: 'Solicitud validada',         messaje: 'Tu solicitud de carnet ha sido validada y está lista para impresión.' },
+  impreso:   { affair: 'Carnet impreso',              messaje: 'Tu carnet ha sido impreso exitosamente. Puedes pasar a recogerlo.' },
+  rechazado: { affair: 'Solicitud rechazada',         messaje: 'Tu solicitud de carnet ha sido rechazada. Contacta al administrador para más información.' },
+  pendiente: { affair: 'Solicitud en revisión',       messaje: 'Tu solicitud de carnet ha sido marcada como pendiente nuevamente.' },
 };
 
 export default function SolicitudesScreen({ navigation }) {
@@ -89,6 +97,18 @@ export default function SolicitudesScreen({ navigation }) {
       setRequests((prev) =>
         prev.map((r) => (r.idRequest === request.idRequest ? { ...r, state: newState } : r))
       );
+      // Enviar notificación automática al usuario
+      const msg = STATE_MESSAGES[newState];
+      if (msg && request.idUser) {
+        createNotification({
+          idUser: request.idUser,
+          affair: msg.affair,
+          messaje: msg.messaje,
+          tipe: 'Carnet',
+          category: 'Estado de solicitud',
+          statedSend: 'enviado',
+        }).catch(() => {});
+      }
     } catch {
       // silent
     } finally {
@@ -130,8 +150,8 @@ export default function SolicitudesScreen({ navigation }) {
               <StatCard title="Pendientes" value={String(count('pendiente'))} />
               <StatCard title="Validados" value={String(count('validado'))} />
               <StatCard title="Impresos" value={String(count('impreso'))} />
+              <StatCard title="Rechazados" value={String(count('rechazado'))} />
             </View>
-
             <View style={styles.tableWrap}>
               <View style={styles.table}>
                 <Text style={styles.tableTitle}>
