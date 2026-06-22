@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -250,7 +250,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 </View>
 
                 <Text style={styles.hashBottom}>
-                  Si por algun motivo este carné es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
+                  Si por algun motivo este carnÃ© es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
                 </Text>
 
                 {!isActive && (
@@ -352,13 +352,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   frontTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    minHeight: 186,
   },
   logoBlock: {
-    width: 88,
-    alignItems: 'center',
+    width: 78,
+    alignItems: 'flex-start',
     marginTop: 2,
   },
   logoSenaImg: {
@@ -428,18 +428,20 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-32deg' }],
   },
   photoFrame: {
-    width: 122,
-    height: 152,
-    borderRadius: 10,
+    width: 112,
+    height: 156,
+    borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#E9E9E9',
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'center',
+    marginTop: 6,
   },
   photoImage: {
     width: '100%',
     height: '100%',
   },
   frontBody: {
-    marginTop: 10,
+    marginTop: 6,
   },
   roleLabel: {
     fontSize: 14,
@@ -467,14 +469,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   barcodeWrap: {
-    height: 38,
+    height: 44,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginBottom: 12,
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingHorizontal: 1,
+    width: '100%',
   },
   barcodeBar: {
-    height: 31,
+    height: 36,
     backgroundColor: '#111111',
+    flexGrow: 1,
   },
   frontFooter: {
     gap: 2,

@@ -5,7 +5,6 @@ import RegisterSteps, { BLOOD_TYPES } from '../components/RegisterSteps.jsx';
 import AuthSplitLayout from '../components/AuthSplitLayout.jsx';
 import { validateCarnetPhoto } from '../services/photoValidationService.js';
 import { colors } from '../theme/colors.jsx';
-import { isPublicRegistrationRole, ROLES } from '../utils/accessControl';
 import { isDigitsOnly } from '../utils/inputFilters.js';
 import { registerUser, uploadPhoto } from '../services/authService';
 
@@ -33,7 +32,7 @@ export default function RegisterGatewayScreen({ navigation }) {
   const [values, setValues] = useState({
     nombres: '', apellidos: '', typeDocument: 'C.C', document: '', bloodType: 'O+',
     regional: 'Quindio', trainingCenter: 'Centro Comercio y Turismo',
-    nameRole: ROLES.APRENDIZ, trainingProgram: '', Ficha: '', fichas: [],
+    nameRole: 'APRENDIZ', trainingProgram: '', Ficha: '',
     email: '', password: '',
   });
 
@@ -86,19 +85,11 @@ export default function RegisterGatewayScreen({ navigation }) {
       }
     }
     if (s === 1) {
-      if (!isPublicRegistrationRole(values.nameRole)) {
-        e.nameRole = 'Selecciona Aprendiz o Instructor';
-      }
       if (!values.trainingProgram) e.trainingProgram = 'Programa requerido';
-      if (values.nameRole === ROLES.INSTRUCTOR) {
-        if (!values.fichas || values.fichas.length === 0)
-          e.fichas = 'Agrega al menos una ficha';
-      } else {
-        if (!values.Ficha) {
-          e.Ficha = 'Numero de ficha requerido';
-        } else if (!isDigitsOnly(values.Ficha)) {
-          e.Ficha = 'Solo se permiten numeros';
-        }
+      if (!values.Ficha) {
+        e.Ficha = 'Numero de ficha requerido';
+      } else if (!isDigitsOnly(values.Ficha)) {
+        e.Ficha = 'Solo se permiten numeros';
       }
     }
     if (s === 2) {
@@ -167,9 +158,7 @@ export default function RegisterGatewayScreen({ navigation }) {
         trainingCenter: values.trainingCenter, regional: values.regional.toLowerCase(),
         bloodType: values.bloodType,
         nameRole: values.nameRole,
-        ficha: values.nameRole === ROLES.INSTRUCTOR
-          ? values.fichas.join(',')
-          : values.Ficha,
+        ficha: values.Ficha,
       });
 
       if (photo) {
@@ -294,8 +283,7 @@ export default function RegisterGatewayScreen({ navigation }) {
                 ['Regional',  values.regional],
                 ['Centro',    values.trainingCenter],
                 ['Programa',  values.trainingProgram],
-                ['Ficha(s)',  values.nameRole === ROLES.INSTRUCTOR ? (values.fichas.join(', ') || '-') : values.Ficha],
-                ['Rol',       values.nameRole],
+                ['Ficha',    values.Ficha],
                 ['Correo',    values.email],
               ].map(([label, val]) => (
                 <View key={label} style={styles.reviewRow}>

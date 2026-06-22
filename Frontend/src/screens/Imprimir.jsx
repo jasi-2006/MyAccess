@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { View, Text, ScrollView, useWindowDimensions, ActivityIndicator, Platform, TouchableOpacity } from 'react-native';
 import WebFrame from '../components/WebFrame.jsx';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -211,7 +211,7 @@ export default function ImprimirScreen({ navigation }) {
       selectedCarnet?.name ||
       selectedCarnet?.learner?.fullName ||
       selectedCarnet?.learner?.full_name ||
-      'Carnet individual';
+      'Carnet digital individual';
     openPrintWindow(
       selectedName,
       'Vista previa - haz clic en "Imprimir" para enviar a la impresora.',
@@ -243,10 +243,10 @@ export default function ImprimirScreen({ navigation }) {
 
             {warningMessage ? (
               <View style={styles.warningBox}>
-                <Text style={styles.warningIcon}>⚠️</Text>
+                <Text style={styles.warningIcon}>âš ï¸</Text>
                 <Text style={styles.warningText}>{warningMessage}</Text>
                 <TouchableOpacity onPress={() => setWarningMessage('')} style={styles.warningClose}>
-                  <Text style={styles.warningCloseText}>×</Text>
+                  <Text style={styles.warningCloseText}>Ã—</Text>
                 </TouchableOpacity>
               </View>
             ) : null}
@@ -296,3 +296,4 @@ export default function ImprimirScreen({ navigation }) {
     </WebFrame>
   );
 }
+
