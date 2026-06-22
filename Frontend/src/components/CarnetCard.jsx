@@ -193,6 +193,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                   <Text style={styles.identityText}>{`${documentType} ${documentNumber} RH ${bloodType}`}</Text>
                   <BarcodeBlock />
                 </View>
+                
 
                 <View style={styles.frontFooter}>
                   {!isActive && (
