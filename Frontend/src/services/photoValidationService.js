@@ -1,4 +1,4 @@
-const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
+﻿const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 
@@ -13,13 +13,13 @@ function fileToBase64(file) {
 
 export async function validateCarnetPhoto(file) {
   if (!GROQ_API_KEY) {
-    console.warn('EXPO_PUBLIC_GROQ_API_KEY no está configurada en Frontend/.env');
+    console.warn('EXPO_PUBLIC_GROQ_API_KEY no estÃ¡ configurada en Frontend/.env');
   }
   
 
   const base64 = await fileToBase64(file);
 
-  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco o de color claro uniforme\n2. Rostro visible, centrado y mirando a cámara\n3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro\n4. Expresión neutral (boca cerrada, sin sonreír)\n5. Iluminación uniforme (sin sombras fuertes en rostro ni fondo)`;
+  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÃšNICAMENTE con un objeto JSON vÃ¡lido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco, claro o transparente, sin objetos distractores\n2. Rostro visible, centrado y mirando a cÃ¡mara\n3. Sin gafas oscuras, gorras, paÃ±oletas o accesorios que cubran el rostro\n4. ExpresiÃ³n neutral (boca cerrada, sin sonreÃ­r)\n5. IluminaciÃ³n uniforme (sin sombras fuertes en rostro ni fondo)`;
 
   const response = await fetch(GROQ_URL, {
     method: 'POST',
@@ -70,3 +70,4 @@ export async function validateCarnetPhoto(file) {
     throw new Error(`JSON invalido en respuesta de Groq: ${match[0].slice(0, 200)}`);
   }
 }
+

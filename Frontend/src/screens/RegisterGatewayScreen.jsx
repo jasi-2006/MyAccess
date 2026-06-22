@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, Platform, ScrollView, Modal, Image } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.jsx';
 import RegisterSteps, { BLOOD_TYPES } from '../components/RegisterSteps.jsx';
@@ -43,7 +43,7 @@ export default function RegisterGatewayScreen({ navigation }) {
     if (!text) return false;
     const words = text.trim().split(/\s+/);
     if (words.length === 0 || (words.length === 1 && words[0] === '')) return false;
-    const wordRegex = /^[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]*$/;
+    const wordRegex = /^[A-ZÃÃ‰ÃÃ“ÃšÃ‘Ãœ][a-zÃ¡Ã©Ã­Ã³ÃºÃ±Ã¼]*$/;
     return words.every(word => wordRegex.test(word));
   };
 
@@ -65,13 +65,13 @@ export default function RegisterGatewayScreen({ navigation }) {
       if (!values.nombres || values.nombres.trim().length < 2) {
         e.nombres = 'Nombres requeridos';
       } else if (!validateCapitalization(values.nombres)) {
-        e.nombres = 'Cada nombre y apellido debe iniciar con mayúscula.';
+        e.nombres = 'Cada nombre y apellido debe iniciar con mayÃºscula.';
       }
 
       if (!values.apellidos || values.apellidos.trim().length < 2) {
         e.apellidos = 'Apellidos requeridos';
       } else if (!validateCapitalization(values.apellidos)) {
-        e.apellidos = 'Cada nombre y apellido debe iniciar con mayúscula.';
+        e.apellidos = 'Cada nombre y apellido debe iniciar con mayÃºscula.';
       }
 
       if (!values.document) {
@@ -104,7 +104,7 @@ export default function RegisterGatewayScreen({ navigation }) {
     if (s === 2) {
       if (!values.email.includes('@')) e.email = 'Email invalido';
       if (!passwordRegex.test(values.password)) {
-        e.password = 'Debe iniciar con mayúscula, tener 8 caracteres, un número y un carácter especial';
+        e.password = 'Debe iniciar con mayÃºscula, tener 8 caracteres, un nÃºmero y un carÃ¡cter especial';
       }
     }
     setErrors(e);
@@ -135,11 +135,11 @@ export default function RegisterGatewayScreen({ navigation }) {
       setLoading(true);
       setSubmitError('');
 
-      if (photo && Platform.OS === 'web' && photo.file) {
+      if (photo?.file) {
         try {
           const validation = await validateCarnetPhoto(photo.file);
           if (!validation.valid) {
-            setSubmitError('Foto no válida:\n• ' + validation.errors.join('\n• '));
+            setSubmitError('Foto no vÃ¡lida:\nâ€¢ ' + validation.errors.join('\nâ€¢ '));
             return;
           }
           if (validation.file) {
@@ -174,10 +174,10 @@ export default function RegisterGatewayScreen({ navigation }) {
 
       if (photo) {
         const formData = new FormData();
-        if (Platform.OS === 'web' && photo.file) {
-          formData.append('photo', photo.file, photo.file.name || 'profile.jpg');
+        if (photo.file) {
+          formData.append('photo', photo.file, photo.name || photo.fileName || 'profile.jpg');
         } else {
-          formData.append('photo', { uri: photo.uri, name: 'profile.jpg', type: 'image/jpeg' });
+          formData.append('photo', { uri: photo.uri, name: photo.name || photo.fileName || 'profile.jpg', type: photo.type || 'image/jpeg' });
         }
         await uploadPhoto(values.document, formData);
       }
@@ -208,8 +208,8 @@ export default function RegisterGatewayScreen({ navigation }) {
     <View style={{ flex: 1 }}>
       <AuthSplitLayout
         compact
-        panelTitle="Excelencia en la Gestión Académica"
-        panelSubtitle="Crea tu cuenta para acceder al seguimiento de fichas, gestión académica y reportes institucionales en tiempo real."
+        panelTitle="Excelencia en la GestiÃ³n AcadÃ©mica"
+        panelSubtitle="Crea tu cuenta para acceder al seguimiento de fichas, gestiÃ³n acadÃ©mica y reportes institucionales en tiempo real."
       >
         <Text style={[styles.title, isMobile && { fontSize: 24 }, isCarnetStep && styles.titleCompact]}>{TITLES[step]}</Text>
         <Text style={[styles.subtitle, isCarnetStep && styles.subtitleCompact]}>{SUBTITLES[step]}</Text>
@@ -267,8 +267,8 @@ export default function RegisterGatewayScreen({ navigation }) {
           <View style={styles.reviewPanel}>
             <View style={styles.reviewHeader}>
               <View style={styles.reviewHeaderText}>
-                <Text style={styles.reviewTitle}>Revisa tu información</Text>
-                <Text style={styles.reviewSubtitle}>Verifica que todo esté correcto antes de registrarte.</Text>
+                <Text style={styles.reviewTitle}>Revisa tu informaciÃ³n</Text>
+                <Text style={styles.reviewSubtitle}>Verifica que todo estÃ© correcto antes de registrarte.</Text>
               </View>
               <TouchableOpacity
                 style={styles.reviewCloseBtn}
@@ -276,7 +276,7 @@ export default function RegisterGatewayScreen({ navigation }) {
                 accessibilityLabel="Cerrar"
                 accessibilityRole="button"
               >
-                <Text style={styles.reviewCloseIcon}>✕</Text>
+                <Text style={styles.reviewCloseIcon}>âœ•</Text>
               </TouchableOpacity>
             </View>
 
@@ -393,3 +393,4 @@ const styles = StyleSheet.create({
   reviewConfirmBtn: { flex: 2, paddingVertical: 11, borderRadius: 8, backgroundColor: '#24C565', alignItems: 'center' },
   reviewConfirmText: { fontSize: 13, color: '#FFFFFF', fontWeight: '800' },
 });
+
