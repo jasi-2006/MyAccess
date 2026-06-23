@@ -438,19 +438,20 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: -25,
+    marginTop: 0,
   },
   roleLabel: {
     fontSize: 11,
     color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginTop: -25,
+    marginTop: -8,
   },
   greenRule: {
     height: 4,
     backgroundColor: '#0A8A4A',
     borderRadius: 2,
+    marginBottom: 2,
   },
   studentNameFront: {
     fontSize: 17,
