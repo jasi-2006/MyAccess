@@ -438,11 +438,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: 10,
+    marginTop: 0.5,
   },
   roleLabel: {
-    fontSize: 14,
-    color: '#2F2F2F',
+    fontSize: 10,
+    color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
     marginBottom: 4,
@@ -466,13 +466,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   barcodeWrap: {
-    height: 38,
+    height: 43,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginBottom: 12,
+    marginBottom: 9,
   },
   barcodeBar: {
-    height: 31,
+    height: 24,
     backgroundColor: '#111111',
   },
   frontFooter: {
