@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
   },
   frontFooter: {
-    gap: 2,
+    marginTop: -20,
   },
   inactiveBadge: {
     alignSelf: 'flex-start',
