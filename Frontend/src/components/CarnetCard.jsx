@@ -431,7 +431,6 @@ const styles = StyleSheet.create({
   photoFrame: {
     width: 122,
     height: 152,
-    borderRadius: 10,
     overflow: 'hidden',
   },
   photoImage: {
