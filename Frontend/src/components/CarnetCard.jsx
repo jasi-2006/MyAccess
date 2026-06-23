@@ -438,14 +438,15 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: -25,
+    marginTop: -45,
   },
   roleLabel: {
     fontSize: 12,
     color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginTop: -25,
+    marginTop: 0,
+    marginBottom: 2,
   },
   greenRule: {
     height: 4,
