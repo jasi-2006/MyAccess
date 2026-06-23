@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   barcodeBar: {
-    height: 31,
+    height: 43,
     backgroundColor: '#111111',
   },
   frontFooter: {
