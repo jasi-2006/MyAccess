@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import { getUserProfile } from '../services/authService';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -119,8 +119,8 @@ export default function ProcessingStatus({navigation}) {
     },
     {
       key: 'assigned',
-      title: 'Carnet asignado',
-      value: card?.idCard ? `Carnet ${cardAssignedLabel}` : 'Aun no asignado por administracion',
+      title: 'Carnet digital asignado',
+      value: card?.idCard ? `Carnet digital ${cardAssignedLabel}` : 'Aun no asignado por administracion',
       tone: card?.idCard ? 'success' : 'warning',
     },
     {
@@ -165,7 +165,7 @@ export default function ProcessingStatus({navigation}) {
 
             <View style={styles.row}>
               <StatCard title="Solicitud" value={latestRequest?.idRequest ? `#${latestRequest.idRequest}` : 'No'} />
-              <StatCard title="Carnet asignado" value={cardAssignedLabel} />
+              <StatCard title="Carnet digital asignado" value={cardAssignedLabel} />
               <StatCard title="Estado actual" value={requestState} />
             </View>
 
@@ -190,8 +190,8 @@ export default function ProcessingStatus({navigation}) {
                       <Text style={styles.summaryValue}>{normalizeText(latestRequest?.cardTipe, 'Institucional')}</Text>
                     </View>
                     <View style={styles.summaryItem}>
-                      <Text style={styles.summaryLabel}>Carnet asignado</Text>
-                      <Text style={styles.summaryValue}>{card?.idCard ? `Carnet ${cardAssignedLabel}` : 'Pendiente de asignacion'}</Text>
+                      <Text style={styles.summaryLabel}>Carnet digital asignado</Text>
+                      <Text style={styles.summaryValue}>{card?.idCard ? `Carnet digital ${cardAssignedLabel}` : 'Pendiente de asignacion'}</Text>
                     </View>
                     <View style={styles.summaryItem}>
                       <Text style={styles.summaryLabel}>Estado activo</Text>
@@ -377,3 +377,4 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
+

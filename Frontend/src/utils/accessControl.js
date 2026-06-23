@@ -7,10 +7,10 @@ export const ROLES = {
 };
 
 /** Roles que el usuario puede elegir en el registro público (no incluye ADMIN) */
-export const PUBLIC_REGISTRATION_ROLES = [ROLES.APRENDIZ, ROLES.INSTRUCTOR];
+export const PUBLIC_REGISTRATION_ROLES = [ROLES.APRENDIZ];
 
 export function isPublicRegistrationRole(role) {
-  return PUBLIC_REGISTRATION_ROLES.includes(normalizeRole(role));
+  return normalizeRole(role) === ROLES.APRENDIZ;
 }
 
 export const PUBLIC_ROUTES = [
