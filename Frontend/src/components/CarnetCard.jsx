@@ -433,7 +433,6 @@ const styles = StyleSheet.create({
     height: 152,
     borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: '#E9E9E9',
   },
   photoImage: {
     width: '100%',
@@ -474,7 +473,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   barcodeBar: {
-    height: 43,
+    height: 31,
     backgroundColor: '#111111',
   },
   frontFooter: {
