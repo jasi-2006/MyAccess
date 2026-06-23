@@ -429,8 +429,8 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-32deg' }],
   },
   photoFrame: {
-    width: 122,
-    height: 152,
+    width: 132,
+    height: 162,
     overflow: 'hidden',
   },
   photoImage: {
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     marginTop: -25,
   },
   roleLabel: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     color: '#3A3A3A',
   },
   barcodeWrap: {
-    height: 43,
+    height: 23,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
