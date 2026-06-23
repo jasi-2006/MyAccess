@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: -25,
+    marginTop: -40,
   },
   roleLabel: {
     fontSize: 10,
