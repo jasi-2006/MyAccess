@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -251,7 +251,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 </View>
 
                 <Text style={styles.hashBottom}>
-                  Si por algun motivo este carné es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
+                  Si por algun motivo este carnÃ© es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
                 </Text>
 
                 {!isActive && (
@@ -353,13 +353,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   frontTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    minHeight: 186,
   },
   logoBlock: {
-    width: 88,
-    alignItems: 'center',
+    width: 78,
+    alignItems: 'flex-start',
     marginTop: 2,
   },
   logoSenaImg: {
@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
   barcodeBar: {
     height: 24,
     backgroundColor: '#111111',
+    flexGrow: 1,
   },
   frontFooter: {
     gap: 2,

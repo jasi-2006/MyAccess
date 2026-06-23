@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0FFF8',
     overflow: 'hidden',
   },
-  photoPreview: { width: 120, height: 120, borderRadius: 60 },
+  photoPreview: { width: 120, height: 120, borderRadius: 60, backgroundColor: '#FFFFFF' },
   photoText: { color: '#0F766E', fontSize: 12, fontWeight: '600', textAlign: 'center', paddingHorizontal: 8 },
   inputGroup: { marginBottom: 12 },
   inputLabel: { fontSize: 12, color: '#64748B', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 },
@@ -215,4 +215,5 @@ const styles = StyleSheet.create({
   fichaChipText: { fontSize: 12, fontWeight: '700', color: '#0F766E' },
   fichaChipRemove: { fontSize: 11, color: '#EF4444', fontWeight: '900' },
 });
+
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, useWindowDimensions,
   TouchableOpacity, ActivityIndicator,
@@ -104,7 +104,7 @@ export default function HistorialScreen({ navigation }) {
       const updated = await getAllRequestCards().catch(() => requests);
       setRequests(updated);
     } catch {
-      setRequestMsg('Error al enviar la solicitud de impresión.');
+      setRequestMsg('Error al enviar la solicitud de impresiÃ³n.');
     } finally {
       setRequesting(false);
     }
@@ -150,7 +150,7 @@ export default function HistorialScreen({ navigation }) {
                   disabled={requesting}
                 >
                   <Text style={styles.headerPrintBtnText}>
-                    {requesting ? 'Enviando...' : 'Solicitar impresión'}
+                    {requesting ? 'Enviando...' : 'Solicitar impresiÃ³n'}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -210,10 +210,11 @@ export default function HistorialScreen({ navigation }) {
                         <Text style={styles.mobileValue}>{request.requestTipe || '-'}</Text>
                       </View>
                       <View style={styles.mobileCardRow}>
-                        <Text style={styles.mobileLabel}>Carnet</Text>
+                        <Text style={styles.mobileLabel}>Carnet digital</Text>
                         <Text style={styles.mobileValue}>{request.cardTipe || '-'}</Text>
                       </View>
                       {isAdmin && (
+                        
                         <TouchableOpacity
                           style={styles.mobilePrintBtn}
                           onPress={() => navigation.navigate('Imprimir')}
@@ -389,3 +390,4 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
+
