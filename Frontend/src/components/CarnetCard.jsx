@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   barcodeBar: {
+    width: 3,
     height: 24,
     backgroundColor: '#111111',
   },
