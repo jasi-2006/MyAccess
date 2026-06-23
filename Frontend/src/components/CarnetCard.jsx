@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginTop= -25,
+    marginTop: -25,
   },
   greenRule: {
     height: 4,
