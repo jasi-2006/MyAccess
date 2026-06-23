@@ -251,7 +251,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 </View>
 
                 <Text style={styles.hashBottom}>
-                  Si por algun motivo este carnÃ© es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
+                  Si por algun motivo este carné es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
                 </Text>
 
                 {!isActive && (
@@ -353,13 +353,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   frontTop: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    minHeight: 186,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   logoBlock: {
-    width: 78,
-    alignItems: 'flex-start',
+    width: 88,
+    alignItems: 'center',
     marginTop: 2,
   },
   logoSenaImg: {
@@ -438,16 +438,14 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop:10,
-    position: "relative"
+    marginTop: -25,
   },
   roleLabel: {
     fontSize: 12,
     color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginTop: -40,
-    marginBottom: 2 ,
+    marginTop: -25,
   },
   greenRule: {
     height: 4,
@@ -473,7 +471,6 @@ const styles = StyleSheet.create({
   barcodeBar: {
     height: 24,
     backgroundColor: '#111111',
-    flexGrow: 1,
   },
   frontFooter: {
     gap: 2,
