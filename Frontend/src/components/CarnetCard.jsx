@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   },
   frontBody: {
     marginTop: -25,
-    top:- 25,
+    top:- 20,
   },
   roleLabel: {
     fontSize: 11,
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: '#0A8A4A',
     borderRadius: 2,
-    marginBottom: 10,
+    marginBottom: 2,
   },
   studentNameFront: {
     fontSize: 17,
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
   identityText: {
     fontSize: 14,
     color: '#3A3A3A',
-    marginBottom: 10,
+    marginBottom: 6,
   },
   barcodeWrap: {
     height: 23,
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   barcodeBar: {
-    width: 40,
+    width: 10,
     height: 24,
     backgroundColor: '#111111',
   },
