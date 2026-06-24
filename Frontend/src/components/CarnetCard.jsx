@@ -476,6 +476,7 @@ const styles = StyleSheet.create({
     height: 24,
     backgroundColor: '#111111',
     marginBottom: 5,
+    marginTop: 4,
   },
   frontFooter: {
     gap: 0,
