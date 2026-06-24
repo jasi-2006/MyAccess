@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   },
   frontBody: {
     marginTop: -25,
-    top:- 20,
+    top:- 25,
   },
   roleLabel: {
     fontSize: 11,
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
   },
   frontFooter: {
-    marginTop: -20,
+    gap: 2,
   },
   inactiveBadge: {
     alignSelf: 'flex-start',
