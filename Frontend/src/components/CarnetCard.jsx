@@ -478,6 +478,7 @@ const styles = StyleSheet.create({
   },
   frontFooter: {
     marginTop: -20,
+    top: -25,
   },
   inactiveBadge: {
     alignSelf: 'flex-start',
