@@ -203,7 +203,7 @@ export default function HistorialScreen({ navigation }) {
                       </View>
                       <View style={styles.mobileCardRow}>
                         <Text style={styles.mobileLabel}>Usuario</Text>
-                        <Text style={styles.mobileValue}>{request.idUser || '-'}</Text>
+                        <Text style={styles.mobileValue}>{request.fullName || '-'}</Text>
                       </View>
                       <View style={styles.mobileCardRow}>
                         <Text style={styles.mobileLabel}>Solicitud</Text>
@@ -242,7 +242,7 @@ export default function HistorialScreen({ navigation }) {
                     {filtered.map((request, index) => (
                       <View key={request.idRequest} style={[styles.tableRow, index % 2 === 0 && styles.rowEven]}>
                         <Text style={[styles.cell, styles.cellIndex]}>{index + 1}</Text>
-                        <Text style={[styles.cell, styles.cellUser]} numberOfLines={1}>{request.idUser || '-'}</Text>
+                        <Text style={[styles.cell, styles.cellUser]} numberOfLines={1}>{request.fullName || '-'}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.requestTipe || '-'}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.cardTipe || '-'}</Text>
                         <View style={[styles.cell, styles.cellCenter]}>
