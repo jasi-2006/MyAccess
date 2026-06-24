@@ -23,6 +23,31 @@ public class UserAuthService {
     private final UserAuthRepository userAuthRepository;
     private final RoleRepository roleRepository;
 
+    public void updatePasswordByEmail(String email, String currentPassword, String newPassword) {
+        String normalizedEmail = email == null ? null : email.trim().toLowerCase();
+        String normalizedCurrentPassword = currentPassword == null ? "" : currentPassword.trim();
+        String normalizedNewPassword = newPassword == null ? "" : newPassword.trim();
+
+        if (normalizedEmail == null || normalizedEmail.isBlank()) {
+            throw new IllegalArgumentException("No se pudo identificar el usuario autenticado.");
+        }
+        if (normalizedCurrentPassword.isBlank()) {
+            throw new IllegalArgumentException("La contraseña actual es obligatoria.");
+        }
+        if (normalizedNewPassword.length() < 8) {
+            throw new IllegalArgumentException("La nueva contraseña debe tener al menos 8 caracteres.");
+        }
+
+        UserAuth user = userAuthRepository.findByEmailWithRole(normalizedEmail)
+                .orElseThrow(() -> new RuntimeException("No se encontro la cuenta de acceso."));
+
+        if (!BCrypt.checkpw(normalizedCurrentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("La contraseña actual no es correcta.");
+        }
+
+        user.setPassword(BCrypt.hashpw(normalizedNewPassword, BCrypt.gensalt()));
+        userAuthRepository.save(user);
+    }
     /*
      * Crea las credenciales de autenticaciÃ³n para un nuevo usuario.
      * Si no se proporciona idRole, asigna el rol APRENDIZ por defecto.

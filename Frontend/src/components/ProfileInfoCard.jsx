@@ -2,10 +2,16 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { resolveImageUrl } from '../services/api.js';
 
-export default function ProfileInfoCard({ profile, loading, fields, onEdit, px }) {
+const appendCacheBust = (url, revision) => {
+  if (!url) return null;
+  const cacheBuster = `v=${revision || 0}`;
+  return url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
+};
+
+export default function ProfileInfoCard({ profile, loading, fields, onEdit, px, photoRevision }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 910;
-  const photoUrl = resolveImageUrl(profile?.photoUrl);
+  const photoUrl = appendCacheBust(resolveImageUrl(profile?.photoUrl), photoRevision);
 
   return (
     <View style={[styles.section, { paddingHorizontal: px }]}>

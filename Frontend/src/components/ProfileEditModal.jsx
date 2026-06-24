@@ -1,4 +1,4 @@
-ï»¿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Modal, View, Text, StyleSheet, ScrollView,
   TextInput, TouchableOpacity, ActivityIndicator, useWindowDimensions,
@@ -9,6 +9,12 @@ import { digitsOnly } from '../utils/inputFilters.js';
 import { resolveImageUrl } from '../services/api.js';
 import { removePhotoBackground } from '../services/photoBackgroundService.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
+
+const appendCacheBust = (url, revision) => {
+  if (!url) return null;
+  const cacheBuster = `v=${revision || 0}`;
+  return url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
+};
 
 export default function ProfileEditModal({
   visible,
@@ -22,16 +28,18 @@ export default function ProfileEditModal({
   photo,
   onPhotoChange,
   userRole,
+  photoRevision,
+  passwordForm,
+  onPasswordChange,
 }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 910;
   const fileInputRef = useRef(null);
-  const previewUrl = photo?.uri || resolveImageUrl(currentPhotoUrl);
+  const previewUrl = photo?.uri || appendCacheBust(resolveImageUrl(currentPhotoUrl), photoRevision);
   const [fichaInput, setFichaInput] = useState('');
 
   const isInstructor = normalizeRole(userRole) === ROLES.INSTRUCTOR;
 
-  // fichas como array derivado del form
   const fichas = isInstructor
     ? String(form.ficha || '').split(',').map((f) => f.trim()).filter(Boolean)
     : [];
@@ -68,6 +76,7 @@ export default function ProfileEditModal({
     if (!file) return;
     onPhotoChange(await removePhotoBackground({ uri: URL.createObjectURL(file), file, fileName: file.name, type: file.type }));
   };
+
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
@@ -95,7 +104,6 @@ export default function ProfileEditModal({
             </View>
 
             {fields.map((f) => {
-              // Campo ficha para instructor: selector de mÃƒÂºltiples fichas
               if (f.key === 'ficha' && isInstructor) {
                 return (
                   <View key={f.key} style={styles.inputGroup}>
@@ -105,7 +113,7 @@ export default function ProfileEditModal({
                         style={styles.fichaInput}
                         value={fichaInput}
                         onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
-                        placeholder="NÃ‚Â° de ficha"
+                        placeholder="N° de ficha"
                         keyboardType="numeric"
                         returnKeyType="done"
                         onSubmitEditing={addFicha}
@@ -121,7 +129,7 @@ export default function ProfileEditModal({
                           <View key={fc} style={styles.fichaChip}>
                             <Text style={styles.fichaChipText}>#{fc}</Text>
                             <TouchableOpacity onPress={() => removeFicha(fc)}>
-                              <Text style={styles.fichaChipRemove}>Ã¢Å“â€¢</Text>
+                              <Text style={styles.fichaChipRemove}>?</Text>
                             </TouchableOpacity>
                           </View>
                         ))}
@@ -130,23 +138,67 @@ export default function ProfileEditModal({
                   </View>
                 );
               }
-              // Campo normal
+
               return (
-              <View key={f.key} style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>{f.label}</Text>
-                <TextInput
-                  style={styles.input}
-                  value={form[f.key] || ''}
-                  onChangeText={(v) => onChange(f.key, f.numeric ? digitsOnly(v) : v)}
-                  placeholder={f.label}
-                  placeholderTextColor="#94A3B8"
-                  keyboardType={f.numeric ? 'numeric' : 'default'}
-                  inputMode={f.numeric ? 'numeric' : 'text'}
-                  editable={f.key !== 'document'}
-                />
-              </View>
+                <View key={f.key} style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>{f.label}</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={form[f.key] || ''}
+                    onChangeText={(v) => onChange(f.key, f.numeric ? digitsOnly(v) : v)}
+                    placeholder={f.label}
+                    placeholderTextColor="#94A3B8"
+                    keyboardType={f.numeric ? 'numeric' : 'default'}
+                    inputMode={f.numeric ? 'numeric' : 'text'}
+                    editable={f.key !== 'document'}
+                  />
+                </View>
               );
             })}
+
+            <View style={styles.passwordSection}>
+              <Text style={styles.passwordTitle}>Contraseña</Text>
+              <Text style={styles.passwordHint}>Si no deseas cambiarla, deja estos campos vacíos.</Text>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Contraseña actual</Text>
+                <TextInput
+                  style={styles.input}
+                  value={passwordForm?.currentPassword || ''}
+                  onChangeText={(v) => onPasswordChange('currentPassword', v)}
+                  placeholder="Ingresa tu contraseña actual"
+                  placeholderTextColor="#94A3B8"
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Nueva contraseña</Text>
+                <TextInput
+                  style={styles.input}
+                  value={passwordForm?.newPassword || ''}
+                  onChangeText={(v) => onPasswordChange('newPassword', v)}
+                  placeholder="Nueva contraseña"
+                  placeholderTextColor="#94A3B8"
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Confirmar nueva contraseña</Text>
+                <TextInput
+                  style={styles.input}
+                  value={passwordForm?.confirmPassword || ''}
+                  onChangeText={(v) => onPasswordChange('confirmPassword', v)}
+                  placeholder="Repite la nueva contraseña"
+                  placeholderTextColor="#94A3B8"
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
           </ScrollView>
           <View style={styles.actions}>
             <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
@@ -190,6 +242,14 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8,
     padding: 10, fontSize: 14, color: '#1E293B', backgroundColor: '#F8FAFC',
   },
+  passwordSection: {
+    marginTop: 8,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
+  },
+  passwordTitle: { fontSize: 15, fontWeight: '800', color: '#0F766E', marginBottom: 4 },
+  passwordHint: { fontSize: 12, color: '#64748B', marginBottom: 12 },
   actions: { flexDirection: 'row', justifyContent: 'flex-end', gap: 12, marginTop: 16 },
   cancelBtn: { paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: '#CBD5E1' },
   cancelText: { color: '#64748B', fontWeight: '600' },
@@ -215,5 +275,3 @@ const styles = StyleSheet.create({
   fichaChipText: { fontSize: 12, fontWeight: '700', color: '#0F766E' },
   fichaChipRemove: { fontSize: 11, color: '#EF4444', fontWeight: '900' },
 });
-
-
