@@ -87,7 +87,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   const isMobile = width < 768;
 
   const cardWidth = isMobile ? Math.min(width - 40, 265) : 265;
-  const cardHeight = 405;
+  const cardHeight = 394;
 
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
@@ -438,8 +438,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: -25,
-    top: -23,
+    marginTop: -18,
+    top: -15,
   },
   roleLabel: {
     fontSize: 11,
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   frontFooter: {
     gap: 0,
     marginTop: -8,
-    top: -38,
+    top: -28,
   },
   inactiveBadge: {
     alignSelf: 'flex-start',
