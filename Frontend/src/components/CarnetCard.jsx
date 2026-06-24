@@ -438,8 +438,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: -18,
-    top: -15,
+    marginTop: -16,
+    top: -13,
   },
   roleLabel: {
     fontSize: 11,
@@ -517,18 +517,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#4A4A4A',
     fontWeight: '700',
+    marginBottom: 2,
   },
   footerSecondary: {
     fontSize: 11,
     color: '#5D9C7A',
     fontWeight: '700',
+    marginBottom: 2,
   },
   footerTertiary: {
     fontSize: 11,
     color: '#4A4A4A',
   },
   hashTop: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#2E2E2E',
     lineHeight: 13,
   },
@@ -576,7 +578,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
   },
   hashBottom: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#2E2E2E',
     lineHeight: 13,
   },
