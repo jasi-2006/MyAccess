@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
   identityText: {
     fontSize: 14,
     color: '#3A3A3A',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   barcodeWrap: {
     height: 23,
@@ -476,7 +476,6 @@ const styles = StyleSheet.create({
     height: 24,
     backgroundColor: '#111111',
     marginBottom: 5,
-    marginTop: 4,
   },
   frontFooter: {
     gap: 0,
