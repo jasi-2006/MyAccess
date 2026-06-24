@@ -113,7 +113,7 @@ export default function ProfileEditModal({
                         style={styles.fichaInput}
                         value={fichaInput}
                         onChangeText={(v) => setFichaInput(v.replace(/\D/g, ''))}
-                        placeholder="N° de ficha"
+                        placeholder="NÂ° de ficha"
                         keyboardType="numeric"
                         returnKeyType="done"
                         onSubmitEditing={addFicha}
@@ -157,16 +157,16 @@ export default function ProfileEditModal({
             })}
 
             <View style={styles.passwordSection}>
-              <Text style={styles.passwordTitle}>Contraseña</Text>
-              <Text style={styles.passwordHint}>Si no deseas cambiarla, deja estos campos vacíos.</Text>
+              <Text style={styles.passwordTitle}>ContraseÃ±a</Text>
+              <Text style={styles.passwordHint}>Si no deseas cambiarla, deja estos campos vacÃ­os.</Text>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Contraseña actual</Text>
+                <Text style={styles.inputLabel}>ContraseÃ±a actual</Text>
                 <TextInput
                   style={styles.input}
                   value={passwordForm?.currentPassword || ''}
                   onChangeText={(v) => onPasswordChange('currentPassword', v)}
-                  placeholder="Ingresa tu contraseña actual"
+                  placeholder="Ingresa tu contrasÃ±a actual"
                   placeholderTextColor="#94A3B8"
                   secureTextEntry
                   autoCapitalize="none"
@@ -174,12 +174,12 @@ export default function ProfileEditModal({
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Nueva contraseña</Text>
+                <Text style={styles.inputLabel}>Nueva contraseÃ±a</Text>
                 <TextInput
                   style={styles.input}
                   value={passwordForm?.newPassword || ''}
                   onChangeText={(v) => onPasswordChange('newPassword', v)}
-                  placeholder="Nueva contraseña"
+                  placeholder="Nueva contraseÃ±a"
                   placeholderTextColor="#94A3B8"
                   secureTextEntry
                   autoCapitalize="none"
@@ -187,12 +187,12 @@ export default function ProfileEditModal({
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Confirmar nueva contraseña</Text>
+                <Text style={styles.inputLabel}>Confirmar nueva contraseÃ±a</Text>
                 <TextInput
                   style={styles.input}
                   value={passwordForm?.confirmPassword || ''}
                   onChangeText={(v) => onPasswordChange('confirmPassword', v)}
-                  placeholder="Repite la nueva contraseña"
+                  placeholder="Repite la nueva contraseÃ±a"
                   placeholderTextColor="#94A3B8"
                   secureTextEntry
                   autoCapitalize="none"

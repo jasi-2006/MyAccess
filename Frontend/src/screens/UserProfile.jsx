@@ -103,19 +103,19 @@ export default function UserProfile({ navigation }) {
     }
 
     if (!String(passwordForm.currentPassword || '').trim()) {
-      return 'Debes ingresar tu contraseÒa actual para cambiarla.';
+      return 'Debes ingresar tu contrase√±a actual para cambiarla.';
     }
     if (!String(passwordForm.newPassword || '').trim()) {
-      return 'Debes ingresar la nueva contraseÒa.';
+      return 'Debes ingresar la nueva contrase√±a.';
     }
     if (!String(passwordForm.confirmPassword || '').trim()) {
-      return 'Debes confirmar la nueva contraseÒa.';
+      return 'Debes confirmar la nueva contrase√±a.';
     }
     if (!passwordRegex.test(passwordForm.newPassword)) {
-      return 'La nueva contraseÒa debe iniciar con may˙scula, tener 8 caracteres, un n˙mero y un car·cter especial.';
+      return 'La nueva contrase√±a debe iniciar con may√°scula, tener 8 caracteres, un n√∫mero y un car√°cter especial.';
     }
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      return 'Las contraseÒas nuevas no coinciden.';
+      return 'Las contrase√±as nuevas no coinciden.';
     }
 
     return null;
@@ -126,7 +126,7 @@ export default function UserProfile({ navigation }) {
 
     const passwordValidationError = getPasswordValidationError();
     if (passwordValidationError) {
-      Alert.alert('ContraseÒa no v·lida', passwordValidationError);
+      Alert.alert('Contrase√±a no v√°lida', passwordValidationError);
       return;
     }
 
@@ -138,7 +138,7 @@ export default function UserProfile({ navigation }) {
       if (photo?.file) {
         const validation = await validateCarnetPhoto(photo.file);
         if (!validation.valid) {
-          Alert.alert('Foto no v·lida', validation.errors.join('\n'));
+          Alert.alert('Foto no v√°lida', validation.errors.join('\n'));
           return;
         }
       }
@@ -177,7 +177,7 @@ export default function UserProfile({ navigation }) {
             newPassword: passwordForm.newPassword.trim(),
           });
         } catch (pwErr) {
-          passwordError = pwErr?.payload?.message || pwErr?.message || 'No se pudo actualizar la contraseÒa.';
+          passwordError = pwErr?.payload?.message || pwErr?.message || 'No se pudo actualizar la contrase√±a.';
         }
       }
 
@@ -192,8 +192,8 @@ export default function UserProfile({ navigation }) {
         Alert.alert(
           'Datos guardados',
           [
-            photoError ? `La foto fallÛ: ${photoError}` : null,
-            passwordError ? `La contraseÒa fallÛ: ${passwordError}` : null,
+            photoError ? `La foto fall√°: ${photoError}` : null,
+            passwordError ? `La contrase√±a fall√°: ${passwordError}` : null,
           ].filter(Boolean).join('\n\n'),
         );
       }

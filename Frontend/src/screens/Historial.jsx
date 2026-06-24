@@ -140,7 +140,7 @@ export default function HistorialScreen({ navigation }) {
                   style={styles.headerPrintBtn}
                   onPress={() => navigation.navigate('Imprimir')}
                 >
-                  <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
+                  <Text style={styles.headerPrintBtnText}>Imprimir carnet</Text>
                 </TouchableOpacity>
               )}
               {isInstructor && (
@@ -248,7 +248,7 @@ export default function HistorialScreen({ navigation }) {
                         <View style={[styles.cell, styles.cellCenter]}>
                           <Badge state={request.state} />
                         </View>
-                        <Text style={styles.cell} numberOfLines={1}>{request.approbedBy || '-'}</Text>
+                        <Text style={styles.cell} numberOfLines={1}>{request.fullName}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.printedBy || '-'}</Text>
                         {isAdmin && (
                           <View style={[styles.cell, styles.cellAction, styles.cellCenter]}>

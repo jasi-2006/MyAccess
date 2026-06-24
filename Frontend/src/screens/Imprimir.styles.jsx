@@ -54,7 +54,10 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E5E7EB',
   },
   verticalPhoto: { width: '100%', height: '100%' },
-  verticalBody: { flex: 1 },
+  verticalBody: { 
+    flex: 1,
+    marginTop: -11,
+  },
   verticalRole: {
     fontSize: 12,
     color: '#000000',
@@ -190,9 +193,7 @@ export const styles = StyleSheet.create({
     marginBottom: 14,
     gap: 10,
   },
-  warningIcon: {
-    fontSize: 15,
-  },
+
   warningText: {
     flex: 1,
     color: '#B45309',

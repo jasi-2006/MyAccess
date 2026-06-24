@@ -90,7 +90,7 @@ export default function InstructorDashboard({ navigation }) {
 
             <View style={styles.headerBlock}>
               <Text style={styles.pageTitle}>Panel de administración</Text>
-              <Text style={styles.pageSubtitle}>Gestiona fichas, solicitudes, carnets y notificaciones.</Text>
+              <Text style={styles.pageSubtitle}>Gestiona fichas, solicitudes, carnet y notificaciones.</Text>
             </View>
 
             <View style={styles.row}>
@@ -102,11 +102,11 @@ export default function InstructorDashboard({ navigation }) {
 
             <View style={styles.actions}>
               {[
-                { title: 'Instructores',      text: 'Ver y gestionar carnets de instructores.',               route: 'Instructores' },
+                { title: 'Instructores',      text: 'Ver y gestionar carnet de instructores.',               route: 'Instructores' },
                 { title: 'Fichas',             text: 'Gestionar grupos y aprendices por ficha.',             route: 'Fichas' },
-                { title: 'Solicitudes',        text: 'Revisar y gestionar solicitudes de carnets.',          route: 'Solicitudes' },
+                { title: 'Solicitudes',        text: 'Revisar y gestionar solicitudes de carnet.',          route: 'Solicitudes' },
                 { title: 'Historial',          text: 'Consultar el historial completo de solicitudes.',      route: 'Historial' },
-                { title: 'Imprimir carnets',   text: 'Imprimir carnets físicos de aprendices.',             route: 'Imprimir' },
+                { title: 'Imprimir carnet',   text: 'Imprimir carnet físicos de aprendices.',             route: 'Imprimir' },
                 { title: 'Crear notificación', text: 'Enviar avisos a usuarios del sistema.',               route: null },
                 { title: 'Carnet instructor',  text: 'Generar carnet digital exclusivo para instructores.', route: 'CreateInstructorCard' },
               ].map((a) => (

@@ -25,7 +25,7 @@ export default function HomeAbout() {
           </Text>
           <Text style={[styles.aboutText, { fontSize: isDesktop ? 13 : 12 }]}>
             <Text style={styles.highlight}>MyAccess</Text> es una aplicación creada para gestionar
-            accesos, usuarios y carnets digitales de manera segura y organizada en el
+            accesos, usuarios y carnet digitales de manera segura y organizada en el
             Centro de Comercio y Turismo del{' '}
             <Text style={styles.highlight}>SENA</Text> en Armenia, Quindío.
           </Text>

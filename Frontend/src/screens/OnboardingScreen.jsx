@@ -77,7 +77,7 @@ export default function OnboardingScreen({ navigation }) {
 
             <Text style={styles.subtitle}>
               Bienvenido a MyAccess!
-              Innovamos la identificación con carnets digitales seguros y personalizados.
+              Innovamos la identificación con carnet digitales seguros y personalizados.
             </Text>
 
             <PrimaryButton

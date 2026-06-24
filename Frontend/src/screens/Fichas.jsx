@@ -204,7 +204,7 @@ export default function FichasScreen({ navigation, route }) {
         });
         return next;
       });
-      setError('No fue posible actualizar todos los carnets seleccionados.');
+      setError('No fue posible actualizar todos los carnet seleccionados.');
     } finally {
       setBulkUpdating(false);
     }
@@ -324,15 +324,15 @@ export default function FichasScreen({ navigation, route }) {
             <View style={styles.headerBlock}>
               <Text style={styles.pageTitle}>Gestion de ficha</Text>
               <Text style={styles.pageSubtitle}>
-                Revisa los aprendices por ficha y administra el estado de sus carnets.
+                Revisa los aprendices por ficha y administra el estado de sus carnet.
               </Text>
             </View>
 
             <View style={styles.row}>
               <StatCard title="Total fichas" value={String(fichas.length)} />
               <StatCard title="Aprendices" value={String(learners.length)} />
-              <StatCard title="Carnets activos" value={String(activeCards)} />
-              <StatCard title="Carnets inactivos" value={String(inactiveCards)} />
+              <StatCard title="Carnet activos" value={String(activeCards)} />
+              <StatCard title="Carnet inactivos" value={String(inactiveCards)} />
             </View>
 
             {loadingData ? (
