@@ -46,15 +46,15 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
 
   const stepFields = [
     [
-      inp( 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
-      inp( 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
-      inp( 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
+      inp('ðŸ‘¤', 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
+      inp('ðŸ‘¤', 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
+      inp('#ï¸âƒ£', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
-      inp( 'Regional',             regional,        o('regional'),        {}),
-      inp( 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
-      inp( 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      inp( 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
+      inp('ðŸ“„', 'Regional',             regional,        o('regional'),        {}),
+      inp('ðŸ¢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
+      inp('âš™ï¸', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
+      inp('ðŸ”¢', 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
     ],
     [
       inp('ðŸ“§', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
