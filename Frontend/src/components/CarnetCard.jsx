@@ -475,6 +475,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 24,
     backgroundColor: '#111111',
+    marginBottom: 5,
   },
   frontFooter: {
     gap: 0,
@@ -517,13 +518,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#4A4A4A',
     fontWeight: '700',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   footerSecondary: {
     fontSize: 11,
     color: '#5D9C7A',
     fontWeight: '700',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   footerTertiary: {
     fontSize: 11,
