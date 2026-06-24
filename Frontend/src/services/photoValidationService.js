@@ -19,7 +19,7 @@ export async function validateCarnetPhoto(file) {
 
   const base64 = await fileToBase64(file);
 
-  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde ÃšNICAMENTE con un objeto JSON vÃ¡lido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco, claro o transparente, sin objetos distractores\n2. Rostro visible, centrado y mirando a cÃ¡mara\n3. Sin gafas oscuras, gorras, paÃ±oletas o accesorios que cubran el rostro\n4. ExpresiÃ³n neutral (boca cerrada, sin sonreÃ­r)\n5. IluminaciÃ³n uniforme (sin sombras fuertes en rostro ni fondo)`;
+  const prompt = `Analiza esta foto para un carnet estudiantil del SENA y responde con un objeto JSON valilido con esta estructura exacta, sin texto adicional ni markdown:\n\n{\n  "valid": boolean,\n  "errors": ["error1", "error2", ...]\n}\n\nCRITERIOS OBLIGATORIOS (todos deben cumplirse):\n1. Fondo blanco, claro o transparente, sin objetos distractores\n2. Rostro visible, centrado y mirando a cÃ¡mara\n3. Sin gafas oscuras, gorras, pañoletas o accesorios que cubran el rostro\n4. Expresion neutral (boca cerrada, sin sonreir)\n5. Iluminacion uniforme (sin sombras fuertes en rostro ni fondo)`;
 
   const response = await fetch(GROQ_URL, {
     method: 'POST',

@@ -42,6 +42,7 @@ export default function HistorialScreen({ navigation }) {
 
   const [profile, setProfile] = useState(null);
   const [requests, setRequests] = useState([]);
+  const [usersById, setUsersById] = useState({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('Todos');
   const [requesting, setRequesting] = useState(false);
@@ -53,12 +54,44 @@ export default function HistorialScreen({ navigation }) {
   const isInstructor = resolveUserRole(profile) === ROLES.INSTRUCTOR;
 
   useEffect(() => {
-    getUserProfile().then(setProfile).catch(() => setProfile(null));
-    getAllRequestCards()
-      .then(setRequests)
-      .catch(() => setRequests([]))
-      .finally(() => setLoading(false));
+    let mounted = true;
+
+    Promise.all([
+      getUserProfile().catch(() => null),
+      getAllRequestCards().catch(() => []),
+      getAllUserProfiles().catch(() => []),
+    ])
+      .then(([currentProfile, allRequests, allUsers]) => {
+        if (!mounted) return;
+
+        const userMap = {};
+        (Array.isArray(allUsers) ? allUsers : []).forEach((user) => {
+          if (user?.id) userMap[user.id] = user;
+        });
+
+        setProfile(currentProfile);
+        setRequests(Array.isArray(allRequests) ? allRequests : []);
+        setUsersById(userMap);
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
+
+  const getRequestUserName = (request) => {
+    const user = usersById[request?.idUser];
+    return (
+      request?.fullName ||
+      request?.full_name ||
+      user?.fullName ||
+      user?.full_name ||
+      (request?.idUser ? `Usuario #${request.idUser}` : '-')
+    );
+  };
 
   const handleSolicitarImpresion = async () => {
     if (requesting) return;
@@ -140,7 +173,7 @@ export default function HistorialScreen({ navigation }) {
                   style={styles.headerPrintBtn}
                   onPress={() => navigation.navigate('Imprimir')}
                 >
-                  <Text style={styles.headerPrintBtnText}>Imprimir carnets</Text>
+                  <Text style={styles.headerPrintBtnText}>Imprimir carnet</Text>
                 </TouchableOpacity>
               )}
               {isInstructor && (
@@ -203,7 +236,7 @@ export default function HistorialScreen({ navigation }) {
                       </View>
                       <View style={styles.mobileCardRow}>
                         <Text style={styles.mobileLabel}>Usuario</Text>
-                        <Text style={styles.mobileValue}>{request.idUser || '-'}</Text>
+                        <Text style={styles.mobileValue}>{getRequestUserName(request)}</Text>
                       </View>
                       <View style={styles.mobileCardRow}>
                         <Text style={styles.mobileLabel}>Solicitud</Text>
@@ -242,7 +275,7 @@ export default function HistorialScreen({ navigation }) {
                     {filtered.map((request, index) => (
                       <View key={request.idRequest} style={[styles.tableRow, index % 2 === 0 && styles.rowEven]}>
                         <Text style={[styles.cell, styles.cellIndex]}>{index + 1}</Text>
-                        <Text style={[styles.cell, styles.cellUser]} numberOfLines={1}>{request.idUser || '-'}</Text>
+                        <Text style={[styles.cell, styles.cellUser]} numberOfLines={1}>{getRequestUserName(request)}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.requestTipe || '-'}</Text>
                         <Text style={styles.cell} numberOfLines={1}>{request.cardTipe || '-'}</Text>
                         <View style={[styles.cell, styles.cellCenter]}>

@@ -45,7 +45,7 @@ export default function GestionFichas({ navigation }) {
             <View style={styles.actions}>
               {[
                 { title: 'Ver fichas',          text: 'Gestionar grupos y programas activos.',                          route: 'Fichas' },
-                { title: 'Ver solicitudes',      text: 'Revisar estados de impresión de carnets.',                      route: 'Solicitudes' },
+                { title: 'Ver solicitudes',      text: 'Revisar estados de impresión de carnet.',                      route: 'Solicitudes' },
                 { title: 'Ver carnet digital',   text: 'Abrir la misma estructura de carnet que ve el aprendiz.',       route: 'Carnet' },
                 { title: 'Crear notificación',   text: 'Enviar un aviso a un usuario o dejarlo registrado en gestión.', route: null },
               ].map((a) => (

@@ -103,6 +103,13 @@ export async function updateUserProfile(document, dto) {
   });
 }
 
+export async function updateProfilePassword({ currentPassword, newPassword }) {
+  return userServiceRequest('/register/profile/password', {
+    method: 'PUT',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
+
 export async function updatePasswordWithCode(email, code, newPassword) {
   return userServiceRequest('/auth/reset-password', {
     method: 'POST',

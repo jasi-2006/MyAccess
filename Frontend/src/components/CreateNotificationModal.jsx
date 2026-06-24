@@ -307,7 +307,7 @@ export default function CreateNotificationModal({ visible, onClose, onCreated })
                 value={form.affair}
                 onChangeText={(value) => updateField('affair', value)}
                 maxLength={30}
-                placeholder="Ej. Entrega de carnets"
+                placeholder="Ej. Entrega de carnet"
                 style={styles.input}
                 placeholderTextColor="#9CA3AF"
               />

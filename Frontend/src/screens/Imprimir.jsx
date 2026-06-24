@@ -192,7 +192,7 @@ export default function ImprimirScreen({ navigation }) {
     const pairsHtml = fichaLearners
       .map((learner) => buildCarnetPairHtml(learner, cardsByUser[learner.id]))
       .join('');
-    openPrintWindow('Carnets MyAccess', 'Vista previa - haz clic en "Imprimir" para enviar a la impresora.', `<div class="grid">${pairsHtml}</div>`);
+    openPrintWindow('Carnet MyAccess', 'Vista previa - haz clic en "Imprimir" para enviar a la impresora.', `<div class="grid">${pairsHtml}</div>`);
   };
 
   const handlePrintSelected = () => {
@@ -243,10 +243,9 @@ export default function ImprimirScreen({ navigation }) {
 
             {warningMessage ? (
               <View style={styles.warningBox}>
-                <Text style={styles.warningIcon}>âš ï¸</Text>
                 <Text style={styles.warningText}>{warningMessage}</Text>
                 <TouchableOpacity onPress={() => setWarningMessage('')} style={styles.warningClose}>
-                  <Text style={styles.warningCloseText}>Ã—</Text>
+                  <Text style={styles.warningCloseText}>—</Text>
                 </TouchableOpacity>
               </View>
             ) : null}
