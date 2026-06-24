@@ -87,7 +87,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   const isMobile = width < 768;
 
   const cardWidth = isMobile ? Math.min(width - 40, 265) : 265;
-  const cardHeight = 420;
+  const cardHeight = 394;
 
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
@@ -251,7 +251,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 </View>
 
                 <Text style={styles.hashBottom}>
-                  Si por algun motivo este carnÃ© es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
+                  Si por algun motivo este carné es extraviado, por favor dirijase a la Direccion Regional Quindio - Avenida Centenario #44 Norte -15
                 </Text>
 
                 {!isActive && (
@@ -353,13 +353,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   frontTop: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    minHeight: 186,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   logoBlock: {
-    width: 78,
-    alignItems: 'flex-start',
+    width: 88,
+    alignItems: 'center',
     marginTop: 2,
   },
   logoSenaImg: {
@@ -429,8 +429,8 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-32deg' }],
   },
   photoFrame: {
-    width: 122,
-    height: 152,
+    width: 132,
+    height: 162,
     overflow: 'hidden',
   },
   photoImage: {
@@ -438,20 +438,21 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   frontBody: {
-    marginTop: -45,
+    marginTop: -13,
+    top: -10,
   },
   roleLabel: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#000000',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginTop: 0,
-    marginBottom: 2,
+    marginTop: -26,
   },
   greenRule: {
     height: 4,
     backgroundColor: '#0A8A4A',
     borderRadius: 2,
+    marginBottom: 4,
   },
   studentNameFront: {
     fontSize: 17,
@@ -463,19 +464,23 @@ const styles = StyleSheet.create({
   identityText: {
     fontSize: 14,
     color: '#3A3A3A',
+    marginBottom: 18,
   },
   barcodeWrap: {
-    height: 43,
+    height: 23,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
   barcodeBar: {
+    width: 10,
     height: 24,
     backgroundColor: '#111111',
-    flexGrow: 1,
+    marginBottom: 5,
   },
   frontFooter: {
-    gap: 2,
+    gap: 0,
+    marginTop: -8,
+    top: -28,
   },
   inactiveBadge: {
     alignSelf: 'flex-start',
@@ -513,18 +518,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#4A4A4A',
     fontWeight: '700',
+    marginBottom: 4,
   },
   footerSecondary: {
     fontSize: 11,
     color: '#5D9C7A',
     fontWeight: '700',
+    marginBottom: 4,
   },
   footerTertiary: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#4A4A4A',
   },
   hashTop: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#2E2E2E',
     lineHeight: 13,
   },
@@ -572,7 +579,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
   },
   hashBottom: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#2E2E2E',
     lineHeight: 13,
   },
