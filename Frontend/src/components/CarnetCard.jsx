@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: '#0A8A4A',
     borderRadius: 2,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   studentNameFront: {
     fontSize: 17,
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
   identityText: {
     fontSize: 14,
     color: '#3A3A3A',
-    marginBottom: 6,
+    marginBottom: 10,
   },
   barcodeWrap: {
     height: 23,
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   footerTertiary: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#4A4A4A',
   },
   hashTop: {
