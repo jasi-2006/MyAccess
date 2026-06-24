@@ -31,7 +31,7 @@ export default function HomeCards({ navigation, role }) {
     ...(isAdmin
       ? [{
           title: 'Area de gestion',
-          desc: 'Administra fichas, solicitudes, carnets y notificaciones.',
+          desc: 'Administra fichas, solicitudes, carnet y notificaciones.',
           onPress: () => navigation.navigate('Instructor'),
           featured: true,
         }]

@@ -36,7 +36,7 @@ export default function RequestCardButton({ profile }) {
 
     const photoUrl = resolveImageUrl(rawPhotoUrl);
     if (!photoUrl) {
-      setWarn('⚠️ Debes cargar una foto de perfil antes de solicitar la impresión del carnet. Ve a "Mi perfil" > "Editar".');
+      setWarn(' Debes cargar una foto de perfil antes de solicitar la impresión del carnet. Ve a "Mi perfil" > "Editar".');
       return;
     }
 

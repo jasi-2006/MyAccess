@@ -74,7 +74,7 @@ export default function CarnetGatewayScreen({ navigation }) {
             {isMobile && <CarnetSidebar navigation={navigation} role={profile?.nameRole} activeKey="Card" />}
 
             <View style={styles.headerBlock}>
-              <Text style={styles.pageTitle}>Carnets digitales</Text>
+              <Text style={styles.pageTitle}>Carnet digitales</Text>
               <Text style={styles.pageSubtitle}>
                 Una identificacion estudiantil agil y segura directamente desde los dispositivos
               </Text>

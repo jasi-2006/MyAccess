@@ -141,7 +141,7 @@ export default function SolicitudesScreen({ navigation }) {
             <View style={styles.headerBlock}>
               <Text style={styles.pageTitle}>Solicitudes de impresion</Text>
               <Text style={styles.pageSubtitle}>
-                Revisa y gestiona las solicitudes de impresion de carnets.
+                Revisa y gestiona las solicitudes de impresion de carnet.
               </Text>
             </View>
 

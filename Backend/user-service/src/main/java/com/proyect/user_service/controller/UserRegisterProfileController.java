@@ -1,5 +1,7 @@
 package com.proyect.user_service.controller;
 
+import com.proyect.auth_service.service.UserAuthService;
+import com.proyect.user_service.dto.UpdatePasswordRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileRequestDTO;
 import com.proyect.user_service.dto.UserRegisterProfileResponseDTO;
 import com.proyect.user_service.service.UserRegisterProfileService;
@@ -25,6 +27,7 @@ import java.util.List;
 public class UserRegisterProfileController {
 
     private final UserRegisterProfileService userService;
+    private final UserAuthService userAuthService;
 
     /*
      * Retorna todos los perfiles de usuario registrados en el sistema.
@@ -144,6 +147,24 @@ public class UserRegisterProfileController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    @PutMapping("/profile/password")
+    public ResponseEntity<?> updateMyPassword(
+            @RequestBody UpdatePasswordRequestDTO dto,
+            HttpServletRequest request) {
+        String email = (String) request.getAttribute("emailId");
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(java.util.Map.of("message", "No se pudo identificar el usuario autenticado."));
+        }
+
+        try {
+            userAuthService.updatePasswordByEmail(email, dto.getCurrentPassword(), dto.getNewPassword());
+            return ResponseEntity.ok(java.util.Map.of("message", "Contraseña actualizada correctamente."));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(java.util.Map.of("message", ex.getMessage()));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(java.util.Map.of("message", ex.getMessage()));
+        }
+    }
     @DeleteMapping("/users/delete/{document}")
     public ResponseEntity<?> deleteByDocument(@PathVariable String document) {
         return userService.deleteUserDoc(document)
@@ -314,4 +335,3 @@ public class UserRegisterProfileController {
     }
 
 }
-

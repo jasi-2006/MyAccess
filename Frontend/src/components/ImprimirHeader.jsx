@@ -5,8 +5,8 @@ export default function ImprimirHeader({ styles, navigation, onPrint, canPrint }
   return (
     <View style={styles.headerRow}>
       <View>
-        <Text style={styles.pageTitle}>Imprimir carnets por ficha</Text>
-        <Text style={styles.pageSubtitle}>Selecciona una ficha y visualiza los carnets de sus aprendices.</Text>
+        <Text style={styles.pageTitle}>Imprimir carnet por ficha</Text>
+        <Text style={styles.pageSubtitle}>Selecciona una ficha y visualiza los carnet de sus aprendices.</Text>
       </View>
       <View style={styles.headerActions}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -17,7 +17,7 @@ export default function ImprimirHeader({ styles, navigation, onPrint, canPrint }
           onPress={onPrint}
           disabled={!canPrint}
         >
-          <Text style={styles.printBtnText}>Imprimir carnets</Text>
+          <Text style={styles.printBtnText}>Imprimir carnet</Text>
         </TouchableOpacity>
       </View>
     </View>

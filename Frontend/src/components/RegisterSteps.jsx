@@ -48,17 +48,17 @@ export default function RegisterSteps({ step, values, onChange, errors, isMobile
     [
       inp('ðŸ‘¤', 'Nombres',             nombres,      o('nombres'),      { error: errors.nombres,  autoCapitalize: 'words' }),
       inp('ðŸ‘¤', 'Apellidos',           apellidos,    o('apellidos'),    { error: errors.apellidos, autoCapitalize: 'words' }),
-      inp('#ï¸âƒ£', 'NÃºmero de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
+      inp('#ï¸âƒ£', 'Número de documento', document,      o('document'),     { error: errors.document, digitsOnly: true }),
     ],
     [
       inp('ðŸ“„', 'Regional',             regional,        o('regional'),        {}),
-      inp('ðŸ¢', 'Centro de formaciÃ³n',  trainingCenter,  o('trainingCenter'),  {}),
-      inp('âš™ï¸', 'Programa de formaciÃ³n', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
-      inp('ðŸ”¢', 'NÂ° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
+      inp('ðŸ¢', 'Centro de formación',  trainingCenter,  o('trainingCenter'),  {}),
+      inp('âš™ï¸', 'Programa de formación', trainingProgram, o('trainingProgram'), { error: errors.trainingProgram }),
+      inp('ðŸ”¢', 'N° Ficha', Ficha, o('Ficha'), { error: errors.Ficha, digitsOnly: true }),
     ],
     [
-      inp('ðŸ“§', 'Correo electrÃ³nico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
-      inp('ðŸ”’', 'ContraseÃ±a',         password, o('password'), { error: errors.password, secureTextEntry: true }),
+      inp('ðŸ“§', 'Correo electrónico', email,    o('email'),    { error: errors.email,    keyboardType: 'email-address', autoCapitalize: 'none' }),
+      inp('ðŸ”’', 'Contraseña',         password, o('password'), { error: errors.password, secureTextEntry: true }),
     ],
   ];
 
