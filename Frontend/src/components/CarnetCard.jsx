@@ -87,7 +87,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   const isMobile = width < 768;
 
   const cardWidth = isMobile ? Math.min(width - 40, 265) : 265;
-  const cardHeight = 320;
+  const cardHeight = 390;
 
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
