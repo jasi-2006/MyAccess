@@ -161,7 +161,7 @@ export function IndividualCarnet({ learner, card }) {
   const trainingProgram = learner?.trainingProgram || 'ADSO';
   const ficha = learner?.ficha || learner?.files || '0000000';
   const fullName = learner?.fullName || learner?.full_name || 'Sin nombre';
-  const { firstLine, secondLine } = formatCarnetNameLines(fullName);
+  const { firstLine, secondLine } = formatCarnetNameLines(fullName, learner?.nombres, learner?.apellidos);
   const identityLine = formatCarnetIdentityLine(learner);
 
   const [flipped, setFlipped] = useState(false);
