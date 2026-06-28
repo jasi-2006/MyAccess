@@ -33,6 +33,7 @@ export default function CreateNotificationModal({ visible, onClose, onCreated })
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (!visible) return undefined;
@@ -68,6 +69,17 @@ export default function CreateNotificationModal({ visible, onClose, onCreated })
     [aprendices],
   );
 
+  const filteredAprendices = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return aprendices;
+    return aprendices.filter((user) => {
+      const name = (user?.fullName || user?.full_name || '').toLowerCase();
+      const id = String(user?.id || '');
+      const ficha = String(getFichaValue(user) || '').toLowerCase();
+      return name.includes(term) || id.includes(term) || ficha.includes(term);
+    });
+  }, [aprendices, searchTerm]);
+
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
     setError('');
@@ -77,6 +89,7 @@ export default function CreateNotificationModal({ visible, onClose, onCreated })
   const resetAndClose = () => {
     if (submitting) return;
     setForm(initialForm);
+    setSearchTerm('');
     setError('');
     setSuccess('');
     onClose?.();
@@ -151,6 +164,7 @@ export default function CreateNotificationModal({ visible, onClose, onCreated })
       }
 
       setForm(initialForm);
+      setSearchTerm('');
       onCreated?.();
     } catch (err) {
       if (err.status === 401) {
@@ -238,30 +252,48 @@ export default function CreateNotificationModal({ visible, onClose, onCreated })
                 ) : aprendices.length === 0 ? (
                   <Text style={styles.helperText}>No hay aprendices registrados.</Text>
                 ) : (
-                  <View style={styles.selectList}>
-                    {aprendices.map((aprendiz) => {
-                      const id = String(aprendiz.id);
-                      const name = aprendiz.fullName || aprendiz.full_name || `Aprendiz #${id}`;
-                      const ficha = getFichaValue(aprendiz);
-                      const selected = form.idUser === id;
+                  <>
+                    <TextInput
+                      style={styles.searchInput}
+                      placeholder="Buscar por nombre, ID o ficha..."
+                      placeholderTextColor="#9CA3AF"
+                      value={searchTerm}
+                      onChangeText={setSearchTerm}
+                    />
+                    <ScrollView
+                      style={styles.selectList}
+                      contentContainerStyle={styles.selectListContent}
+                      nestedScrollEnabled={true}
+                      showsVerticalScrollIndicator={true}
+                    >
+                      {filteredAprendices.length === 0 ? (
+                        <Text style={styles.helperText}>No se encontraron aprendices.</Text>
+                      ) : (
+                        filteredAprendices.map((aprendiz) => {
+                          const id = String(aprendiz.id);
+                          const name = aprendiz.fullName || aprendiz.full_name || `Aprendiz #${id}`;
+                          const ficha = getFichaValue(aprendiz);
+                          const selected = form.idUser === id;
 
-                      return (
-                        <TouchableOpacity
-                          key={id}
-                          style={[styles.selectItem, selected && styles.selectItemActive]}
-                          onPress={() => updateField('idUser', id)}
-                          activeOpacity={0.85}
-                        >
-                          <Text style={[styles.selectItemTitle, selected && styles.selectItemTitleActive]}>
-                            {name}
-                          </Text>
-                          <Text style={styles.selectItemMeta}>
-                            {ficha ? `Ficha #${ficha}` : 'Sin ficha'} · ID {id}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
+                          return (
+                            <TouchableOpacity
+                              key={id}
+                              style={[styles.selectItem, selected && styles.selectItemActive]}
+                              onPress={() => updateField('idUser', id)}
+                              activeOpacity={0.85}
+                            >
+                              <Text style={[styles.selectItemTitle, selected && styles.selectItemTitleActive]}>
+                                {name}
+                              </Text>
+                              <Text style={styles.selectItemMeta}>
+                                {ficha ? `Ficha #${ficha}` : 'Sin ficha'} · ID {id}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })
+                      )}
+                    </ScrollView>
+                  </>
                 )}
               </View>
             )}
@@ -479,9 +511,30 @@ const styles = StyleSheet.create({
   chipTextActive: {
     color: '#FFFFFF',
   },
+  searchInput: {
+    width: '100%',
+    minHeight: 40,
+    borderWidth: 1,
+    borderColor: '#D1FAE5',
+    borderRadius: 8,
+    backgroundColor: '#F9FFFC',
+    color: '#1F2937',
+    fontSize: 13,
+    fontWeight: '600',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
   selectList: {
-    gap: 8,
     maxHeight: 180,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    padding: 6,
+    backgroundColor: '#F9FAFB',
+  },
+  selectListContent: {
+    gap: 8,
   },
   selectItem: {
     borderWidth: 1,
