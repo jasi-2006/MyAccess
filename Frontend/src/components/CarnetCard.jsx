@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 import { colors } from '../theme/colors.jsx';
 import { resolveImageUrl } from '../services/api.js';
 import { resolveUserRole, getRoleDisplayName, ROLES } from '../utils/accessControl';
+import { formatCarnetNameLines } from '../utils/carnetFormat.js';
 
 
 
@@ -121,6 +122,7 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
   });
 
   const studentName = (profile?.fullName || profile?.full_name || 'Aprendiz').trim();
+  const { firstLine, secondLine } = formatCarnetNameLines(studentName, profile?.nombres, profile?.apellidos);
   const documentType = profile?.typeDocument || 'C.C';
   const documentNumber = profile?.document || '0.000.000.000';
   const bloodType = profile?.bloodType || 'RH O+';
@@ -190,7 +192,10 @@ export default function CarnetCard({ profile, card, loading, cardError }) {
                 <View style={styles.frontBody}>
                   <Text style={styles.roleLabel}>{roleLabel}</Text>
                   <View style={styles.greenRule} />
-                  <Text style={styles.studentNameFront}>{studentName}</Text>
+                  <Text style={styles.studentNameFront}>
+                    {firstLine}
+                    {secondLine ? `\n${secondLine}` : ''}
+                  </Text>
                   <Text style={styles.identityText}>{`${documentType} ${documentNumber} RH ${bloodType}`}</Text>
                   <BarcodeBlock />
                 </View>

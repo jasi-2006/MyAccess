@@ -1,13 +1,34 @@
-export function formatCarnetNameLines(fullName) {
+export function formatCarnetNameLines(fullName, nombres, apellidos) {
+  const cleanNombres = String(nombres || '').trim();
+  const cleanApellidos = String(apellidos || '').trim();
+
+  if (cleanNombres || cleanApellidos) {
+    return {
+      firstLine: cleanNombres || 'Sin nombre',
+      secondLine: cleanApellidos,
+    };
+  }
+
   const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
   if (parts.length <= 1) {
     return { firstLine: parts[0] || 'Sin nombre', secondLine: '' };
   }
-  return { firstLine: parts[0], secondLine: parts.slice(1).join(' ') };
+  if (parts.length === 2) {
+    return { firstLine: parts[0], secondLine: parts[1] };
+  }
+  if (parts.length === 3) {
+    return { firstLine: parts[0], secondLine: parts.slice(1).join(' ') };
+  }
+  // For 4 or more words, put the first two words (nombres) on the first line
+  // and the remaining words (apellidos) on the second line.
+  return {
+    firstLine: parts.slice(0, 2).join(' '),
+    secondLine: parts.slice(2).join(' '),
+  };
 }
 
-export function formatCarnetNameHtml(fullName) {
-  const { firstLine, secondLine } = formatCarnetNameLines(fullName);
+export function formatCarnetNameHtml(fullName, nombres, apellidos) {
+  const { firstLine, secondLine } = formatCarnetNameLines(fullName, nombres, apellidos);
   return secondLine ? `${firstLine}<br/>${secondLine}` : firstLine;
 }
 

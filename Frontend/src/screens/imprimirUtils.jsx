@@ -153,7 +153,7 @@ function buildQrHtml() {
 export function buildCarnetPairHtml(learner, card) {
   const photoUrl = resolveImageUrl(learner?.photoUrl || card?.photoUrl);
   const fullName = (learner?.fullName || learner?.full_name || 'Sin nombre').trim();
-  const nameHtml = formatCarnetNameHtml(fullName);
+  const nameHtml = formatCarnetNameHtml(fullName, learner?.nombres, learner?.apellidos);
   const roleDisplay = getRoleDisplayName(learner?.nameRole || learner?.name_role);
   const docType = formatDocTypeForCarnet(learner?.typeDocument);
   const docNum = formatDocNumberForCarnet(learner?.document);
