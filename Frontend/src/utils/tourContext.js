@@ -8,37 +8,37 @@ export const TOUR_STEPS = {
     {
       route: 'Home',
       title: 'Paseo de Aprendiz - Inicio',
-      text: '¡Bienvenido a MyAccess! Este es tu Inicio. ➜ Aquí ves tu perfil resumido, accesos directos rápidos y notificaciones recientes. En el menú superior izquierdo tienes el icono de tres líneas (hamburguesa) para expandir la barra lateral. En el lado superior derecho tienes la campana de alertas y el avatar de tu perfil.',
+      text: 'Panel Principal de Inicio. Desde aquí puedes orientarte:\n\n• Menú Hamburguesa (arriba izq.): Pulsa para abrir o contraer la barra de navegación lateral.\n• Campana de Alertas (arriba der.): Muestra tus avisos pendientes.\n• Perfil de Usuario (arriba der.): Acceso rápido a tu información.\n• Tarjetas del Home: Atajos directos a Mi Carnet, Validación Sofia y Estado de Trámite.',
       placement: 'bottom'
     },
     {
       route: 'Card',
       title: 'Módulo: Mi Carnet Digital',
-      text: 'Aquí se muestra tu identificación oficial. ➜ Tu carnet digital. Puedes tocar la tarjeta para voltearla en 3D (el frente tiene tu foto/datos y el reverso tu código QR y de barras). Abajo encuentras el botón "Solicitar Carnet Físico" si deseas pedir la tarjeta plástica impresa.',
+      text: 'Credencial de Identificación. Visualiza tus datos:\n\n• Tarjeta del Carnet: Toca para voltearla 3D. El frente muestra tu foto y datos; el reverso muestra tu código QR y código de barras para el lector de ingreso de la sede.\n• Solicitar Carnet Físico: Botón inferior para enviar tu petición de impresión plástica a la oficina de administración.',
       placement: 'top'
     },
     {
       route: 'SofiaVerification',
       title: 'Módulo: Validar Sofia Plus',
-      text: 'Este módulo te permite autenticar y sincronizar tu cuenta con Sofia Plus. ➜ Vincula tu matrícula oficial. Tienes tres campos clave: Tipo de documento, Número de documento, y Contraseña de Sofia Plus. Ingresa tus datos oficiales y pulsa el botón verde "Validar Cuenta" para activar tu carnet.',
+      text: 'Sincronización con la plataforma Sofia Plus:\n\n• Tipo de Documento: Selector desplegable para elegir tu documento (C.C, T.I, etc.).\n• Número de Documento: Campo de texto para ingresar tu identificación.\n• Contraseña: Campo de texto seguro para tu contraseña de Sofia Plus.\n• Validar Cuenta: Botón verde para verificar tu matrícula oficial y activar automáticamente tu carnet digital.',
       placement: 'center'
     },
     {
       route: 'Tramite',
       title: 'Módulo: Estado de Trámite',
-      text: 'Módulo: Estado de Trámite. ➜ Monitorea tu carnet físico. Muestra una barra de progreso que indica si tu plástico físico ya está Solicitado, Aprobado o Listo para reclamar en las oficinas del centro.',
+      text: 'Estado de tu Carnet Físico:\n\n• Barra de Progreso: Muestra visualmente la fase actual (Solicitado ➔ Aprobado ➔ Impreso).\n• Mensaje Informativo: Explica detalladamente si tu carnet físico ya está disponible para reclamar en coordinación.',
       placement: 'bottom'
     },
     {
       route: 'Notifications',
       title: 'Módulo: Novedades y Avisos',
-      text: 'Bandeja de Notificaciones. ➜ Revisa tus mensajes. Cuenta con una barra de búsqueda para filtrar por asunto/mensaje, un botón "Limpiar" para restablecer el filtro y una lista de tarjetas de mensajes que puedes tocar para leer en detalle.',
+      text: 'Buzón de Mensajes Recibidos:\n\n• Buscador (arriba): Escribe palabras clave para filtrar mensajes por asunto o contenido.\n• Limpiar: Botón al lado del buscador para vaciar el filtro.\n• Mensajes: Lista de circulares recibidas. Toca cualquier mensaje para abrirlo, leerlo completo y marcarlo como leído.',
       placement: 'top'
     },
     {
       route: 'User',
       title: 'Módulo: Mi Perfil',
-      text: 'Módulo: Mi Perfil. ➜ Revisa tus datos personales. Tienes tu foto de perfil y el botón "Subir Foto" para actualizar tu retrato oficial de carnet. Abajo encuentras tus datos (nombre, correo, teléfono y rol) y el botón para Cerrar Sesión.',
+      text: 'Configuración de Perfil Personal:\n\n• Avatar/Foto: Retrato que aparecerá en tu carnet.\n• Subir Foto: Botón verde para abrir tu galería o cámara y actualizar tu fotografía oficial.\n• Datos Personales: Muestra tu Nombre, Correo, Ficha y Rol.\n• Cerrar Sesión: Botón inferior para salir de forma segura de tu cuenta.',
       placement: 'bottom'
     }
   ],
@@ -46,31 +46,31 @@ export const TOUR_STEPS = {
     {
       route: 'Home',
       title: 'Paseo de Instructor - Inicio',
-      text: 'Módulo de Inicio. ➜ Tu panel como Instructor. Tienes accesos rápidos a tus fichas, tu perfil y notificaciones. Cuenta con el menú lateral desplegable en la parte superior izquierda y los atajos directos en el cuerpo.',
+      text: 'Panel Principal del Instructor:\n\n• Menú Hamburguesa (arriba izq.): Permite abrir o cerrar la barra de navegación lateral.\n• Campana de Alertas (arriba der.): Accede a avisos importantes de la sede.\n• Atajos del Home: Botones centrales para ir a tu Carnet, Fichas, Notificaciones y Perfil.',
       placement: 'bottom'
     },
     {
       route: 'Card',
       title: 'Módulo: Mi Carnet de Instructor',
-      text: 'Módulo: Mi Carnet de Instructor. ➜ Tu credencial docente. Toca el carnet para voltearlo 3D y mostrar tu código QR en portería. No cuentas con el botón de solicitud física ya que es exclusivo de los aprendices.',
+      text: 'Carnet Digital Docente. Tu credencial oficial:\n\n• Tarjeta del Carnet: Toca para voltearla 3D, permitiéndote mostrar tu foto en el frente y tu código QR de ingreso en el reverso.',
       placement: 'top'
     },
     {
       route: 'Fichas',
       title: 'Módulo: Gestión de Fichas',
-      text: 'Módulo: Gestión de Fichas. ➜ Consulta tus grupos. Usa la barra de búsqueda en la parte superior para filtrar por número de Ficha y toca sobre una ficha del listado para expandirla hacia abajo y listar a tus aprendices activos.',
+      text: 'Gestión de Fichas Académicas:\n\n• Buscador de Fichas: Campo de texto para ingresar el número de grupo de formación.\n• Lista de Fichas: Listado de tus grupos asignados. Toca una ficha para expandir en cascada el listado de aprendices matriculados en ella.',
       placement: 'top'
     },
     {
       route: 'Notifications',
       title: 'Módulo: Avisos Recibidos',
-      text: 'Bandeja de Notificaciones. ➜ Revisa alertas y comunicados generales. Como instructor, tienes el botón verde "Crear" arriba a la derecha de la lista; púlsalo para abrir un formulario modal y redactar circulares masivas para tus grupos.',
+      text: 'Buzón de Notificaciones y Envíos:\n\n• Mensajes: Revisa avisos recibidos.\n• Crear (botón verde arriba der.): Abre el formulario modal para redactar y enviar una notificación masiva (Asunto, Mensaje, Ficha) a tus aprendices.',
       placement: 'top'
     },
     {
       route: 'User',
       title: 'Módulo: Mi Perfil',
-      text: 'Módulo: Mi Perfil. ➜ Revisa tus datos. Cuentas con tu foto oficial de instructor, el botón "Subir Foto" para cargar una nueva desde la galería y el listado de tus datos institucionales con la opción de Cerrar Sesión abajo.',
+      text: 'Configuración de Perfil Docente:\n\n• Foto de Perfil: Tu retrato oficial.\n• Subir Foto: Botón para cambiar o tomar una nueva foto docente.\n• Datos: Muestra tu información de contacto y el botón Cerrar Sesión.',
       placement: 'bottom'
     }
   ],
@@ -78,55 +78,55 @@ export const TOUR_STEPS = {
     {
       route: 'Home',
       title: 'Paseo de Administrador - Inicio',
-      text: 'Módulo de Inicio. ➜ Panel de control del Administrador. Te da accesos rápidos generales a toda la plataforma. Cuenta con el menú lateral en la izquierda y los botones del centro.',
+      text: 'Panel Principal del Administrador. Gestión global:\n\n• Menú Lateral (arriba izq.): Navega rápidamente entre módulos.\n• Atajos del Home: Acceso directo a Dashboard, Fichas, Solicitudes, Historial e Impresión.',
       placement: 'bottom'
     },
     {
       route: 'Instructor',
       title: 'Módulo: Dashboard de Gestión',
-      text: 'Módulo: Dashboard de Gestión. ➜ Aquí ves el panel estadístico del centro: número de fichas, solicitudes pendientes, aprobadas y carnets impresos. Abajo encuentras atajos para cambiar estado de solicitudes, administrar fichas y el botón "Crear Notificación" para redactar circulares masivas.',
+      text: 'Dashboard de Gestión y Control:\n\n• Métricas Rápidas: Tarjetas que muestran totales de Fichas, Solicitudes Pendientes, Validadas e Impresiones.\n• Acceso Rápido Inferior: Botones para gestionar fichas, solicitudes y el botón "Crear Notificación" para redactar circulares a la sede.',
       placement: 'bottom'
     },
     {
       route: 'Card',
       title: 'Módulo: Mi Carnet de Administrador',
-      text: 'Módulo: Mi Carnet de Administrador. ➜ Esta es tu credencial digital oficial de personal. Puedes pulsar sobre la tarjeta para voltearla 3D y revelar tu código QR institucional de ingreso a la sede.',
+      text: 'Carnet Digital del Administrador:\n\n• Tarjeta de Carnet: Púlsala para voltearla 3D y mostrar tu código QR de ingreso en portería.',
       placement: 'top'
     },
     {
       route: 'Fichas',
       title: 'Módulo: Fichas',
-      text: 'Módulo: Fichas de la Sede. ➜ Administra grupos. Tienes la barra de búsqueda para filtrar por código numérico de Ficha y puedes tocar a cualquier grupo de la lista para desplegar en cascada el listado de sus aprendices.',
+      text: 'Administración de Fichas de la Sede:\n\n• Buscador de Ficha: Filtra por código numérico.\n• Lista de Fichas: Lista completa de grupos de la sede. Toca un grupo para desplegar el listado de sus aprendices.',
       placement: 'bottom'
     },
     {
       route: 'Solicitudes',
       title: 'Módulo: Solicitudes de Carnet',
-      text: 'Módulo: Solicitudes de Carnet. ➜ Aquí gestionas las solicitudes de aprendices. Cada tarjeta tiene la foto y datos del estudiante. Tienes dos botones clave: "Validar" (para aprobar la solicitud, firmarla digitalmente y generar el QR) y "Rechazar" (si la información está errónea).',
+      text: 'Aprobación de Solicitudes de Carnet:\n\n• Lista de Solicitudes: Peticiones enviadas por aprendices con su foto y datos.\n• Validar (botón verde): Aprueba el carnet digital, firma digitalmente la credencial y genera el código QR.\n• Rechazar (botón rojo): Declina la solicitud si los datos no coinciden.',
       placement: 'top'
     },
     {
       route: 'Historial',
       title: 'Módulo: Historial General',
-      text: 'Módulo: Historial General. ➜ Consulta la bitácora histórica. Se muestra una lista de acciones cronológicas indicando qué administrador validó o imprimió cada carnet con su fecha respectiva.',
+      text: 'Bitácora de Acciones de Administración:\n\n• Lista del Historial: Auditoría cronológica de solicitudes validadas, rechazadas e impresas con la fecha y el administrador responsable.',
       placement: 'bottom'
     },
     {
       route: 'Imprimir',
       title: 'Módulo: Imprimir Carnet',
-      text: 'Módulo: Imprimir Carnet. ➜ Genera carnets físicos. Usa el selector desplegable para elegir la Ficha. Cuentas con el botón "Imprimir todos" para enviar la Ficha entera a la impresora física, o bien puedes presionar el botón "Imprimir" de cada fila para procesar un solo carnet.',
+      text: 'Impresión Física de Carnets en Lote:\n\n• Selector de Ficha: Menú desplegable para cargar los aprendices de un grupo.\n• Imprimir todos (botón verde): Envía la ficha completa a imprimir en la impresora física en un solo lote.\n• Botón Imprimir (individual): Ubicado al lado de cada aprendiz para imprimir únicamente ese carnet plástico.',
       placement: 'top'
     },
     {
       route: 'Notifications',
       title: 'Módulo: Novedades del Centro',
-      text: 'Bandeja de Notificaciones. ➜ Consulta circulares. Cuentas con el buscador de mensajes, el botón "Limpiar" y el botón verde "Crear" en el encabezado para redactar y enviar una alerta masiva indicando Asunto, Mensaje, Categoría y Ficha destino.',
+      text: 'Buzón de Notificaciones y Envíos Masivos:\n\n• Buscador / Limpiar: Filtra la lista de circulares.\n• Crear (botón verde): Abre el formulario para enviar una alerta a la sede (Asunto, Mensaje, Categoría, Ficha destino).',
       placement: 'top'
     },
     {
       route: 'User',
       title: 'Módulo: Mi Perfil',
-      text: 'Módulo: Mi Perfil. ➜ Revisa tus credenciales administrativas. Tienes tu foto de perfil, el botón "Subir Foto" para cargar una nueva foto oficial y tu ficha de contacto de administrador con el botón para Cerrar Sesión.',
+      text: 'Perfil del Administrador:\n\n• Foto y Subir Foto: Carga tu retrato oficial de administrador.\n• Ficha de Datos: Muestra tus credenciales y el botón de Cerrar Sesión.',
       placement: 'bottom'
     }
   ]
