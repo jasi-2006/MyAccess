@@ -31,7 +31,11 @@ export default function TourOverlay() {
   return (
     <View style={styles.backdrop} pointerEvents="box-none">
       <View style={getContainerStyle()}>
-        
+        {/* Flecha indicadora (Tooltip Arrow) */}
+        {currentStepData.placement === 'top' && <View style={[styles.arrow, styles.arrowTop]} />}
+        {currentStepData.placement === 'bottom' && <View style={[styles.arrow, styles.arrowBottom]} />}
+        {currentStepData.placement === 'center' && <View style={[styles.arrow, styles.arrowLeft]} />}
+
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.badgeWrap}>
@@ -206,5 +210,44 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#FFFFFF',
     fontWeight: '700',
+  },
+  arrow: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    borderStyle: 'solid',
+  },
+  arrowTop: {
+    top: -10,
+    left: '50%',
+    marginLeft: -8,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderBottomWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#059669',
+  },
+  arrowBottom: {
+    bottom: -10,
+    left: '50%',
+    marginLeft: -8,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderTopWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#059669',
+  },
+  arrowLeft: {
+    left: -10,
+    top: '50%',
+    marginTop: -8,
+    borderTopWidth: 8,
+    borderBottomWidth: 8,
+    borderRightWidth: 10,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderRightColor: '#059669',
   },
 });

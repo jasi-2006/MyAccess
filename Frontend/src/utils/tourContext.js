@@ -14,13 +14,13 @@ export const TOUR_STEPS = {
     {
       route: 'Card',
       title: 'Módulo: Mi Carnet Digital',
-      text: 'Aquí se muestra tu identificación oficial. Puedes pulsar tu carnet para voltearlo 3D y revelar el código QR institucional para entrar a la sede.',
+      text: 'Aquí se muestra tu identificación oficial. ➜ Pulsa tu carnet para voltearlo 3D y revelar el código QR institucional para entrar a la sede.',
       placement: 'top'
     },
     {
       route: 'SofiaVerification',
       title: 'Módulo: Validar Sofia Plus',
-      text: 'Este módulo te permite autenticar y sincronizar tu cuenta con Sofia Plus para cargar tu Ficha de formación (ADSO) y habilitar tu carnet.',
+      text: 'Este módulo te permite autenticar y sincronizar tu cuenta con Sofia Plus. ➜ Ingresa tus datos oficiales para cargar tu Ficha de formación (ADSO) y habilitar tu carnet.',
       placement: 'center'
     },
     {
@@ -40,7 +40,7 @@ export const TOUR_STEPS = {
     {
       route: 'Fichas',
       title: 'Módulo: Gestión de Fichas',
-      text: 'Aquí visualizas los grupos de aprendices a tu cargo. Puedes realizar búsquedas por número de Ficha y expandir la lista de aprendices.',
+      text: 'Aquí visualizas los grupos de aprendices a tu cargo. ➜ Puedes realizar búsquedas por número de Ficha y expandir la lista de aprendices.',
       placement: 'top'
     },
     {
@@ -60,7 +60,7 @@ export const TOUR_STEPS = {
     {
       route: 'Instructor',
       title: 'Módulo: Dashboard de Gestión',
-      text: 'En este panel de control ves las métricas generales del centro. Al final verás accesos rápidos como "Crear Notificación", el cual te permite enviar avisos y comunicados masivos a fichas específicas o a toda la sede en tiempo real.',
+      text: 'En este panel de control ves las métricas generales del centro. ➜ Toca "Crear Notificación" en los accesos rápidos de abajo para enviar comunicados y alertas masivas a fichas específicas o a toda la sede en tiempo real.',
       placement: 'top'
     },
     {
@@ -72,7 +72,7 @@ export const TOUR_STEPS = {
     {
       route: 'Solicitudes',
       title: 'Módulo: Solicitudes de Carnet',
-      text: '¡Módulo crítico! Aquí gestionas las solicitudes enviadas por los aprendices. Puedes cambiar el estado de la solicitud: haz clic en "Validar" para aprobar el carnet digital de manera que se firme digitalmente, o "Rechazar" si los datos no coinciden.',
+      text: '¡Módulo crítico! Aquí gestionas las solicitudes enviadas por los aprendices. ➜ Cambia el estado de la solicitud haciendo clic en "Validar" para aprobar el carnet digital de manera que se firme digitalmente, o "Rechazar" si los datos no coinciden.',
       placement: 'top'
     },
     {
@@ -84,7 +84,7 @@ export const TOUR_STEPS = {
     {
       route: 'Imprimir',
       title: 'Módulo: Imprimir Carnet',
-      text: 'Una vez que un carnet está en estado aprobado, en este módulo puedes buscar la Ficha del aprendiz, seleccionar su carnet y enviarlo a imprimir en lote en la impresora física institucional.',
+      text: 'Una vez que un carnet está en estado aprobado, en este módulo puedes buscar la Ficha del aprendiz. ➜ Toca "Imprimir todos" para enviar todos los carnets de la ficha seleccionada en un solo lote, o bien toca la opción individual de un carnet para imprimir únicamente ese carnet.',
       placement: 'top'
     }
   ]
