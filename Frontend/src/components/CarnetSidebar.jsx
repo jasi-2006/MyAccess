@@ -9,7 +9,6 @@ const sidebarItems = [
   { key: 'Notifications', label: 'Notificaciones'},
   { key: 'status',      label: 'Estado tramite', aprendizOnly: true },
   { key: 'SofiaVerification', label: 'Validar Sofia Plus', aprendizOnly: true },
-  { key: 'UserManual',  label: 'Manual de usuario' },
   { key: 'Instructor',  label: 'Dashboard', managementOnly: true },
   { key: 'Instructores', label: 'Instructores', managementOnly: true },
   { key: 'Fichas',      label: 'Fichas', managementOnly: true },
@@ -39,7 +38,6 @@ export default function CarnetSidebar({ navigation, role, activeKey }) {
       status: 'Tramite', Notifications: 'Notifications', Instructor: 'Instructor',
       Fichas: 'Fichas', Solicitudes: 'Solicitudes', Historial: 'Historial',
       Instructores: 'Instructores', Imprimir: 'Imprimir', SofiaVerification: 'SofiaVerification',
-      UserManual: 'UserManual',
     };
     if (routes[key]) navigation.navigate(routes[key]);
   };
