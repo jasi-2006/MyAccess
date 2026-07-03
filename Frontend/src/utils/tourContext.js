@@ -60,8 +60,8 @@ export const TOUR_STEPS = {
     {
       route: 'Instructor',
       title: 'Módulo: Dashboard de Gestión',
-      text: 'En este panel de control ves las métricas generales del centro. ➜ Toca "Crear Notificación" en los accesos rápidos de abajo para enviar comunicados y alertas masivas a fichas específicas o a toda la sede en tiempo real.',
-      placement: 'top'
+      text: 'Panel de Control (Dashboard). Aquí monitorizas las estadísticas. En la sección de acciones de abajo encuentras "Crear Notificación" para REDACTAR y ENVIAR comunicados oficiales a los aprendices. Nota: No confundir con la campana de arriba, la cual es para RECIBIR notificaciones.',
+      placement: 'bottom'
     },
     {
       route: 'Fichas',
