@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,39 +10,39 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   Platform,
-  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import WebFrame from '../components/WebFrame.jsx';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import CarnetSidebar from '../components/CarnetSidebar.jsx';
 import { colors } from '../theme/colors.jsx';
-import { getUserProfile } from '../services/authService.js';
-import { resolveUserRole } from '../utils/accessControl.js';
 
-// --- DATOS DE LAS GUÍAS INTERACTIVAS ---
+// --- GUÍAS PASO A PASO CON SUS ELEMENTOS INTERACTIVOS INTEGRADOS ---
 const GUIDES = [
   {
     id: 'carnet',
     title: 'Ver y voltear mi Carnet Digital',
     category: 'aprendiz',
     icon: 'card-outline',
-    desc: 'Aprende a visualizar tu carnet institucional y a girarlo para mostrar el código QR de acceso.',
+    desc: 'Aprende a ver tu carnet digital e interactuar con él (frente y reverso).',
     steps: [
       {
-        title: 'Paso 1: Abrir mi carnet',
-        text: 'Ve a la opción "Mi carnet digital" en la barra de navegación para ver tu carnet frontal.',
-        actionText: 'Toca el carnet de la derecha para prepararte.'
+        title: 'Ver el frente del carnet',
+        text: 'Este es el frente de tu carnet. Contiene tu foto, nombre completo, rol (Aprendiz) y código de barras. Toca la tarjeta o el botón de abajo para girarla.',
+        instruction: 'Toca el carnet o presiona "Girar Carnet"',
+        type: 'carnet-front'
       },
       {
-        title: 'Paso 2: Girar el carnet',
-        text: 'Toca el carnet digital para darle la vuelta. La tarjeta rotará en 3D simulando el reverso físico.',
-        actionText: '¡Pruébalo! Toca el carnet en el celular simulado para girarlo.'
+        title: 'Ver el reverso del carnet',
+        text: 'Este es el reverso de tu carnet. Aquí encuentras la firma autorizada y tu código QR personal, el cual usarás en los lectores de acceso.',
+        instruction: 'Toca el carnet para volver al frente',
+        type: 'carnet-back'
       },
       {
-        title: 'Paso 3: Códigos de barras y QR',
-        text: 'El frente tiene el código de barras y el reverso el código QR institucional que usarás para entrar al centro.',
-        actionText: 'Interactúa con el carnet tantas veces como quieras para ver ambos lados.'
+        title: '¡Guía Completada!',
+        text: 'Ya sabes cómo alternar las vistas de tu carnet. Recuerda que puedes presentarlo desde tu celular en cualquier portería del centro.',
+        instruction: 'Presiona "Siguiente Guía" para continuar aprendiendo.',
+        type: 'carnet-success'
       }
     ]
   },
@@ -51,46 +51,52 @@ const GUIDES = [
     title: 'Validar cuenta con Sofia Plus',
     category: 'aprendiz',
     icon: 'shield-checkmark-outline',
-    desc: 'Verifica tu información con la base de datos de Sofia Plus para activar tu carnet.',
+    desc: 'Vincula tu cuenta de Sofia Plus para activar tu perfil en MyAccess.',
     steps: [
       {
-        title: 'Paso 1: Ir a Validación',
-        text: 'Ingresa a "Validar Sofia Plus" desde tu barra lateral.',
-        actionText: 'Verás el formulario de verificación en la pantalla de la derecha.'
+        title: 'Ingresar datos de Sofia Plus',
+        text: 'Para empezar, debes escribir tu documento de identidad y tu contraseña de Sofia Plus. Ingresa datos ficticios en el formulario de abajo para probar.',
+        instruction: 'Ingresa un documento y contraseña y haz clic en "Continuar"',
+        type: 'sofia-form'
       },
       {
-        title: 'Paso 2: Llenar el formulario',
-        text: 'Selecciona tu tipo de documento, escribe tu número de documento y tu contraseña oficial de Sofia Plus.',
-        actionText: 'Ingresa datos ficticios en el formulario del celular simulado.'
+        title: 'Ejecutar la validación',
+        text: 'Una vez ingresados los datos, presiona el botón "Validar" para simular la conexión segura con los servidores de Sofia Plus.',
+        instruction: 'Haz clic en el botón verde "Validar" para procesar',
+        type: 'sofia-submit'
       },
       {
-        title: 'Paso 3: Validar y Sincronizar',
-        text: 'Presiona el botón "Validar". El sistema consultará el servicio de validación y cargará tu ficha y programa.',
-        actionText: 'Toca "Validar" en el celular simulado para ver cómo funciona el proceso.'
+        title: 'Resultado de la validación',
+        text: '¡Éxito! Tus datos fueron validados correctamente. El sistema ha cargado tu Ficha (2687392) y Programa de Formación (ADSO). Tu carnet digital ya está activo.',
+        instruction: '¡Excelente! Has aprendido a validar tu cuenta.',
+        type: 'sofia-success'
       }
     ]
   },
   {
     id: 'solicitudes',
-    title: 'Aprobar solicitudes de carnet',
+    title: 'Aprobar solicitudes (Admin)',
     category: 'admin',
     icon: 'checkbox-outline',
-    desc: 'Flujo exclusivo de administradores para aprobar o rechazar las solicitudes de carnetización de aprendices.',
+    desc: 'Flujo administrativo para autorizar y firmar carnet digitales de aprendices.',
     steps: [
       {
-        title: 'Paso 1: Entrar a Solicitudes',
-        text: 'En el panel de administración, haz clic en la sección "Solicitudes" para ver el listado de pendientes.',
-        actionText: 'Revisa el listado de solicitudes que cargará a la derecha.'
+        title: 'Revisar solicitudes pendientes',
+        text: 'Aquí se muestran los aprendices que han solicitado su carnet. Debes seleccionar a uno de la lista para ver su información detallada.',
+        instruction: 'Toca a "Mateo Gómez" para ver su solicitud',
+        type: 'requests-list'
       },
       {
-        title: 'Paso 2: Revisar información del aprendiz',
-        text: 'Valida los nombres, documento y foto del aprendiz solicitante antes de tomar una decisión.',
-        actionText: 'Puedes ver los detalles de los aprendices en la lista simulada.'
+        title: 'Validar información',
+        text: 'Observa la foto de perfil y los datos del aprendiz. Si son válidos y corresponden al estudiante, presiona el botón "Aprobar Solicitud".',
+        instruction: 'Haz clic en el botón "Aprobar Solicitud"',
+        type: 'requests-approve'
       },
       {
-        title: 'Paso 3: Aprobar o Rechazar',
-        text: 'Toca el botón "Validar" para aprobar el carnet. Esto generará su firma autorizada y activará su QR.',
-        actionText: 'Toca "Validar" en alguno de los aprendices simulados para ver el cambio de estado.'
+        title: 'Solicitud Aprobada',
+        text: '¡Perfecto! La solicitud de Mateo Gómez ha sido aprobada. El carnet se ha firmado digitalmente y se le notificará a su celular.',
+        instruction: 'Guía de solicitudes completada con éxito.',
+        type: 'requests-success'
       }
     ]
   },
@@ -99,22 +105,25 @@ const GUIDES = [
     title: 'Gestionar grupos y Fichas',
     category: 'instructor',
     icon: 'people-outline',
-    desc: 'Cómo los instructores y administradores pueden buscar grupos de formación y listar aprendices por fichas.',
+    desc: 'Permite buscar grupos de formación y desplegar listas de estudiantes.',
     steps: [
       {
-        title: 'Paso 1: Ir a Fichas',
-        text: 'Haz clic en "Fichas" en tu menú lateral para visualizar tus grupos asignados.',
-        actionText: 'Verás la lista de fichas en la derecha.'
+        title: 'Buscar ficha en el buscador',
+        text: 'Los instructores tienen una lista de sus fichas asignadas. Escribe "268" en el campo de búsqueda para simular una búsqueda rápida.',
+        instruction: 'Escribe "268" en el campo de texto',
+        type: 'fichas-search'
       },
       {
-        title: 'Paso 2: Filtrar o buscar ficha',
-        text: 'Usa la barra de búsqueda superior para encontrar una ficha específica escribiendo su número de código.',
-        actionText: 'Prueba escribiendo "268" en el buscador del celular simulado.'
+        title: 'Seleccionar ficha del listado',
+        text: 'El sistema filtrará los resultados mostrando la Ficha correspondiente. Toca la ficha de ADSO para expandirla.',
+        instruction: 'Toca la ficha "2687392 - ADSO"',
+        type: 'fichas-expand'
       },
       {
-        title: 'Paso 3: Ver aprendices de la ficha',
-        text: 'Toca sobre la ficha en la lista para desplegar a todos los aprendices inscritos en esa jornada.',
-        actionText: 'Toca sobre la ficha en el celular de la derecha para ver sus aprendices.'
+        title: 'Revisar aprendices inscritos',
+        text: 'Ahora puedes visualizar la lista de todos los aprendices inscritos y activos en este grupo de formación.',
+        instruction: 'Has completado la guía de gestión de fichas.',
+        type: 'fichas-success'
       }
     ]
   },
@@ -123,84 +132,64 @@ const GUIDES = [
     title: 'Enviar notificaciones masivas',
     category: 'admin',
     icon: 'notifications-outline',
-    desc: 'Aprende a redactar y enviar avisos urgentes a fichas específicas o a todo el centro de formación.',
+    desc: 'Envía anuncios institucionales a los dispositivos móviles de los aprendices.',
     steps: [
       {
-        title: 'Paso 1: Abrir el creador',
-        text: 'Haz clic en "Crear notificación" desde los accesos rápidos del panel de administración.',
-        actionText: 'Aparecerá el formulario de redacción a la derecha.'
+        title: 'Redactar el anuncio',
+        text: 'Escribe un título y el cuerpo del mensaje en el formulario para definir tu aviso institucional de prueba.',
+        instruction: 'Completa los campos del formulario de abajo',
+        type: 'notif-form'
       },
       {
-        title: 'Paso 2: Rellenar datos y destino',
-        text: 'Ingresa un título llamativo, escribe el cuerpo del mensaje y selecciona la ficha que debe recibir el aviso.',
-        actionText: 'Ingresa datos ficticios en el formulario del celular simulado.'
+        title: 'Seleccionar destinatarios',
+        text: 'Selecciona si enviarás el mensaje a todos los usuarios o a una ficha en específico (ej. Ficha 2687392).',
+        instruction: 'Selecciona una ficha de destino y haz clic en "Enviar"',
+        type: 'notif-target'
       },
       {
-        title: 'Paso 3: Enviar mensaje',
-        text: 'Presiona "Enviar". Los aprendices de la ficha elegida recibirán una alerta instantánea y un correo electrónico.',
-        actionText: 'Presiona "Enviar" en el celular simulado para ver la alerta de confirmación.'
+        title: 'Notificación transmitida',
+        text: '¡Enviado! El mensaje ha sido transmitido instantáneamente a los celulares de los estudiantes de la ficha seleccionada.',
+        instruction: 'Has aprendido a enviar notificaciones masivas.',
+        type: 'notif-success'
       }
     ]
   }
 ];
 
 export default function UserManualScreen({ navigation }) {
-  const { width, height } = useWindowDimensions();
-  const isMobile = width < 900;
-  const pagePadding = isMobile ? 12 : 20;
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768;
 
-  const [profile, setProfile] = useState(null);
-  const [role, setRole] = useState('APRENDIZ');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all'); // 'all', 'aprendiz', 'instructor', 'admin'
   const [activeGuide, setActiveGuide] = useState(GUIDES[0]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // --- ESTADOS INTERACTIVOS DE LOS SIMULADORES ---
-  // Simulator Carnet
+  // --- ESTADOS INTERACTIVOS DE LOS PASOS ---
+  // Guía Carnet
   const [carnetFlipped, setCarnetFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
 
-  // Simulator Sofia Plus
+  // Guía Sofia
   const [sofiaDoc, setSofiaDoc] = useState('');
   const [sofiaPass, setSofiaPass] = useState('');
-  const [sofiaLoading, setSofiaLoading] = useState(false);
-  const [sofiaResult, setSofiaResult] = useState(null);
+  const [sofiaStatus, setSofiaStatus] = useState('idle'); // 'idle', 'loading', 'success'
 
-  // Simulator Solicitudes
-  const [mockRequests, setMockRequests] = useState([
-    { id: 1, name: 'Mateo Gómez Montoya', doc: '1.094.223.112', status: 'Pendiente' },
-    { id: 2, name: 'Juliana Ríos Castaño', doc: '1.094.887.411', status: 'Pendiente' },
-    { id: 3, name: 'Santiago Blandón A.', doc: '1.095.334.229', status: 'Pendiente' }
-  ]);
-  const [requestLoadingId, setRequestLoadingId] = useState(null);
+  // Guía Solicitudes (Admin)
+  const [requestSelected, setRequestSelected] = useState(false);
+  const [requestApproved, setRequestApproved] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
 
-  // Simulator Fichas
-  const [fichaSearch, setFichaSearch] = useState('');
-  const [expandedFicha, setExpandedFicha] = useState(false);
-  const allFichas = [
-    { id: '2687392', title: 'ADSO - Diurna', center: 'Comercio y Turismo', students: ['Carlos Pérez', 'Andrés Marín', 'Laura Rojas', 'Sofía Ospina'] },
-    { id: '2712993', title: 'Diseño Gráfico - Mixta', center: 'Construcción', students: ['María Restrepo', 'Daniela Tobón', 'Juan López'] },
-    { id: '2561102', title: 'Gestión Empresarial', center: 'Comercio y Turismo', students: ['Patricia C.', 'Felipe V.', 'Olga M.'] }
-  ];
+  // Guía Fichas (Instructor)
+  const [fichaSearchText, setFichaSearchText] = useState('');
+  const [fichaExpanded, setFichaExpanded] = useState(false);
 
-  // Simulator Notificaciones
+  // Guía Notificaciones (Admin)
   const [notifTitle, setNotifTitle] = useState('');
   const [notifBody, setNotifBody] = useState('');
-  const [notifTarget, setNotifTarget] = useState('2687392');
-  const [notifSuccess, setNotifSuccess] = useState(false);
+  const [notifSelectedFicha, setNotifSelectedFicha] = useState('2687392');
+  const [notifStatus, setNotifStatus] = useState('idle'); // 'idle', 'sending', 'success'
 
-  useEffect(() => {
-    getUserProfile()
-      .then((p) => {
-        setProfile(p);
-        const resolved = resolveUserRole(p);
-        setRole(resolved);
-      })
-      .catch(() => {});
-  }, []);
-
-  // --- FUNCIÓN DE ROTACIÓN EN SIMULADOR CARNET ---
   const handleFlipCarnet = () => {
     const toValue = carnetFlipped ? 0 : 1;
     setCarnetFlipped(!carnetFlipped);
@@ -209,7 +198,14 @@ export default function UserManualScreen({ navigation }) {
       friction: 8,
       tension: 15,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      // Avanzar al paso 2 si estaba en el paso 1 y se volteó
+      if (currentStepIndex === 0 && !carnetFlipped) {
+        setCurrentStepIndex(1);
+      } else if (currentStepIndex === 1 && carnetFlipped) {
+        setCurrentStepIndex(2);
+      }
+    });
   };
 
   const frontInterpolate = flipAnim.interpolate({
@@ -229,53 +225,42 @@ export default function UserManualScreen({ navigation }) {
     outputRange: [0, 1]
   });
 
-  // --- ACCIONES SIMULADAS ---
-  const runSofiaSimulation = () => {
-    if (!sofiaDoc || !sofiaPass) {
-      alert('Por favor, ingresa los datos de prueba primero.');
-      return;
-    }
-    setSofiaLoading(true);
-    setSofiaResult(null);
-    setTimeout(() => {
-      setSofiaLoading(false);
-      setSofiaResult({
-        success: true,
-        name: 'PAULO RODRÍGUEZ GÓMEZ',
-        ficha: '2687392',
-        program: 'Análisis y Desarrollo de Software (ADSO)'
-      });
-      if (currentStepIndex === 1) {
-        setCurrentStepIndex(2);
-      }
-    }, 1500);
-  };
-
-  const runValidateRequest = (id) => {
-    setRequestLoadingId(id);
-    setTimeout(() => {
-      setMockRequests(prev => prev.map(req => req.id === id ? { ...req, status: 'Validado' } : req));
-      setRequestLoadingId(null);
-    }, 1000);
-  };
-
-  const resetSofiaSim = () => {
+  const handleSelectGuide = (guide) => {
+    setActiveGuide(guide);
+    setCurrentStepIndex(0);
+    // Reiniciar estados
+    setCarnetFlipped(false);
+    flipAnim.setValue(0);
     setSofiaDoc('');
     setSofiaPass('');
-    setSofiaResult(null);
+    setSofiaStatus('idle');
+    setRequestSelected(false);
+    setRequestApproved(false);
+    setFichaSearchText('');
+    setFichaExpanded(false);
+    setNotifTitle('');
+    setNotifBody('');
+    setNotifStatus('idle');
   };
 
-  const runSendNotification = () => {
-    if (!notifTitle || !notifBody) {
-      alert('Completa el título y mensaje de la notificación.');
-      return;
+  const nextStep = () => {
+    if (currentStepIndex < activeGuide.steps.length - 1) {
+      setCurrentStepIndex(currentStepIndex + 1);
+    } else {
+      // Siguiente guía si terminó
+      const currentIndex = GUIDES.findIndex(g => g.id === activeGuide.id);
+      if (currentIndex < GUIDES.length - 1) {
+        handleSelectGuide(GUIDES[currentIndex + 1]);
+      } else {
+        handleSelectGuide(GUIDES[0]);
+      }
     }
-    setNotifSuccess(true);
-    setTimeout(() => {
-      setNotifSuccess(false);
-      setNotifTitle('');
-      setNotifBody('');
-    }, 3000);
+  };
+
+  const prevStep = () => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(currentStepIndex - 1);
+    }
   };
 
   // --- FILTRADO DE GUÍAS ---
@@ -286,316 +271,390 @@ export default function UserManualScreen({ navigation }) {
     return matchesSearch && matchesCategory;
   });
 
-  const selectGuide = (guide) => {
-    setActiveGuide(guide);
-    setCurrentStepIndex(0);
-    setCarnetFlipped(false);
-    flipAnim.setValue(0);
-    resetSofiaSim();
-    setNotifTitle('');
-    setNotifBody('');
-    setNotifSuccess(false);
-    setExpandedFicha(false);
-  };
+  // --- RENDERIZADORES DE SIMULACIÓN DENTRO DE LA TARJETA ---
+  const renderCardSimulator = (type) => {
+    switch (type) {
+      // 1. CARNET DIGITAL
+      case 'carnet-front':
+      case 'carnet-back':
+      case 'carnet-success':
+        return (
+          <View style={styles.simContainer}>
+            <TouchableOpacity onPress={handleFlipCarnet} activeOpacity={0.95} style={styles.cardTouchable}>
+              <View style={{ width: 170, height: 260 }}>
+                {/* Frente */}
+                <Animated.View style={[
+                  styles.mockCard, 
+                  styles.mockCardFront, 
+                  {
+                    transform: [{ rotateY: frontInterpolate }],
+                    opacity: frontOpacity,
+                    position: 'absolute',
+                    backfaceVisibility: 'hidden',
+                    width: 170,
+                    height: 260
+                  }
+                ]}>
+                  <View style={styles.mockCardHeader}>
+                    <View style={styles.mockSenaCircle} />
+                    <Text style={styles.mockSenaText}>SENA</Text>
+                  </View>
+                  
+                  <View style={styles.mockPhotoFrame}>
+                    <Ionicons name="person" size={32} color="#CCCCCC" />
+                  </View>
 
-  const nextStep = () => {
-    if (currentStepIndex < activeGuide.steps.length - 1) {
-      setCurrentStepIndex(currentStepIndex + 1);
+                  <Text style={styles.mockRoleLabel}>APRENDIZ</Text>
+                  <View style={styles.mockCardLine} />
+                  <Text style={styles.mockStudentName}>PAULO RODRIGUEZ</Text>
+                  <Text style={styles.mockStudentInfo}>C.C 1.094.733.910 {'\n'}RH O+</Text>
+                  
+                  <View style={styles.mockBarcode}>
+                    <View style={[styles.barcodeLine, { width: 3 }]} />
+                    <View style={[styles.barcodeLine, { width: 1 }]} />
+                    <View style={[styles.barcodeLine, { width: 2 }]} />
+                    <View style={[styles.barcodeLine, { width: 4 }]} />
+                    <View style={[styles.barcodeLine, { width: 1 }]} />
+                    <View style={[styles.barcodeLine, { width: 3 }]} />
+                    <View style={[styles.barcodeLine, { width: 2 }]} />
+                  </View>
+                </Animated.View>
+
+                {/* Reverso */}
+                <Animated.View style={[
+                  styles.mockCard, 
+                  styles.mockCardBack, 
+                  {
+                    transform: [{ rotateY: backInterpolate }],
+                    opacity: backOpacity,
+                    position: 'absolute',
+                    backfaceVisibility: 'hidden',
+                    width: 170,
+                    height: 260
+                  }
+                ]}>
+                  <Text style={styles.mockBackTerms}>
+                    Este documento es personal e intransferible. Válido para el ingreso al centro de formación.
+                  </Text>
+                  
+                  <View style={styles.mockQrCode}>
+                    <Ionicons name="qr-code-outline" size={64} color="#000000" />
+                  </View>
+
+                  <View style={styles.mockSignature}>
+                    <View style={styles.signatureLine} />
+                    <Text style={styles.signatureLabel}>FIRMA AUTORIZADA</Text>
+                  </View>
+                </Animated.View>
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.simActionBtn} onPress={handleFlipCarnet}>
+              <Ionicons name="sync-outline" size={16} color="#FFFFFF" style={{ marginRight: 6 }} />
+              <Text style={styles.simActionBtnText}>Girar Carnet</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      // 2. SOFIA PLUS
+      case 'sofia-form':
+        return (
+          <View style={styles.simContainer}>
+            <Text style={styles.simInputLabel}>Número de Documento:</Text>
+            <TextInput
+              style={styles.simTextInput}
+              placeholder="Ej: 1094733910"
+              value={sofiaDoc}
+              onChangeText={setSofiaDoc}
+              keyboardType="numeric"
+            />
+            <Text style={styles.simInputLabel}>Contraseña Sofia Plus:</Text>
+            <TextInput
+              style={styles.simTextInput}
+              placeholder="Contraseña oficial"
+              secureTextEntry
+              value={sofiaPass}
+              onChangeText={setSofiaPass}
+            />
+            <TouchableOpacity 
+              style={[styles.simActionBtn, (!sofiaDoc || !sofiaPass) && styles.simActionBtnDisabled]} 
+              disabled={!sofiaDoc || !sofiaPass}
+              onPress={() => setCurrentStepIndex(1)}
+            >
+              <Text style={styles.simActionBtnText}>Continuar</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      case 'sofia-submit':
+        return (
+          <View style={styles.simContainer}>
+            <View style={styles.simFormSummary}>
+              <Text style={styles.simSummaryText}>Doc: {sofiaDoc}</Text>
+              <Text style={styles.simSummaryText}>Pass: ********</Text>
+            </View>
+
+            {sofiaStatus === 'loading' ? (
+              <ActivityIndicator size="small" color="#059669" style={{ marginVertical: 12 }} />
+            ) : (
+              <TouchableOpacity 
+                style={styles.simActionBtn} 
+                onPress={() => {
+                  setSofiaStatus('loading');
+                  setTimeout(() => {
+                    setSofiaStatus('success');
+                    setCurrentStepIndex(2);
+                  }, 1200);
+                }}
+              >
+                <Text style={styles.simActionBtnText}>Validar en Sofia Plus</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        );
+
+      case 'sofia-success':
+        return (
+          <View style={styles.simContainer}>
+            <View style={styles.successBadge}>
+              <Ionicons name="checkmark-circle" size={32} color="#059669" />
+              <Text style={styles.successBadgeTitle}>¡Sincronización Exitosa!</Text>
+              <Text style={styles.successBadgeSubtitle}>PAULO RODRÍGUEZ GÓMEZ</Text>
+              <Text style={styles.successBadgeFicha}>Ficha: 2687392 (ADSO)</Text>
+            </View>
+            <TouchableOpacity style={styles.simActionBtn} onPress={() => handleSelectGuide(GUIDES[2])}>
+              <Text style={styles.simActionBtnText}>Ir a Siguiente Guía</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      // 3. APROBAR SOLICITUDES
+      case 'requests-list':
+        return (
+          <View style={styles.simContainer}>
+            <Text style={styles.simListHeading}>Solicitudes de Carnetización</Text>
+            <TouchableOpacity 
+              style={[styles.simListItem, requestSelected && styles.simListItemActive]} 
+              onPress={() => {
+                setRequestSelected(true);
+                setTimeout(() => {
+                  setCurrentStepIndex(1);
+                }, 800);
+              }}
+            >
+              <Ionicons name="person-circle-outline" size={24} color="#059669" />
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Text style={styles.simListItemTitle}>Mateo Gómez Montoya</Text>
+                <Text style={styles.simListItemDesc}>Doc: 1.094.223.112 | Ficha: 2687392</Text>
+              </View>
+              <Text style={styles.simListItemBadge}>Pendiente</Text>
+            </TouchableOpacity>
+
+            <View style={[styles.simListItem, { opacity: 0.6 }]}>
+              <Ionicons name="person-circle-outline" size={24} color="#666" />
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Text style={styles.simListItemTitle}>Juliana Ríos Castaño</Text>
+                <Text style={styles.simListItemDesc}>Doc: 1.094.887.411 | Ficha: 2687392</Text>
+              </View>
+              <Text style={styles.simListItemBadge}>Pendiente</Text>
+            </View>
+          </View>
+        );
+
+      case 'requests-approve':
+        return (
+          <View style={styles.simContainer}>
+            <View style={styles.simDetailCard}>
+              <Text style={styles.simDetailTitle}>Detalles de Solicitud</Text>
+              <View style={styles.simDetailRow}><Text style={styles.simDetailLabel}>Aprendiz:</Text><Text style={styles.simDetailVal}>Mateo Gómez</Text></View>
+              <View style={styles.simDetailRow}><Text style={styles.simDetailLabel}>Documento:</Text><Text style={styles.simDetailVal}>1.094.223.112</Text></View>
+              <View style={styles.simDetailRow}><Text style={styles.simDetailLabel}>Ficha:</Text><Text style={styles.simDetailVal}>2687392</Text></View>
+              
+              {approveLoading ? (
+                <ActivityIndicator size="small" color="#059669" style={{ marginTop: 14 }} />
+              ) : (
+                <TouchableOpacity 
+                  style={[styles.simActionBtn, { backgroundColor: '#059669', marginTop: 14 }]} 
+                  onPress={() => {
+                    setApproveLoading(true);
+                    setTimeout(() => {
+                      setApproveLoading(false);
+                      setRequestApproved(true);
+                      setCurrentStepIndex(2);
+                    }, 1200);
+                  }}
+                >
+                  <Text style={styles.simActionBtnText}>Aprobar Solicitud</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        );
+
+      case 'requests-success':
+        return (
+          <View style={styles.simContainer}>
+            <View style={styles.successBadge}>
+              <Ionicons name="shield-checkmark" size={32} color="#059669" />
+              <Text style={styles.successBadgeTitle}>¡Carnet Autorizado!</Text>
+              <Text style={styles.successBadgeSubtitle}>La firma digital y código QR se han generado.</Text>
+            </View>
+            <TouchableOpacity style={styles.simActionBtn} onPress={() => handleSelectGuide(GUIDES[3])}>
+              <Text style={styles.simActionBtnText}>Ir a Siguiente Guía</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      // 4. GESTIÓN DE FICHAS
+      case 'fichas-search':
+        return (
+          <View style={styles.simContainer}>
+            <Text style={styles.simInputLabel}>Buscador de Fichas:</Text>
+            <View style={styles.simSearchBox}>
+              <Ionicons name="search-outline" size={16} color="#666" style={{ marginRight: 6 }} />
+              <TextInput
+                style={styles.simSearchInput}
+                placeholder="Escribe '268'..."
+                value={fichaSearchText}
+                onChangeText={(t) => {
+                  setFichaSearchText(t);
+                  if (t.includes('268')) {
+                    setTimeout(() => {
+                      setCurrentStepIndex(1);
+                    }, 1000);
+                  }
+                }}
+              />
+            </View>
+          </View>
+        );
+
+      case 'fichas-expand':
+        return (
+          <View style={styles.simContainer}>
+            <Text style={styles.simInputLabel}>Resultados de búsqueda:</Text>
+            <TouchableOpacity 
+              style={[styles.simFichaItem, fichaExpanded && styles.simFichaItemActive]} 
+              onPress={() => {
+                setFichaExpanded(true);
+                setTimeout(() => {
+                  setCurrentStepIndex(2);
+                }, 1000);
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.simFichaTitle}>Ficha: 2687392</Text>
+                <Text style={styles.simFichaDesc}>Programa: ADSO | 45 Aprendices</Text>
+              </View>
+              <Ionicons name="chevron-forward-outline" size={16} color="#059669" />
+            </TouchableOpacity>
+          </View>
+        );
+
+      case 'fichas-success':
+        return (
+          <View style={styles.simContainer}>
+            <View style={styles.simStudentsList}>
+              <Text style={styles.simStudentsHeading}>Aprendices en Ficha 2687392:</Text>
+              {['Carlos Mario Pérez', 'Andrés Felipe Marín', 'Laura Camila Rojas', 'Sofía Ospina Tabares'].map((student, idx) => (
+                <View key={idx} style={styles.simStudentRow}>
+                  <Text style={styles.simStudentText}>{student}</Text>
+                  <Text style={styles.simStudentStatus}>Activo</Text>
+                </View>
+              ))}
+            </View>
+            <TouchableOpacity style={styles.simActionBtn} onPress={() => handleSelectGuide(GUIDES[4])}>
+              <Text style={styles.simActionBtnText}>Ir a Siguiente Guía</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      // 5. ENVIAR NOTIFICACIONES MASIVAS
+      case 'notif-form':
+        return (
+          <View style={styles.simContainer}>
+            <Text style={styles.simInputLabel}>Título de Notificación:</Text>
+            <TextInput
+              style={styles.simTextInput}
+              placeholder="Ej: Entrega de Carnets"
+              value={notifTitle}
+              onChangeText={setNotifTitle}
+            />
+            <Text style={styles.simInputLabel}>Cuerpo del Mensaje:</Text>
+            <TextInput
+              style={[styles.simTextInput, { height: 50, textAlignVertical: 'top' }]}
+              placeholder="Mensaje para los aprendices..."
+              multiline
+              numberOfLines={2}
+              value={notifBody}
+              onChangeText={setNotifBody}
+            />
+            <TouchableOpacity 
+              style={[styles.simActionBtn, (!notifTitle || !notifBody) && styles.simActionBtnDisabled]} 
+              disabled={!notifTitle || !notifBody}
+              onPress={() => setCurrentStepIndex(1)}
+            >
+              <Text style={styles.simActionBtnText}>Elegir Destinatario</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      case 'notif-target':
+        return (
+          <View style={styles.simContainer}>
+            <Text style={styles.simInputLabel}>Seleccionar Ficha de Destino:</Text>
+            <View style={styles.simSelectRow}>
+              {['2687392', '2712993', 'Todas'].map((num) => (
+                <TouchableOpacity 
+                  key={num} 
+                  style={[styles.simSelectOpt, notifSelectedFicha === num && styles.simSelectOptActive]}
+                  onPress={() => setNotifSelectedFicha(num)}
+                >
+                  <Text style={[styles.simSelectOptText, notifSelectedFicha === num && styles.simSelectOptTextActive]}>{num}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {notifStatus === 'sending' ? (
+              <ActivityIndicator size="small" color="#059669" style={{ marginVertical: 12 }} />
+            ) : (
+              <TouchableOpacity 
+                style={styles.simActionBtn} 
+                onPress={() => {
+                  setNotifStatus('sending');
+                  setTimeout(() => {
+                    setNotifStatus('success');
+                    setCurrentStepIndex(2);
+                  }, 1200);
+                }}
+              >
+                <Text style={styles.simActionBtnText}>Enviar Notificación Masiva</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        );
+
+      case 'notif-success':
+        return (
+          <View style={styles.simContainer}>
+            <View style={styles.successBadge}>
+              <Ionicons name="checkmark-done-circle" size={32} color="#059669" />
+              <Text style={styles.successBadgeTitle}>¡Notificación Transmitida!</Text>
+              <Text style={styles.successBadgeSubtitle}>Los aprendices la recibirán en tiempo real.</Text>
+            </View>
+            <TouchableOpacity style={styles.simActionBtn} onPress={() => handleSelectGuide(GUIDES[0])}>
+              <Text style={styles.simActionBtnText}>Volver al Inicio del Manual</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      default:
+        return null;
     }
   };
 
-  const prevStep = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(currentStepIndex - 1);
-    }
-  };
-
-  // --- COMPONENTE MOCKUP CELULAR INTELIGENTE ---
-  const renderSimulatorPhone = () => {
-    return (
-      <View style={styles.phoneContainer}>
-        <View style={styles.phoneNotch} />
-        <View style={styles.phoneScreen}>
-          
-          <View style={styles.mockAppHeader}>
-            <Text style={styles.mockAppTitle}>MyAccess Sim</Text>
-            <View style={styles.mockHeaderDot} />
-          </View>
-
-          <ScrollView contentContainerStyle={styles.mockScrollContent} showsVerticalScrollIndicator={false}>
-            {activeGuide.id === 'carnet' && (
-              <View style={styles.simCarnetStage}>
-                <Text style={styles.simTip}>Toca el carnet para voltearlo</Text>
-                
-                <TouchableOpacity onPress={handleFlipCarnet} activeOpacity={0.95} style={styles.cardTouchable}>
-                  <View style={{ width: 170, height: 260 }}>
-                    {/* Frente */}
-                    <Animated.View style={[
-                      styles.mockCard, 
-                      styles.mockCardFront, 
-                      {
-                        transform: [{ rotateY: frontInterpolate }],
-                        opacity: frontOpacity,
-                        position: 'absolute',
-                        backfaceVisibility: 'hidden',
-                        width: 170,
-                        height: 260
-                      }
-                    ]}>
-                      <View style={styles.mockCardHeader}>
-                        <View style={styles.mockSenaCircle} />
-                        <Text style={styles.mockSenaText}>SENA</Text>
-                      </View>
-                      
-                      <View style={styles.mockPhotoFrame}>
-                        <Ionicons name="person" size={32} color="#CCCCCC" />
-                      </View>
-
-                      <Text style={styles.mockRoleLabel}>APRENDIZ</Text>
-                      <View style={styles.mockCardLine} />
-                      <Text style={styles.mockStudentName}>PAULO RODRIGUEZ</Text>
-                      <Text style={styles.mockStudentInfo}>C.C 1.094.733.910 {'\n'}RH O+</Text>
-                      
-                      <View style={styles.mockBarcode}>
-                        <View style={[styles.barcodeLine, { width: 3 }]} />
-                        <View style={[styles.barcodeLine, { width: 1 }]} />
-                        <View style={[styles.barcodeLine, { width: 2 }]} />
-                        <View style={[styles.barcodeLine, { width: 4 }]} />
-                        <View style={[styles.barcodeLine, { width: 1 }]} />
-                        <View style={[styles.barcodeLine, { width: 3 }]} />
-                        <View style={[styles.barcodeLine, { width: 2 }]} />
-                      </View>
-                    </Animated.View>
-
-                    {/* Reverso */}
-                    <Animated.View style={[
-                      styles.mockCard, 
-                      styles.mockCardBack, 
-                      {
-                        transform: [{ rotateY: backInterpolate }],
-                        opacity: backOpacity,
-                        position: 'absolute',
-                        backfaceVisibility: 'hidden',
-                        width: 170,
-                        height: 260
-                      }
-                    ]}>
-                      <Text style={styles.mockBackTerms}>
-                        Este documento es personal e intransferible. Válido para el ingreso al centro de formación.
-                      </Text>
-                      
-                      <View style={styles.mockQrCode}>
-                        <Ionicons name="qr-code-outline" size={64} color="#000000" />
-                      </View>
-
-                      <View style={styles.mockSignature}>
-                        <View style={styles.signatureLine} />
-                        <Text style={styles.signatureLabel}>FIRMA AUTORIZADA</Text>
-                      </View>
-                    </Animated.View>
-                  </View>
-                </TouchableOpacity>
-
-                <View style={styles.simStatusBadge}>
-                  <Text style={styles.simStatusLabel}>Estado del Carnet: </Text>
-                  <Text style={styles.simStatusValue}>ACTIVO</Text>
-                </View>
-              </View>
-            )}
-
-            {activeGuide.id === 'sofia' && (
-              <View style={styles.simSofiaStage}>
-                <Text style={styles.simSubTitle}>Verificación Sofia Plus</Text>
-                <Text style={styles.simInputLabel}>Número de documento:</Text>
-                <TextInput
-                  style={styles.simInput}
-                  placeholder="Ej: 1094733910"
-                  value={sofiaDoc}
-                  onChangeText={setSofiaDoc}
-                  keyboardType="numeric"
-                />
-                
-                <Text style={styles.simInputLabel}>Contraseña Sofia Plus:</Text>
-                <TextInput
-                  style={styles.simInput}
-                  placeholder="******"
-                  secureTextEntry
-                  value={sofiaPass}
-                  onChangeText={setSofiaPass}
-                />
-
-                {sofiaLoading ? (
-                  <ActivityIndicator size="small" color={colors.primary} style={{ marginVertical: 12 }} />
-                ) : (
-                  <TouchableOpacity style={styles.simButton} onPress={runSofiaSimulation}>
-                    <Text style={styles.simButtonText}>Validar Cuenta</Text>
-                  </TouchableOpacity>
-                )}
-
-                {sofiaResult && (
-                  <View style={styles.simSofiaResult}>
-                    <Ionicons name="checkmark-circle" size={20} color="#087C4A" />
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.simResultName}>{sofiaResult.name}</Text>
-                      <Text style={styles.simResultDetails}>Ficha: {sofiaResult.ficha}</Text>
-                      <Text style={styles.simResultDetails}>{sofiaResult.program}</Text>
-                    </View>
-                    <TouchableOpacity onPress={resetSofiaSim}>
-                      <Ionicons name="close-circle-outline" size={14} color="#999" />
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            )}
-
-            {activeGuide.id === 'solicitudes' && (
-              <View style={styles.simSofiaStage}>
-                <Text style={styles.simSubTitle}>Solicitudes Pendientes</Text>
-                {mockRequests.map((req) => (
-                  <View key={req.id} style={styles.simRequestRow}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.simRequestName}>{req.name}</Text>
-                      <Text style={styles.simRequestDoc}>Doc: {req.doc}</Text>
-                      <Text style={[styles.simRequestStatus, req.status === 'Validado' ? styles.statusTextSuccess : styles.statusTextPending]}>
-                        {req.status}
-                      </Text>
-                    </View>
-                    {req.status === 'Pendiente' && (
-                      <TouchableOpacity 
-                        style={styles.simMiniBtn} 
-                        onPress={() => runValidateRequest(req.id)}
-                        disabled={requestLoadingId === req.id}
-                      >
-                        {requestLoadingId === req.id ? (
-                          <ActivityIndicator size="small" color="#FFF" />
-                        ) : (
-                          <Text style={styles.simMiniBtnText}>Validar</Text>
-                        )}
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {activeGuide.id === 'fichas' && (
-              <View style={styles.simSofiaStage}>
-                <Text style={styles.simSubTitle}>Gestión de Fichas</Text>
-                
-                <View style={styles.simSearchBox}>
-                  <Ionicons name="search-outline" size={12} color="#666" style={{ marginRight: 4 }} />
-                  <TextInput
-                    style={styles.simSearchInput}
-                    placeholder="Buscar ficha..."
-                    value={fichaSearch}
-                    onChangeText={(t) => {
-                      setFichaSearch(t);
-                      if(t.trim() !== '') setExpandedFicha(false);
-                    }}
-                  />
-                </View>
-
-                {allFichas
-                  .filter(f => f.id.includes(fichaSearch) || f.title.toLowerCase().includes(fichaSearch.toLowerCase()))
-                  .map(ficha => (
-                    <View key={ficha.id} style={styles.simFichaCard}>
-                      <TouchableOpacity 
-                        style={styles.simFichaHeader} 
-                        onPress={() => setExpandedFicha(expandedFicha === ficha.id ? null : ficha.id)}
-                      >
-                        <View style={{ flex: 1 }}>
-                          <Text style={styles.simFichaNum}>Ficha: {ficha.id}</Text>
-                          <Text style={styles.simFichaTitle}>{ficha.title}</Text>
-                        </View>
-                        <Ionicons 
-                          name={expandedFicha === ficha.id ? "chevron-up" : "chevron-down"} 
-                          size={14} 
-                          color="#333" 
-                        />
-                      </TouchableOpacity>
-
-                      {expandedFicha === ficha.id && (
-                        <View style={styles.simFichaStudents}>
-                          <Text style={styles.simStudentsTitle}>Aprendices inscritos ({ficha.students.length}):</Text>
-                          {ficha.students.map((s, idx) => (
-                            <Text key={idx} style={styles.simStudentRow}>• {s}</Text>
-                          ))}
-                        </View>
-                      )}
-                    </View>
-                ))}
-              </View>
-            )}
-
-            {activeGuide.id === 'notificaciones' && (
-              <View style={styles.simSofiaStage}>
-                <Text style={styles.simSubTitle}>Enviar Notificación</Text>
-                
-                <Text style={styles.simInputLabel}>Título:</Text>
-                <TextInput
-                  style={styles.simInput}
-                  placeholder="Ej: Entrega de Carnets"
-                  value={notifTitle}
-                  onChangeText={setNotifTitle}
-                />
-
-                <Text style={styles.simInputLabel}>Mensaje:</Text>
-                <TextInput
-                  style={[styles.simInput, { height: 48, textAlignVertical: 'top' }]}
-                  placeholder="Ej: Mañana a las 8 AM en coordinación."
-                  multiline
-                  numberOfLines={2}
-                  value={notifBody}
-                  onChangeText={setNotifBody}
-                />
-
-                <Text style={styles.simInputLabel}>Ficha Destino:</Text>
-                <View style={styles.simSelectContainer}>
-                  {['2687392', '2712993', 'Todas'].map((fichaNum) => (
-                    <TouchableOpacity 
-                      key={fichaNum}
-                      style={[styles.simSelectOption, notifTarget === fichaNum && styles.simSelectOptionActive]}
-                      onPress={() => setNotifTarget(fichaNum)}
-                    >
-                      <Text style={[styles.simSelectOptionText, notifTarget === fichaNum && styles.simSelectOptionTextActive]}>
-                        {fichaNum}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                <TouchableOpacity style={styles.simButton} onPress={runSendNotification}>
-                  <Text style={styles.simButtonText}>Enviar Notificación</Text>
-                </TouchableOpacity>
-
-                {notifSuccess && (
-                  <View style={styles.simSofiaResult}>
-                    <Ionicons name="mail" size={20} color="#087C4A" />
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.simResultName}>¡Notificación Emitida!</Text>
-                      <Text style={styles.simResultDetails}>Enviada a ficha: {notifTarget}</Text>
-                    </View>
-                  </View>
-                )}
-              </View>
-            )}
-          </ScrollView>
-
-          <View style={styles.mockAppBottomBar}>
-            <Ionicons name="home" size={14} color="#666" />
-            <Ionicons name="card" size={14} color={activeGuide.id === 'carnet' ? '#059669' : '#666'} />
-            <Ionicons name="notifications" size={14} color={activeGuide.id === 'notificaciones' ? '#059669' : '#666'} />
-            <Ionicons name="person" size={14} color="#666" />
-          </View>
-        </View>
-
-        <View style={styles.phoneHomeBtn} />
-      </View>
-    );
-  };
-
-  const userInitial = profile?.fullName ? profile.fullName.trim().charAt(0).toUpperCase() : 'U';
-  const userName = profile?.fullName || 'Usuario';
+  const userInitial = 'U';
+  const userName = 'Usuario';
 
   return (
     <WebFrame>
@@ -611,149 +670,131 @@ export default function UserManualScreen({ navigation }) {
               <View style={styles.headerBlock}>
                 <Text style={styles.pageTitle}>Manual de Usuario Interactivo</Text>
                 <Text style={styles.pageSubtitle}>
-                  Selecciona una guía y sigue los pasos en la pantalla de la izquierda mientras interactúas con el celular simulado en la derecha.
+                  Aprende a utilizar las funciones de MyAccess interactivamente a través de estas tarjetas paso a paso.
                 </Text>
               </View>
 
-              <View style={[styles.mainGrid, isMobile && styles.mainGridMobile]}>
-                
-                <View style={styles.leftPanel}>
-                  
-                  <View style={styles.searchSection}>
-                    <View style={styles.searchBar}>
-                      <Ionicons name="search-outline" size={16} color="#6B7280" style={{ marginRight: 6 }} />
-                      <TextInput
-                        style={styles.searchInput}
-                        placeholder="Buscar guías..."
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                      />
-                    </View>
-
-                    <View style={styles.categoriesRow}>
-                      {[
-                        { id: 'all', label: 'Todos' },
-                        { id: 'aprendiz', label: 'Aprendices' },
-                        { id: 'instructor', label: 'Instructores' },
-                        { id: 'admin', label: 'Admin' }
-                      ].map((cat) => (
-                        <TouchableOpacity
-                          key={cat.id}
-                          style={[styles.categoryBtn, selectedCategory === cat.id && styles.categoryBtnActive]}
-                          onPress={() => setSelectedCategory(cat.id)}
-                        >
-                          <Text style={[styles.categoryBtnText, selectedCategory === cat.id && styles.categoryBtnTextActive]}>
-                            {cat.label}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </View>
-
-                  <View style={styles.guidesListSection}>
-                    <Text style={styles.sectionHeading}>Selecciona una Guía:</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.guidesListScroll}>
-                      {filteredGuides.map((guide) => (
-                        <TouchableOpacity
-                          key={guide.id}
-                          style={[styles.guideCard, activeGuide.id === guide.id && styles.guideCardActive]}
-                          onPress={() => selectGuide(guide)}
-                          activeOpacity={0.8}
-                        >
-                          <View style={[styles.guideIconContainer, activeGuide.id === guide.id && styles.guideIconContainerActive]}>
-                            <Ionicons 
-                              name={guide.icon} 
-                              size={18} 
-                              color={activeGuide.id === guide.id ? '#FFFFFF' : '#059669'} 
-                            />
-                          </View>
-                          <View style={{ flex: 1 }}>
-                            <Text style={[styles.guideCardTitle, activeGuide.id === guide.id && styles.guideCardTitleActive]}>
-                              {guide.title}
-                            </Text>
-                            <Text style={styles.guideCardCategory} numberOfLines={1}>
-                              Para: {guide.category.toUpperCase()}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      ))}
-                      {filteredGuides.length === 0 && (
-                        <Text style={styles.emptyText}>No se encontraron guías que coincidan con la búsqueda.</Text>
-                      )}
-                    </ScrollView>
-                  </View>
-
-                  <View style={styles.stepDetailsCard}>
-                    <View style={styles.stepCardHeader}>
-                      <Text style={styles.stepBadge}>
-                        Paso {currentStepIndex + 1} de {activeGuide.steps.length}
-                      </Text>
-                      <Text style={styles.stepLabel}>{activeGuide.title}</Text>
-                    </View>
-
-                    <Text style={styles.stepTitle}>
-                      {activeGuide.steps[currentStepIndex].title}
-                    </Text>
-                    
-                    <Text style={styles.stepText}>
-                      {activeGuide.steps[currentStepIndex].text}
-                    </Text>
-
-                    {activeGuide.steps[currentStepIndex].highlight && (
-                      <View style={styles.tipBox}>
-                        <Ionicons name="information-circle" size={14} color="#047857" style={{ marginRight: 4 }} />
-                        <Text style={styles.tipText}>
-                          {activeGuide.steps[currentStepIndex].highlight}
-                        </Text>
-                      </View>
-                    )}
-
-                    <View style={styles.actionInstructionBox}>
-                      <Ionicons name="phone-portrait-outline" size={14} color="#059669" style={{ marginRight: 4 }} />
-                      <Text style={styles.actionInstructionText}>
-                        {activeGuide.steps[currentStepIndex].actionText}
-                      </Text>
-                    </View>
-
-                    <View style={styles.stepControls}>
-                      <TouchableOpacity
-                        style={[styles.controlBtn, currentStepIndex === 0 && styles.controlBtnDisabled]}
-                        onPress={prevStep}
-                        disabled={currentStepIndex === 0}
-                      >
-                        <Ionicons name="arrow-back" size={16} color={currentStepIndex === 0 ? '#9CA3AF' : '#059669'} />
-                        <Text style={[styles.controlBtnText, currentStepIndex === 0 && styles.controlBtnTextDisabled]}>Anterior</Text>
-                      </TouchableOpacity>
-
-                      <View style={styles.progressDots}>
-                        {activeGuide.steps.map((_, idx) => (
-                          <View 
-                            key={idx} 
-                            style={[styles.progressDot, currentStepIndex === idx && styles.progressDotActive]} 
-                          />
-                        ))}
-                      </View>
-
-                      <TouchableOpacity
-                        style={[styles.controlBtn, currentStepIndex === activeGuide.steps.length - 1 && styles.controlBtnDisabled]}
-                        onPress={nextStep}
-                        disabled={currentStepIndex === activeGuide.steps.length - 1}
-                      >
-                        <Text style={[styles.controlBtnText, currentStepIndex === activeGuide.steps.length - 1 && styles.controlBtnTextDisabled]}>Siguiente</Text>
-                        <Ionicons name="arrow-forward" size={16} color={currentStepIndex === activeGuide.steps.length - 1 ? '#9CA3AF' : '#059669'} />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
+              {/* Selector de Guías */}
+              <View style={styles.guidesSelectorCard}>
+                <Text style={styles.selectorHeading}>¿Qué quieres aprender hoy?</Text>
+                <View style={styles.searchBox}>
+                  <Ionicons name="search-outline" size={16} color="#6B7280" style={{ marginRight: 6 }} />
+                  <TextInput
+                    style={styles.searchInput}
+                    placeholder="Buscar tema de ayuda..."
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                  />
                 </View>
 
-                <View style={styles.rightPanel}>
-                  <Text style={styles.simulatorTitle}>Celular Simulado</Text>
-                  {renderSimulatorPhone()}
+                <View style={styles.categoriesRow}>
+                  {[
+                    { id: 'all', label: 'Todos' },
+                    { id: 'aprendiz', label: 'Para Aprendices' },
+                    { id: 'instructor', label: 'Para Instructores' },
+                    { id: 'admin', label: 'Administrativos' }
+                  ].map((cat) => (
+                    <TouchableOpacity
+                      key={cat.id}
+                      style={[styles.categoryBtn, selectedCategory === cat.id && styles.categoryBtnActive]}
+                      onPress={() => setSelectedCategory(cat.id)}
+                    >
+                      <Text style={[styles.categoryBtnText, selectedCategory === cat.id && styles.categoryBtnTextActive]}>
+                        {cat.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.selectorScroll}>
+                  {filteredGuides.map((guide) => (
+                    <TouchableOpacity
+                      key={guide.id}
+                      style={[styles.guideOptionCard, activeGuide.id === guide.id && styles.guideOptionCardActive]}
+                      onPress={() => handleSelectGuide(guide)}
+                      activeOpacity={0.85}
+                    >
+                      <Ionicons 
+                        name={guide.icon} 
+                        size={20} 
+                        color={activeGuide.id === guide.id ? '#FFFFFF' : '#059669'} 
+                      />
+                      <Text style={[styles.guideOptionTitle, activeGuide.id === guide.id && styles.guideOptionTitleActive]}>
+                        {guide.title}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+
+              {/* TARJETA INTERACTIVA DE PASO A PASO */}
+              <View style={styles.interactiveStepCard}>
+                
+                {/* Header de la tarjeta */}
+                <View style={styles.stepCardHeader}>
+                  <View style={styles.badgeWrap}>
+                    <Text style={styles.badgeText}>
+                      Paso {currentStepIndex + 1} de {activeGuide.steps.length}
+                    </Text>
+                  </View>
+                  <Text style={styles.guideTitleText}>{activeGuide.title}</Text>
+                </View>
+
+                {/* Explicación del paso */}
+                <View style={styles.stepExplainSection}>
+                  <Text style={styles.stepTitleText}>
+                    {activeGuide.steps[currentStepIndex].title}
+                  </Text>
+                  <Text style={styles.stepDescText}>
+                    {activeGuide.steps[currentStepIndex].text}
+                  </Text>
+                </View>
+
+                {/* Área de interacción del simulador integrada en la tarjeta */}
+                <View style={styles.simCardWrapper}>
+                  <Text style={styles.simHeading}>ZONA DE INTERACCIÓN</Text>
+                  <View style={styles.simCardBorder}>
+                    <View style={styles.instructionBadge}>
+                      <Ionicons name="bulb-outline" size={14} color="#059669" style={{ marginRight: 4 }} />
+                      <Text style={styles.instructionText}>{activeGuide.steps[currentStepIndex].instruction}</Text>
+                    </View>
+                    {renderCardSimulator(activeGuide.steps[currentStepIndex].type)}
+                  </View>
+                </View>
+
+                {/* Controles de navegación */}
+                <View style={styles.stepCardFooter}>
+                  <TouchableOpacity
+                    style={[styles.navBtn, currentStepIndex === 0 && styles.navBtnDisabled]}
+                    onPress={prevStep}
+                    disabled={currentStepIndex === 0}
+                  >
+                    <Ionicons name="chevron-back" size={16} color={currentStepIndex === 0 ? '#9CA3AF' : '#059669'} />
+                    <Text style={[styles.navBtnText, currentStepIndex === 0 && styles.navBtnTextDisabled]}>Anterior</Text>
+                  </TouchableOpacity>
+
+                  <View style={styles.dotsIndicator}>
+                    {activeGuide.steps.map((_, idx) => (
+                      <View 
+                        key={idx} 
+                        style={[styles.dot, currentStepIndex === idx && styles.dotActive]} 
+                      />
+                    ))}
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.navBtn}
+                    onPress={nextStep}
+                  >
+                    <Text style={styles.navBtnText}>
+                      {currentStepIndex === activeGuide.steps.length - 1 ? 'Siguiente Guía' : 'Siguiente'}
+                    </Text>
+                    <Ionicons name="chevron-forward" size={16} color="#059669" />
+                  </TouchableOpacity>
                 </View>
 
               </View>
-              
+
             </ScrollView>
           </View>
         </View>
@@ -767,160 +808,147 @@ const styles = StyleSheet.create({
   contentFrame: { flex: 1, flexDirection: 'row' },
   mainContainer: { flex: 1 },
   mainScroll: { flexGrow: 1, paddingVertical: 14, paddingHorizontal: 16 },
-  headerBlock: { marginBottom: 12 },
+  headerBlock: { marginBottom: 14 },
   pageTitle: { fontSize: 20, fontWeight: '800', color: '#111827', marginBottom: 4 },
-  pageSubtitle: { fontSize: 13, color: '#4B5563', lineHeight: 18, maxWidth: 800 },
-  
-  mainGrid: { flexDirection: 'row', gap: 16 },
-  mainGridMobile: { flexDirection: 'column' },
-  leftPanel: { flex: 1.4, gap: 14 },
-  rightPanel: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', minWidth: 280 },
-  simulatorTitle: { fontSize: 13, fontWeight: '700', color: '#374151', alignSelf: 'center', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.8 },
+  pageSubtitle: { fontSize: 13, color: '#4B5563', lineHeight: 18 },
 
-  searchSection: {
+  // Selector de Guías
+  guidesSelectorCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
     padding: 12,
     borderWidth: 1,
     borderColor: '#DDF7EC',
+    marginBottom: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.04,
     shadowRadius: 6,
     elevation: 2,
   },
-  searchBar: {
+  selectorHeading: { fontSize: 12, fontWeight: '700', color: '#374151', marginBottom: 8, textTransform: 'uppercase' },
+  searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F3F4F6',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    height: 38,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    height: 34,
     marginBottom: 8,
   },
-  searchInput: { flex: 1, fontSize: 13, color: '#1F2937' },
-  categoriesRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  searchInput: { flex: 1, fontSize: 12, color: '#1F2937' },
+  categoriesRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 8 },
   categoryBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
     backgroundColor: '#F3F4F6',
   },
   categoryBtnActive: { backgroundColor: '#059669' },
-  categoryBtnText: { fontSize: 11, color: '#4B5563', fontWeight: '600' },
+  categoryBtnText: { fontSize: 10, color: '#4B5563', fontWeight: '600' },
   categoryBtnTextActive: { color: '#FFFFFF' },
-
-  guidesListSection: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#DDF7EC',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  sectionHeading: { fontSize: 12, fontWeight: '700', color: '#374151', marginBottom: 8, textTransform: 'uppercase' },
-  guidesListScroll: { flexDirection: 'row', paddingBottom: 4 },
-  guideCard: {
+  selectorScroll: { flexDirection: 'row', paddingVertical: 4 },
+  guideOptionCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F9FAFB',
-    borderRadius: 10,
-    padding: 10,
-    marginRight: 10,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 36,
+    marginRight: 8,
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    width: 210,
-    gap: 8,
+    gap: 6,
   },
-  guideCardActive: {
-    backgroundColor: '#E8FFF5',
+  guideOptionCardActive: {
+    backgroundColor: '#059669',
     borderColor: '#059669',
   },
-  guideIconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: '#E8FFF5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  guideIconContainerActive: {
-    backgroundColor: '#059669',
-  },
-  guideCardTitle: { fontSize: 12, fontWeight: '700', color: '#1F2937' },
-  guideCardTitleActive: { color: '#047857' },
-  guideCardCategory: { fontSize: 9, color: '#6B7280', fontWeight: '500', marginTop: 2 },
-  emptyText: { color: '#6B7280', fontSize: 12, fontStyle: 'italic', paddingVertical: 10 },
+  guideOptionTitle: { fontSize: 11, fontWeight: '700', color: '#1F2937' },
+  guideOptionTitleActive: { color: '#FFFFFF' },
 
-  stepDetailsCard: {
+  // TARJETA DE PASOS INTERACTIVA
+  interactiveStepCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#DDF7EC',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+    overflow: 'hidden',
   },
   stepCardHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 14,
+    backgroundColor: '#F9FAFB',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
-    paddingBottom: 8,
-    marginBottom: 10,
+    gap: 10,
   },
-  stepBadge: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#059669',
+  badgeWrap: {
     backgroundColor: '#E8FFF5',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
   },
-  stepLabel: { fontSize: 11, color: '#4B5563', fontWeight: '600' },
-  stepTitle: { fontSize: 15, fontWeight: '800', color: '#111827', marginBottom: 8 },
-  stepText: { fontSize: 13, color: '#374151', lineHeight: 18, marginBottom: 12 },
-  
-  tipBox: {
+  badgeText: { fontSize: 10, fontWeight: '800', color: '#059669' },
+  guideTitleText: { fontSize: 12, fontWeight: '600', color: '#4B5563', flex: 1 },
+
+  stepExplainSection: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 10,
+  },
+  stepTitleText: { fontSize: 16, fontWeight: '800', color: '#111827', marginBottom: 6 },
+  stepDescText: { fontSize: 13, color: '#374151', lineHeight: 18 },
+
+  // Contenedor del simulador integrado
+  simCardWrapper: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  simHeading: { fontSize: 9, fontWeight: '700', color: '#9CA3AF', letterSpacing: 0.8, marginBottom: 6 },
+  simCardBorder: {
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    borderStyle: 'dashed',
+    padding: 14,
+    alignItems: 'center',
+  },
+  instructionBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#E8FFF5',
-    borderLeftWidth: 3,
-    borderLeftColor: '#059669',
-    padding: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 6,
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  tipText: { fontSize: 11, color: '#047857', fontWeight: '600', flex: 1 },
-  
-  actionInstructionBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#EFF6FF',
-    borderLeftWidth: 3,
-    borderLeftColor: '#2563EB',
-    padding: 8,
-    borderRadius: 6,
-    marginBottom: 14,
-  },
-  actionInstructionText: { fontSize: 11, color: '#1E40AF', fontWeight: '600', flex: 1 },
+  instructionText: { fontSize: 10, color: '#047857', fontWeight: '700' },
 
-  stepControls: {
+  simContainer: {
+    width: '100%',
+    maxWidth: 280,
+    alignItems: 'center',
+  },
+
+  // Controles del pie de tarjeta
+  stepCardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 6,
+    padding: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    backgroundColor: '#F9FAFB',
   },
-  controlBtn: {
+  navBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -931,111 +959,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#059669',
   },
-  controlBtnDisabled: {
+  navBtnDisabled: {
     borderColor: '#D1D5DB',
   },
-  controlBtnText: { fontSize: 12, fontWeight: '700', color: '#059669' },
-  controlBtnTextDisabled: { color: '#9CA3AF' },
-  
-  progressDots: { flexDirection: 'row', gap: 6 },
-  progressDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#E5E7EB',
-  },
-  progressDotActive: {
-    backgroundColor: '#059669',
-    width: 14,
-  },
+  navBtnText: { fontSize: 12, fontWeight: '700', color: '#059669' },
+  navBtnTextDisabled: { color: '#9CA3AF' },
+  dotsIndicator: { flexDirection: 'row', gap: 6 },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#E5E7EB' },
+  dotActive: { backgroundColor: '#059669', width: 14 },
 
-  phoneContainer: {
-    width: 240,
-    height: 480,
-    borderRadius: 32,
-    borderWidth: 8,
-    borderColor: '#111827',
-    backgroundColor: '#000000',
-    position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.25,
-    shadowRadius: 15,
-    elevation: 10,
-    padding: 4,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  phoneNotch: {
-    width: 80,
-    height: 14,
-    backgroundColor: '#111827',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    position: 'absolute',
-    top: 0,
-    zIndex: 100,
-  },
-  phoneScreen: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 22,
-    overflow: 'hidden',
-    justifyContent: 'space-between',
-  },
-  phoneHomeBtn: {
-    width: 35,
-    height: 4,
-    backgroundColor: '#374151',
-    borderRadius: 2,
-    marginBottom: 4,
-    marginTop: 2,
-  },
-
-  mockAppHeader: {
-    height: 38,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingTop: 10,
-  },
-  mockAppTitle: { fontSize: 10, fontWeight: '800', color: '#059669' },
-  mockHeaderDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#059669' },
-  
-  mockScrollContent: {
-    flexGrow: 1,
-    padding: 10,
-    alignItems: 'center',
-    width: '100%',
-  },
-
-  mockAppBottomBar: {
-    height: 28,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: '100%',
-  },
-
-  simCarnetStage: {
-    width: '100%',
-    alignItems: 'center',
-    paddingTop: 4,
-  },
-  simTip: { fontSize: 9, color: '#6B7280', marginBottom: 8, fontStyle: 'italic' },
+  // ESTILOS DE LOS SIMULADORES
   cardTouchable: {
     width: 170,
     height: 260,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 10,
   },
   mockCard: {
     borderRadius: 12,
@@ -1049,16 +988,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  mockCardFront: {
-    backgroundColor: '#FDFDFD',
-  },
-  mockCardBack: {
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-  },
+  mockCardFront: { backgroundColor: '#FDFDFD' },
+  mockCardBack: { backgroundColor: '#FFFFFF', alignItems: 'center' },
   mockCardHeader: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  mockSenaCircle: { width: 14, height: 14, borderRadius: 7, backgroundColor: '#059669' },
-  mockSenaText: { fontSize: 8, fontWeight: '800', color: '#059669' },
+  mockSenaCircle: { width: 12, height: 12, borderRadius: 6, backgroundColor: '#059669' },
+  mockSenaText: { fontSize: 7, fontWeight: '800', color: '#059669' },
   mockPhotoFrame: {
     width: 60,
     height: 75,
@@ -1076,148 +1010,157 @@ const styles = StyleSheet.create({
   mockStudentInfo: { fontSize: 8, color: '#4B5563', lineHeight: 10 },
   mockBarcode: { height: 14, flexDirection: 'row', alignItems: 'flex-end', marginTop: 4, gap: 1 },
   barcodeLine: { height: 14, backgroundColor: '#000000' },
-  
-  simStatusBadge: {
-    flexDirection: 'row',
-    marginTop: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  simStatusLabel: { fontSize: 8, color: '#4B5563' },
-  simStatusValue: { fontSize: 8, fontWeight: '800', color: '#047857' },
-
   mockBackTerms: { fontSize: 7, color: '#4B5563', textAlign: 'center', lineHeight: 9 },
   mockQrCode: { marginVertical: 14 },
   mockSignature: { alignItems: 'center', width: '100%', marginBottom: 6 },
   signatureLine: { height: 1, backgroundColor: '#000000', width: '70%', marginBottom: 2 },
   signatureLabel: { fontSize: 6, fontWeight: '700', color: '#666666' },
 
-  simSofiaStage: { width: '100%', padding: 4 },
-  simSubTitle: { fontSize: 11, fontWeight: '800', color: '#111827', marginBottom: 8, textAlign: 'center' },
-  simInputLabel: { fontSize: 8, color: '#4B5563', marginBottom: 2, fontWeight: '600' },
-  simInput: {
+  simActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#059669',
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    marginTop: 6,
+  },
+  simActionBtnDisabled: {
+    backgroundColor: '#9CA3AF',
+  },
+  simActionBtnText: { color: '#FFFFFF', fontSize: 11, fontWeight: '700' },
+
+  // Inputs del simulador
+  simInputLabel: { fontSize: 10, color: '#4B5563', fontWeight: '600', alignSelf: 'flex-start', marginBottom: 3 },
+  simTextInput: {
+    width: '100%',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    height: 30,
-    fontSize: 9,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 34,
+    fontSize: 11,
     marginBottom: 8,
-    width: '100%'
   },
-  simButton: {
-    backgroundColor: '#059669',
-    borderRadius: 6,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+  simFormSummary: {
     width: '100%',
-    marginTop: 4,
+    backgroundColor: '#E5E7EB',
+    padding: 8,
+    borderRadius: 6,
+    marginBottom: 10,
   },
-  simButtonText: { color: '#FFFFFF', fontSize: 10, fontWeight: '700' },
-  simSofiaResult: {
-    flexDirection: 'row',
+  simSummaryText: { fontSize: 10, color: '#374151', fontWeight: '600' },
+
+  // Badges y resultados
+  successBadge: {
+    alignItems: 'center',
+    padding: 12,
     backgroundColor: '#E8FFF5',
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#A7F3D0',
-    borderRadius: 6,
-    padding: 8,
-    marginTop: 10,
-    gap: 6,
+    width: '100%',
+    marginBottom: 10,
+  },
+  successBadgeTitle: { fontSize: 12, fontWeight: '800', color: '#047857', marginTop: 4 },
+  successBadgeSubtitle: { fontSize: 10, color: '#065F46', textAlign: 'center', marginTop: 2 },
+  successBadgeFicha: { fontSize: 10, color: '#047857', fontWeight: '700', marginTop: 2 },
+
+  // Listas de solicitudes
+  simListHeading: { fontSize: 11, fontWeight: '700', color: '#374151', alignSelf: 'flex-start', marginBottom: 8 },
+  simListItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    width: '100%',
+    marginBottom: 6,
+  },
+  simListItemActive: {
+    borderColor: '#059669',
+    backgroundColor: '#E8FFF5',
+  },
+  simListItemTitle: { fontSize: 10, fontWeight: '700', color: '#1F2937' },
+  simListItemDesc: { fontSize: 8, color: '#6B7280' },
+  simListItemBadge: { fontSize: 8, fontWeight: '700', color: '#D97706', backgroundColor: '#FEF3C7', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 4 },
+
+  // Detalle de solicitud
+  simDetailCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    padding: 10,
+  },
+  simDetailTitle: { fontSize: 11, fontWeight: '700', color: '#1F2937', marginBottom: 8, borderBottomWidth: 1, borderBottomColor: '#E5E7EB', paddingBottom: 4 },
+  simDetailRow: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 2 },
+  simDetailLabel: { fontSize: 9, color: '#6B7280' },
+  simDetailVal: { fontSize: 9, fontWeight: '700', color: '#374151' },
+
+  // Gestión de fichas
+  simFichaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     width: '100%',
   },
-  simResultName: { fontSize: 9, fontWeight: '800', color: '#047857' },
-  simResultDetails: { fontSize: 8, color: '#065F46' },
+  simFichaItemActive: {
+    borderColor: '#059669',
+    backgroundColor: '#E8FFF5',
+  },
+  simFichaTitle: { fontSize: 10, fontWeight: '700', color: '#1F2937' },
+  simFichaDesc: { fontSize: 8, color: '#6B7280' },
 
-  simRequestRow: {
+  simStudentsList: {
+    width: '100%',
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#E5E7EB',
     padding: 8,
-    marginBottom: 6,
+    marginBottom: 8,
+  },
+  simStudentsHeading: { fontSize: 9, fontWeight: '700', color: '#374151', marginBottom: 6 },
+  simStudentRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%'
+    paddingVertical: 3,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#F3F4F6',
   },
-  simRequestName: { fontSize: 9, fontWeight: '700', color: '#1F2937' },
-  simRequestDoc: { fontSize: 8, color: '#6B7280' },
-  simRequestStatus: { fontSize: 8, fontWeight: '700', marginTop: 2 },
-  statusTextPending: { color: '#D97706' },
-  statusTextSuccess: { color: '#059669' },
-  simMiniBtn: {
-    backgroundColor: '#059669',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  simMiniBtnText: { color: '#FFFFFF', fontSize: 8, fontWeight: '700' },
+  simStudentText: { fontSize: 9, color: '#4B5563' },
+  simStudentStatus: { fontSize: 8, fontWeight: '600', color: '#059669' },
 
-  simSearchBox: {
+  // Selectores de notificaciones
+  simSelectRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    paddingHorizontal: 8,
-    height: 28,
-    marginBottom: 8,
-    width: '100%'
+    gap: 6,
+    width: '100%',
+    marginBottom: 10,
   },
-  simSearchInput: { flex: 1, fontSize: 8 },
-  simFichaCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginBottom: 6,
-    overflow: 'hidden',
-    width: '100%'
-  },
-  simFichaHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8,
-    backgroundColor: '#F9FAFB',
-  },
-  simFichaNum: { fontSize: 8, color: '#6B7280' },
-  simFichaTitle: { fontSize: 9, fontWeight: '700', color: '#1F2937' },
-  simFichaStudents: {
-    padding: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    backgroundColor: '#FFFFFF',
-  },
-  simStudentsTitle: { fontSize: 8, fontWeight: '700', color: '#374151', marginBottom: 4 },
-  simStudentRow: { fontSize: 8, color: '#4B5563', marginVertical: 1 },
-
-  simSelectContainer: {
-    flexDirection: 'row',
-    gap: 4,
-    marginBottom: 8,
-  },
-  simSelectOption: {
+  simSelectOpt: {
     flex: 1,
-    height: 24,
-    borderRadius: 4,
+    height: 28,
+    borderRadius: 6,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#D1D5DB',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  simSelectOptionActive: {
+  simSelectOptActive: {
     backgroundColor: '#E8FFF5',
     borderColor: '#059669',
   },
-  simSelectOptionText: { fontSize: 7, color: '#4B5563', fontWeight: '600' },
-  simSelectOptionTextActive: { color: '#047857', fontWeight: '800' },
+  simSelectOptText: { fontSize: 8, color: '#4B5563', fontWeight: '600' },
+  simSelectOptTextActive: { color: '#047857', fontWeight: '800' },
 });
