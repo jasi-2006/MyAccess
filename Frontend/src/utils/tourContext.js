@@ -50,7 +50,7 @@ export const TOUR_STEPS = {
       placement: 'bottom'
     },
     {
-      route: 'CreateInstructorCard',
+      route: 'Card',
       title: 'Módulo: Mi Carnet de Instructor',
       text: 'Módulo: Mi Carnet de Instructor. ➜ Esta es tu credencial digital docente. Al igual que los aprendices, puedes pulsar sobre el carnet para voltearlo 3D y mostrar tu código QR de portería.',
       placement: 'top'
@@ -88,7 +88,7 @@ export const TOUR_STEPS = {
       placement: 'bottom'
     },
     {
-      route: 'CreateInstructorCard',
+      route: 'Card',
       title: 'Módulo: Mi Carnet de Administrador',
       text: 'Módulo: Mi Carnet de Administrador. ➜ Esta es tu credencial digital oficial de personal. Puedes pulsar sobre la tarjeta para voltearla 3D y revelar tu código QR institucional.',
       placement: 'top'
