@@ -18,6 +18,7 @@ export default function HomeCards({ navigation, role }) {
         const notifications = await getNotifications();
         const unread = notifications?.filter(n => !n.readingDate).length || 0;
         setUnreadCount(unread);
+        
       } catch {
         setUnreadCount(0);
       } finally {
