@@ -34,11 +34,13 @@ export default function HomeCards({ navigation, role }) {
           desc: 'Administra fichas, solicitudes, carnet y notificaciones.',
           onPress: () => navigation.navigate('Instructor'),
           featured: true,
+          icon: '⚙️',
         }]
       : []),
-    {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
-    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'),  },
-    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'),  },
+    {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card'), icon: '🪪' },
+    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'), icon: '🔔' },
+    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'), icon: '👤' },
+    {  title: 'Manual de Usuario', desc: 'Aprende a usar MyAccess con guías interactivas y simuladores.', onPress: () => navigation.navigate('UserManual'), icon: '📚' },
   ];
 
   return (
