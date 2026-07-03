@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { getUserProfile } from '../services/authService';
+import { resolveUserRole } from '../utils/accessControl';
 import {
   View,
   Text,
@@ -160,10 +162,22 @@ export default function UserManualScreen({ navigation }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
 
+  const [profile, setProfile] = useState(null);
+  const [role, setRole] = useState('APRENDIZ');
   const [activeGuide, setActiveGuide] = useState(GUIDES[0]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  useEffect(() => {
+    getUserProfile()
+      .then((p) => {
+        setProfile(p);
+        const resolved = resolveUserRole(p);
+        setRole(resolved);
+      })
+      .catch(() => {});
+  }, []);
 
   // --- ESTADOS INTERACTIVOS DE LOS PASOS ---
   // Guía Carnet
@@ -653,8 +667,8 @@ export default function UserManualScreen({ navigation }) {
     }
   };
 
-  const userInitial = 'U';
-  const userName = 'Usuario';
+  const userInitial = profile?.fullName ? profile.fullName.trim().charAt(0).toUpperCase() : 'U';
+  const userName = profile?.fullName || 'Usuario';
 
   return (
     <WebFrame>
