@@ -52,7 +52,7 @@ export const TOUR_STEPS = {
     {
       route: 'CreateInstructorCard',
       title: 'Módulo: Mi Carnet de Instructor',
-      text: 'Módulo: Mi Carnet de Instructor. ➜ Al igual que los aprendices, cuentas con una credencial digital docente. Puedes entrar aquí para visualizar e interactuar con tu carnet de instructor.',
+      text: 'Módulo: Mi Carnet de Instructor. ➜ Esta es tu credencial digital docente. Al igual que los aprendices, puedes pulsar sobre el carnet para voltearlo 3D y mostrar tu código QR de portería.',
       placement: 'top'
     },
     {
@@ -64,7 +64,7 @@ export const TOUR_STEPS = {
     {
       route: 'Notifications',
       title: 'Módulo: Avisos Recibidos',
-      text: 'Bandeja de notificaciones del instructor. ➜ Consulta las circulares generales que publica el equipo de administración de la sede.',
+      text: 'Bandeja de notificaciones. ➜ Aquí ves avisos recibidos. Además, como eres instructor, verás arriba a la derecha el botón "Crear" para redactar y enviar comunicados masivos a tus aprendices.',
       placement: 'top'
     },
     {
@@ -90,7 +90,7 @@ export const TOUR_STEPS = {
     {
       route: 'CreateInstructorCard',
       title: 'Módulo: Mi Carnet de Administrador',
-      text: 'Módulo: Mi Carnet de Administrador. ➜ Como administrador, tú también posees una credencial digital oficial para ingresar al centro de formación.',
+      text: 'Módulo: Mi Carnet de Administrador. ➜ Esta es tu credencial digital oficial de personal. Puedes pulsar sobre la tarjeta para voltearla 3D y revelar tu código QR institucional.',
       placement: 'top'
     },
     {
@@ -120,7 +120,7 @@ export const TOUR_STEPS = {
     {
       route: 'Notifications',
       title: 'Módulo: Novedades del Centro',
-      text: 'Tu buzón de entrada administrativo donde se archivan y muestran las circulares y avisos de la sede.',
+      text: 'Bandeja de notificaciones. ➜ Tu buzón administrativo. Como eres administrador, cuentas con el botón "Crear" en la parte superior derecha para redactar y enviar avisos oficiales a todo el centro de formación.',
       placement: 'top'
     },
     {
