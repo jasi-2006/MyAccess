@@ -46,13 +46,13 @@ export const TOUR_STEPS = {
     {
       route: 'Home',
       title: 'Paseo de Instructor - Inicio',
-      text: '¡Hola! Este es tu menú principal como Instructor. Desde aquí puedes acceder a la gestión de tus grupos asignados.',
+      text: '¡Hola! Este es tu menú principal como Instructor. Desde aquí tienes acceso a la consulta rápida de tus grupos asignados.',
       placement: 'bottom'
     },
     {
-      route: 'Card',
-      title: 'Módulo: Mi Carnet Digital',
-      text: 'Como docente del centro de formación, tú también posees una credencial digital. ➜ Toca el carnet para ver tu código QR y presentarlo en el ingreso.',
+      route: 'CreateInstructorCard',
+      title: 'Módulo: Mi Carnet de Instructor',
+      text: 'Módulo: Mi Carnet de Instructor. ➜ Al igual que los aprendices, cuentas con una credencial digital docente. Puedes entrar aquí para visualizar e interactuar con tu carnet de instructor.',
       placement: 'top'
     },
     {
@@ -60,12 +60,6 @@ export const TOUR_STEPS = {
       title: 'Módulo: Gestión de Fichas',
       text: 'Aquí visualizas los grupos de aprendices a tu cargo. ➜ Puedes realizar búsquedas por número de Ficha y expandir la lista de aprendices.',
       placement: 'top'
-    },
-    {
-      route: 'SofiaVerification',
-      title: 'Módulo: Validar Sofia Plus',
-      text: 'Si lo requieres, también puedes validar y sincronizar tu propio perfil oficial de Sofia Plus en esta sección.',
-      placement: 'center'
     },
     {
       route: 'Notifications',
@@ -94,9 +88,9 @@ export const TOUR_STEPS = {
       placement: 'bottom'
     },
     {
-      route: 'Card',
-      title: 'Módulo: Mi Carnet Digital',
-      text: 'Tú también cuentas con una credencial digital institucional como parte del equipo administrativo de MyAccess.',
+      route: 'CreateInstructorCard',
+      title: 'Módulo: Mi Carnet de Administrador',
+      text: 'Módulo: Mi Carnet de Administrador. ➜ Como administrador, tú también posees una credencial digital oficial para ingresar al centro de formación.',
       placement: 'top'
     },
     {

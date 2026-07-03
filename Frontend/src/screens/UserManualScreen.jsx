@@ -43,7 +43,7 @@ export default function UserManualScreen({ navigation }) {
       bgColor: '#E8FFF5',
       borderColor: '#A7F3D0',
       desc: 'Conoce cómo acceder a tu identificación digital, validar tus datos con Sofia Plus y monitorear el estado físico de tu carnet.',
-      modules: ['Inicio', 'Mi Carnet Digital', 'Validar Sofia Plus', 'Estado del Trámite'],
+      modules: ['Inicio', 'Mi Carnet Digital', 'Validar Sofia Plus', 'Estado del Trámite', 'Novedades y Avisos', 'Mi Perfil'],
     },
     {
       id: 'instructor',
@@ -53,7 +53,7 @@ export default function UserManualScreen({ navigation }) {
       bgColor: '#EFF6FF',
       borderColor: '#BFDBFE',
       desc: 'Aprende a buscar fichas de formación activas, consultar tus grupos asignados y listar la información de tus aprendices.',
-      modules: ['Inicio', 'Gestión de Fichas', 'Validar Sofia Plus'],
+      modules: ['Inicio', 'Mi Carnet de Instructor', 'Gestión de Fichas', 'Avisos Recibidos', 'Mi Perfil'],
     },
     {
       id: 'admin',
@@ -63,7 +63,7 @@ export default function UserManualScreen({ navigation }) {
       bgColor: '#FEF3C7',
       borderColor: '#FDE68A',
       desc: 'Domina el panel de métricas, autoriza las solicitudes de carnetización enviadas por aprendices, audita el historial e imprime credenciales físicas.',
-      modules: ['Inicio', 'Dashboard Estadístico', 'Fichas Sede', 'Aprobación de Solicitudes', 'Bitácora Histórica', 'Impresión Física'],
+      modules: ['Inicio', 'Dashboard Estadístico', 'Mi Carnet de Administrador', 'Fichas Sede', 'Aprobación de Solicitudes', 'Bitácora Histórica', 'Impresión Física', 'Novedades del Centro', 'Mi Perfil'],
     }
   ];
 
