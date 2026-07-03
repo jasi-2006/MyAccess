@@ -28,6 +28,18 @@ export const TOUR_STEPS = {
       title: 'Módulo: Estado de Trámite',
       text: 'Consulta el estado de tu solicitud de carnet físico aquí, por si necesitas reclamarlo impreso en coordinación.',
       placement: 'bottom'
+    },
+    {
+      route: 'Notifications',
+      title: 'Módulo: Novedades y Avisos',
+      text: 'Esta es tu bandeja de notificaciones. ➜ Revisa aquí los mensajes y avisos institucionales importantes que te envían los instructores y administradores.',
+      placement: 'top'
+    },
+    {
+      route: 'User',
+      title: 'Módulo: Mi Perfil',
+      text: 'Revisa y mantén actualizada tu información personal. ➜ Aquí puedes editar tus datos y subir tu foto de perfil oficial para el carnet.',
+      placement: 'bottom'
     }
   ],
   instructor: [
@@ -36,6 +48,12 @@ export const TOUR_STEPS = {
       title: 'Paseo de Instructor - Inicio',
       text: '¡Hola! Este es tu menú principal como Instructor. Desde aquí puedes acceder a la gestión de tus grupos asignados.',
       placement: 'bottom'
+    },
+    {
+      route: 'Card',
+      title: 'Módulo: Mi Carnet Digital',
+      text: 'Como docente del centro de formación, tú también posees una credencial digital. ➜ Toca el carnet para ver tu código QR y presentarlo en el ingreso.',
+      placement: 'top'
     },
     {
       route: 'Fichas',
@@ -48,6 +66,18 @@ export const TOUR_STEPS = {
       title: 'Módulo: Validar Sofia Plus',
       text: 'Si lo requieres, también puedes validar y sincronizar tu propio perfil oficial de Sofia Plus en esta sección.',
       placement: 'center'
+    },
+    {
+      route: 'Notifications',
+      title: 'Módulo: Avisos Recibidos',
+      text: 'Bandeja de notificaciones del instructor. ➜ Consulta las circulares generales que publica el equipo de administración de la sede.',
+      placement: 'top'
+    },
+    {
+      route: 'User',
+      title: 'Módulo: Mi Perfil',
+      text: 'Revisa y actualiza tus datos de contacto y tu foto de perfil docente oficial.',
+      placement: 'bottom'
     }
   ],
   admin: [
@@ -60,8 +90,14 @@ export const TOUR_STEPS = {
     {
       route: 'Instructor',
       title: 'Módulo: Dashboard de Gestión',
-      text: 'Panel de Control (Dashboard). Aquí monitorizas las estadísticas. En la sección de acciones de abajo encuentras "Crear Notificación" para REDACTAR y ENVIAR comunicados oficiales a los aprendices. Nota: No confundir con la campana de arriba, la cual es para RECIBIR notificaciones.',
+      text: 'Panel de Control (Dashboard). Aquí monitorizas las estadísticas. ➜ En la sección de acciones de abajo encuentras "Crear Notificación" para REDACTAR y ENVIAR comunicados oficiales a los aprendices. Nota: No confundir con la campana de arriba, la cual es para RECIBIR notificaciones.',
       placement: 'bottom'
+    },
+    {
+      route: 'Card',
+      title: 'Módulo: Mi Carnet Digital',
+      text: 'Tú también cuentas con una credencial digital institucional como parte del equipo administrativo de MyAccess.',
+      placement: 'top'
     },
     {
       route: 'Fichas',
@@ -86,6 +122,18 @@ export const TOUR_STEPS = {
       title: 'Módulo: Imprimir Carnet',
       text: 'Una vez que un carnet está en estado aprobado, en este módulo puedes buscar la Ficha del aprendiz. ➜ Toca "Imprimir todos" para enviar todos los carnets de la ficha seleccionada en un solo lote, o bien toca la opción individual de un carnet para imprimir únicamente ese carnet.',
       placement: 'top'
+    },
+    {
+      route: 'Notifications',
+      title: 'Módulo: Novedades del Centro',
+      text: 'Tu buzón de entrada administrativo donde se archivan y muestran las circulares y avisos de la sede.',
+      placement: 'top'
+    },
+    {
+      route: 'User',
+      title: 'Módulo: Mi Perfil',
+      text: 'Consulta tu información de perfil de administrador y sube tu foto oficial.',
+      placement: 'bottom'
     }
   ]
 };
