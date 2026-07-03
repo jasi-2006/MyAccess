@@ -60,31 +60,31 @@ export const TOUR_STEPS = {
     {
       route: 'Instructor',
       title: 'Módulo: Dashboard de Gestión',
-      text: 'Este panel muestra las estadísticas rápidas del centro: total de fichas, solicitudes registradas, aprobadas y carnets listos.',
+      text: 'En este panel de control ves las métricas generales del centro. Al final verás accesos rápidos como "Crear Notificación", el cual te permite enviar avisos y comunicados masivos a fichas específicas o a toda la sede en tiempo real.',
       placement: 'top'
     },
     {
       route: 'Fichas',
       title: 'Módulo: Fichas',
-      text: 'Revisa y gestiona la lista completa de grupos de formación del centro de formación.',
+      text: 'Revisa y gestiona la lista completa de grupos de formación de tu centro de formación.',
       placement: 'bottom'
     },
     {
       route: 'Solicitudes',
-      title: 'Módulo: Solicitudes Pendientes',
-      text: 'Aquí apruebas o rechazas las solicitudes de carnetización digital que envían los aprendices. Al aprobar, generas su firma autorizada.',
+      title: 'Módulo: Solicitudes de Carnet',
+      text: '¡Módulo crítico! Aquí gestionas las solicitudes enviadas por los aprendices. Puedes cambiar el estado de la solicitud: haz clic en "Validar" para aprobar el carnet digital de manera que se firme digitalmente, o "Rechazar" si los datos no coinciden.',
       placement: 'top'
     },
     {
       route: 'Historial',
       title: 'Módulo: Historial General',
-      text: 'Monitorea todas las solicitudes validadas e impresas anteriormente por el equipo.',
+      text: 'Permite auditar y revisar el registro completo de acciones tomadas anteriormente sobre los carnets (solicitudes impresas o validadas).',
       placement: 'bottom'
     },
     {
       route: 'Imprimir',
-      title: 'Módulo: Imprimir Carnets',
-      text: 'Envía a imprimir los carnets digitales aprobados a la impresora física institucional.',
+      title: 'Módulo: Imprimir Carnet',
+      text: 'Una vez que un carnet está en estado aprobado, en este módulo puedes buscar la Ficha del aprendiz, seleccionar su carnet y enviarlo a imprimir en lote en la impresora física institucional.',
       placement: 'top'
     }
   ]

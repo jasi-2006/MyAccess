@@ -103,8 +103,16 @@ export default function UserManualScreen({ navigation }) {
 
               {/* Grid de opciones */}
               <View style={[styles.grid, isMobile && styles.gridMobile]}>
-                {tourOptions.map((opt) => (
-                  <View key={opt.id} style={styles.optionCard}>
+                {tourOptions
+                  .filter((opt) => {
+                    const normalizedRole = role ? role.toUpperCase() : 'APRENDIZ';
+                    if (normalizedRole === 'APRENDIZ') return opt.id === 'aprendiz';
+                    if (normalizedRole === 'INSTRUCTOR') return opt.id === 'instructor';
+                    if (normalizedRole === 'ADMIN') return opt.id === 'admin';
+                    return opt.id === 'aprendiz'; // fallback
+                  })
+                  .map((opt) => (
+                    <View key={opt.id} style={styles.optionCard}>
                     
                     {/* Icon & Title */}
                     <View style={styles.cardHeader}>
