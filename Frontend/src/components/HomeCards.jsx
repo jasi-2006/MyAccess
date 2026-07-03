@@ -40,7 +40,6 @@ export default function HomeCards({ navigation, role }) {
     {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
     {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications') },
     {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User') },
-    {  title: 'Manual de Usuario', desc: 'Aprende a usar MyAccess con guías interactivas y simuladores.', onPress: () => navigation.navigate('UserManual') },
   ];
 
   return (
