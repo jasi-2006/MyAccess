@@ -48,6 +48,11 @@ export default function HomeNavbar({ navigation, active = 'Home', fullName, role
           <Text style={[styles.linkText, active === 'Home' && styles.linkActive]}>Inicio</Text>
         </TouchableOpacity>
 
+        {/* Manual */}
+        <TouchableOpacity onPress={() => navigation.navigate('UserManual')}>
+          <Text style={[styles.linkText, active === 'UserManual' && styles.linkActive]}>Manual</Text>
+        </TouchableOpacity>
+
         {/* Campana */}
         <TouchableOpacity style={styles.bellWrap} onPress={() => navigation.navigate('Notifications')}>
           <Text style={styles.bellIcon}>🔔</Text>

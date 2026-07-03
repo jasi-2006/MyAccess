@@ -18,6 +18,7 @@ export default function HomeCards({ navigation, role }) {
         const notifications = await getNotifications();
         const unread = notifications?.filter(n => !n.readingDate).length || 0;
         setUnreadCount(unread);
+        
       } catch {
         setUnreadCount(0);
       } finally {
@@ -37,8 +38,8 @@ export default function HomeCards({ navigation, role }) {
         }]
       : []),
     {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
-    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'),  },
-    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'),  },
+    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications') },
+    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User') },
   ];
 
   return (
