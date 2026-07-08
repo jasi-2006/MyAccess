@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
+export const navigationRef = createNavigationContainerRef();
 import OnboardingScreen from '../screens/OnboardingScreen.jsx';
 import LoginGatewayScreen from '../screens/LoginGatewayScreen.jsx';
 import RegisterGatewayScreen from '../screens/RegisterGatewayScreen.jsx';
@@ -24,6 +26,7 @@ import InstructoresScreen from '../screens/Instructores.jsx';
 import ImprimirScreen from '../screens/Imprimir.jsx';
 import ProcessingStatus from '../screens/Processingstatus.jsx';
 import SofiaVerificationScreen from '../screens/SofiaVerificationScreen.jsx';
+import UserManualScreen from '../screens/UserManualScreen.jsx';
 import { getAuthToken, getUserProfile } from '../services/authService';
 import { canAccessRoute, getHomeRouteForRole, getRoleFromToken, normalizeRole, resolveUserRole } from '../utils/accessControl';
 
@@ -117,11 +120,12 @@ const ProtectedInstructores = protect('Instructores', InstructoresScreen);
 const ProtectedGestion = protect('Gestion', GestionFichas);
 const ProtectedProcessingStatus = protect('Tramite', ProcessingStatus);
 const ProtectedSofiaVerification = protect('SofiaVerification', SofiaVerificationScreen);
+const ProtectedUserManual = protect('UserManual', UserManualScreen);
 
 
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Onboarding"
         screenOptions={{
@@ -157,6 +161,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Gestion" component={ProtectedGestion}/>
         <Stack.Screen name="Tramite" component={ProtectedProcessingStatus} />
         <Stack.Screen name="SofiaVerification" component={ProtectedSofiaVerification} />
+        <Stack.Screen name="UserManual" component={ProtectedUserManual} />
 
       </Stack.Navigator>
     </NavigationContainer>

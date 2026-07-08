@@ -19,6 +19,7 @@ import CarnetTopbar from '../components/CarnetTopbar.jsx';
 import UserSidebar from '../components/UserSidebar.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
+import TourTarget from '../components/TourTarget.jsx';
 
 const LOADING_STEPS = [
   'Estableciendo conexión segura con Sofia Plus...',
@@ -181,187 +182,189 @@ export default function SofiaVerificationScreen({ navigation }) {
             {loadingProfile ? (
               <ActivityIndicator size="large" color="#0F766E" style={{ marginTop: 40 }} />
             ) : profile ? (
-              <View style={styles.cardContent}>
-                
-                {/* ── ESTADO ACTUAL ── */}
-                <View style={[styles.statusBanner, profile.sofiaVerified ? styles.statusBannerSuccess : styles.statusBannerPending]}>
-                  <Text style={[styles.statusBannerText, profile.sofiaVerified ? styles.statusTextSuccess : styles.statusTextPending]}>
-                    {profile.sofiaVerified 
-                      ? '✓ Cuenta Verificada con Sofia Plus' 
-                      : '⚠ Datos sin Verificar contra Sofia Plus'}
-                  </Text>
-                </View>
-
-                {validating ? (
-                  /* ── ANIMACIÓN DE CARGA DINÁMICA ── */
-                  <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#0F766E" />
-                    <Text style={styles.loadingTitle}>Procesando Validación</Text>
-                    <Text style={styles.loadingSub}>{LOADING_STEPS[currentStep]}</Text>
-                    <View style={styles.progressBar}>
-                      <View style={[styles.progressFill, { width: `${((currentStep + 1) / LOADING_STEPS.length) * 100}%` }]} />
-                    </View>
+              <TourTarget targetId="sofia-form-card">
+                <View style={styles.cardContent}>
+                  
+                  {/* ── ESTADO ACTUAL ── */}
+                  <View style={[styles.statusBanner, profile.sofiaVerified ? styles.statusBannerSuccess : styles.statusBannerPending]}>
+                    <Text style={[styles.statusBannerText, profile.sofiaVerified ? styles.statusTextSuccess : styles.statusTextPending]}>
+                      {profile.sofiaVerified 
+                        ? '✓ Cuenta Verificada con Sofia Plus' 
+                        : '⚠ Datos sin Verificar contra Sofia Plus'}
+                    </Text>
                   </View>
-                ) : validationResult && !validationResult.success ? (
-                  /* ── DISCREPANCIAS DETECTADAS ── */
-                  <View style={styles.mismatchContainer}>
-                    <View style={styles.alertHeader}>
-                      <Text style={styles.alertTitle}>¡Se detectaron diferencias con Sofia Plus!</Text>
-                      <Text style={styles.alertText}>
-                        La Inteligencia Artificial ha encontrado que los datos locales en tu carnet difieren de la base de datos oficial de Sofia Plus. Los campos erróneos están marcados a continuación:
-                      </Text>
-                    </View>
 
-                    {/* Fila con imagen y desglose */}
-                    <View style={[styles.mismatchRow, isDesktop && styles.rowLayout]}>
-                      
-                      {/* Imagen Mockup Generada */}
-                      {validationResult.feedbackImageUrl && (
-                        <View style={[styles.imageCard, isDesktop && { width: '45%' }]}>
-                          <Text style={styles.sectionLabel}>Guía Visual del Carnet</Text>
-                          <Image 
-                            source={{ uri: resolveImageUrl(validationResult.feedbackImageUrl) }} 
-                            style={styles.mockupImage} 
-                            resizeMode="contain"
+                  {validating ? (
+                    /* ── ANIMACIÓN DE CARGA DINÁMICA ── */
+                    <View style={styles.loadingContainer}>
+                      <ActivityIndicator size="large" color="#0F766E" />
+                      <Text style={styles.loadingTitle}>Procesando Validación</Text>
+                      <Text style={styles.loadingSub}>{LOADING_STEPS[currentStep]}</Text>
+                      <View style={styles.progressBar}>
+                        <View style={[styles.progressFill, { width: `${((currentStep + 1) / LOADING_STEPS.length) * 100}%` }]} />
+                      </View>
+                    </View>
+                  ) : validationResult && !validationResult.success ? (
+                    /* ── DISCREPANCIAS DETECTADAS ── */
+                    <View style={styles.mismatchContainer}>
+                      <View style={styles.alertHeader}>
+                        <Text style={styles.alertTitle}>¡Se detectaron diferencias con Sofia Plus!</Text>
+                        <Text style={styles.alertText}>
+                          La Inteligencia Artificial ha encontrado que los datos locales en tu carnet difieren de la base de datos oficial de Sofia Plus. Los campos erróneos están marcados a continuación:
+                        </Text>
+                      </View>
+
+                      {/* Fila con imagen y desglose */}
+                      <View style={[styles.mismatchRow, isDesktop && styles.rowLayout]}>
+                        
+                        {/* Imagen Mockup Generada */}
+                        {validationResult.feedbackImageUrl && (
+                          <View style={[styles.imageCard, isDesktop && { width: '45%' }]}>
+                            <Text style={styles.sectionLabel}>Guía Visual del Carnet</Text>
+                            <Image 
+                              source={{ uri: resolveImageUrl(validationResult.feedbackImageUrl) }} 
+                              style={styles.mockupImage} 
+                              resizeMode="contain"
+                            />
+                            <Text style={styles.imageCaption}>
+                              * Los recuadros rojos señalan los campos que debes corregir para validar tu carnet.
+                            </Text>
+                          </View>
+                        )}
+
+                        {/* Tabla / Lista de diferencias */}
+                        <View style={[styles.detailsCard, isDesktop && { width: '50%' }]}>
+                          <Text style={styles.sectionLabel}>Explicación de Diferencias</Text>
+                          
+                          {validationResult.mismatches.map((m, idx) => (
+                            <View key={idx} style={styles.mismatchItem}>
+                              <View style={styles.mismatchHeaderRow}>
+                                <Text style={styles.mismatchField}>{getFieldName(m.field)}</Text>
+                              </View>
+                              <View style={styles.mismatchComparison}>
+                                <View style={styles.compColumn}>
+                                  <Text style={styles.compLabel}>Dato Local:</Text>
+                                  <Text style={styles.compValueLocal}>{m.local || '(En blanco)'}</Text>
+                                </View>
+                                <View style={styles.compColumn}>
+                                  <Text style={styles.compLabel}>Sofia Plus (Oficial):</Text>
+                                  <Text style={styles.compValueSofia}>{m.sofia || '(No registra)'}</Text>
+                                </View>
+                              </View>
+                              <Text style={styles.aiExplanation}>{m.explanation}</Text>
+                            </View>
+                          ))}
+
+                          <View style={styles.actionBlock}>
+                            <TouchableOpacity 
+                              style={styles.autoCorrectBtn} 
+                              onPress={handleAutoCorrect}
+                              disabled={correcting}
+                            >
+                              {correcting ? (
+                                <ActivityIndicator color="#FFFFFF" size="small" />
+                              ) : (
+                                <Text style={styles.autoCorrectText}>Corregir Datos Automáticamente</Text>
+                              )}
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                              style={styles.cancelBtn} 
+                              onPress={() => setValidationResult(null)}
+                            >
+                              <Text style={styles.cancelBtnText}>Reintentar Validación</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  ) : (
+                    /* ── FORMULARIO DE INGRESO ── */
+                    <View style={styles.formContainer}>
+                      <Text style={styles.formTitle}>Validar Información Oficial</Text>
+                      <Text style={styles.formInstructions}>
+                        Ingresa tu contraseña de Sofia Plus. Esta se procesará únicamente para la consulta en vivo y no se almacenará en nuestros servidores.
+                      </Text>
+
+                      {errorMsg ? <Text style={styles.errorBanner}>{errorMsg}</Text> : null}
+
+                      <View style={styles.fieldGroup}>
+                        <Text style={styles.inputLabel}>Tipo de Documento</Text>
+                        <TextInput 
+                          value={profile.typeDocument || 'CC'} 
+                          editable={false} 
+                          style={[styles.input, styles.inputDisabled]} 
+                        />
+                      </View>
+
+                      <View style={styles.fieldGroup}>
+                        <Text style={styles.inputLabel}>Número de Documento</Text>
+                        <TextInput 
+                          value={profile.document} 
+                          editable={false} 
+                          style={[styles.input, styles.inputDisabled]} 
+                        />
+                      </View>
+
+                      <View style={styles.fieldGroup}>
+                        <Text style={styles.inputLabel}>Contraseña de Sofia Plus</Text>
+                        <View style={styles.passwordContainer}>
+                          <TextInput 
+                            value={password} 
+                            onChangeText={setPassword} 
+                            secureTextEntry={!showPassword} 
+                            placeholder="••••••••••••"
+                            style={[styles.passwordInput, useMock && styles.inputDisabled]}
+                            editable={!useMock}
                           />
-                          <Text style={styles.imageCaption}>
-                            * Los recuadros rojos señalan los campos que debes corregir para validar tu carnet.
+                          <TouchableOpacity 
+                            style={styles.showPasswordBtn} 
+                            onPress={() => setShowPassword(!showPassword)}
+                            disabled={useMock}
+                          >
+                            <Text style={styles.showPasswordText}>{showPassword ? '👁️ Ocultar' : '👁️ Mostrar'}</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      {/* Toggle de Modo Demo */}
+                      <View style={styles.demoToggleRow}>
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.demoTitle}>Modo Demo (Pruebas)</Text>
+                          <Text style={styles.demoDesc}>
+                            Simula la validación usando casos de prueba. Ideal para evaluar sin contraseñas reales.
+                          </Text>
+                        </View>
+                        <TouchableOpacity 
+                          style={[styles.toggleBtn, useMock ? styles.toggleBtnActive : styles.toggleBtnInactive]}
+                          onPress={() => setUseMock(!useMock)}
+                        >
+                          <Text style={[styles.toggleText, useMock && { color: '#FFFFFF' }]}>
+                            {useMock ? 'ACTIVADO' : 'DESACTIVADO'}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      {useMock && (
+                        <View style={styles.mockInfoAlert}>
+                          <Text style={styles.mockInfoText}>
+                            💡 **Casos de prueba en Modo Demo según tu Cédula:**{'\n'}
+                            • **12345678**: Coincidencia perfecta (Valida con éxito).{'\n'}
+                            • **12345679**: Error ortográfico en el Nombre (Daniela López).{'\n'}
+                            • **12345680**: Ficha desactualizada (Local: 2455678, Sofia: 2899123).{'\n'}
+                            • **12345681**: Aprendiz con estado de Matrícula Cancelado.{'\n'}
+                            *(Si tu documento actual no empieza por 123, el sistema usará un aprendiz autoverificado).*
                           </Text>
                         </View>
                       )}
 
-                      {/* Tabla / Lista de diferencias */}
-                      <View style={[styles.detailsCard, isDesktop && { width: '50%' }]}>
-                        <Text style={styles.sectionLabel}>Explicación de Diferencias</Text>
-                        
-                        {validationResult.mismatches.map((m, idx) => (
-                          <View key={idx} style={styles.mismatchItem}>
-                            <View style={styles.mismatchHeaderRow}>
-                              <Text style={styles.mismatchField}>{getFieldName(m.field)}</Text>
-                            </View>
-                            <View style={styles.mismatchComparison}>
-                              <View style={styles.compColumn}>
-                                <Text style={styles.compLabel}>Dato Local:</Text>
-                                <Text style={styles.compValueLocal}>{m.local || '(En blanco)'}</Text>
-                              </View>
-                              <View style={styles.compColumn}>
-                                <Text style={styles.compLabel}>Sofia Plus (Oficial):</Text>
-                                <Text style={styles.compValueSofia}>{m.sofia || '(No registra)'}</Text>
-                              </View>
-                            </View>
-                            <Text style={styles.aiExplanation}>{m.explanation}</Text>
-                          </View>
-                        ))}
-
-                        <View style={styles.actionBlock}>
-                          <TouchableOpacity 
-                            style={styles.autoCorrectBtn} 
-                            onPress={handleAutoCorrect}
-                            disabled={correcting}
-                          >
-                            {correcting ? (
-                              <ActivityIndicator color="#FFFFFF" size="small" />
-                            ) : (
-                              <Text style={styles.autoCorrectText}>Corregir Datos Automáticamente</Text>
-                            )}
-                          </TouchableOpacity>
-                          
-                          <TouchableOpacity 
-                            style={styles.cancelBtn} 
-                            onPress={() => setValidationResult(null)}
-                          >
-                            <Text style={styles.cancelBtnText}>Reintentar Validación</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                ) : (
-                  /* ── FORMULARIO DE INGRESO ── */
-                  <View style={styles.formContainer}>
-                    <Text style={styles.formTitle}>Validar Información Oficial</Text>
-                    <Text style={styles.formInstructions}>
-                      Ingresa tu contraseña de Sofia Plus. Esta se procesará únicamente para la consulta en vivo y no se almacenará en nuestros servidores.
-                    </Text>
-
-                    {errorMsg ? <Text style={styles.errorBanner}>{errorMsg}</Text> : null}
-
-                    <View style={styles.fieldGroup}>
-                      <Text style={styles.inputLabel}>Tipo de Documento</Text>
-                      <TextInput 
-                        value={profile.typeDocument || 'CC'} 
-                        editable={false} 
-                        style={[styles.input, styles.inputDisabled]} 
-                      />
-                    </View>
-
-                    <View style={styles.fieldGroup}>
-                      <Text style={styles.inputLabel}>Número de Documento</Text>
-                      <TextInput 
-                        value={profile.document} 
-                        editable={false} 
-                        style={[styles.input, styles.inputDisabled]} 
-                      />
-                    </View>
-
-                    <View style={styles.fieldGroup}>
-                      <Text style={styles.inputLabel}>Contraseña de Sofia Plus</Text>
-                      <View style={styles.passwordContainer}>
-                        <TextInput 
-                          value={password} 
-                          onChangeText={setPassword} 
-                          secureTextEntry={!showPassword} 
-                          placeholder="••••••••••••"
-                          style={[styles.passwordInput, useMock && styles.inputDisabled]}
-                          editable={!useMock}
-                        />
-                        <TouchableOpacity 
-                          style={styles.showPasswordBtn} 
-                          onPress={() => setShowPassword(!showPassword)}
-                          disabled={useMock}
-                        >
-                          <Text style={styles.showPasswordText}>{showPassword ? '👁️ Ocultar' : '👁️ Mostrar'}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-
-                    {/* Toggle de Modo Demo */}
-                    <View style={styles.demoToggleRow}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.demoTitle}>Modo Demo (Pruebas)</Text>
-                        <Text style={styles.demoDesc}>
-                          Simula la validación usando casos de prueba. Ideal para evaluar sin contraseñas reales.
-                        </Text>
-                      </View>
-                      <TouchableOpacity 
-                        style={[styles.toggleBtn, useMock ? styles.toggleBtnActive : styles.toggleBtnInactive]}
-                        onPress={() => setUseMock(!useMock)}
-                      >
-                        <Text style={[styles.toggleText, useMock && { color: '#FFFFFF' }]}>
-                          {useMock ? 'ACTIVADO' : 'DESACTIVADO'}
-                        </Text>
+                      <TouchableOpacity style={styles.submitBtn} onPress={handleValidate}>
+                        <Text style={styles.submitBtnText}>Iniciar Validación Automática</Text>
                       </TouchableOpacity>
                     </View>
-
-                    {useMock && (
-                      <View style={styles.mockInfoAlert}>
-                        <Text style={styles.mockInfoText}>
-                          💡 **Casos de prueba en Modo Demo según tu Cédula:**{'\n'}
-                          • **12345678**: Coincidencia perfecta (Valida con éxito).{'\n'}
-                          • **12345679**: Error ortográfico en el Nombre (Daniela López).{'\n'}
-                          • **12345680**: Ficha desactualizada (Local: 2455678, Sofia: 2899123).{'\n'}
-                          • **12345681**: Aprendiz con estado de Matrícula Cancelado.{'\n'}
-                          *(Si tu documento actual no empieza por 123, el sistema usará un aprendiz autoverificado).*
-                        </Text>
-                      </View>
-                    )}
-
-                    <TouchableOpacity style={styles.submitBtn} onPress={handleValidate}>
-                      <Text style={styles.submitBtnText}>Iniciar Validación Automática</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
+                  )}
+                </View>
+              </TourTarget>
             ) : (
               <Text>No se pudo cargar el perfil de usuario.</Text>
             )}

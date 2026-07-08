@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import { getUserProfile } from '../services/authService';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -7,6 +7,8 @@ import StatCard from '../components/StatCard.jsx';
 import WebFrame from '../components/WebFrame.jsx';
 import { getCardsByUser } from '../services/cardService';
 import { getRequestCardsByUser } from '../services/requestCardService';
+import TourTarget from '../components/TourTarget.jsx';
+
 
 function normalizeText(value, fallback = 'Sin registro') {
   const text = String(value || '').trim();
@@ -200,21 +202,23 @@ export default function ProcessingStatus({navigation}) {
                   </View>
                 </View>
 
-                <View style={styles.statusCard}>
-                  <Text style={styles.sectionTitle}>Seguimiento</Text>
-                  {steps.map((step, index) => (
-                    <View key={step.key} style={[styles.timelineRow, index === steps.length - 1 && styles.timelineRowLast]}>
-                      <View style={styles.timelineRail}>
-                        <View style={[styles.timelineDot, styles[`tone_${step.tone}`]]} />
-                        {index < steps.length - 1 && <View style={styles.timelineLine} />}
+                <TourTarget targetId="tramite-timeline-card">
+                  <View style={styles.statusCard}>
+                    <Text style={styles.sectionTitle}>Seguimiento</Text>
+                    {steps.map((step, index) => (
+                      <View key={step.key} style={[styles.timelineRow, index === steps.length - 1 && styles.timelineRowLast]}>
+                        <View style={styles.timelineRail}>
+                          <View style={[styles.timelineDot, styles[`tone_${step.tone}`]]} />
+                          {index < steps.length - 1 && <View style={styles.timelineLine} />}
+                        </View>
+                        <View style={styles.timelineContent}>
+                          <Text style={styles.timelineTitle}>{step.title}</Text>
+                          <Text style={styles.timelineValue}>{step.value}</Text>
+                        </View>
                       </View>
-                      <View style={styles.timelineContent}>
-                        <Text style={styles.timelineTitle}>{step.title}</Text>
-                        <Text style={styles.timelineValue}>{step.value}</Text>
-                      </View>
-                    </View>
-                  ))}
-                </View>
+                    ))}
+                  </View>
+                </TourTarget>
 
                 {!!latestRequest?.reasonRejection && (
                   <View style={styles.alertCard}>

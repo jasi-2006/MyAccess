@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ActivityIndicator } from 'react-native';
 import { normalizeRole, ROLES } from '../utils/accessControl';
 import { getNotifications } from '../services/notificationService';
+import TourTarget from './TourTarget.jsx';
 
 export default function HomeCards({ navigation, role }) {
   const { width } = useWindowDimensions();
@@ -18,6 +19,7 @@ export default function HomeCards({ navigation, role }) {
         const notifications = await getNotifications();
         const unread = notifications?.filter(n => !n.readingDate).length || 0;
         setUnreadCount(unread);
+        
       } catch {
         setUnreadCount(0);
       } finally {
@@ -37,44 +39,47 @@ export default function HomeCards({ navigation, role }) {
         }]
       : []),
     {  title: 'Carnet Digital', desc: 'Accede a tu carnet institucional en cualquier momento.', onPress: () => navigation.navigate('Card') },
-    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications'),  },
-    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User'),  },
+    {  title: 'Notificaciones', desc: 'Consulta las ultimas novedades del centro.', onPress: () => navigation.navigate('Notifications') },
+    {  title: 'Mi Perfil', desc: 'Revisa y actualiza tu informacion personal.', onPress: () => navigation.navigate('User') },
   ];
 
   return (
-    <View style={[styles.cards, { paddingHorizontal: px, flexDirection: isDesktop ? 'row' : 'column' }]}>
-      {items.map((item) => (
-        <TouchableOpacity
-          key={item.title}
-          style={[
-            styles.card,
-            item.featured && styles.managementCard,
-            isDesktop && { flex: 1 },
-          ]}
-          onPress={item.onPress}
-          activeOpacity={0.85}
-        >
-          <View style={styles.cardHeader}>
-            <Text style={[styles.cardIcon, item.featured && styles.managementIcon, { fontSize: isDesktop ? 28 : 22 }]}>
-              {item.icon}
+    <TourTarget targetId="home-cards-section">
+      <View style={[styles.cards, { paddingHorizontal: px, flexDirection: isDesktop ? 'row' : 'column' }]}>
+        {items.map((item) => (
+          <TouchableOpacity
+            key={item.title}
+            style={[
+              styles.card,
+              item.featured && styles.managementCard,
+              isDesktop && { flex: 1 },
+            ]}
+            onPress={item.onPress}
+            activeOpacity={0.85}
+          >
+            <View style={styles.cardHeader}>
+              <Text style={[styles.cardIcon, item.featured && styles.managementIcon, { fontSize: isDesktop ? 28 : 22 }]}>
+                {item.icon}
+              </Text>
+              {item.title === 'Notificaciones' && !loading && unreadCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{unreadCount}</Text>
+                </View>
+              )}
+            </View>
+            <Text style={[styles.cardTitle, item.featured && styles.managementTitle, { fontSize: isDesktop ? 16 : 14 }]}>
+              {item.title}
             </Text>
-            {item.title === 'Notificaciones' && !loading && unreadCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{unreadCount}</Text>
-              </View>
-            )}
-          </View>
-          <Text style={[styles.cardTitle, item.featured && styles.managementTitle, { fontSize: isDesktop ? 16 : 14 }]}>
-            {item.title}
-          </Text>
-          <Text style={[styles.cardDesc, item.featured && styles.managementDesc, { fontSize: isDesktop ? 13 : 12 }]}>
-            {item.desc}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+            <Text style={[styles.cardDesc, item.featured && styles.managementDesc, { fontSize: isDesktop ? 13 : 12 }]}>
+              {item.desc}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </TourTarget>
   );
 }
+
 
 const styles = StyleSheet.create({
   cards: {

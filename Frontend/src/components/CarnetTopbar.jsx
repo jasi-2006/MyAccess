@@ -45,6 +45,11 @@ export default function CarnetTopbar({ navigation, studentName, studentInitial, 
           <Text style={styles.linkText}>Inicio</Text>
         </TouchableOpacity>
 
+        {/* Manual */}
+        <TouchableOpacity onPress={() => navigation.navigate('UserManual')}>
+          <Text style={styles.linkText}>Manual</Text>
+        </TouchableOpacity>
+
         {/* Campana */}
         <TouchableOpacity style={styles.bellWrap} onPress={() => navigation.navigate('Notifications')}>
           <Text style={styles.bellIcon}>🔔</Text>
