@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { resolveImageUrl } from '../services/api.js';
+import TourTarget from './TourTarget.jsx';
 
 const appendCacheBust = (url, revision) => {
   if (!url) return null;
@@ -14,15 +15,18 @@ export default function ProfileInfoCard({ profile, loading, fields, onEdit, px, 
   const photoUrl = appendCacheBust(resolveImageUrl(profile?.photoUrl), photoRevision);
 
   return (
-    <View style={[styles.section, { paddingHorizontal: px }]}>
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { fontSize: isDesktop ? 22 : 18 }]}>Mi Información</Text>
-        {profile && (
-          <TouchableOpacity style={styles.editBtn} onPress={onEdit}>
-            <Text style={styles.editBtnText}>Editar</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+    <TourTarget targetId="profile-info-card" style={{ flex: 1 }}>
+      <View style={[styles.section, { paddingHorizontal: px }]}>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { fontSize: isDesktop ? 22 : 18 }]}>Mi Información</Text>
+          {profile && (
+            <TourTarget targetId="profile-edit-btn">
+              <TouchableOpacity style={styles.editBtn} onPress={onEdit}>
+                <Text style={styles.editBtnText}>Editar</Text>
+              </TouchableOpacity>
+            </TourTarget>
+          )}
+        </View>
 
       {loading ? (
         <ActivityIndicator size="large" color="#0F766E" style={{ marginTop: 24 }} />
@@ -53,7 +57,8 @@ export default function ProfileInfoCard({ profile, loading, fields, onEdit, px, 
           <Text style={styles.emptyText}>No se encontró información del perfil.</Text>
         </View>
       )}
-    </View>
+      </View>
+    </TourTarget>
   );
 }
 

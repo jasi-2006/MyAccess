@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import { getUserProfile } from '../services/authService';
 import CarnetTopbar from '../components/CarnetTopbar.jsx';
@@ -8,6 +8,7 @@ import WebFrame from '../components/WebFrame.jsx';
 import RequestCardButton from '../components/RequestCardButton.jsx';
 import { getCardsByUser } from '../services/cardService';
 import { resolveUserRole, ROLES } from '../utils/accessControl';
+import TourTarget from '../components/TourTarget.jsx';
 
 export default function CarnetGatewayScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
@@ -80,12 +81,14 @@ export default function CarnetGatewayScreen({ navigation }) {
               </Text>
             </View>
 
-            <CarnetCard
-              profile={profile}
-              card={card}
-              loading={loading}
-              cardError={cardError}
-            />
+            <TourTarget targetId="carnet-card-view">
+              <CarnetCard
+                profile={profile}
+                card={card}
+                loading={loading}
+                cardError={cardError}
+              />
+            </TourTarget>
             {isAprendiz ? <RequestCardButton profile={profile} /> : null}
 
           </ScrollView>
@@ -94,6 +97,7 @@ export default function CarnetGatewayScreen({ navigation }) {
     </WebFrame>
   );
 }
+
 
 const styles = StyleSheet.create({
   screen:       { flex: 1, backgroundColor: '#EAE6E6' },

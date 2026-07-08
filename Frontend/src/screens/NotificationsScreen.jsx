@@ -18,6 +18,8 @@ import WebFrame from '../components/WebFrame.jsx';
 import { getUserProfile } from '../services/authService';
 import { getNotifications, getNotificationsByUser, markNotificationAsRead } from '../services/notificationService.js';
 import { normalizeRole, ROLES } from '../utils/accessControl';
+import TourTarget from '../components/TourTarget.jsx';
+
 
 function formatNotificationDate(value) {
   if (!value) return 'Sin fecha';
@@ -272,88 +274,92 @@ export default function NotificationsScreen({ navigation }) {
         </View>
 
           <View style={[styles.contentGrid, isDesktop && styles.contentGridDesktop]}>
-            <View style={styles.listPanel}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Recientes</Text>
-                <View style={styles.sectionActions}>
-                  <Text style={styles.sectionHint}>{notifications.length} mensajes</Text>
-                  {canCreateNotifications ? (
+            <TourTarget targetId="notif-list-panel" style={{ flex: 1 }}>
+              <View style={styles.listPanel}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Recientes</Text>
+                  <View style={styles.sectionActions}>
+                    <Text style={styles.sectionHint}>{notifications.length} mensajes</Text>
+                    {canCreateNotifications ? (
+                      <TourTarget targetId="notif-create-btn">
+                        <TouchableOpacity
+                          style={styles.createButton}
+                          onPress={() => setCreateModalVisible(true)}
+                          activeOpacity={0.85}
+                        >
+                          <Text style={styles.createButtonText}>Crear</Text>
+                        </TouchableOpacity>
+                      </TourTarget>
+                    ) : null}
+                  </View>
+                </View>
+
+                <View style={styles.searchRow}>
+                  <TextInput
+                    style={styles.searchInput}
+                    value={filterText}
+                    onChangeText={setFilterText}
+                    placeholder="Buscar por asunto, mensaje, categoria, estado o usuario"
+                    placeholderTextColor="#9CA3AF"
+                  />
+                  {filterText ? (
                     <TouchableOpacity
-                      style={styles.createButton}
-                      onPress={() => setCreateModalVisible(true)}
-                      activeOpacity={0.85}
+                      style={styles.clearSearchButton}
+                      onPress={() => setFilterText('')}
+                      activeOpacity={0.8}
                     >
-                      <Text style={styles.createButtonText}>Crear</Text>
+                      <Text style={styles.clearSearchText}>Limpiar</Text>
                     </TouchableOpacity>
                   ) : null}
                 </View>
-              </View>
 
-              <View style={styles.searchRow}>
-                <TextInput
-                  style={styles.searchInput}
-                  value={filterText}
-                  onChangeText={setFilterText}
-                  placeholder="Buscar por asunto, mensaje, categoria, estado o usuario"
-                  placeholderTextColor="#9CA3AF"
-                />
-                {filterText ? (
-                  <TouchableOpacity
-                    style={styles.clearSearchButton}
-                    onPress={() => setFilterText('')}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={styles.clearSearchText}>Limpiar</Text>
-                  </TouchableOpacity>
+                {loading ? (
+                  <View style={styles.stateBox}>
+                    <ActivityIndicator color="#079B72" />
+                    <Text style={styles.stateText}>Cargando notificaciones...</Text>
+                  </View>
                 ) : null}
-              </View>
 
-              {loading ? (
-                <View style={styles.stateBox}>
-                  <ActivityIndicator color="#079B72" />
-                  <Text style={styles.stateText}>Cargando notificaciones...</Text>
-                </View>
-              ) : null}
-
-              {!loading && error ? (
-                <View style={styles.stateBox}>
-                  <Text style={styles.errorText}>{error}</Text>
-                  <TouchableOpacity style={styles.retryButton} onPress={loadNotifications}>
-                    <Text style={styles.retryText}>Reintentar</Text>
-                  </TouchableOpacity>
-                </View>
-              ) : null}
-
-              {!loading && !error && notifications.length === 0 ? (
-                <View style={styles.stateBox}>
-                  <Text style={styles.stateText}>
-                    {filterText ? 'No hay notificaciones que coincidan con la busqueda.' : 'No tienes notificaciones por ahora.'}
-                  </Text>
-                </View>
-              ) : null}
-
-              {!loading && !error ? notifications.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={[styles.notificationCard, selected === item.id && styles.notificationCardOpen]}
-                  activeOpacity={0.85}
-                  onPress={() => openDetail(item)}
-                >
-                  <View style={[styles.iconBubble, item.unread && styles.iconBubbleUnread]}>
-                    <Text style={styles.iconText}>{item.unread ? '!' : 'i'}</Text>
+                {!loading && error ? (
+                  <View style={styles.stateBox}>
+                    <Text style={styles.errorText}>{error}</Text>
+                    <TouchableOpacity style={styles.retryButton} onPress={loadNotifications}>
+                      <Text style={styles.retryText}>Reintentar</Text>
+                    </TouchableOpacity>
                   </View>
+                ) : null}
 
-                  <View style={styles.notificationBody}>
-                    <View style={styles.notificationTop}>
-                      <Text style={styles.badge}>{item.type}</Text>
-                      <Text style={styles.time}>{item.time}</Text>
+                {!loading && !error && notifications.length === 0 ? (
+                  <View style={styles.stateBox}>
+                    <Text style={styles.stateText}>
+                      {filterText ? 'No hay notificaciones que coincidan con la busqueda.' : 'No tienes notificaciones por ahora.'}
+                    </Text>
+                  </View>
+                ) : null}
+
+                {!loading && !error ? notifications.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[styles.notificationCard, selected === item.id && styles.notificationCardOpen]}
+                    activeOpacity={0.85}
+                    onPress={() => openDetail(item)}
+                  >
+                    <View style={[styles.iconBubble, item.unread && styles.iconBubbleUnread]}>
+                      <Text style={styles.iconText}>{item.unread ? '!' : 'i'}</Text>
                     </View>
-                    <Text style={styles.notificationTitle}>{item.title}</Text>
-                    <Text style={styles.notificationMessage}>{item.message}</Text>
-                  </View>
-                </TouchableOpacity>
-              )) : null}
-            </View>
+
+                    <View style={styles.notificationBody}>
+                      <View style={styles.notificationTop}>
+                        <Text style={styles.badge}>{item.type}</Text>
+                        <Text style={styles.time}>{item.time}</Text>
+                      </View>
+                      <Text style={styles.notificationTitle}>{item.title}</Text>
+                      <Text style={styles.notificationMessage}>{item.message}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )) : null}
+              </View>
+            </TourTarget>
           </View>
         </ScrollView>
       </View>

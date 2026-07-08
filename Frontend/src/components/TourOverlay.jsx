@@ -1,45 +1,163 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTour } from '../utils/tourContext.js';
 
 export default function TourOverlay() {
-  const { isTourActive, tourRole, currentStep, nextStep, prevStep, stopTour, steps } = useTour();
-  const { width } = useWindowDimensions();
-  const isMobile = width < 768;
+  const { isTourActive, tourRole, currentStep, nextStep, prevStep, stopTour, steps, targets } = useTour();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const isMobile = screenWidth < 768;
+
+  // Pulse animation for the target highlight box
+  const pulseAnim = useRef(new Animated.Value(0.6)).current;
+
+  const currentStepData = steps?.[currentStep];
+  const targetId = currentStepData?.targetId;
+  const targetCoords = targetId ? targets[targetId] : null;
+  const showHighlight = isTourActive && !!targetCoords;
+
+  useEffect(() => {
+    if (showHighlight) {
+      pulseAnim.setValue(0.6);
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 0.6,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    }
+  }, [showHighlight, currentStep]);
 
   if (!isTourActive || !steps || steps.length === 0) return null;
 
-  const currentStepData = steps[currentStep];
   const stepNumber = currentStep + 1;
   const totalSteps = steps.length;
   const isLastStep = currentStep === totalSteps - 1;
 
-  // Determinar posición según el paso
-  const getContainerStyle = () => {
-    switch (currentStepData.placement) {
-      case 'top':
-        return [styles.overlayContainer, styles.positionTop, isMobile ? { width: '90%' } : { width: 480 }];
-      case 'center':
-        return [styles.overlayContainer, styles.positionCenter, isMobile ? { width: '90%' } : { width: 480 }];
-      case 'bottom':
-      default:
-        return [styles.overlayContainer, styles.positionBottom, isMobile ? { width: '90%' } : { width: 480 }];
+  // Mask coordinates
+  const tx = targetCoords?.x || 0;
+  const ty = targetCoords?.y || 0;
+  const tw = targetCoords?.width || 0;
+  const th = targetCoords?.height || 0;
+
+  // Tooltip positioning math
+  let tooltipStyle = {};
+  let arrowStyle = {};
+  const tooltipWidth = Math.min(380, screenWidth - 32);
+
+  if (targetCoords) {
+    const spaceAbove = ty;
+    const spaceBelow = screenHeight - (ty + th);
+    const useTop = spaceAbove > spaceBelow && spaceAbove > 180;
+
+    const targetCenter = tx + tw / 2;
+    let leftPos = targetCenter - tooltipWidth / 2;
+    leftPos = Math.max(16, Math.min(leftPos, screenWidth - tooltipWidth - 16));
+
+    if (useTop) {
+      tooltipStyle = {
+        position: 'absolute',
+        bottom: screenHeight - ty + 12,
+        left: leftPos,
+        width: tooltipWidth,
+      };
+      
+      const arrowLeft = targetCenter - leftPos - 8;
+      arrowStyle = {
+        bottom: -10,
+        left: Math.max(16, Math.min(arrowLeft, tooltipWidth - 32)),
+        borderLeftWidth: 8,
+        borderRightWidth: 8,
+        borderTopWidth: 10,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderTopColor: '#059669',
+      };
+    } else {
+      tooltipStyle = {
+        position: 'absolute',
+        top: ty + th + 12,
+        left: leftPos,
+        width: tooltipWidth,
+      };
+
+      const arrowLeft = targetCenter - leftPos - 8;
+      arrowStyle = {
+        top: -10,
+        left: Math.max(16, Math.min(arrowLeft, tooltipWidth - 32)),
+        borderLeftWidth: 8,
+        borderRightWidth: 8,
+        borderBottomWidth: 10,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderBottomColor: '#059669',
+      };
     }
-  };
+  } else {
+    // Fallback to centered dialog if target coordinates are not available
+    tooltipStyle = {
+      position: 'absolute',
+      top: '35%',
+      alignSelf: 'center',
+      width: tooltipWidth,
+    };
+  }
 
   return (
-    <View style={styles.backdrop} pointerEvents="box-none">
-      <View style={getContainerStyle()}>
-        {/* Flecha indicadora (Tooltip Arrow) */}
-        {currentStepData.placement === 'top' && <View style={[styles.arrow, styles.arrowTop]} />}
-        {currentStepData.placement === 'bottom' && <View style={[styles.arrow, styles.arrowBottom]} />}
-        {currentStepData.placement === 'center' && <View style={[styles.arrow, styles.arrowLeft]} />}
+    <View style={styles.fullscreenContainer} pointerEvents="box-none">
+      
+      {/* ── MÁSCARAS DE DIMMING (RECORTAN EL ELEMENTO DESTACADO) ── */}
+      {showHighlight ? (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          {/* Top mask */}
+          <View style={[styles.dimmer, { top: 0, left: 0, width: screenWidth, height: ty }]} />
+          {/* Bottom mask */}
+          <View style={[styles.dimmer, { top: ty + th, left: 0, width: screenWidth, bottom: 0 }]} />
+          {/* Left mask */}
+          <View style={[styles.dimmer, { top: ty, left: 0, width: tx, height: th }]} />
+          {/* Right mask */}
+          <View style={[styles.dimmer, { top: ty, left: tx + tw, right: 0, height: th }]} />
+        </View>
+      ) : (
+        /* Fullscreen dimming fallback */
+        <View style={[styles.dimmer, StyleSheet.absoluteFill]} pointerEvents="none" />
+      )}
+
+      {/* ── CUADRO DE RESALTADO CON BRILLO Y PULSO ── */}
+      {showHighlight && (
+        <Animated.View
+          style={[
+            styles.highlightBox,
+            {
+              top: ty - 4,
+              left: tx - 4,
+              width: tw + 8,
+              height: th + 8,
+              opacity: pulseAnim,
+            },
+          ]}
+          pointerEvents="none"
+        />
+      )}
+
+      {/* ── TARJETA DEL TOOLTIP GUIADO ── */}
+      <View style={[styles.overlayContainer, tooltipStyle]}>
+        
+        {/* Flecha indicadora */}
+        {targetCoords && <View style={[styles.arrow, arrowStyle]} />}
 
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.badgeWrap}>
-            <Text style={styles.badgeText}>MÓDULO {stepNumber}/{totalSteps}</Text>
+            <Text style={styles.badgeText}>PASO {stepNumber}/{totalSteps}</Text>
           </View>
           <Text style={styles.roleTitle} numberOfLines={1}>
             Paseo: {tourRole.charAt(0).toUpperCase() + tourRole.slice(1)}
@@ -84,11 +202,25 @@ export default function TourOverlay() {
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
+  fullscreenContainer: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
     zIndex: 99999,
+  },
+  dimmer: {
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    position: 'absolute',
+  },
+  highlightBox: {
+    position: 'absolute',
+    borderRadius: 10,
+    borderWidth: 2.5,
+    borderColor: '#24C565',
+    shadowColor: '#24C565',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 99998,
   },
   overlayContainer: {
     backgroundColor: '#FFFFFF',
@@ -98,23 +230,17 @@ const styles = StyleSheet.create({
     borderColor: '#059669',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.15,
     shadowRadius: 16,
-    elevation: 20,
+    elevation: 10,
+    zIndex: 99999,
+  },
+  arrow: {
     position: 'absolute',
+    width: 0,
+    height: 0,
+    borderStyle: 'solid',
   },
-  // Posicionamientos
-  positionTop: {
-    top: 70,
-  },
-  positionCenter: {
-    top: '38%',
-  },
-  positionBottom: {
-    bottom: 30,
-  },
-
-  // Cabecera
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -133,7 +259,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 9,
-    fontWeight: '800',
+    fontWeight: '850',
     color: '#059669',
   },
   roleTitle: {
@@ -145,8 +271,6 @@ const styles = StyleSheet.create({
   closeBtn: {
     padding: 2,
   },
-
-  // Cuerpo
   body: {
     marginBottom: 14,
   },
@@ -161,8 +285,6 @@ const styles = StyleSheet.create({
     color: '#374151',
     lineHeight: 18,
   },
-
-  // Pie
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -175,7 +297,7 @@ const styles = StyleSheet.create({
   cancelBtnText: {
     fontSize: 11,
     color: '#EF4444',
-    fontWeight: '600',
+    fontWeight: '700',
   },
   navGroup: {
     flexDirection: 'row',
@@ -211,43 +333,5 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '700',
   },
-  arrow: {
-    position: 'absolute',
-    width: 0,
-    height: 0,
-    borderStyle: 'solid',
-  },
-  arrowTop: {
-    top: -10,
-    left: '50%',
-    marginLeft: -8,
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderBottomWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#059669',
-  },
-  arrowBottom: {
-    bottom: -10,
-    left: '50%',
-    marginLeft: -8,
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderTopWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#059669',
-  },
-  arrowLeft: {
-    left: -10,
-    top: '50%',
-    marginTop: -8,
-    borderTopWidth: 8,
-    borderBottomWidth: 8,
-    borderRightWidth: 10,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderRightColor: '#059669',
-  },
 });
+
