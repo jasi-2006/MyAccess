@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
+export const navigationRef = createNavigationContainerRef();
 import OnboardingScreen from '../screens/OnboardingScreen.jsx';
 import LoginGatewayScreen from '../screens/LoginGatewayScreen.jsx';
 import RegisterGatewayScreen from '../screens/RegisterGatewayScreen.jsx';
@@ -123,7 +125,7 @@ const ProtectedUserManual = protect('UserManual', UserManualScreen);
 
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Onboarding"
         screenOptions={{

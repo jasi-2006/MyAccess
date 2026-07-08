@@ -36,6 +36,7 @@ const ROLE_ROUTE_ACCESS = {
     'Historial',
     'SofiaVerification',
     'UserManual',
+    'CreateInstructorCard',
   ],
   [ROLES.APRENDIZ]: [
     'Home',
