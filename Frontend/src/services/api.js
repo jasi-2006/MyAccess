@@ -30,10 +30,10 @@ function shouldIgnoreEnvUrl(url) {
   if (!url) return true;
   const normalized = String(url).trim().toLowerCase();
   
-  // Deprecated Render URLs are always ignored
-  if (normalized.includes('.onrender.com')) {
-    return true;
-  }
+  // Deprecated Render URLs are no longer ignored since we are redeploying to Render
+  // if (normalized.includes('.onrender.com')) {
+  //   return true;
+  // }
 
   // If we are running on an HTTPS page, we MUST ignore any insecure HTTP URLs
   // to prevent browser Mixed Content blocking.
