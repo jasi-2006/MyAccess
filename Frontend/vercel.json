@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/v1/:path*",
-      "destination": "http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/api/v1/:path*"
+      "destination": "https://myaccess-kong.onrender.com/api/v1/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com/uploads/:path*"
+      "destination": "https://myaccess-user.onrender.com/uploads/:path*"
     }
   ]
 }
