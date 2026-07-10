@@ -12,6 +12,25 @@ El único punto de entrada público de internet al Backend es el **Kong Gateway*
 
 ---
 
+## 💡 Reanudación de Servicios Existentes (Sin Redesplegar desde cero)
+
+Si **no eliminaste** tus servicios anteriores en Render, sino que simplemente los **pausaste (suspendiste)**, ¡no necesitas redesplegar todo desde cero! Puedes reanudar tu infraestructura existente siguiendo estos pasos:
+
+1. Ve a tu Dashboard de **Render**.
+2. Entra a cada uno de tus servicios suspendidos y haz clic en **"Resume"** (Reanudar) para iniciarlos de nuevo:
+   * **Gateway (Kong)**: `myaccess-kong` (`https://myaccess-kong.onrender.com`)
+   * **User Service**: `myaccess-user` (`https://myaccess-user.onrender.com`)
+   * **Auth Service**: `myaccess-auth-3qr9` (`https://myaccess-auth-3qr9.onrender.com`)
+   * **Card Service**: `myaccess-card-7jc2` (`https://myaccess-card-7jc2.onrender.com`)
+   * **News Service**: `myaccess-news-9h3h` (`https://myaccess-news-9h3h.onrender.com`)
+   * **Notification Service**: `myaccess-notification-ichc` (`https://myaccess-notification-ichc.onrender.com`)
+3. Sube los cambios actuales de este commit a tu repositorio de GitHub para actualizar las configuraciones de fallback del frontend (`api.js` y `vercel.json`).
+4. Al hacer push, **Vercel** compilará el Frontend automáticamente apuntando a tus servicios de Render reanudados.
+
+*Nota: El microservicio `validation-service` (FastAPI) es nuevo. Si deseas usarlo, puedes desplegar únicamente ese servicio en Render y configurar su ruta en Kong, o bien usar el archivo `render.yaml` si decides reconstruir todo desde cero.*
+
+---
+
 ## 🛠️ Paso a Paso para el Despliegue
 
 ### Paso 1: Subir los Cambios a GitHub

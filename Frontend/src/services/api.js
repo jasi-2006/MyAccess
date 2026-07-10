@@ -10,14 +10,19 @@ const isLocalWeb =
 // On local web (HTTP) or mobile platforms, we can request the HTTP ALB URL directly.
 const useRelative = isWeb && !isLocalWeb;
 
-const ALB_URL = 'http://myaccess-alb-878398065.us-east-2.elb.amazonaws.com';
+const RENDER_GATEWAY_URL = 'https://myaccess-kong.onrender.com';
+const RENDER_USER_SERVICE_URL = 'https://myaccess-user.onrender.com';
+const RENDER_NOTIFICATIONS_SERVICE_URL = 'https://myaccess-notification-ichc.onrender.com';
+const RENDER_CARD_SERVICE_URL = 'https://myaccess-card-7jc2.onrender.com';
+const RENDER_NEWS_SERVICE_URL = 'https://myaccess-news-9h3h.onrender.com';
+const RENDER_VALIDATION_SERVICE_URL = 'https://myaccess-validation.onrender.com';
 
-const DEFAULT_GATEWAY_URL = useRelative ? '' : ALB_URL;
-const DEFAULT_USER_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
-const DEFAULT_NOTIFICATIONS_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
-const DEFAULT_CARD_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
-const DEFAULT_NEWS_SERVICE_URL = useRelative ? '/api/v1' : `${ALB_URL}/api/v1`;
-const DEFAULT_VALIDATION_SERVICE_URL = useRelative ? '/api/v1/validation' : `${ALB_URL}/api/v1/validation`;
+const DEFAULT_GATEWAY_URL = useRelative ? '' : RENDER_GATEWAY_URL;
+const DEFAULT_USER_SERVICE_URL = useRelative ? '/api/v1' : RENDER_USER_SERVICE_URL;
+const DEFAULT_NOTIFICATIONS_SERVICE_URL = useRelative ? '/api/v1' : RENDER_NOTIFICATIONS_SERVICE_URL;
+const DEFAULT_CARD_SERVICE_URL = useRelative ? '/api/v1' : RENDER_CARD_SERVICE_URL;
+const DEFAULT_NEWS_SERVICE_URL = useRelative ? '/api/v1' : RENDER_NEWS_SERVICE_URL;
+const DEFAULT_VALIDATION_SERVICE_URL = useRelative ? '/api/v1/validation' : RENDER_VALIDATION_SERVICE_URL;
 
 const ENV_GATEWAY_URL = process.env.EXPO_PUBLIC_API_GATEWAY_URL;
 const ENV_USER_SERVICE_URL = process.env.EXPO_PUBLIC_USER_SERVICE_URL;
